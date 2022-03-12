@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Wizzard;
+
 public class Player {
     private final String nickname;
     private final Wizzard wizzard;

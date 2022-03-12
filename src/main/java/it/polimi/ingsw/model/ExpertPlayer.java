@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Wizzard;
+
 public class ExpertPlayer extends Player {
     private int coins;
 
