@@ -7,4 +7,8 @@ public class Bag {
     protected PawnColor drawStudent(){}
      */
 
+    //TODO
+    //protected PawnColor drawStudent(){}
+    //protected void AddStudents(PawnColor student, int size){}
+
 }
