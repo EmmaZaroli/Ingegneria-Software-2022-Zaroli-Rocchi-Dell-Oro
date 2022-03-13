@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.enums.*;
 
 public class CloudTile {
     private PlayerCountIcon playerCountIcon;
-    private List<PawnColor> students;
+    private final List<PawnColor> students;
 
     public CloudTile(PlayerCountIcon playerCountIcon) {
         this.playerCountIcon = playerCountIcon;

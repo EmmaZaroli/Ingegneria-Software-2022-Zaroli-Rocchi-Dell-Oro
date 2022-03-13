@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.enums.*;
 
 public class IslandCard {
     private boolean hasMotherNature;
-    private List<PawnColor> students;
+    private final List<PawnColor> students;
     /*
     private List<Tower> towers;
     private int size;
@@ -21,6 +21,10 @@ public class IslandCard {
 
     public boolean isHasMotherNature() {
         return hasMotherNature;
+    }
+
+    public void movePawnOnIsland(PawnColor student){
+        students.add(student);
     }
 
     //public int countInfluence(){}

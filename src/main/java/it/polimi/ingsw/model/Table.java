@@ -4,8 +4,8 @@ import it.polimi.ingsw.model.enums.*;
 import java.util.*;
 
 public class Table {
-    private ArrayList<PawnColor> professors;
-    private List<IslandCard> islandCards;
+    private final ArrayList<PawnColor> professors;
+    private final List<IslandCard> islandCards;
     private final Bag bag;
     private final List<CloudTile> cloudTiles;
 
@@ -22,6 +22,13 @@ public class Table {
         this.cloudTiles.add(new CloudTile(playerCountIcon));
         if(playerCountIcon.equals(PlayerCountIcon.THREE)){
             this.cloudTiles.add(new CloudTile(playerCountIcon));
+        }
+    }
+
+    public void fillClouds(){
+        for(CloudTile cloud : cloudTiles) {
+            // List<PawnColor> studentsDrawn = bag.drawStudents();
+            //cloud.AddStudents(studentsDrawn);
         }
     }
 
@@ -43,13 +50,6 @@ public class Table {
             return true;
         }
         return false;
-    }
-
-    public void fillClouds(){
-        for(CloudTile cloud : cloudTiles) {
-            // List<PawnColor> studentsDrawn = bag.drawStudents();
-            //cloud.AddStudents(studentsDrawn);
-        }
     }
 
     public List<PawnColor> takeStudentsFromCloud(CloudTile cloud){
