@@ -18,6 +18,11 @@ public class CloudTile {
         }
     }
 
+    //method to return the students in a cloud
+    public List<PawnColor> takeStudentsFromCloud(){
+        return students;
+    }
+
     //method to remove students (draft)
     public void clearCloud(){
         students.clear();

@@ -23,7 +23,5 @@ public class IslandCard {
         return hasMotherNature;
     }
 
-    public List<PawnColor> getStudents() {
-        return students;
-    }
+    //public int countInfluence(){}
 }
