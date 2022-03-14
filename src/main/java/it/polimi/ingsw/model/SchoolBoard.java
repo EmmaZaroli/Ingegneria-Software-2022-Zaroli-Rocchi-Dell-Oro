@@ -8,10 +8,10 @@ import java.util.List;
 
 public class SchoolBoard {
     private int towers;
-    private Tower towerColor;
-    private Entrance entrance;
-    private DiningRoom diningRoom;
-    private ProfessorTable professorTable;
+    private final Tower towerColor;
+    private final Entrance entrance;
+    private final DiningRoom diningRoom;
+    private final ProfessorTable professorTable;
 
     public SchoolBoard(int towers, Tower towerColor) {
         this.towers = towers;

@@ -26,60 +26,31 @@ public class ProfessorTable {
     }
 
     public boolean isThereProfessor(PawnColor color) {
+        return switch (color){
+            case YELLOW -> yellow;
+            case BLUE -> blue;
+            case GREEN -> green;
+            case RED -> red;
+            case PINK -> pink;
+        };
+    }
+
+    private void changeProfessorStatus(PawnColor color, boolean status){
         switch (color) {
-            case YELLOW:
-                return yellow;
-            case BLUE:
-                return blue;
-            case GREEN:
-                return green;
-            case RED:
-                return red;
-            case PINK:
-                return pink;
+            case YELLOW -> yellow = status;
+            case BLUE -> blue = status;
+            case GREEN -> green = status;
+            case RED -> red = status;
+            case PINK -> pink = status;
         }
-        return false;
-        //TODO gestire il possibile caso di default con un Optional?
     }
 
     public void addProfessor(PawnColor color) {
-        switch (color) {
-            case YELLOW:
-                yellow = true;
-                break;
-            case BLUE:
-                blue = true;
-                break;
-            case GREEN:
-                green = true;
-                break;
-            case RED:
-                red = true;
-                break;
-            case PINK:
-                pink = true;
-                break;
-        }
+        changeProfessorStatus(color, true);
     }
 
     public void removeProfessor(PawnColor color) {
-        switch (color) {
-            case YELLOW:
-                yellow = false;
-                break;
-            case BLUE:
-                blue = false;
-                break;
-            case GREEN:
-                green = false;
-                break;
-            case RED:
-                red = false;
-                break;
-            case PINK:
-                pink = false;
-                break;
-        }
+        changeProfessorStatus(color, false);
         //TODO se provo a rimuovere un professore non presente?
     }
 }

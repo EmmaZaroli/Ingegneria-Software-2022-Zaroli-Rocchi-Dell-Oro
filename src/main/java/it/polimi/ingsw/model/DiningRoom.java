@@ -26,62 +26,27 @@ public class DiningRoom {
     }
 
     public int getStudents(PawnColor color) {
-        switch (color) {
-            case YELLOW:
-                return yellow;
-            case BLUE:
-                return blue;
-            case GREEN:
-                return green;
-            case RED:
-                return red;
-            case PINK:
-                return pink;
-        }
-        return 0;
-        //TODO gestire il caso di default con un Optional?
-    }
-
-    public void addStudent(PawnColor color) {
-        switch (color) {
-            case YELLOW:
-                yellow++;
-                break;
-            case BLUE:
-                blue++;
-                break;
-            case GREEN:
-                green++;
-                break;
-            case RED:
-                red++;
-                break;
-            case PINK:
-                pink++;
-                break;
-        }
-        //TODO gestione nel caso si superi il limite di studenti
-        //TODO riutilizzare il codice di addStudents() ?
+        return switch (color){
+            case YELLOW -> yellow;
+            case BLUE -> blue;
+            case GREEN -> green;
+            case RED -> red;
+            case PINK -> pink;
+        };
     }
 
     public void addStudents(PawnColor color, int n) {
         switch (color) {
-            case YELLOW:
-                yellow += n;
-                break;
-            case BLUE:
-                blue += n;
-                break;
-            case GREEN:
-                green += n;
-                break;
-            case RED:
-                red += n;
-                break;
-            case PINK:
-                pink += n;
-                break;
+            case YELLOW -> yellow += n;
+            case BLUE -> blue += n;
+            case GREEN -> green += n;
+            case RED -> red += n;
+            case PINK -> pink += n;
         }
         //TODO gestione nel caso si superi il limite di studenti
+    }
+
+    public void addStudent(PawnColor color) {
+        addStudents(color, 1);
     }
 }
