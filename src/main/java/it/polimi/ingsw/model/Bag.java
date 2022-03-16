@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Bag {
@@ -35,6 +37,16 @@ public class Bag {
         }
         //Random value, this statement should not be reached
         return PawnColor.RED;
+    }
+
+    protected List<PawnColor> drawStudents(int n) {
+        List<PawnColor> drawnStudents = new LinkedList<>();
+
+        for (int i = 0; i < n; i++) {
+            drawnStudents.add(drawStudent());
+        }
+
+        return drawnStudents;
     }
 
     //Removes a pawn from the bag
