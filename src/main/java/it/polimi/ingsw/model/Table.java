@@ -11,7 +11,7 @@ public class Table {
     private final Bag bag;
     private final List<CloudTile> cloudTiles;
     private int islandWithMotherNature;
-    private int playerNumber;
+    private final int playerNumber;
 
     public Table(PlayerCountIcon playerCountIcon) {
         islandCards = new ArrayList<>(12);
@@ -35,8 +35,8 @@ public class Table {
         }
         this.bag = new Bag();
         cloudTiles = new ArrayList<>();
-        if(playerCountIcon.equals(PlayerCountIcon.THREE)){playerNumber=3;}
-        else{playerNumber=2;}
+        if(playerCountIcon.equals(PlayerCountIcon.THREE)) playerNumber=3;
+        else playerNumber=2;
         this.cloudTiles.add(new CloudTile(playerCountIcon));
         this.cloudTiles.add(new CloudTile(playerCountIcon));
         if(playerCountIcon.equals(PlayerCountIcon.THREE)){
@@ -47,7 +47,7 @@ public class Table {
     }
 
     //method to call the first time to fill the Entrance in SchoolBoard
-    public List<PawnColor> drawStudents(){
+    public List<PawnColor> drawStudents() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
         if(playerNumber == 2){
             studentsDrawn.addAll(bag.drawStudents(7));
@@ -58,7 +58,7 @@ public class Table {
         return studentsDrawn;
     }
 
-    public void fillClouds(){
+    public void fillClouds() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
         for(CloudTile cloud : cloudTiles) {
             if(playerNumber == 2){
@@ -88,7 +88,7 @@ public class Table {
 
     public void moveMotherNature(int move) {
         islandCards.get(islandWithMotherNature).setMotherNatureHere(false);
-        islandWithMotherNature=(islandWithMotherNature+move)%12;
+        islandWithMotherNature=(islandWithMotherNature+move)%islandCards.size();
         islandCards.get(islandWithMotherNature).setMotherNatureHere(true);
     }
     
@@ -97,25 +97,37 @@ public class Table {
        return influence;
    }
 
-   public  boolean canBuildTower(Tower towerColor){
+   public  boolean canBuildTower(Tower towerColor) {
         Tower towerOnIsland = islandCards.get(islandWithMotherNature).getTower();
-        if(towerOnIsland.equals(Tower.NONE)|| !towerOnIsland.equals(towerColor)){
+        if(towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor)){
             return true;
         }
         return false;
-
    }
 
-   public Pair BuildTower(Tower towerColor){
+   public Pair BuildTower(Tower towerColor) {
        Tower towerOnIsland = islandCards.get(islandWithMotherNature).getTower();
        Pair pair = new Pair(towerOnIsland,islandCards.get(islandWithMotherNature).getSize());
        islandCards.get(islandWithMotherNature).setTower(towerColor);
-       tryUnifyIslands();
+       tryUnifyIslands(towerColor);
        return pair;
    }
 
-   private void tryUnifyIslands(){
-
+   private void tryUnifyIslands(Tower towerColor) {
+        //left
+       IslandCard islandLeft = islandCards.get(Math.floorMod(islandWithMotherNature-1,islandCards.size()));
+       if(islandLeft.getTower().equals(towerColor)){
+           islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandLeft.getStudentsFromIsland());
+           islandCards.remove(Math.floorMod(islandWithMotherNature-1,islandCards.size()));
+           islandCards.get(islandWithMotherNature).setSize();
+       }
+       //right
+       IslandCard islandRight = islandCards.get(Math.floorMod(islandWithMotherNature+1,islandCards.size()));
+       if(islandLeft.getTower().equals(towerColor)){
+           islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandRight.getStudentsFromIsland());
+           islandCards.remove(Math.floorMod(islandWithMotherNature+1,islandCards.size()));
+           islandCards.get(islandWithMotherNature).setSize();
+       }
    }
 
     public List<PawnColor> takeStudentsFromCloud(CloudTile cloud) {
