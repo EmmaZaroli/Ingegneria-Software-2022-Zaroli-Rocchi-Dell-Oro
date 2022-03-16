@@ -21,13 +21,15 @@ public class IslandCard {
         hasMotherNature=b;
     }
 
-    public void movePawnOnIsland(PawnColor student){
+    public void movePawnOnIsland(PawnColor student) {
         students.add(student);
     }
-    public void movePawnsOnIsland(List<PawnColor> p){
+    
+    public void movePawnsOnIsland(List<PawnColor> p) {
         students.addAll(p);
     }
-    public List<PawnColor> getStudentsFromIsland(){
+    
+    public List<PawnColor> getStudentsFromIsland() {
         return students;
     }
 
@@ -47,12 +49,15 @@ public class IslandCard {
     public int getSize() {
         return size;
     }
-    public void setSize(){
+    
+    public void setSize() {
         this.size++;
     }
+    
     public Tower getTower() {
         return tower;
     }
+    
     public void setTower(Tower tower) {
         this.tower=tower;
     }
