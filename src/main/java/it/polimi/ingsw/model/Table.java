@@ -27,7 +27,7 @@ public class Table {
         initialized.addAll((Arrays.stream(PawnColor.values()).toList()));
         for(int i=0;i<12; i++)
         {
-            if(i-initialPosition!=6 && initialPosition-i!=6){
+            if(i-initialPosition!=6 && initialPosition-i!=6) {
                 int pawnColor= random.getInt(initialized.size());
                 islandCards.get((i+initialPosition)%12).movePawnOnIsland(initialized.get(pawnColor));
                 initialized.remove(pawnColor);
@@ -39,7 +39,7 @@ public class Table {
         else playerNumber=2;
         this.cloudTiles.add(new CloudTile(playerCountIcon));
         this.cloudTiles.add(new CloudTile(playerCountIcon));
-        if(playerCountIcon.equals(PlayerCountIcon.THREE)){
+        if(playerCountIcon.equals(PlayerCountIcon.THREE)) {
             this.cloudTiles.add(new CloudTile(playerCountIcon));
         }
         professors = new ArrayList<>();
@@ -49,10 +49,10 @@ public class Table {
     //method to call the first time to fill the Entrance in SchoolBoard
     public List<PawnColor> drawStudents() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
-        if(playerNumber == 2){
+        if(playerNumber == 2) {
             studentsDrawn.addAll(bag.drawStudents(7));
         }
-        else{
+        else {
             studentsDrawn.addAll(bag.drawStudents(9));
         }
         return studentsDrawn;
@@ -61,10 +61,10 @@ public class Table {
     public void fillClouds() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
         for(CloudTile cloud : cloudTiles) {
-            if(playerNumber == 2){
+            if(playerNumber == 2) {
                 studentsDrawn = bag.drawStudents(3);
             }
-            else{
+            else {
                 studentsDrawn = bag.drawStudents(4);
             }
             cloud.AddStudents(studentsDrawn);
@@ -78,8 +78,7 @@ public class Table {
 
     //take professor
     public boolean takeProfessor(PawnColor professor) {
-        if(professors.contains(professor))
-        {
+        if(professors.contains(professor)) {
             professors.remove(professor);
             return true;
         }
@@ -99,7 +98,7 @@ public class Table {
 
    public  boolean canBuildTower(Tower towerColor) {
         Tower towerOnIsland = islandCards.get(islandWithMotherNature).getTower();
-        if(towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor)){
+        if(towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor)) {
             return true;
         }
         return false;
@@ -116,14 +115,14 @@ public class Table {
    private void tryUnifyIslands(Tower towerColor) {
         //left
        IslandCard islandLeft = islandCards.get(Math.floorMod(islandWithMotherNature-1,islandCards.size()));
-       if(islandLeft.getTower().equals(towerColor)){
+       if(islandLeft.getTower().equals(towerColor)) {
            islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandLeft.getStudentsFromIsland());
            islandCards.remove(Math.floorMod(islandWithMotherNature-1,islandCards.size()));
            islandCards.get(islandWithMotherNature).setSize();
        }
        //right
        IslandCard islandRight = islandCards.get(Math.floorMod(islandWithMotherNature+1,islandCards.size()));
-       if(islandLeft.getTower().equals(towerColor)){
+       if(islandLeft.getTower().equals(towerColor)) {
            islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandRight.getStudentsFromIsland());
            islandCards.remove(Math.floorMod(islandWithMotherNature+1,islandCards.size()));
            islandCards.get(islandWithMotherNature).setSize();
