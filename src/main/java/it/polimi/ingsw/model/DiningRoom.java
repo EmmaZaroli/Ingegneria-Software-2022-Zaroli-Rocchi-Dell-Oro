@@ -26,7 +26,7 @@ public class DiningRoom {
     }
 
     public int getStudents(PawnColor color) {
-        return switch (color){
+        return switch (color) {
             case YELLOW -> yellow;
             case BLUE -> blue;
             case GREEN -> green;
@@ -35,7 +35,7 @@ public class DiningRoom {
         };
     }
 
-    public void addStudents(PawnColor color, int n) {
+    private void addStudents(PawnColor color, int n) {
         switch (color) {
             case YELLOW -> yellow += n;
             case BLUE -> blue += n;
@@ -46,7 +46,15 @@ public class DiningRoom {
         //TODO gestione nel caso si superi il limite di studenti
     }
 
-    public void addStudent(PawnColor color) {
+    //addStudent return true if the player is supposed to take one coin from the general supply
+    public boolean addStudent(PawnColor color) {
         addStudents(color, 1);
+        return switch (color) {
+            case YELLOW -> (yellow % 3) == 0;
+            case BLUE -> (blue % 3) == 0;
+            case GREEN -> (green % 3) == 0;
+            case RED -> (red % 3) == 0;
+            case PINK -> (pink % 3) == 0;
+        };
     }
 }
