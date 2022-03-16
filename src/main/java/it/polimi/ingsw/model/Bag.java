@@ -52,7 +52,7 @@ public class Bag {
     //Removes a pawn from the bag
     private void removePawn(PawnColor c) {
         Integer pawnColorCount = this.students.get(c);
-        pawnColorCount = pawnColorCount + 1;
+        pawnColorCount = pawnColorCount - 1;
         this.students.replace(c, pawnColorCount);
         this.pawnCount--;
     }
