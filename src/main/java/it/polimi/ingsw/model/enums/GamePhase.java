@@ -1,0 +1,9 @@
+package it.polimi.ingsw.model.enums;
+
+public enum GamePhase {
+    PLANNING_ADD_STUDENTS_TO_CLOUD,
+    PLANNING_PLAY_ASSISTANT,
+    ACTION_MOVE_STUDENTS,
+    ACTION_MOVE_MOTHER_NATURE,
+    ACTION_CHOOSE_CLOUD
+}
