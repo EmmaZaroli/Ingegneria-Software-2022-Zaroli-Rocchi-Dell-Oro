@@ -57,6 +57,10 @@ public class Player {
     }
 
     protected void playAssistant(AssistantCard a) {
+        if (!assistantDeck.contains(a)) {
+            //TODO throw exception
+        }
         this.discardPileHead = a;
+        assistantDeck.remove(a);
     }
 }
