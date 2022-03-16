@@ -57,4 +57,5 @@ public class DiningRoom {
             case PINK -> (pink % 3) == 0;
         };
     }
+    
 }
