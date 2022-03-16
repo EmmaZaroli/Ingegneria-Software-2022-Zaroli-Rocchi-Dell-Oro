@@ -2,6 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Optional;
+
 public class Game {
     private Player[] players;
     private int currentPlayer;
@@ -16,7 +20,23 @@ public class Game {
     }
 
     private int pickNextPlayer() {
-        //TODO
+        switch (gamePhase) {
+            case PLANNING_ADD_STUDENTS_TO_CLOUD:
+            case PLANNING_PLAY_ASSISTANT:
+                return (currentPlayer + 1) % players.length;
+            case ACTION_MOVE_STUDENTS:
+            case ACTION_MOVE_MOTHER_NATURE:
+            case ACTION_CHOOSE_CLOUD:
+                Optional<Player> nextPlayer = Arrays.stream(players).filter((Player p) -> {
+                    return p.getDiscardPileHead().getValue() >= players[currentPlayer].getDiscardPileHead().getValue();
+                }).sorted((p1, p2) -> ((Integer) (p1.getDiscardPileHead().getValue())).compareTo((Integer) (p2.getDiscardPileHead().getValue()))).findFirst();
+                if (!nextPlayer.isPresent())
+                    nextPlayer = Optional.of(players[0]);
+                for (int i = 0; i < players.length; i++) {
+                    if (players[i] == nextPlayer.get())
+                        return i;
+                }
+        }
         return 0;
     }
 }

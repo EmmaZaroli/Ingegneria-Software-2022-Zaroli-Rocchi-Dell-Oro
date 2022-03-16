@@ -21,6 +21,10 @@ public class Player {
         return this.wizzard;
     }
 
+    public AssistantCard getDiscardPileHead() {
+        return discardPileHead;
+    }
+
     protected void playAssistant(AssistantCard a) {
         this.discardPileHead = a;
     }
