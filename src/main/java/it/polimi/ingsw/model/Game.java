@@ -133,23 +133,22 @@ public class Game {
     }
 
     private boolean canPlayAssistant(AssistantCard assistant) {
-        //considero assisant il numero dell'assistente da giocare
-        //suppongo che il giocatore abbia effettivamente tale assistente nel deck
-        //suppongo che il giocatore per cui si sta controllando sia quello corrente
+        //assume the player has assistant in its deck
+        //assume the player for witch the check is made, is currentplayerte
 
-        //se assistant è diverso da tutte le altre carte giocate, lo posso giocare
+        //if assistant is different from every other player assistantcard, i can play it
         if(isAssistantDifferentFromOthers(assistant))
             return true;
 
-        //se assistant è uguale ad un'altra carta giocata, controllo che nel mazzo del giocatore non esista almeno una carta diversa da tutte le altre giocate
+        //if assistant is equals to another played assistantcard, check if in player deck exist at least one cart different from every other one
         for(AssistantCard ac : players[currentPlayer].getAssistantDeck()){
             if(!isAssistantDifferentFromOthers(ac))
                 return false;
         }
         return true;
     }
-    
-    //ritorna true se l'assistente è diverso da tutti quelli giocati dagli altri giocatori
+
+    //return true if assistant is different from every other one already played
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant){
         for(int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length){
             //TODO change == with equals()
