@@ -62,12 +62,24 @@ public class Player {
         return assistantDeck;
     }
 
+    public AssistantCard getAssistant(int assistantIndex){
+        return assistantDeck.get(assistantIndex);
+    }
+
     protected void playAssistant(AssistantCard a) {
         if (!assistantDeck.contains(a)) {
             //TODO throw exception
         }
         this.discardPileHead = a;
         assistantDeck.remove(a);
+    }
+
+    protected void playAssistant(int assistantIndex) {
+        if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
+            //TODO throw exception
+        }
+        this.discardPileHead = assistantDeck.get(assistantIndex);
+        assistantDeck.remove(assistantIndex);
     }
 
     protected AssistantCard getDiscardPileHead() {

@@ -49,15 +49,15 @@ public class Game {
         this.playedCount = 0;
     }
 
-    //TODO how to check this method is called exclusively by the currentPlayer?
-    public void playAssistant(int assistant) throws IllegalActionException, IllegalAssistantException {
+    //TODO how to check this method is called exclusively by the currentPlayer? idk
+    public void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
         if (this.gamePhase != GamePhase.PLANNING) {
             throw new IllegalActionException();
         }
-        if (!this.canPlayAssistant(assistant)) {
+        if (!this.canPlayAssistant(players[currentPlayer].getAssistant(assistantIndex))) {
             throw new IllegalAssistantException();
         }
-        //TODO this.players[this.currentPlayer].playAssistant(assistant);
+        players[currentPlayer].playAssistant(assistantIndex);
 
         this.playerHasEnded();
     }
@@ -126,7 +126,7 @@ public class Game {
         currentPlayerBoard.addStudentToEntrance(studentsFromCloud);
     }
 
-    private boolean canPlayAssistant(int assistant) {
+    private boolean canPlayAssistant(AssistantCard assistant) {
         //considero assisant il numero dell'assistente da giocare
         //suppongo che il giocatore abbia effettivamente tale assistente nel deck
         //suppongo che il giocatore per cui si sta controllando sia quello corrente
@@ -137,16 +137,17 @@ public class Game {
 
         //se assistant è uguale ad un'altra carta giocata, controllo che nel mazzo del giocatore non esista almeno una carta diversa da tutte le altre giocate
         for(AssistantCard ac : players[currentPlayer].getAssistantDeck()){
-            if(!isAssistantDifferentFromOthers(ac.getValue()))
+            if(!isAssistantDifferentFromOthers(ac))
                 return false;
         }
         return true;
     }
 
     //ritorna true se l'assistente è diverso da tutti quelli giocati dagli altri giocatori
-    private boolean isAssistantDifferentFromOthers(int assistant){
+    private boolean isAssistantDifferentFromOthers(AssistantCard assistant){
         for(int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length){
-            if(players[i].getDiscardPileHead().getValue() == assistant)
+            //TODO change == with equals()
+            if(players[i].getDiscardPileHead().getValue() == assistant.getValue())
                 return false;
         }
         return true;
