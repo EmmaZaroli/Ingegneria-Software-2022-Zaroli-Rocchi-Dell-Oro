@@ -20,6 +20,7 @@ public class Game {
     private int playedCount;
 
     private int currentPlayer;
+    private int firstPlayerInRound;
     private SchoolBoard currentPlayerBoard;
     private boolean isFirstRound;
 
@@ -126,7 +127,28 @@ public class Game {
     }
 
     private boolean canPlayAssistant(int assistant) {
-        //TODO
+        //considero assisant il numero dell'assistente da giocare
+        //suppongo che il giocatore abbia effettivamente tale assistente nel deck
+        //suppongo che il giocatore per cui si sta controllando sia quello corrente
+
+        //se assistant è diverso da tutte le altre carte giocate, lo posso giocare
+        if(isAssistantDifferentFromOthers(assistant))
+            return true;
+
+        //se assistant è uguale ad un'altra carta giocata, controllo che nel mazzo del giocatore non esista almeno una carta diversa da tutte le altre giocate
+        for(AssistantCard ac : players[currentPlayer].getAssistantDeck()){
+            if(!isAssistantDifferentFromOthers(ac.getValue()))
+                return false;
+        }
+        return true;
+    }
+
+    //ritorna true se l'assistente è diverso da tutti quelli giocati dagli altri giocatori
+    private boolean isAssistantDifferentFromOthers(int assistant){
+        for(int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length){
+            if(players[i].getDiscardPileHead().getValue() == assistant)
+                return false;
+        }
         return true;
     }
 

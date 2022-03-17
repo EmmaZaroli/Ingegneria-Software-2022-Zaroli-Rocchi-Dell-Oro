@@ -57,6 +57,11 @@ public class Player {
         return schoolBoard;
     }
 
+    //TODO sicuramente da sistemare, espone il rep
+    public List<AssistantCard> getAssistantDeck() {
+        return assistantDeck;
+    }
+
     protected void playAssistant(AssistantCard a) {
         if (!assistantDeck.contains(a)) {
             //TODO throw exception
