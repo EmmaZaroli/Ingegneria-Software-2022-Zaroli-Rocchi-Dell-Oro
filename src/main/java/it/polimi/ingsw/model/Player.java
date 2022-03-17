@@ -64,4 +64,12 @@ public class Player {
         this.discardPileHead = a;
         assistantDeck.remove(a);
     }
+
+    protected AssistantCard getDiscardPileHead() {
+        return this.discardPileHead;
+    }
+
+    protected SchoolBoard getBoard() {
+        return this.schoolBoard;
+    }
 }

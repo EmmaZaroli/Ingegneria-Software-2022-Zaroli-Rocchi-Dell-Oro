@@ -56,7 +56,7 @@ public class Game {
         if (!this.canPlayAssistant(assistant)) {
             throw new IllegalAssistantException();
         }
-        this.players[this.currentPlayer].playAssistant(assistant);
+        //TODO this.players[this.currentPlayer].playAssistant(assistant);
 
         this.playerHasEnded();
     }
