@@ -72,8 +72,8 @@ public class SchoolBoard {
         professorTable.removeProfessor(color);
     }
 
-    public void moveStudentFromEntranceToDiningRoom(List<PawnColor> color) {
-        //TODO a list as parameter is better
+    public void moveStudentFromEntranceToDiningRoom(PawnColor student) {
+        //TODO implement
         //removeStudentFromEntrance(color);
         //TODO gestire caso in cui il colore non è presente in entrance
         //addStudentToDiningRoom(color);
