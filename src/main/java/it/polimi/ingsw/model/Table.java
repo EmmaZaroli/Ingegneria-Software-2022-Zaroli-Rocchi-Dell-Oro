@@ -132,6 +132,11 @@ public class Table {
         return students;
     }
 
+    public List<PawnColor> takeStudentsFromCloud(int cloudIndex) {
+        List<PawnColor> students = cloudTiles.get(cloudIndex).takeStudentsFromCloud();
+        return students;
+    }
+
     protected Bag getBag() {
         return this.bag;
     }

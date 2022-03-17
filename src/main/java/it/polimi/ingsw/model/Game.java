@@ -122,13 +122,12 @@ public class Game {
         //TODO add logic to return towers to schoolBoard
     }
 
-    public void pickStudentsFromCloud(int cloudNumber) throws IllegalActionException {
+    public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
         if (this.gamePhase != GamePhase.ACTION_CHOOSE_CLOUD) {
             throw new IllegalActionException();
         }
-        //TODO int better than reference: already written some methods ago...
         //TODO check params validity
-        List<PawnColor> studentsFromCloud = this.table.takeStudentsFromCloud(null);
+        List<PawnColor> studentsFromCloud = this.table.takeStudentsFromCloud(cloudIndex);
         currentPlayerBoard.addStudentToEntrance(studentsFromCloud);
     }
 
