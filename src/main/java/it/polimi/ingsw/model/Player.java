@@ -22,6 +22,7 @@ public class Player {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.discardPileHead = null;
+
         this.isPlayerTurn = isPlayerTurn;
         this.schoolBoard = new SchoolBoard(8, tower);
         //TODO parametrizzare numero di torri

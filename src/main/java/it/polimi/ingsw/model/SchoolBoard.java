@@ -51,8 +51,9 @@ public class SchoolBoard {
         //TODO controllo che non scenda sotto zero
     }
 
-    public void addStudentToEntrance(PawnColor color) {
-        entrance.addStudent(color);
+    public void addStudentToEntrance(List<PawnColor> color) {
+        //TODO
+        //entrance.addStudent(color);
     }
 
     public void removeStudentFromEntrance(PawnColor color) {
@@ -71,9 +72,10 @@ public class SchoolBoard {
         professorTable.removeProfessor(color);
     }
 
-    public void moveStudentFromEntranceToDiningRoom(PawnColor color) {
-        removeStudentFromEntrance(color);
+    public void moveStudentFromEntranceToDiningRoom(PawnColor student) {
+        //TODO implement
+        //removeStudentFromEntrance(color);
         //TODO gestire caso in cui il colore non è presente in entrance
-        addStudentToDiningRoom(color);
+        //addStudentToDiningRoom(color);
     }
 }

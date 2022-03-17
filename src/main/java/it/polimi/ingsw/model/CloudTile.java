@@ -12,19 +12,19 @@ public class CloudTile {
     }
 
     //method to add students (draft)
-    public void AddStudents(List<PawnColor> students){
-        for(PawnColor c : students){
-            this.students.add(c);
-        }
+    public void AddStudents(List<PawnColor> student) {
+        students.addAll(student);
     }
 
     //method to return the students in a cloud
-    public List<PawnColor> takeStudentsFromCloud(){
-        return students;
+    public List<PawnColor> takeStudentsFromCloud() {
+        List<PawnColor> copy = new ArrayList<>(students);
+        this.clearCloud();
+        return copy;
     }
 
     //method to remove students (draft)
-    public void clearCloud(){
+    private void clearCloud(){
         students.clear();
     }
 
