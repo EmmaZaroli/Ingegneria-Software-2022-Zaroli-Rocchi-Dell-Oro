@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 
@@ -88,5 +89,14 @@ public class Player {
 
     protected SchoolBoard getBoard() {
         return this.schoolBoard;
+    }
+
+    public void tryStealProfessor(PawnColor color, Player player){
+        if(!getBoard().isThereProfessor(color) &&
+                player.getBoard().isThereProfessor(color) &&
+                getBoard().getStudentsInDinigRoom(color) > player.getBoard().getStudentsInDinigRoom(color)){
+            player.getBoard().removeProfessor(color);
+            getBoard().addProfessor(color);
+        }
     }
 }

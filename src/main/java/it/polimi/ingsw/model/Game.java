@@ -92,11 +92,17 @@ public class Game {
             throw new IllegalActionException();
         }
         this.currentPlayerBoard.moveStudentFromEntranceToDiningRoom(pawn);
-        this.checkProfessorsStatus();
+        this.checkProfessorsStatus(pawn);
     }
 
-    private void checkProfessorsStatus() {
-        //TODO
+    private void checkProfessorsStatus(PawnColor color) {
+        //check if currentplayer has, for the specified color, the max number of students in diningroom
+        //if so, proceeds to move the professor
+
+        //the forloop will check also currentplayer with itself, but this should not cause problems
+        for(Player p : players){
+            players[currentPlayer].tryStealProfessor(color, p);
+        }
     }
 
     public void moveStudentToIsle(PawnColor pawn, int isle) {
@@ -142,7 +148,7 @@ public class Game {
         }
         return true;
     }
-
+    
     //ritorna true se l'assistente è diverso da tutti quelli giocati dagli altri giocatori
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant){
         for(int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length){
