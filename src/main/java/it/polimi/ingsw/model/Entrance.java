@@ -26,7 +26,7 @@ public class Entrance {
     }
 
     public int getStudents(PawnColor color) {
-        return switch (color){
+        return switch (color) {
             case YELLOW -> yellow;
             case BLUE -> blue;
             case GREEN -> green;
@@ -34,7 +34,7 @@ public class Entrance {
             case PINK -> pink;
         };
     }
-
+    
     public void addStudents(PawnColor color, int n) {
         switch (color) {
             case YELLOW -> yellow += n;

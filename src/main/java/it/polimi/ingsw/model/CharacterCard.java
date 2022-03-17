@@ -4,30 +4,30 @@ import it.polimi.ingsw.model.enums.Character;
 
 public class CharacterCard {
     private final int initialPrice;
-    private int coins;
+    private boolean hasCoin;
     private final Character character;
     private final Effect effect;
 
     public CharacterCard(int initialPrice, Character character, Effect effect) {
         this.initialPrice = initialPrice;
-        this.coins = 0;
+        this.hasCoin = false;
         this.character = character;
         this.effect = effect;
     }
 
-    public int getCoins() {
-        return this.coins;
+    public boolean hasCoins() {
+        return this.hasCoin;
     }
 
     public int getCurrentPrice() {
-        return this.initialPrice + this.coins;
+        return this.hasCoin ? this.initialPrice + 1 : this.initialPrice;
     }
 
     public Character getCharacter() {
         return this.character;
     }
 
-    public Effect getEffect() {
-        return this.effect;
+    public void activateEffect(Game game) {
+        this.effect.activateEffect(game);
     }
 }

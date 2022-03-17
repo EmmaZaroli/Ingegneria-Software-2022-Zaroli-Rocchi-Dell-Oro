@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model;
+
 import java.util.*;
+
 import it.polimi.ingsw.model.enums.*;
 
 public class CloudTile {
+    //TODO probably it is better to place this info somewhere else
     private PlayerCountIcon playerCountIcon;
     private final List<PawnColor> students;
 
@@ -24,7 +27,7 @@ public class CloudTile {
     }
 
     //method to remove students (draft)
-    private void clearCloud(){
+    private void clearCloud() {
         students.clear();
     }
 

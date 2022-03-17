@@ -70,8 +70,8 @@ public class Table {
         }
     }
 
-    public void movePawnOnIsland(PawnColor student, IslandCard Island) {
-        Island.movePawnOnIsland(student);
+    public void movePawnOnIsland(PawnColor student, int islandIndex) {
+        islandCards.get(islandIndex).movePawnOnIsland(student);
     }
 
     //take professor
@@ -102,7 +102,7 @@ public class Table {
         return false;
     }
 
-    public Pair BuildTower(Tower towerColor) {
+    public Pair buildTower(Tower towerColor) {
         Tower towerOnIsland = islandCards.get(islandWithMotherNature).getTower();
         Pair pair = new Pair(towerOnIsland, islandCards.get(islandWithMotherNature).getSize());
         islandCards.get(islandWithMotherNature).setTower(towerColor);

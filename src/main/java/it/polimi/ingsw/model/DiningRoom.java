@@ -8,7 +8,7 @@ public class DiningRoom {
     private int green;
     private int red;
     private int pink;
-
+    
     public DiningRoom() {
         this.yellow = 0;
         this.blue = 0;
@@ -57,5 +57,5 @@ public class DiningRoom {
             case PINK -> (pink % 3) == 0;
         };
     }
-    
+
 }

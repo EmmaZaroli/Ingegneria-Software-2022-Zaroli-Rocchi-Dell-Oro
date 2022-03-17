@@ -38,7 +38,7 @@ public class Bag {
         //Random value, this statement should not be reached
         return PawnColor.RED;
     }
-
+    
     protected List<PawnColor> drawStudents(int n) {
         List<PawnColor> drawnStudents = new LinkedList<>();
 

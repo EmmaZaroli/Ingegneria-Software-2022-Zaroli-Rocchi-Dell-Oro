@@ -8,7 +8,7 @@ public class ProfessorTable {
     private boolean green;
     private boolean red;
     private boolean pink;
-
+    
     public ProfessorTable() {
         this.yellow = false;
         this.blue = false;
@@ -26,7 +26,7 @@ public class ProfessorTable {
     }
 
     public boolean isThereProfessor(PawnColor color) {
-        return switch (color){
+        return switch (color) {
             case YELLOW -> yellow;
             case BLUE -> blue;
             case GREEN -> green;
@@ -35,7 +35,7 @@ public class ProfessorTable {
         };
     }
 
-    private void changeProfessorStatus(PawnColor color, boolean status){
+    private void changeProfessorStatus(PawnColor color, boolean status) {
         switch (color) {
             case YELLOW -> yellow = status;
             case BLUE -> blue = status;

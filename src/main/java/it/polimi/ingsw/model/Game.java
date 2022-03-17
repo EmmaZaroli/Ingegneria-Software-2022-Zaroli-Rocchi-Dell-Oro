@@ -1,17 +1,17 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.model.enums.PlayerCountIcon;
-import it.polimi.ingsw.model.exceptions.IllegalActionException;
-import it.polimi.ingsw.model.exceptions.IllegalAssistantException;
-import it.polimi.ingsw.model.exceptions.NotAllowedMotherNatureMovementException;
+import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.utils.Pair;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+//TODO check access modifiers
 //TODO order methods by access modifier: public, protected, private
+//TODO sooner or later we will have to remove unused methods
 public class Game {
     private final Player[] players;
     private final Table table;
@@ -20,9 +20,11 @@ public class Game {
     private int playedCount;
 
     private int currentPlayer;
+    //TODO this value is used but never initialized
     private int firstPlayerInRound;
     private SchoolBoard currentPlayerBoard;
-    private boolean isFirstRound;
+
+    private int movedPawns;
 
     //TODO manage game over logics
     public Game(Player[] players) {
@@ -35,7 +37,6 @@ public class Game {
         }
 
         this.currentPlayer = 0;
-        this.isFirstRound = true;
         this.gamePhase = GamePhase.PLANNING;
     }
 
@@ -43,13 +44,14 @@ public class Game {
         return this.playedCount == this.players.length;
     }
 
+    //TODO someone should call this method
     private void planning() {
         this.table.fillClouds();
 
         this.playedCount = 0;
     }
 
-    //TODO how to check this method is called exclusively by the currentPlayer? idk
+    //TODO how to check this method is called exclusively by the currentPlayer? (Same for following methods)
     public void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
         if (this.gamePhase != GamePhase.PLANNING) {
             throw new IllegalActionException();
@@ -59,20 +61,32 @@ public class Game {
         }
         players[currentPlayer].playAssistant(assistantIndex);
 
-        this.playerHasEnded();
+        this.playerHasEndedPlanning();
     }
 
-    //TODO this doesn't work
-    private void playerHasEnded() {
+    private void playerHasEndedPlanning() {
         this.playedCount++;
 
         if (!this.isTurnComplete()) {
             this.currentPlayer = pickNextPlayer();
             this.currentPlayerBoard = players[this.currentPlayer].getBoard();
         } else {
-            this.gamePhase = this.pickNextPhase();
-            if (this.gamePhase == GamePhase.PLANNING) {
-                this.planning();
+            this.playedCount = 0;
+            this.gamePhase = pickNextPhase();
+        }
+    }
+
+    private void playerHasEndedAction() {
+        this.gamePhase = this.pickNextPhase();
+        if (this.gamePhase == GamePhase.ACTION_END) {
+            this.playedCount++;
+
+            if (!this.isTurnComplete()) {
+                //TODO I'm repeating this snippet too many times, move into pickNextPlayer?
+                this.currentPlayer = pickNextPlayer();
+                this.currentPlayerBoard = players[this.currentPlayer].getBoard();
+            } else {
+                this.gamePhase = GamePhase.PLANNING;
             }
         }
     }
@@ -82,44 +96,63 @@ public class Game {
             case PLANNING -> GamePhase.ACTION_MOVE_STUDENTS;
             case ACTION_MOVE_STUDENTS -> GamePhase.ACTION_MOVE_MOTHER_NATURE;
             case ACTION_MOVE_MOTHER_NATURE -> GamePhase.ACTION_CHOOSE_CLOUD;
-            case ACTION_CHOOSE_CLOUD -> this.isTurnComplete() ? GamePhase.PLANNING : GamePhase.ACTION_MOVE_STUDENTS;
+            case ACTION_CHOOSE_CLOUD, ACTION_END -> GamePhase.ACTION_END;
         };
     }
 
-    //TODO check if total moved pawns == allowed pawns
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
         if (this.gamePhase != GamePhase.ACTION_MOVE_STUDENTS) {
             throw new IllegalActionException();
         }
         this.currentPlayerBoard.moveStudentFromEntranceToDiningRoom(pawn);
         this.checkProfessorsStatus(pawn);
-    }
-
-    private void checkProfessorsStatus(PawnColor color) {
-        //check if currentplayer has, for the specified color, the max number of students in diningroom
-        //if so, proceeds to move the professor
-
-        //the forloop will check also currentplayer with itself, but this should not cause problems
-        for(Player p : players){
-            players[currentPlayer].tryStealProfessor(color, p);
-        }
+        this.movedPawn();
     }
 
     public void moveStudentToIsle(PawnColor pawn, int isle) {
-        //TODO table receives an int instead of an Isle
-        //this.table.movePawnOnIsland(pawn, isle);
+        this.table.movePawnOnIsland(pawn, isle);
+        this.movedPawn();
+    }
+
+    private void movedPawn() {
+        this.movedPawns++;
+        //TODO
+        /* if (this.movedPawns == params) {
+            this.movedPawns = 0;
+            this.playerHasEndedAction();
+        } */
+    }
+
+    //Checks if the current player has the highest number of students of the given color in his dining room
+    //If so, proceeds to move the professor to the player's professor table
+    private void checkProfessorsStatus(PawnColor color) {
+        //It will also check the current player with itself, but this should not cause problems
+        for (Player p : players) {
+            players[currentPlayer].tryStealProfessor(color, p);
+        }
     }
 
     public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
         if (this.gamePhase != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.players[currentPlayer].getDiscardPileHead().getMotherNatureMovement()) {
+        if (steps < 1 || steps > this.players[currentPlayer].getDiscardPileHead().motherNatureMovement()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.table.moveMotherNature(steps);
-        //TODO add logic to build towers
-        //TODO add logic to return towers to schoolBoard
+
+        this.buildTowers();
+
+        this.playerHasEndedAction();
+    }
+
+    private void buildTowers() {
+        if (this.table.canBuildTower(currentPlayerBoard.getTowerColor())) {
+            Pair result = this.table.buildTower(currentPlayerBoard.getTowerColor());
+            Arrays.stream(this.players)
+                    .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
+                    .forEach(x -> x.getSchoolBoard().addTowers(result.size()));
+        }
     }
 
     public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
@@ -129,30 +162,26 @@ public class Game {
         //TODO check params validity
         List<PawnColor> studentsFromCloud = this.table.takeStudentsFromCloud(cloudIndex);
         currentPlayerBoard.addStudentToEntrance(studentsFromCloud);
+
+        this.playerHasEndedAction();
     }
 
     private boolean canPlayAssistant(AssistantCard assistant) {
-        //assume the player has assistant in its deck
-        //assume the player for witch the check is made, is currentplayerte
+        //If assistant is different from every other played assistantCard
+        if (isAssistantDifferentFromOthers(assistant)) return true;
 
-        //if assistant is different from every other player assistantcard, i can play it
-        if(isAssistantDifferentFromOthers(assistant))
-            return true;
-
-        //if assistant is equals to another played assistantcard, check if in player deck exist at least one cart different from every other one
-        for(AssistantCard ac : players[currentPlayer].getAssistantDeck()){
-            if(!isAssistantDifferentFromOthers(ac))
-                return false;
+        //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
+        // different from every other one
+        for (AssistantCard ac : players[currentPlayer].getAssistantDeck()) {
+            if (!isAssistantDifferentFromOthers(ac)) return false;
         }
         return true;
     }
 
-    //return true if assistant is different from every other one already played
-    private boolean isAssistantDifferentFromOthers(AssistantCard assistant){
-        for(int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length){
-            //TODO change == with equals()
-            if(players[i].getDiscardPileHead().getValue() == assistant.getValue())
-                return false;
+    //Returns true if assistant is different from every other assistants already played in this turn
+    private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
+        for (int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length) {
+            if (players[i].getDiscardPileHead().equals(assistant)) return false;
         }
         return true;
     }
@@ -165,12 +194,16 @@ public class Game {
             case ACTION_MOVE_STUDENTS:
             case ACTION_MOVE_MOTHER_NATURE:
             case ACTION_CHOOSE_CLOUD:
-                Optional<Player> nextPlayer = Arrays.stream(players).filter((Player p) -> {
-                    return p.getDiscardPileHead().getValue() >= players[currentPlayer].getDiscardPileHead().getValue();
-                }).sorted((p1, p2) -> ((Integer) (p1.getDiscardPileHead().getValue())).compareTo((Integer) (p2.getDiscardPileHead().getValue()))).findFirst();
-                if (!nextPlayer.isPresent())
-                    nextPlayer = Optional.of(players[0]);
+                Optional<Player> nextPlayer = Arrays.stream(players)
+                        .filter((Player p) ->
+                                p.getDiscardPileHead().value() >= players[currentPlayer].getDiscardPileHead().value())
+                        .sorted(Comparator.comparing(p -> ((p.getDiscardPileHead().value()))))
+                        .findFirst();
+
+                if (nextPlayer.isEmpty()) nextPlayer = Optional.of(players[0]);
+                
                 for (int i = 0; i < players.length; i++) {
+                    //TODO are we sure == is ok?
                     if (players[i] == nextPlayer.get())
                         return i;
                 }

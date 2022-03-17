@@ -23,7 +23,7 @@ public class Player {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.discardPileHead = null;
-
+        
         this.isPlayerTurn = isPlayerTurn;
         this.schoolBoard = new SchoolBoard(8, tower);
         //TODO parametrizzare numero di torri
@@ -63,7 +63,7 @@ public class Player {
         return assistantDeck;
     }
 
-    public AssistantCard getAssistant(int assistantIndex){
+    public AssistantCard getAssistant(int assistantIndex) {
         return assistantDeck.get(assistantIndex);
     }
 
@@ -91,10 +91,10 @@ public class Player {
         return this.schoolBoard;
     }
 
-    public void tryStealProfessor(PawnColor color, Player player){
-        if(!getBoard().isThereProfessor(color) &&
+    public void tryStealProfessor(PawnColor color, Player player) {
+        if (!getBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
-                getBoard().getStudentsInDinigRoom(color) > player.getBoard().getStudentsInDinigRoom(color)){
+                getBoard().getStudentsInDinigRoom(color) > player.getBoard().getStudentsInDinigRoom(color)) {
             player.getBoard().removeProfessor(color);
             getBoard().addProfessor(color);
         }

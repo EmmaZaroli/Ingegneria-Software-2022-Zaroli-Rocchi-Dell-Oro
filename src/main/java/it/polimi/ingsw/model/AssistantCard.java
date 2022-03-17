@@ -1,19 +1,12 @@
 package it.polimi.ingsw.model;
 
-public class AssistantCard {
-    private int value;
-    private int motherNatureMovement;
+//TODO Can we avoid to instantiate the same card multiple times?
+public record AssistantCard(int value, int motherNatureMovement) {
 
-    public AssistantCard(int value, int motherNatureMovement) {
-        this.value = value;
-        this.motherNatureMovement = motherNatureMovement;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public int getMotherNatureMovement() {
-        return motherNatureMovement;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AssistantCard that = (AssistantCard) o;
+        return value == that.value && motherNatureMovement == that.motherNatureMovement;
     }
 }

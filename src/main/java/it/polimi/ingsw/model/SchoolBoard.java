@@ -41,8 +41,8 @@ public class SchoolBoard {
         return professorTable.isThereProfessor(color);
     }
 
-    public void addTower() {
-        towers++;
+    public void addTowers(int n) {
+        towers += n;
         //TODO controllo che non superi il limite
     }
 

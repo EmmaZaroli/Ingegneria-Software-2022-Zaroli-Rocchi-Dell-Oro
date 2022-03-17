@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import java.util.*;
+
 import it.polimi.ingsw.model.enums.*;
 
 
@@ -9,26 +10,26 @@ public class IslandCard {
     private final List<PawnColor> students;
     private Tower tower;
     private int size;
-
+    
     public IslandCard() {
         this.students = new ArrayList<>();
         tower = Tower.NONE;
-        size=1;
-        hasMotherNature=false;
+        size = 1;
+        hasMotherNature = false;
     }
 
     public void setMotherNatureHere(boolean b) {
-        hasMotherNature=b;
+        hasMotherNature = b;
     }
 
     public void movePawnOnIsland(PawnColor student) {
         students.add(student);
     }
-    
+
     public void movePawnsOnIsland(List<PawnColor> p) {
         students.addAll(p);
     }
-    
+
     public List<PawnColor> getStudentsFromIsland() {
         return students;
     }
@@ -41,7 +42,7 @@ public class IslandCard {
             }
         }
         if (towerColor.equals(tower)) {
-            influence+=size;
+            influence += size;
         }
         return influence;
     }
@@ -49,16 +50,16 @@ public class IslandCard {
     public int getSize() {
         return size;
     }
-    
+
     public void setSize() {
         this.size++;
     }
-    
+
     public Tower getTower() {
         return tower;
     }
-    
+
     public void setTower(Tower tower) {
-        this.tower=tower;
+        this.tower = tower;
     }
 }
