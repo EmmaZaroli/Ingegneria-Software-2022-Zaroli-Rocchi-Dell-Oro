@@ -78,4 +78,8 @@ public class SchoolBoard {
         //TODO gestire caso in cui il colore non è presente in entrance
         //addStudentToDiningRoom(color);
     }
+
+    public List<PawnColor> getProfessors(){
+        return professorTable.getProfessors();
+    }
 }

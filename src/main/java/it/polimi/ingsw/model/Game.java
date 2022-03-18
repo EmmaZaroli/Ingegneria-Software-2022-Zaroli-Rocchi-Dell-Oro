@@ -33,7 +33,7 @@ public class Game {
 
         Bag bag = this.table.getBag();
         for (Player c : this.players) {
-            c.getBoard().addStudentToEntrance(bag.drawStudents(7));   //TODO gameParams
+            c.getBoard().addStudentToEntrance(table.drawStudents());
         }
 
         this.currentPlayer = 0;
@@ -47,7 +47,6 @@ public class Game {
     //TODO someone should call this method
     private void planning() {
         this.table.fillClouds();
-
         this.playedCount = 0;
     }
 
@@ -126,9 +125,15 @@ public class Game {
     //Checks if the current player has the highest number of students of the given color in his dining room
     //If so, proceeds to move the professor to the player's professor table
     private void checkProfessorsStatus(PawnColor color) {
-        //It will also check the current player with itself, but this should not cause problems
-        for (Player p : players) {
-            players[currentPlayer].tryStealProfessor(color, p);
+        //first try to check if it's still available on the table, if so it's useless to do the second check
+        if(this.table.takeProfessor(color)) {
+            players[currentPlayer].getBoard().addProfessor(color);
+        }
+        else {
+            //It will also check the current player with itself, but this should not cause problems
+            for (Player p : players) {
+                players[currentPlayer].tryStealProfessor(color, p);
+            }
         }
     }
 
@@ -141,14 +146,34 @@ public class Game {
         }
         this.table.moveMotherNature(steps);
 
-        this.buildTowers();
+        this.checkInfluence();
 
         this.playerHasEndedAction();
     }
 
-    private void buildTowers() {
-        if (this.table.canBuildTower(currentPlayerBoard.getTowerColor())) {
-            Pair result = this.table.buildTower(currentPlayerBoard.getTowerColor());
+    private void checkInfluence() {
+        int max_influence = 0;
+        int current_influence = 0;
+        Player max_influence_player = players[currentPlayer]; //default condition, it shouldn't matter
+
+        for(Player p : players) {
+            if(p.getBoard().getProfessors() != null) {
+                current_influence = table.countInfluenceOnIsland(p.getBoard().getProfessors(), p.getBoard().getTowerColor());
+            }
+            if(current_influence > max_influence) {
+                max_influence_player = p;
+            }
+        }
+
+        //if the max_influence is 0, none of the player has a professor
+        if(max_influence!=0) this.buildTowers(max_influence_player);
+    }
+
+
+    // i have to build the tower of the player with max influence
+    private void buildTowers(Player player) {
+        if (this.table.canBuildTower(player.getBoard().getTowerColor())) {
+            Pair result = this.table.buildTower(player.getBoard().getTowerColor());
             Arrays.stream(this.players)
                     .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
                     .forEach(x -> x.getSchoolBoard().addTowers(result.size()));
