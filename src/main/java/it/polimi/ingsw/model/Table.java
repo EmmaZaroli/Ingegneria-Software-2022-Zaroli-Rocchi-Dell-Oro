@@ -70,6 +70,7 @@ public class Table {
         }
     }
 
+    //TODO check if islandIndex exists
     public void movePawnOnIsland(PawnColor student, int islandIndex) {
         islandCards.get(islandIndex).movePawnOnIsland(student);
     }
@@ -132,6 +133,7 @@ public class Table {
         return students;
     }
 
+    //TODO check if cloudIndex exists
     public List<PawnColor> takeStudentsFromCloud(int cloudIndex) {
         List<PawnColor> students = cloudTiles.get(cloudIndex).takeStudentsFromCloud();
         return students;

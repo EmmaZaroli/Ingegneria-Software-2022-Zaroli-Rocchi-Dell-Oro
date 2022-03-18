@@ -18,6 +18,7 @@ public class IslandCard {
         hasMotherNature = false;
     }
 
+    //TODO if b=true check that no one else is true?
     public void setMotherNatureHere(boolean b) {
         hasMotherNature = b;
     }

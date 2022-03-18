@@ -26,7 +26,7 @@ public class Game {
 
     private int movedPawns;
 
-
+    //TODO manage game over logics
     public Game(Player[] players) {
         this.players = players;
         this.table = players.length == 3 ? new Table(PlayerCountIcon.THREE) : new Table(PlayerCountIcon.TWO_FOUR);

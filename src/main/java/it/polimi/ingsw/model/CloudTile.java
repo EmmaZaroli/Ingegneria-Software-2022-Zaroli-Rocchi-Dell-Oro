@@ -14,7 +14,7 @@ public class CloudTile {
         students = new ArrayList<>();
     }
 
-    //method to add students (draft)
+    //method to add students
     public void AddStudents(List<PawnColor> student) {
         students.addAll(student);
     }
@@ -26,7 +26,7 @@ public class CloudTile {
         return copy;
     }
 
-    //method to remove students (draft)
+    //method to remove students
     private void clearCloud() {
         students.clear();
     }
