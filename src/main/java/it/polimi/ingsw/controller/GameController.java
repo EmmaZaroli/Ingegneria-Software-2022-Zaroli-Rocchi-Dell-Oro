@@ -103,7 +103,7 @@ public class GameController {
         };
     }
 
-    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
+    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException, ImpossibleActionException {
         if (this.gamePhase != GamePhase.ACTION_MOVE_STUDENTS) {
             throw new IllegalActionException();
         }
@@ -181,7 +181,7 @@ public class GameController {
                     .forEach(x -> {
                         try {
                             x.getSchoolBoard().addTowers(result.size());
-                        } catch (IllegalActionException e) {
+                        } catch (ImpossibleActionException e) {
                             e.printStackTrace();
                         }
                     });

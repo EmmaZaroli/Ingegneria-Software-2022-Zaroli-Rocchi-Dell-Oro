@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.ImpossibleActionException;
 
 
 import java.util.*;
@@ -47,28 +48,28 @@ public class SchoolBoard {
         return professorTable.contains(color);
     }
 
-    public void addTowers(int n) throws IllegalActionException {
+    public void addTowers(int n) throws ImpossibleActionException {
         towers += n;
         if (towers > 8)
-            throw new IllegalActionException();
+            throw new ImpossibleActionException();
         //TODO parametrizzare numero massimo di torri
     }
 
-    public void removeTower() throws IllegalActionException {
+    public void removeTower() throws ImpossibleActionException {
         towers--;
         if(towers < 0)
-            throw new IllegalActionException();
+            throw new ImpossibleActionException();
     }
 
     public void addStudentToEntrance(List<PawnColor> color) {
         entrance.addAll(color);
     }
 
-    public void removeStudentFromEntrance(PawnColor color) throws IllegalActionException {
+    public void removeStudentFromEntrance(PawnColor color) throws ImpossibleActionException {
         entrance.remove(color);
     }
 
-    public void addStudentToDiningRoom(PawnColor color) throws IllegalActionException {
+    public void addStudentToDiningRoom(PawnColor color) throws ImpossibleActionException {
         diningRoom.addStudent(color);
     }
 
@@ -81,7 +82,7 @@ public class SchoolBoard {
         professorTable.remove(color);
     }
 
-    public void moveStudentFromEntranceToDiningRoom(PawnColor student) throws IllegalActionException {
+    public void moveStudentFromEntranceToDiningRoom(PawnColor student) throws ImpossibleActionException {
         //TODO gestire caso in cui il colore non è presente in entrance
         removeStudentFromEntrance(student);
         addStudentToDiningRoom(student);
