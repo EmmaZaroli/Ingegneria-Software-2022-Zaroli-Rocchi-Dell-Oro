@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -96,7 +97,11 @@ public class Player {
         if (!getBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
                 getBoard().getStudentsInDinigRoom(color) > player.getBoard().getStudentsInDinigRoom(color)) {
-            player.getBoard().removeProfessor(color);
+            try {
+                player.getBoard().removeProfessor(color);
+            } catch (IllegalActionException e) {
+                e.printStackTrace();
+            }
             getBoard().addProfessor(color);
         }
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
 
 public class DiningRoom {
     private int yellow;
@@ -35,7 +36,7 @@ public class DiningRoom {
         };
     }
 
-    private void addStudents(PawnColor color, int n) {
+    private void addStudents(PawnColor color, int n) throws IllegalActionException {
         switch (color) {
             case YELLOW -> yellow += n;
             case BLUE -> blue += n;
@@ -43,11 +44,20 @@ public class DiningRoom {
             case RED -> red += n;
             case PINK -> pink += n;
         }
-        //TODO gestione nel caso si superi il limite di studenti
+        if(switch (color){
+            case YELLOW -> yellow;
+            case BLUE -> blue;
+            case GREEN -> green;
+            case RED -> red;
+            case PINK -> pink;
+        } > 10){
+            //TODO parametrizzare il numero di studenti massimo
+            throw new IllegalActionException();
+        }
     }
 
     //addStudent return true if the player is supposed to take one coin from the general supply
-    public boolean addStudent(PawnColor color) {
+    public boolean addStudent(PawnColor color) throws IllegalActionException {
         addStudents(color, 1);
         return switch (color) {
             case YELLOW -> (yellow % 3) == 0;

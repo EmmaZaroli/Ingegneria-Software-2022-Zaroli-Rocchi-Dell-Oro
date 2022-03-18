@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
 
 
 import java.util.*;
@@ -46,26 +47,29 @@ public class SchoolBoard {
         return professorTable.contains(color);
     }
 
-    public void addTowers(int n) {
+    public void addTowers(int n) throws IllegalActionException {
         towers += n;
-        //TODO controllo che non superi il limite
+        if (towers > 8)
+            throw new IllegalActionException();
+        //TODO parametrizzare numero massimo di torri
     }
 
-    public void removeTower() {
+    public void removeTower() throws IllegalActionException {
         towers--;
-        //TODO controllo che non scenda sotto zero
+        if(towers < 0)
+            throw new IllegalActionException();
     }
 
     public void addStudentToEntrance(List<PawnColor> color) {
         entrance.addAll(color);
     }
 
-    public void removeStudentFromEntrance(PawnColor color) {
+    public void removeStudentFromEntrance(PawnColor color) throws IllegalActionException {
         entrance.remove(color);
     }
 
-    public void addStudentToDiningRoom(PawnColor color) {
-        diningRoom.getStudents(color);
+    public void addStudentToDiningRoom(PawnColor color) throws IllegalActionException {
+        diningRoom.addStudent(color);
     }
 
     public void addProfessor(PawnColor color) {
@@ -77,11 +81,10 @@ public class SchoolBoard {
         professorTable.remove(color);
     }
 
-    public void moveStudentFromEntranceToDiningRoom(PawnColor student) {
-        //TODO implement
-        //removeStudentFromEntrance(color);
+    public void moveStudentFromEntranceToDiningRoom(PawnColor student) throws IllegalActionException {
         //TODO gestire caso in cui il colore non è presente in entrance
-        //addStudentToDiningRoom(color);
+        removeStudentFromEntrance(student);
+        addStudentToDiningRoom(student);
     }
 
     public List<PawnColor> getProfessors() {

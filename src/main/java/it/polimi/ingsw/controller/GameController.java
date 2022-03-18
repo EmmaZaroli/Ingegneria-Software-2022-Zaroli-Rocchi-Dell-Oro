@@ -178,7 +178,13 @@ public class GameController {
             Pair result = this.table.buildTower(player.getBoard().getTowerColor());
             Arrays.stream(this.players)
                     .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
-                    .forEach(x -> x.getSchoolBoard().addTowers(result.size()));
+                    .forEach(x -> {
+                        try {
+                            x.getSchoolBoard().addTowers(result.size());
+                        } catch (IllegalActionException e) {
+                            e.printStackTrace();
+                        }
+                    });
         }
         checkImmediateGameOver();
     }
