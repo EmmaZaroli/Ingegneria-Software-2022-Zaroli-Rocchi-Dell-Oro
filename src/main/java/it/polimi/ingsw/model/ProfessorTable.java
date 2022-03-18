@@ -2,13 +2,17 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProfessorTable {
+    //TODO maybe an EnumMap can suit this use case better
     private boolean yellow;
     private boolean blue;
     private boolean green;
     private boolean red;
     private boolean pink;
-    
+
     public ProfessorTable() {
         this.yellow = false;
         this.blue = false;
@@ -52,5 +56,16 @@ public class ProfessorTable {
     public void removeProfessor(PawnColor color) {
         changeProfessorStatus(color, false);
         //TODO se provo a rimuovere un professore non presente?
+    }
+
+    //TODO this obviously shows a design mistake
+    public List<PawnColor> getProfessors() {
+        List listProfessors = new ArrayList();
+        if (this.blue) listProfessors.add(PawnColor.BLUE);
+        if (this.red) listProfessors.add(PawnColor.RED);
+        if (this.yellow) listProfessors.add(PawnColor.YELLOW);
+        if (this.green) listProfessors.add(PawnColor.GREEN);
+        if (this.pink) listProfessors.add(PawnColor.PINK);
+        return listProfessors;
     }
 }
