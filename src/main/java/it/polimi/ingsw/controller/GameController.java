@@ -237,7 +237,7 @@ public class GameController {
         return 0;
     }
 
-    public boolean checkGameOver(){
+    public boolean isGameOver(){
         //check if any player has build his last tower
         for(Player p : players){
             if(p.getBoard().getTowers() == 0)
@@ -270,5 +270,12 @@ public class GameController {
         }
         //return player with the minimum number of towers
         return min;
+    }
+
+    public void checkGameOver(){
+        if(!isGameOver())
+            return;
+
+        //TODO what to do after the game has ended
     }
 }
