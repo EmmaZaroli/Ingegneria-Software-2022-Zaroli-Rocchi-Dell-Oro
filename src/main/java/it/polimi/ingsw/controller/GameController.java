@@ -240,6 +240,10 @@ public class GameController {
     }
 
     public boolean isGameOver(){
+        //check if the last student has been drawn from the bag
+        if(table.getBag().isEmpty())
+            return true;
+
         //check if any player has build his last tower
         for(Player p : players){
             if(p.getBoard().getTowers() == 0)
@@ -248,10 +252,6 @@ public class GameController {
 
         //check if only 3 island grorp remain on the table
         if(table.howManyIsland() == 3)
-            return true;
-
-        //check if the last student has been drawn from the bag
-        if(table.getBag().isEmpty())
             return true;
 
         //check if any player has run out of assistant card
@@ -266,9 +266,14 @@ public class GameController {
     public int winner(){
         //TODO maybe throw an exception if the game is not over?
         int min = 0;
+        boolean flag = false;
         for(int i = 0; i < players.length; i++){
             if(players[i].getBoard().getTowers() < players[min].getBoard().getTowers())
                 min = i;
+            if(players[i].getBoard().getTowers() == players[min].getBoard().getTowers()){
+                if(players[i].getBoard().howManyProfessors() > players[min].getBoard().howManyProfessors())
+                    min = i;
+            }
         }
         //return player with the minimum number of towers
         return min;
