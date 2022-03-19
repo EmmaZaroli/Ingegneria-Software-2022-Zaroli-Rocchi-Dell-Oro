@@ -261,5 +261,14 @@ public class GameController {
         return false;
     }
 
-   
+    public int winner(){
+        //TODO maybe throw an exception if the game is not over?
+        int min = 0;
+        for(int i = 0; i < players.length; i++){
+            if(players[i].getBoard().getTowers() < players[min].getBoard().getTowers())
+                min = i;
+        }
+        //return player with the minimum number of towers
+        return min;
+    }
 }
