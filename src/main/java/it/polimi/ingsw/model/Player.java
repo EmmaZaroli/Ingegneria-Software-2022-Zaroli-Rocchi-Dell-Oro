@@ -100,4 +100,8 @@ public class Player {
             getBoard().addProfessor(color);
         }
     }
+
+    public boolean isDeckEmpty(){
+        return assistantDeck.isEmpty();
+    }
 }

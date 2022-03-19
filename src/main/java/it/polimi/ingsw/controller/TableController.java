@@ -147,4 +147,8 @@ public class TableController {
     protected Bag getBag() {
         return this.bag;
     }
+
+    public int howManyIsland(){
+        return islandCards.size();
+    }
 }

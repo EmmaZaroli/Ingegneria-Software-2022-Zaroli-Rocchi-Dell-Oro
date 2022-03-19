@@ -236,4 +236,30 @@ public class GameController {
         }
         return 0;
     }
+
+    public boolean checkGameOver(){
+        //check if any player has build his last tower
+        for(Player p : players){
+            if(p.getBoard().getTowers() == 0)
+                return true;
+        }
+
+        //check if only 3 island grorp remain on the table
+        if(table.howManyIsland() == 3)
+            return true;
+
+        //check if the last student has been drawn from the bag
+        if(table.getBag().isEmpty())
+            return true;
+
+        //check if any player has run out of assistant card
+        for(Player p : players){
+            if(p.isDeckEmpty())
+                return true;
+        }
+
+        return false;
+    }
+
+   
 }
