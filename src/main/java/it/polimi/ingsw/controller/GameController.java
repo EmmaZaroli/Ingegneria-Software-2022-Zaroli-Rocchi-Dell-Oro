@@ -91,6 +91,7 @@ public class GameController {
                 this.gamePhase = GamePhase.PLANNING;
             }
         }
+        checkGameOver();
     }
 
     private GamePhase pickNextPhase() {
@@ -179,6 +180,7 @@ public class GameController {
                     .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
                     .forEach(x -> x.getSchoolBoard().addTowers(result.size()));
         }
+        checkGameOver();
     }
 
     public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
