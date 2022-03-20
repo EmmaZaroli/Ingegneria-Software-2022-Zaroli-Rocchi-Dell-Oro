@@ -91,7 +91,7 @@ public class GameController {
                 this.gamePhase = GamePhase.PLANNING;
             }
         }
-        checkGameOver();
+        checkTournGameOver();
     }
 
     private GamePhase pickNextPhase() {
@@ -180,7 +180,7 @@ public class GameController {
                     .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
                     .forEach(x -> x.getSchoolBoard().addTowers(result.size()));
         }
-        checkGameOver();
+        checkImmediateGameOver();
     }
 
     public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
@@ -239,19 +239,23 @@ public class GameController {
         return 0;
     }
 
-    public boolean isGameOver(){
-        //check if the last student has been drawn from the bag
-        if(table.getBag().isEmpty())
-            return true;
-
+    public boolean isImmediateGameOver(){
         //check if any player has build his last tower
         for(Player p : players){
             if(p.getBoard().getTowers() == 0)
                 return true;
         }
 
-        //check if only 3 island grorp remain on the table
+        //check if only 3 island group remain on the table
         if(table.howManyIsland() == 3)
+            return true;
+
+        return false;
+    }
+
+    public boolean isTournGameOver(){
+        //check if the last student has been drawn from the bag
+        if(table.getBag().isEmpty())
             return true;
 
         //check if any player has run out of assistant card
@@ -279,8 +283,16 @@ public class GameController {
         return min;
     }
 
-    public void checkGameOver(){
-        if(!isGameOver())
+    public void checkImmediateGameOver(){
+        if(!isImmediateGameOver())
+            return;
+
+        //TODO what to do after the game has ended
+    }
+
+    //TODO think about a better function name
+    public void checkTournGameOver(){
+        if(!isTournGameOver())
             return;
 
         //TODO what to do after the game has ended
