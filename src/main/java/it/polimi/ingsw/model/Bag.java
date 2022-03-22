@@ -14,7 +14,7 @@ public class Bag {
     private final Map<PawnColor, Integer> students;
     private int pawnCount;
 
-    protected Bag() {
+    public Bag() {
         this.students = new EnumMap<>(PawnColor.class);
         for (PawnColor pc : PawnColor.values()) {
             students.put(pc, PAWNS_PER_COLOR);
@@ -38,8 +38,8 @@ public class Bag {
         //Random value, this statement should not be reached
         return PawnColor.RED;
     }
-    
-    protected List<PawnColor> drawStudents(int n) {
+
+    public List<PawnColor> drawStudents(int n) {
         List<PawnColor> drawnStudents = new LinkedList<>();
 
         for (int i = 0; i < n; i++) {

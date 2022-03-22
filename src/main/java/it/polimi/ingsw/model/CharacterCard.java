@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.enums.Character;
 
 public class CharacterCard {
@@ -27,7 +28,7 @@ public class CharacterCard {
         return this.character;
     }
 
-    public void activateEffect(Game game) {
+    public void activateEffect(GameController game) {
         this.effect.activateEffect(game);
     }
 }

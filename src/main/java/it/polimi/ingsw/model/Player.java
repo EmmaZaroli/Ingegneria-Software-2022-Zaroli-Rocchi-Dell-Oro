@@ -23,7 +23,7 @@ public class Player {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.discardPileHead = null;
-        
+
         this.isPlayerTurn = isPlayerTurn;
         this.schoolBoard = new SchoolBoard(8, tower);
         //TODO parametrizzare numero di torri
@@ -75,7 +75,7 @@ public class Player {
         assistantDeck.remove(a);
     }
 
-    protected void playAssistant(int assistantIndex) {
+    public void playAssistant(int assistantIndex) {
         if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
             //TODO throw exception
         }
@@ -83,11 +83,11 @@ public class Player {
         assistantDeck.remove(assistantIndex);
     }
 
-    protected AssistantCard getDiscardPileHead() {
+    public AssistantCard getDiscardPileHead() {
         return this.discardPileHead;
     }
 
-    protected SchoolBoard getBoard() {
+    public SchoolBoard getBoard() {
         return this.schoolBoard;
     }
 

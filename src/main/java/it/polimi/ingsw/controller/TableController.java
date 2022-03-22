@@ -1,12 +1,19 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.utils.*;
-import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.CloudTile;
+import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.model.enums.PlayerCountIcon;
+import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class Table {
+public class TableController {
     private final ArrayList<PawnColor> professors;
     private final List<IslandCard> islandCards;
     private final Bag bag;
@@ -14,7 +21,7 @@ public class Table {
     private int islandWithMotherNature;
     private final int playerNumber;
 
-    public Table(PlayerCountIcon playerCountIcon) {
+    public TableController(PlayerCountIcon playerCountIcon) {
         islandCards = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
             this.islandCards.add(new IslandCard());

@@ -1,7 +1,14 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.enums.*;
-import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.SchoolBoard;
+import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.model.enums.PlayerCountIcon;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.IllegalAssistantException;
+import it.polimi.ingsw.model.exceptions.NotAllowedMotherNatureMovementException;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.Arrays;
@@ -9,12 +16,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-//TODO check access modifiers
-//TODO order methods by access modifier: public, protected, private
-//TODO sooner or later we will have to remove unused methods
-public class Game {
+public class GameController {
     private final Player[] players;
-    private final Table table;
+    private final TableController table;
 
     private GamePhase gamePhase;
     private int playedCount;
@@ -27,9 +31,9 @@ public class Game {
     private int movedPawns;
 
     //TODO manage game over logics
-    public Game(Player[] players) {
+    public GameController(Player[] players) {
         this.players = players;
-        this.table = players.length == 3 ? new Table(PlayerCountIcon.THREE) : new Table(PlayerCountIcon.TWO_FOUR);
+        this.table = players.length == 3 ? new TableController(PlayerCountIcon.THREE) : new TableController(PlayerCountIcon.TWO_FOUR);
 
         for (Player c : this.players) {
             c.getBoard().addStudentToEntrance(table.drawStudents());
