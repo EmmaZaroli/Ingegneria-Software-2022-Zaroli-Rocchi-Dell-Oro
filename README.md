@@ -24,4 +24,6 @@ Number: GC10
 | Disconnections | :x:    |
 
 ## Design documents
-[Model - Initial UML](Deliverables/UML/20220315%20-%20Model%20initial.png) First lab revision
+
+[Model - Initial UML](Deliverables/UML/20220315%20-%20Model%20initial.png) First lab revision  
+[Model - UML rev 2](Deliverables/UML/20220322%20-%20Model%20rev%202.png) Second lab revision
