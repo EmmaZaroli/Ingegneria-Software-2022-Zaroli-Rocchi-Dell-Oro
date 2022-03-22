@@ -11,8 +11,8 @@ public class Table {
     private final List<IslandCard> islandCards;
     private final Bag bag;
     private final List<CloudTile> cloudTiles;
-    private int islandWithMotherNature;
     private final int playerNumber;
+    private int islandWithMotherNature;
 
     public Table(PlayerCountIcon playerCountIcon) {
         islandCards = new ArrayList<>(12);
@@ -21,7 +21,6 @@ public class Table {
         }
         RandomHelper random = RandomHelper.getInstance();
         int initialPosition = random.getInt(12);
-        islandCards.get(initialPosition).setMotherNatureHere(true);
         islandWithMotherNature = initialPosition;
         List<PawnColor> initialized = new ArrayList<>(10);
         initialized.addAll((Arrays.stream(PawnColor.values()).toList()));
@@ -85,9 +84,7 @@ public class Table {
     }
 
     public void moveMotherNature(int move) {
-        islandCards.get(islandWithMotherNature).setMotherNatureHere(false);
         islandWithMotherNature = (islandWithMotherNature + move) % islandCards.size();
-        islandCards.get(islandWithMotherNature).setMotherNatureHere(true);
     }
 
     public int countInfluenceOnIsland(List<PawnColor> Playerprofessors, Tower towerColor) {
@@ -112,6 +109,7 @@ public class Table {
     }
 
     private void tryUnifyIslands(Tower towerColor) {
+        //TODO remember to modify islandwithmothernature
         //left
         IslandCard islandLeft = islandCards.get(Math.floorMod(islandWithMotherNature - 1, islandCards.size()));
         if (islandLeft.getTower().equals(towerColor)) {

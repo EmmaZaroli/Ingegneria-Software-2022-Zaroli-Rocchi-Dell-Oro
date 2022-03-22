@@ -91,6 +91,7 @@ public class Player {
         return this.schoolBoard;
     }
 
+    //TODO move to game
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!getBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&

@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.enums.*;
 
 
 public class IslandCard {
-    private boolean hasMotherNature;
     private final List<PawnColor> students;
     private Tower tower;
     private int size;
@@ -15,12 +14,6 @@ public class IslandCard {
         this.students = new ArrayList<>();
         tower = Tower.NONE;
         size = 1;
-        hasMotherNature = false;
-    }
-
-    //TODO if b=true check that no one else is true?
-    public void setMotherNatureHere(boolean b) {
-        hasMotherNature = b;
     }
 
     public void movePawnOnIsland(PawnColor student) {
