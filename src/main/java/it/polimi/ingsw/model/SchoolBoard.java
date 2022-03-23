@@ -88,4 +88,8 @@ public class SchoolBoard {
         List<PawnColor> clone = new ArrayList<>(professorTable);
         return clone;
     }
+
+    public int howManyProfessors(){
+        return professorTable.howManyProfessors();
+    }
 }

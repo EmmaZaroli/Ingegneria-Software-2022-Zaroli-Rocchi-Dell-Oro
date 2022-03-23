@@ -56,4 +56,12 @@ public class Bag {
         this.students.replace(c, pawnColorCount);
         this.pawnCount--;
     }
+
+    public boolean isEmpty(){
+        for (Map.Entry<PawnColor, Integer> e : students.entrySet()){
+            if(e.getValue() > 0)
+                return false;
+        }
+        return true;
+    }
 }
