@@ -116,15 +116,15 @@ public class TableController {
     }
 
     private void tryUnifyIslands(Tower towerColor) {
-        //TODO remember to modify islandwithmothernature
-        //left
+        //right
         IslandCard islandLeft = islandCards.get(Math.floorMod(islandWithMotherNature - 1, islandCards.size()));
         if (islandLeft.getTower().equals(towerColor)) {
             islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandLeft.getStudentsFromIsland());
             islandCards.remove(Math.floorMod(islandWithMotherNature - 1, islandCards.size()));
             islandCards.get(islandWithMotherNature).setSize();
+            islandWithMotherNature -= 1;
         }
-        //right
+        //left
         IslandCard islandRight = islandCards.get(Math.floorMod(islandWithMotherNature + 1, islandCards.size()));
         if (islandLeft.getTower().equals(towerColor)) {
             islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandRight.getStudentsFromIsland());
