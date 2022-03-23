@@ -30,7 +30,7 @@ public class CharacterCard {
         return this.character;
     }
 
-    public void activateEffect(GameController game) {
-        this.effect.activateEffect(game);
+    public void activateEffect(GameParameters parameters) {
+        this.effect.activateEffect(parameters);
     }
 }
