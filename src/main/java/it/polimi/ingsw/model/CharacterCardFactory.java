@@ -20,47 +20,63 @@ public class CharacterCardFactory {
     private CharacterCard get1() {
         return new CharacterCard(1, Character._1, parameters -> {
 
+        }, parameters -> {
+
         });
     }
 
     private CharacterCard get2() {
-        return new CharacterCard(2, Character._2, parameters -> {
-
+        return new CharacterCard(2, Character._1, parameters -> {
+            parameters.setTakeProfessorEvenIfSameStudents(true);
+        }, parameters -> {
+            parameters.setTakeProfessorEvenIfSameStudents(false);
         });
     }
 
     private CharacterCard get4() {
-        return new CharacterCard(1, Character._4, parameters -> {
-
+        return new CharacterCard(1, Character._1, parameters -> {
+            parameters.setMotherNatureExtraMovements(2);
+        }, parameters -> {
+            parameters.setMotherNatureExtraMovements(0);
         });
     }
 
     private CharacterCard get6() {
-        return new CharacterCard(3, Character._6, parameters -> {
-
+        return new CharacterCard(3, Character._1, parameters -> {
+            parameters.setTowersCountInInfluence(false);
+        }, parameters -> {
+            parameters.setTowersCountInInfluence(true);
         });
     }
 
     private CharacterCard get7() {
-        return new CharacterCard(1, Character._7, parameters -> {
+        return new CharacterCard(1, Character._1, parameters -> {
+
+        }, parameters -> {
 
         });
     }
 
     private CharacterCard get8() {
-        return new CharacterCard(2, Character._8, parameters -> {
-
+        return new CharacterCard(2, Character._1, parameters -> {
+            parameters.setExtraInfluence(2);
+        }, parameters -> {
+            parameters.setExtraInfluence(0);
         });
     }
 
     private CharacterCard get9() {
-        return new CharacterCard(3, Character._9, parameters -> {
+        return new CharacterCard(3, Character._1, parameters -> {
+            //TODO how can we have here the color that the player has choosen?
+        }, parameters -> {
 
         });
     }
 
     private CharacterCard get11() {
-        return new CharacterCard(2, Character._11, parameters -> {
+        return new CharacterCard(2, Character._1, parameters -> {
+
+        }, parameters -> {
 
         });
     }

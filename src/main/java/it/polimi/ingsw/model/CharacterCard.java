@@ -8,12 +8,14 @@ public class CharacterCard {
     private boolean hasCoin;
     private final Character character;
     private final Effect effect;
+    private final Effect reverseEffect;
 
-    public CharacterCard(int initialPrice, Character character, Effect effect) {
+    public CharacterCard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
         this.initialPrice = initialPrice;
         this.hasCoin = false;
         this.character = character;
         this.effect = effect;
+        this.reverseEffect = reverseEffect;
     }
 
     public boolean hasCoins() {
