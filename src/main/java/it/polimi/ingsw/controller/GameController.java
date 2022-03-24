@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.enums.PlayerCountIcon;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalAssistantException;
 import it.polimi.ingsw.model.exceptions.NotAllowedMotherNatureMovementException;
+import it.polimi.ingsw.model.exceptions.TowersOutOfBoundException;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.Arrays;
@@ -36,71 +37,65 @@ public class GameController {
         this.table = players.length == 3 ? new TableController(PlayerCountIcon.THREE) : new TableController(PlayerCountIcon.TWO_FOUR);
 
         for (Player c : this.players) {
-            c.getBoard().addStudentToEntrance(table.drawStudents());
+            c.getBoard().addStudentsToEntrance(table.drawStudents());
         }
 
         this.currentPlayer = 0;
         this.gamePhase = GamePhase.PLANNING;
     }
 
-    private boolean isTurnComplete() {
-        return this.playedCount == this.players.length;
+    public void checkImmediateGameOver() {
+        if (!isImmediateGameOver())
+            return;
+
+        //TODO what to do after the game has ended
     }
 
-    //TODO someone should call this method
-    private void planning() {
-        this.table.fillClouds();
-        this.playedCount = 0;
+    //TODO think about a better function name
+    public void checkTournGameOver() {
+        if (!isTournGameOver())
+            return;
+
+        //TODO what to do after the game has ended
     }
 
-    //TODO how to check this method is called exclusively by the currentPlayer? (Same for following methods)
-    public void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
-        if (this.gamePhase != GamePhase.PLANNING) {
+    public boolean isImmediateGameOver() {
+        //check if any player has build his last tower
+        for (Player p : players) {
+            if (p.getBoard().getTowersCount() == 0)
+                return true;
+        }
+
+        //check if only 3 island group remain on the table
+        return table.howManyIsland() == 3;
+    }
+
+    public boolean isTournGameOver() {
+        //check if the last student has been drawn from the bag
+        if (table.getBag().isEmpty())
+            return true;
+
+        //check if any player has run out of assistant card
+        for (Player p : players) {
+            if (p.isDeckEmpty())
+                return true;
+        }
+
+        return false;
+    }
+
+    public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
+        if (this.gamePhase != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (!this.canPlayAssistant(players[currentPlayer].getAssistant(assistantIndex))) {
-            throw new IllegalAssistantException();
+        if (steps < 1 || steps > this.players[currentPlayer].getDiscardPileHead().motherNatureMovement()) {
+            throw new NotAllowedMotherNatureMovementException();
         }
-        players[currentPlayer].playAssistant(assistantIndex);
+        this.table.moveMotherNature(steps);
 
-        this.playerHasEndedPlanning();
-    }
+        this.checkInfluence();
 
-    private void playerHasEndedPlanning() {
-        this.playedCount++;
-
-        if (!this.isTurnComplete()) {
-            this.currentPlayer = pickNextPlayer();
-            this.currentPlayerBoard = players[this.currentPlayer].getBoard();
-        } else {
-            this.playedCount = 0;
-            this.gamePhase = pickNextPhase();
-        }
-    }
-
-    private void playerHasEndedAction() {
-        this.gamePhase = this.pickNextPhase();
-        if (this.gamePhase == GamePhase.ACTION_END) {
-            this.playedCount++;
-
-            if (!this.isTurnComplete()) {
-                //TODO I'm repeating this snippet too many times, move into pickNextPlayer?
-                this.currentPlayer = pickNextPlayer();
-                this.currentPlayerBoard = players[this.currentPlayer].getBoard();
-            } else {
-                this.gamePhase = GamePhase.PLANNING;
-            }
-        }
-        checkTournGameOver();
-    }
-
-    private GamePhase pickNextPhase() {
-        return switch (this.gamePhase) {
-            case PLANNING -> GamePhase.ACTION_MOVE_STUDENTS;
-            case ACTION_MOVE_STUDENTS -> GamePhase.ACTION_MOVE_MOTHER_NATURE;
-            case ACTION_MOVE_MOTHER_NATURE -> GamePhase.ACTION_CHOOSE_CLOUD;
-            case ACTION_CHOOSE_CLOUD, ACTION_END -> GamePhase.ACTION_END;
-        };
+        this.playerHasEndedAction();
     }
 
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
@@ -117,41 +112,74 @@ public class GameController {
         this.movedPawn();
     }
 
-    private void movedPawn() {
-        this.movedPawns++;
-        //TODO
-        /* if (this.movedPawns == params) {
-            this.movedPawns = 0;
-            this.playerHasEndedAction();
-        } */
-    }
-
-    //Checks if the current player has the highest number of students of the given color in his dining room
-    //If so, proceeds to move the professor to the player's professor table
-    private void checkProfessorsStatus(PawnColor color) {
-        //first try to check if it's still available on the table, if so it's useless to do the second check
-        if (this.table.takeProfessor(color)) {
-            players[currentPlayer].getBoard().addProfessor(color);
-        } else {
-            //It will also check the current player with itself, but this should not cause problems
-            for (Player p : players) {
-                players[currentPlayer].tryStealProfessor(color, p);
-            }
-        }
-    }
-
-    public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
-        if (this.gamePhase != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
+    public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
+        if (this.gamePhase != GamePhase.ACTION_CHOOSE_CLOUD) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.players[currentPlayer].getDiscardPileHead().motherNatureMovement()) {
-            throw new NotAllowedMotherNatureMovementException();
-        }
-        this.table.moveMotherNature(steps);
-
-        this.checkInfluence();
+        //TODO check params validity
+        List<PawnColor> studentsFromCloud = this.table.takeStudentsFromCloud(cloudIndex);
+        currentPlayerBoard.addStudentsToEntrance(studentsFromCloud);
 
         this.playerHasEndedAction();
+    }
+
+    //TODO how to check this method is called exclusively by the currentPlayer? (Same for following methods)
+    public void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
+        if (this.gamePhase != GamePhase.PLANNING) {
+            throw new IllegalActionException();
+        }
+        if (!this.canPlayAssistant(players[currentPlayer].getAssistant(assistantIndex))) {
+            throw new IllegalAssistantException();
+        }
+        players[currentPlayer].playAssistant(assistantIndex);
+
+        this.playerHasEndedPlanning();
+    }
+
+    public int winner() {
+        //TODO maybe throw an exception if the game is not over?
+        int min = 0;
+        boolean flag = false;
+        for (int i = 0; i < players.length; i++) {
+            if (players[i].getBoard().getTowersCount() < players[min].getBoard().getTowersCount())
+                min = i;
+            if (players[i].getBoard().getTowersCount() == players[min].getBoard().getTowersCount()) {
+                if (players[i].getBoard().countProfessors() > players[min].getBoard().countProfessors())
+                    min = i;
+            }
+        }
+        //return player with the minimum number of towers
+        return min;
+    }
+
+    //Builds the tower of the player with max influence
+    private void buildTowers(Player player) {
+        if (this.table.canBuildTower(player.getBoard().getTowerColor())) {
+            Pair result = this.table.buildTower(player.getBoard().getTowerColor());
+            Arrays.stream(this.players)
+                    .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
+                    .forEach(x -> {
+                        try {
+                            x.getSchoolBoard().addTowers(result.size());
+                        } catch (Exception e) {
+                            //TODO this is not the proper way of handling exceptions
+                            e.printStackTrace();
+                        }
+                    });
+        }
+        checkImmediateGameOver();
+    }
+
+    private boolean canPlayAssistant(AssistantCard assistant) {
+        //If assistant is different from every other played assistantCard
+        if (isAssistantDifferentFromOthers(assistant)) return true;
+
+        //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
+        // different from every other one
+        for (AssistantCard ac : players[currentPlayer].getAssistantDeck()) {
+            if (!isAssistantDifferentFromOthers(ac)) return false;
+        }
+        return true;
     }
 
     private void checkInfluence() {
@@ -172,38 +200,18 @@ public class GameController {
         if (maxInfluence != 0) this.buildTowers(maxInfluencePlayer);
     }
 
-    //Builds the tower of the player with max influence
-    private void buildTowers(Player player) {
-        if (this.table.canBuildTower(player.getBoard().getTowerColor())) {
-            Pair result = this.table.buildTower(player.getBoard().getTowerColor());
-            Arrays.stream(this.players)
-                    .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
-                    .forEach(x -> x.getSchoolBoard().addTowers(result.size()));
+    //Checks if the current player has the highest number of students of the given color in his dining room
+    //If so, proceeds to move the professor to the player's professor table
+    private void checkProfessorsStatus(PawnColor color) {
+        //first try to check if it's still available on the table, if so it's useless to do the second check
+        if (this.table.takeProfessor(color)) {
+            players[currentPlayer].getBoard().addProfessor(color);
+        } else {
+            //It will also check the current player with itself, but this should not cause problems
+            for (Player p : players) {
+                players[currentPlayer].tryStealProfessor(color, p);
+            }
         }
-        checkImmediateGameOver();
-    }
-
-    public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
-        if (this.gamePhase != GamePhase.ACTION_CHOOSE_CLOUD) {
-            throw new IllegalActionException();
-        }
-        //TODO check params validity
-        List<PawnColor> studentsFromCloud = this.table.takeStudentsFromCloud(cloudIndex);
-        currentPlayerBoard.addStudentToEntrance(studentsFromCloud);
-
-        this.playerHasEndedAction();
-    }
-
-    private boolean canPlayAssistant(AssistantCard assistant) {
-        //If assistant is different from every other played assistantCard
-        if (isAssistantDifferentFromOthers(assistant)) return true;
-
-        //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
-        // different from every other one
-        for (AssistantCard ac : players[currentPlayer].getAssistantDeck()) {
-            if (!isAssistantDifferentFromOthers(ac)) return false;
-        }
-        return true;
     }
 
     //Returns true if assistant is different from every other assistants already played in this turn
@@ -214,6 +222,28 @@ public class GameController {
         return true;
     }
 
+    private boolean isTurnComplete() {
+        return this.playedCount == this.players.length;
+    }
+
+    private void movedPawn() {
+        this.movedPawns++;
+        //TODO
+        /* if (this.movedPawns == params) {
+            this.movedPawns = 0;
+            this.playerHasEndedAction();
+        } */
+    }
+
+    private GamePhase pickNextPhase() {
+        return switch (this.gamePhase) {
+            case PLANNING -> GamePhase.ACTION_MOVE_STUDENTS;
+            case ACTION_MOVE_STUDENTS -> GamePhase.ACTION_MOVE_MOTHER_NATURE;
+            case ACTION_MOVE_MOTHER_NATURE -> GamePhase.ACTION_CHOOSE_CLOUD;
+            case ACTION_CHOOSE_CLOUD, ACTION_END -> GamePhase.ACTION_END;
+        };
+    }
+
     //TODO hopefully it will become less complex
     private int pickNextPlayer() {
         switch (gamePhase) {
@@ -222,7 +252,8 @@ public class GameController {
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
                 Optional<Player> nextPlayer = Arrays.stream(players)
                         .filter((Player p) ->
-                                p.getDiscardPileHead().value() >= players[currentPlayer].getDiscardPileHead().value()).min(Comparator.comparing(p -> ((p.getDiscardPileHead().value()))));
+                                p.getDiscardPileHead().value() >= players[currentPlayer].getDiscardPileHead().value())
+                        .min(Comparator.comparing(p -> ((p.getDiscardPileHead().value()))));
 
                 if (nextPlayer.isEmpty()) nextPlayer = Optional.of(players[0]);
 
@@ -236,59 +267,37 @@ public class GameController {
         return 0;
     }
 
-    public boolean isImmediateGameOver() {
-        //check if any player has build his last tower
-        for (Player p : players) {
-            if (p.getBoard().getTowers() == 0)
-                return true;
-        }
-
-        //check if only 3 island group remain on the table
-        return (table.howManyIsland() == 3);
+    //TODO someone should call this method
+    private void planning() {
+        this.table.fillClouds();
+        this.playedCount = 0;
     }
 
-    public boolean isTournGameOver() {
-        //check if the last student has been drawn from the bag
-        if (table.getBag().isEmpty())
-            return true;
+    private void playerHasEndedAction() {
+        this.gamePhase = this.pickNextPhase();
+        if (this.gamePhase == GamePhase.ACTION_END) {
+            this.playedCount++;
 
-        //check if any player has run out of assistant card
-        for (Player p : players) {
-            if (p.isDeckEmpty())
-                return true;
-        }
-
-        return false;
-    }
-
-    public int winner() {
-        //TODO maybe throw an exception if the game is not over?
-        int min = 0;
-        boolean flag = false;
-        for (int i = 0; i < players.length; i++) {
-            if (players[i].getBoard().getTowers() < players[min].getBoard().getTowers())
-                min = i;
-            if (players[i].getBoard().getTowers() == players[min].getBoard().getTowers()) {
-                if (players[i].getBoard().howManyProfessors() > players[min].getBoard().howManyProfessors())
-                    min = i;
+            if (!this.isTurnComplete()) {
+                //TODO I'm repeating this snippet too many times, move into pickNextPlayer?
+                this.currentPlayer = pickNextPlayer();
+                this.currentPlayerBoard = players[this.currentPlayer].getBoard();
+            } else {
+                this.gamePhase = GamePhase.PLANNING;
             }
         }
-        //return player with the minimum number of towers
-        return min;
+        checkTournGameOver();
     }
 
-    public void checkImmediateGameOver() {
-        if (!isImmediateGameOver())
-            return;
+    private void playerHasEndedPlanning() {
+        this.playedCount++;
 
-        //TODO what to do after the game has ended
-    }
-
-    //TODO think about a better function name
-    public void checkTournGameOver() {
-        if (!isTournGameOver())
-            return;
-
-        //TODO what to do after the game has ended
+        if (!this.isTurnComplete()) {
+            this.currentPlayer = pickNextPlayer();
+            this.currentPlayerBoard = players[this.currentPlayer].getBoard();
+        } else {
+            this.playedCount = 0;
+            this.gamePhase = pickNextPhase();
+        }
     }
 }

@@ -3,93 +3,83 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 
-
 import java.util.*;
 
-
 public class SchoolBoard {
-    private int towers;
     private final Tower towerColor;
     private final List<PawnColor> entrance;
     private final DiningRoom diningRoom;
     private final Set<PawnColor> professorTable;
+    private int towers;
 
     public SchoolBoard(int towers, Tower towerColor) {
         this.towers = towers;
         this.towerColor = towerColor;
-        this.entrance = new ArrayList<>(7);
+        this.entrance = new ArrayList<>();
         this.diningRoom = new DiningRoom();
         this.professorTable = new HashSet<>();
-    }
-
-    public int getTowers() {
-        return towers;
-    }
-
-    public Tower getTowerColor() {
-        return towerColor;
-    }
-
-    public int getStudentsInEntrance(PawnColor color) {
-        int numOfPawn = 0;
-        for (PawnColor p : entrance) {
-            if (p.equals(color)) numOfPawn++;
-        }
-        return numOfPawn;
-    }
-
-    public int getStudentsInDinigRoom(PawnColor color) {
-        return diningRoom.getStudents(color);
-    }
-
-    public boolean isThereProfessor(PawnColor color) {
-        return professorTable.contains(color);
-    }
-
-    public void addTowers(int n) {
-        towers += n;
-        //TODO controllo che non superi il limite
-    }
-
-    public void removeTower() {
-        towers--;
-        //TODO controllo che non scenda sotto zero
-    }
-
-    public void addStudentToEntrance(List<PawnColor> color) {
-        entrance.addAll(color);
-    }
-
-    public void removeStudentFromEntrance(PawnColor color) {
-        entrance.remove(color);
-    }
-
-    public void addStudentToDiningRoom(PawnColor color) {
-        diningRoom.getStudents(color);
     }
 
     public void addProfessor(PawnColor color) {
         professorTable.add(color);
     }
 
-    //TODO exception if professor not present(?)
-    public void removeProfessor(PawnColor color) {
-        professorTable.remove(color);
+    public boolean addStudentToDiningRoom(PawnColor color) {
+        return diningRoom.addStudent(color);
     }
 
-    public void moveStudentFromEntranceToDiningRoom(PawnColor student) {
-        //TODO implement
-        //removeStudentFromEntrance(color);
-        //TODO gestire caso in cui il colore non è presente in entrance
-        //addStudentToDiningRoom(color);
+    public void addStudentsToEntrance(List<PawnColor> color) {
+        entrance.addAll(color);
+    }
+
+    public void addTowers(int n) {
+        towers += n;
+    }
+
+    public int countProfessors() {
+        return professorTable.size();
+    }
+
+    public int countStudentsInEntrance() {
+        //TODO same as below
+        return this.entrance.size();
     }
 
     public List<PawnColor> getProfessors() {
-        List<PawnColor> clone = new ArrayList<>(professorTable);
-        return clone;
+        return this.professorTable.stream().toList();
     }
 
-    public int howManyProfessors(){
-        return professorTable.howManyProfessors();
+    public int getStudentsInDiningRoom(PawnColor color) {
+        return diningRoom.getStudents(color);
+    }
+
+    public Tower getTowerColor() {
+        return towerColor;
+    }
+
+    public int getTowersCount() {
+        //TODO even if now this method it is not used, it will be used by the controller to check the selected action is valid
+        return this.towers;
+    }
+
+    public boolean isThereProfessor(PawnColor color) {
+        return professorTable.contains(color);
+    }
+
+    public boolean moveStudentFromEntranceToDiningRoom(PawnColor student) {
+        removeStudentFromEntrance(student);
+        return addStudentToDiningRoom(student);
+    }
+
+    public boolean removeProfessor(PawnColor color) {
+        return professorTable.remove(color);
+    }
+
+    public void removeStudentFromEntrance(PawnColor color) {
+        entrance.remove(color);
+    }
+
+    public void removeTower() {
+        towers--;
     }
 }
