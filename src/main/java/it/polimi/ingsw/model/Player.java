@@ -10,10 +10,10 @@ import java.util.List;
 public class Player {
     private final String nickname;
     private final Wizzard wizzard;
-    private AssistantCard discardPileHead;
-    private boolean isPlayerTurn;
     private final SchoolBoard schoolBoard;
     private final List<AssistantCard> assistantDeck;
+    private AssistantCard discardPileHead;
+    private boolean isPlayerTurn;
 
     public Player(String nickname, Wizzard wizzard, Tower tower) {
         this(nickname, wizzard, tower, false);
@@ -34,12 +34,37 @@ public class Player {
         }
     }
 
+    public AssistantCard getAssistant(int assistantIndex) {
+        return assistantDeck.get(assistantIndex);
+    }
+
+    //TODO sicuramente da sistemare, espone il rep
+    public List<AssistantCard> getAssistantDeck() {
+        return assistantDeck;
+    }
+
+    public SchoolBoard getBoard() {
+        return this.schoolBoard;
+    }
+
+    public AssistantCard getDiscardPileHead() {
+        return this.discardPileHead;
+    }
+
     public String getNickname() {
         return this.nickname;
     }
 
+    public SchoolBoard getSchoolBoard() {
+        return schoolBoard;
+    }
+
     public Wizzard getWizzard() {
         return this.wizzard;
+    }
+
+    public boolean isDeckEmpty() {
+        return assistantDeck.isEmpty();
     }
 
     public boolean isPlayerTurn() {
@@ -50,31 +75,6 @@ public class Player {
         isPlayerTurn = playerTurn;
     }
 
-    public void togglePlayerTurn() {
-        isPlayerTurn = !isPlayerTurn;
-    }
-
-    public SchoolBoard getSchoolBoard() {
-        return schoolBoard;
-    }
-
-    //TODO sicuramente da sistemare, espone il rep
-    public List<AssistantCard> getAssistantDeck() {
-        return assistantDeck;
-    }
-
-    public AssistantCard getAssistant(int assistantIndex) {
-        return assistantDeck.get(assistantIndex);
-    }
-
-    protected void playAssistant(AssistantCard a) {
-        if (!assistantDeck.contains(a)) {
-            //TODO throw exception
-        }
-        this.discardPileHead = a;
-        assistantDeck.remove(a);
-    }
-
     public void playAssistant(int assistantIndex) {
         if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
             //TODO throw exception
@@ -83,25 +83,29 @@ public class Player {
         assistantDeck.remove(assistantIndex);
     }
 
-    public AssistantCard getDiscardPileHead() {
-        return this.discardPileHead;
-    }
-
-    public SchoolBoard getBoard() {
-        return this.schoolBoard;
+    public void togglePlayerTurn() {
+        isPlayerTurn = !isPlayerTurn;
     }
 
     //TODO move to game
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!getBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
-                getBoard().getStudentsInDinigRoom(color) > player.getBoard().getStudentsInDinigRoom(color)) {
-            player.getBoard().removeProfessor(color);
+                getBoard().getStudentsInDiningRoom(color) > player.getBoard().getStudentsInDiningRoom(color)) {
+            try {
+                player.getBoard().removeProfessor(color);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             getBoard().addProfessor(color);
         }
     }
 
-    public boolean isDeckEmpty() {
-        return assistantDeck.isEmpty();
+    protected void playAssistant(AssistantCard a) {
+        if (!assistantDeck.contains(a)) {
+            //TODO throw exception
+        }
+        this.discardPileHead = a;
+        assistantDeck.remove(a);
     }
 }
