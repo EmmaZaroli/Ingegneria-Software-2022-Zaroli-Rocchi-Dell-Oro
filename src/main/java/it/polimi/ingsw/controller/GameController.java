@@ -156,7 +156,7 @@ public class GameController {
 
     private void checkInfluence() {
         int maxInfluence = 0;
-        int currentInfluence = 0;
+        int currentInfluence;
         Player maxInfluencePlayer = players[currentPlayer]; //default condition, it shouldn't matter
 
         for (Player p : players) {
@@ -222,15 +222,12 @@ public class GameController {
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
                 Optional<Player> nextPlayer = Arrays.stream(players)
                         .filter((Player p) ->
-                                p.getDiscardPileHead().value() >= players[currentPlayer].getDiscardPileHead().value())
-                        .sorted(Comparator.comparing(p -> ((p.getDiscardPileHead().value()))))
-                        .findFirst();
+                                p.getDiscardPileHead().value() >= players[currentPlayer].getDiscardPileHead().value()).min(Comparator.comparing(p -> ((p.getDiscardPileHead().value()))));
 
                 if (nextPlayer.isEmpty()) nextPlayer = Optional.of(players[0]);
 
                 for (int i = 0; i < players.length; i++) {
-                    //TODO are we sure == is ok?
-                    if (players[i] == nextPlayer.get())
+                    if (players[i].getNickname().equals(nextPlayer.get().getNickname()))
                         return i;
                 }
             case ACTION_END:
@@ -239,43 +236,40 @@ public class GameController {
         return 0;
     }
 
-    public boolean isImmediateGameOver(){
+    public boolean isImmediateGameOver() {
         //check if any player has build his last tower
-        for(Player p : players){
-            if(p.getBoard().getTowers() == 0)
+        for (Player p : players) {
+            if (p.getBoard().getTowers() == 0)
                 return true;
         }
 
         //check if only 3 island group remain on the table
-        if(table.howManyIsland() == 3)
-            return true;
-
-        return false;
+        return (table.howManyIsland() == 3);
     }
 
-    public boolean isTournGameOver(){
+    public boolean isTournGameOver() {
         //check if the last student has been drawn from the bag
-        if(table.getBag().isEmpty())
+        if (table.getBag().isEmpty())
             return true;
 
         //check if any player has run out of assistant card
-        for(Player p : players){
-            if(p.isDeckEmpty())
+        for (Player p : players) {
+            if (p.isDeckEmpty())
                 return true;
         }
 
         return false;
     }
 
-    public int winner(){
+    public int winner() {
         //TODO maybe throw an exception if the game is not over?
         int min = 0;
         boolean flag = false;
-        for(int i = 0; i < players.length; i++){
-            if(players[i].getBoard().getTowers() < players[min].getBoard().getTowers())
+        for (int i = 0; i < players.length; i++) {
+            if (players[i].getBoard().getTowers() < players[min].getBoard().getTowers())
                 min = i;
-            if(players[i].getBoard().getTowers() == players[min].getBoard().getTowers()){
-                if(players[i].getBoard().howManyProfessors() > players[min].getBoard().howManyProfessors())
+            if (players[i].getBoard().getTowers() == players[min].getBoard().getTowers()) {
+                if (players[i].getBoard().howManyProfessors() > players[min].getBoard().howManyProfessors())
                     min = i;
             }
         }
@@ -283,16 +277,16 @@ public class GameController {
         return min;
     }
 
-    public void checkImmediateGameOver(){
-        if(!isImmediateGameOver())
+    public void checkImmediateGameOver() {
+        if (!isImmediateGameOver())
             return;
 
         //TODO what to do after the game has ended
     }
 
     //TODO think about a better function name
-    public void checkTournGameOver(){
-        if(!isTournGameOver())
+    public void checkTournGameOver() {
+        if (!isTournGameOver())
             return;
 
         //TODO what to do after the game has ended

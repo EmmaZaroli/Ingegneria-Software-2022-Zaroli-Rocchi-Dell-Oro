@@ -30,7 +30,7 @@ public class Player {
         this.assistantDeck = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
             //TODO parametrizzare il numero di carte
-            this.assistantDeck.add(new AssistantCard(i + 1, ((int) (i / 2)) + 1));
+            this.assistantDeck.add(new AssistantCard(i + 1, ((i / 2) + 1)));
         }
     }
 
@@ -101,7 +101,7 @@ public class Player {
         }
     }
 
-    public boolean isDeckEmpty(){
+    public boolean isDeckEmpty() {
         return assistantDeck.isEmpty();
     }
 }

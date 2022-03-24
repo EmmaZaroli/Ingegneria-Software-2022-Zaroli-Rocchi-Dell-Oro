@@ -15,7 +15,7 @@ public class CloudTile {
     }
 
     //method to add students
-    public void AddStudents(List<PawnColor> student) {
+    public void addStudents(List<PawnColor> student) {
         students.addAll(student);
     }
 

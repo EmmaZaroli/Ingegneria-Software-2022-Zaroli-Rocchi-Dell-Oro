@@ -64,14 +64,14 @@ public class TableController {
     }
 
     public void fillClouds() {
-        List<PawnColor> studentsDrawn = new ArrayList<>();
+        List<PawnColor> studentsDrawn;
         for (CloudTile cloud : cloudTiles) {
             if (playerNumber == 2) {
                 studentsDrawn = bag.drawStudents(3);
             } else {
                 studentsDrawn = bag.drawStudents(4);
             }
-            cloud.AddStudents(studentsDrawn);
+            cloud.addStudents(studentsDrawn);
             studentsDrawn.clear();
         }
     }
@@ -94,17 +94,13 @@ public class TableController {
         islandWithMotherNature = (islandWithMotherNature + move) % islandCards.size();
     }
 
-    public int countInfluenceOnIsland(List<PawnColor> Playerprofessors, Tower towerColor) {
-        int influence = islandCards.get(islandWithMotherNature).countInfluence(Playerprofessors, towerColor);
-        return influence;
+    public int countInfluenceOnIsland(List<PawnColor> playerProfessors, Tower towerColor) {
+        return islandCards.get(islandWithMotherNature).countInfluence(playerProfessors, towerColor);
     }
 
     public boolean canBuildTower(Tower towerColor) {
         Tower towerOnIsland = islandCards.get(islandWithMotherNature).getTower();
-        if (towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor)) {
-            return true;
-        }
-        return false;
+        return (towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor));
     }
 
     public Pair buildTower(Tower towerColor) {
@@ -134,21 +130,18 @@ public class TableController {
     }
 
     public List<PawnColor> takeStudentsFromCloud(CloudTile cloud) {
-        List<PawnColor> students = cloud.takeStudentsFromCloud();
-        return students;
+        return cloud.takeStudentsFromCloud();
     }
 
-    //TODO check if cloudIndex exists
     public List<PawnColor> takeStudentsFromCloud(int cloudIndex) {
-        List<PawnColor> students = cloudTiles.get(cloudIndex).takeStudentsFromCloud();
-        return students;
+        return cloudTiles.get(cloudIndex % 2).takeStudentsFromCloud();
     }
 
     protected Bag getBag() {
         return this.bag;
     }
 
-    public int howManyIsland(){
+    public int howManyIsland() {
         return islandCards.size();
     }
 }
