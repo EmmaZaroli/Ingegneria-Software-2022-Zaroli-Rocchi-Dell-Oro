@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.enums.Character;
+import it.polimi.ingsw.model.enums.PawnColor;
 
 public class CharacterCardFactory {
     public CharacterCard getCharacterCard(Character character) {
@@ -69,7 +70,7 @@ public class CharacterCardFactory {
         return new CharacterCard(3, Character._1, parameters -> {
             //TODO how can we have here the color that the player has choosen?
         }, parameters -> {
-
+            parameters.setColorWithNoInfluence(PawnColor.NONE);
         });
     }
 

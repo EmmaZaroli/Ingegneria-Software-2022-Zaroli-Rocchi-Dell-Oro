@@ -33,4 +33,8 @@ public class CharacterCard {
     public void activateEffect(GameParameters parameters) {
         this.effect.activateEffect(parameters);
     }
+
+    public void reverseEffect(GameParameters parameters) {
+        this.reverseEffect.activateEffect(parameters);
+    }
 }
