@@ -22,13 +22,7 @@ public class CloudTile {
     //method to return the students in a cloud
     public List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
-        this.clearCloud();
+        this.students.clear();
         return copy;
     }
-
-    //method to remove students
-    private void clearCloud() {
-        students.clear();
-    }
-
 }
