@@ -12,11 +12,11 @@ public class CharacterCardStandard extends CharacterCard {
         this.reverseEffect = reverseEffect;
     }
 
-    public void activateEffect(GameParameters parameters) {
+    public void activateEffect(ExpertGameParameters parameters) {
         this.effect.activateEffect(parameters);
     }
 
-    public void reverseEffect(GameParameters parameters) {
+    public void reverseEffect(ExpertGameParameters parameters) {
         this.reverseEffect.activateEffect(parameters);
     }
 }
