@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.enums.Character;
 
-public class CharacterCard {
+public abstract class CharacterCard {
     private final int initialPrice;
     private boolean hasCoin;
     private final Character character;

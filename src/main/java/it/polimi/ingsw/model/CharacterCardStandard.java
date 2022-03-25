@@ -6,7 +6,7 @@ public class CharacterCardStandard extends CharacterCard {
     private final Effect effect;
     private final Effect reverseEffect;
 
-    public CharacterCardStandard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
+    protected CharacterCardStandard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
         super(initialPrice, character);
         this.effect = effect;
         this.reverseEffect = reverseEffect;
