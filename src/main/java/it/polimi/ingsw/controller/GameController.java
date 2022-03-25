@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class GameController {
-    private final Player[] players;
+    public final Player[] players;
     private final TableController table;
     private GamePhase gamePhase;
     private int playedCount;
 
-    private int currentPlayer;
+    public int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
     private SchoolBoard currentPlayerBoard;
