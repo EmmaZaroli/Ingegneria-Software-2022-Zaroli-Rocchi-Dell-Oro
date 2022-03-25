@@ -10,7 +10,7 @@ public class CharacterCard {
     private final Effect effect;
     private final Effect reverseEffect;
 
-    public CharacterCard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
+    protected CharacterCard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
         this.initialPrice = initialPrice;
         this.hasCoin = false;
         this.character = character;

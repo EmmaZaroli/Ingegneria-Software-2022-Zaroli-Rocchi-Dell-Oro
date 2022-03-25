@@ -4,6 +4,8 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
+import java.util.List;
+
 public class CharacterCardFactory {
     public CharacterCard getCharacterCard(Character character) {
         return switch (character) {
@@ -19,15 +21,20 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get1() {
-        return new CharacterCard(1, Character._1, parameters -> {
+        return new CharacterCardWithSetUpAction(1, Character._1, parameters -> {
 
         }, parameters -> {
 
-        });
+        }, ((bag, students) -> {
+            List<PawnColor> ris = bag.drawStudents(4);
+            for (PawnColor c : ris) {
+                students.put(c, students.get(c) + 1);
+            }
+        }));
     }
 
     private CharacterCard get2() {
-        return new CharacterCard(2, Character._1, parameters -> {
+        return new CharacterCard(2, Character._2, parameters -> {
             parameters.setTakeProfessorEvenIfSameStudents(true);
         }, parameters -> {
             parameters.setTakeProfessorEvenIfSameStudents(false);
@@ -35,7 +42,7 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get4() {
-        return new CharacterCard(1, Character._1, parameters -> {
+        return new CharacterCard(1, Character._4, parameters -> {
             parameters.setMotherNatureExtraMovements(2);
         }, parameters -> {
             parameters.setMotherNatureExtraMovements(0);
@@ -43,7 +50,7 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get6() {
-        return new CharacterCard(3, Character._1, parameters -> {
+        return new CharacterCard(3, Character._6, parameters -> {
             parameters.setTowersCountInInfluence(false);
         }, parameters -> {
             parameters.setTowersCountInInfluence(true);
@@ -51,15 +58,20 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get7() {
-        return new CharacterCard(1, Character._1, parameters -> {
+        return new CharacterCardWithSetUpAction(1, Character._7, parameters -> {
 
         }, parameters -> {
 
-        });
+        }, ((bag, students) -> {
+            List<PawnColor> ris = bag.drawStudents(6);
+            for (PawnColor c : ris) {
+                students.put(c, students.get(c) + 1);
+            }
+        }));
     }
 
     private CharacterCard get8() {
-        return new CharacterCard(2, Character._1, parameters -> {
+        return new CharacterCard(2, Character._8, parameters -> {
             parameters.setExtraInfluence(2);
         }, parameters -> {
             parameters.setExtraInfluence(0);
@@ -67,7 +79,7 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get9() {
-        return new CharacterCard(3, Character._1, parameters -> {
+        return new CharacterCard(3, Character._9, parameters -> {
             //TODO how can we have here the color that the player has choosen?
         }, parameters -> {
             parameters.setColorWithNoInfluence(PawnColor.NONE);
@@ -75,10 +87,15 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get11() {
-        return new CharacterCard(2, Character._1, parameters -> {
+        return new CharacterCardWithSetUpAction(2, Character._11, parameters -> {
 
         }, parameters -> {
 
-        });
+        }, ((bag, students) -> {
+            List<PawnColor> ris = bag.drawStudents(4);
+            for (PawnColor c : ris) {
+                students.put(c, students.get(c) + 1);
+            }
+        }));
     }
 }
