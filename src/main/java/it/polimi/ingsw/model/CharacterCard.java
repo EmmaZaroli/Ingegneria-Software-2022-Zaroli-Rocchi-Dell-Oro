@@ -7,15 +7,12 @@ public class CharacterCard {
     private final int initialPrice;
     private boolean hasCoin;
     private final Character character;
-    private final Effect effect;
-    private final Effect reverseEffect;
 
-    protected CharacterCard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
+
+    protected CharacterCard(int initialPrice, Character character) {
         this.initialPrice = initialPrice;
         this.hasCoin = false;
         this.character = character;
-        this.effect = effect;
-        this.reverseEffect = reverseEffect;
     }
 
     public boolean hasCoins() {
@@ -30,11 +27,4 @@ public class CharacterCard {
         return this.character;
     }
 
-    public void activateEffect(GameParameters parameters) {
-        this.effect.activateEffect(parameters);
-    }
-
-    public void reverseEffect(GameParameters parameters) {
-        this.reverseEffect.activateEffect(parameters);
-    }
 }

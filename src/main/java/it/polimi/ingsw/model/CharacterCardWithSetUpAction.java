@@ -11,8 +11,8 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
     private final SetupEffect setupEffect;
     private final Map<PawnColor, Integer> students;
 
-    protected CharacterCardWithSetUpAction(int initialPrice, Character character, Effect effect, Effect reverseEffect, SetupEffect setupEffect) {
-        super(initialPrice, character, effect, reverseEffect);
+    protected CharacterCardWithSetUpAction(int initialPrice, Character character, SetupEffect setupEffect) {
+        super(initialPrice, character);
         this.setupEffect = setupEffect;
         students = new HashMap<>();
     }
