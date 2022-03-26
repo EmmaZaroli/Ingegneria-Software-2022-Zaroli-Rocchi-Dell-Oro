@@ -1,15 +1,14 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.exceptions.IllegalActionException;
+import it.polimi.ingsw.controller.exceptions.IllegalAssistantException;
+import it.polimi.ingsw.controller.exceptions.NotAllowedMotherNatureMovementException;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
-import it.polimi.ingsw.model.exceptions.IllegalActionException;
-import it.polimi.ingsw.model.exceptions.IllegalAssistantException;
-import it.polimi.ingsw.model.exceptions.NotAllowedMotherNatureMovementException;
-import it.polimi.ingsw.model.exceptions.TowersOutOfBoundException;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.Arrays;

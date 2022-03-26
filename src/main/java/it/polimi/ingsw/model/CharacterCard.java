@@ -1,19 +1,16 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.enums.Character;
 
-public class CharacterCard {
+public abstract class CharacterCard {
     private final int initialPrice;
     private boolean hasCoin;
     private final Character character;
-    private final Effect effect;
 
-    public CharacterCard(int initialPrice, Character character, Effect effect) {
+    protected CharacterCard(int initialPrice, Character character) {
         this.initialPrice = initialPrice;
-        this.hasCoin = false;
         this.character = character;
-        this.effect = effect;
+        this.hasCoin = false;
     }
 
     public boolean hasCoins() {
@@ -28,7 +25,7 @@ public class CharacterCard {
         return this.character;
     }
 
-    public void activateEffect(GameController game) {
-        this.effect.activateEffect(game);
+    protected void setUsed() {
+        this.hasCoin = true;
     }
 }

@@ -22,7 +22,7 @@ public class Bag {
         }
     }
 
-    protected PawnColor drawStudent() {
+    private PawnColor drawStudent() {
         RandomHelper randomHelper = RandomHelper.getInstance();
         //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
         int random = randomHelper.getInt(pawnCount) + 1;

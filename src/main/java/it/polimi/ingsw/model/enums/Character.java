@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model.enums;
 
 public enum Character {
-    _1,
-    _2,
-    _4,
-    _6,
-    _7,
-    _8,
-    _9,
-    _11
+    CHARACTER_ONE,
+    CHARACTER_TWO,
+    CHARACTER_FOUR,
+    CHARACTER_SIX,
+    CHARACTER_SEVEN,
+    CHARACTER_EIGHT,
+    CHARACTER_NINE,
+    CHARACTER_ELEVEN
 }
