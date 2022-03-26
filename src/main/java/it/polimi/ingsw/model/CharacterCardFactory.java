@@ -20,69 +20,34 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get1() {
-        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_ONE, ((bag, students) -> {
-            List<PawnColor> ris = bag.drawStudents(4);
-            for (PawnColor c : ris) {
-                students.put(c, students.get(c) + 1);
-            }
-        }));
+        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_ONE);
     }
 
     private CharacterCard get2() {
-        return new StandardCharacterCard(2, Character.CHARACTER_TWO, parameters -> {
-            parameters.setTakeProfessorEvenIfSameStudents(true);
-        }, parameters -> {
-            parameters.setTakeProfessorEvenIfSameStudents(false);
-        });
+        return new CharacterCard(2, Character.CHARACTER_TWO);
     }
 
     private CharacterCard get4() {
-        return new StandardCharacterCard(1, Character.CHARACTER_FOUR, parameters -> {
-            parameters.setMotherNatureExtraMovements(2);
-        }, parameters -> {
-            parameters.setMotherNatureExtraMovements(0);
-        });
+        return new CharacterCard(1, Character.CHARACTER_FOUR);
     }
 
     private CharacterCard get6() {
-        return new StandardCharacterCard(3, Character.CHARACTER_SIX, parameters -> {
-            parameters.setTowersCountInInfluence(false);
-        }, parameters -> {
-            parameters.setTowersCountInInfluence(true);
-        });
+        return new CharacterCard(3, Character.CHARACTER_SIX);
     }
 
     private CharacterCard get7() {
-        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_SEVEN, ((bag, students) -> {
-            List<PawnColor> ris = bag.drawStudents(6);
-            for (PawnColor c : ris) {
-                students.put(c, students.get(c) + 1);
-            }
-        }));
+        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_SEVEN);
     }
 
     private CharacterCard get8() {
-        return new StandardCharacterCard(2, Character.CHARACTER_EIGHT, parameters -> {
-            parameters.setExtraInfluence(2);
-        }, parameters -> {
-            parameters.setExtraInfluence(0);
-        });
+        return new CharacterCard(2, Character.CHARACTER_EIGHT);
     }
 
     private CharacterCard get9() {
-        return new StandardCharacterCard(3, Character.CHARACTER_NINE, parameters -> {
-            //TODO how can we have here the color that the player has choosen?
-        }, parameters -> {
-            parameters.setColorWithNoInfluence(PawnColor.NONE);
-        });
+        return new CharacterCard(3, Character.CHARACTER_NINE);
     }
 
     private CharacterCard get11() {
-        return new CharacterCardWithSetUpAction(2, Character.CHARACTER_ELEVEN, ((bag, students) -> {
-            List<PawnColor> ris = bag.drawStudents(4);
-            for (PawnColor c : ris) {
-                students.put(c, students.get(c) + 1);
-            }
-        }));
+        return new CharacterCardWithSetUpAction(2, Character.CHARACTER_ELEVEN);
     }
 }
