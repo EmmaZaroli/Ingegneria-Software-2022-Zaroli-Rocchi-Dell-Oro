@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-//TODO Can we avoid to instantiate the same card multiple times?
 public record AssistantCard(int value, int motherNatureMovement) {
 
     @Override

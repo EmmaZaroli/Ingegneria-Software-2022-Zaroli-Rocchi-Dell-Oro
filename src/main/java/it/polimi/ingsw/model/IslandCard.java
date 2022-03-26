@@ -4,7 +4,6 @@ import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
 
-
 public class IslandCard {
     private final List<PawnColor> students;
     private Tower tower;
@@ -45,7 +44,7 @@ public class IslandCard {
         return size;
     }
 
-    public void setSize() {
+    public void addTower() {
         this.size++;
     }
 

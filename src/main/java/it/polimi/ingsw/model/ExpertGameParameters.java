@@ -48,5 +48,4 @@ public class ExpertGameParameters extends GameParameters {
     public void setColorWithNoInfluence(PawnColor colorWithNoInfluence) {
         this.colorWithNoInfluence = colorWithNoInfluence;
     }
-
 }

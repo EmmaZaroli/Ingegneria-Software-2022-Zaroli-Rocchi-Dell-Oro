@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.enums.Character;
 
 public abstract class CharacterCard {
@@ -8,11 +7,10 @@ public abstract class CharacterCard {
     private boolean hasCoin;
     private final Character character;
 
-
     protected CharacterCard(int initialPrice, Character character) {
         this.initialPrice = initialPrice;
-        this.hasCoin = false;
         this.character = character;
+        this.hasCoin = false;
     }
 
     public boolean hasCoins() {
@@ -27,4 +25,7 @@ public abstract class CharacterCard {
         return this.character;
     }
 
+    protected void setUsed() {
+        this.hasCoin = true;
+    }
 }

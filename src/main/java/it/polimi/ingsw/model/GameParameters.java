@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.PawnColor;
-
 public class GameParameters {
     private int initialTowersCount;
     private int initialStudentsCount;
@@ -39,5 +37,4 @@ public class GameParameters {
     public void setStudentsToMove(int studentsToMove) {
         this.studentsToMove = studentsToMove;
     }
-
 }

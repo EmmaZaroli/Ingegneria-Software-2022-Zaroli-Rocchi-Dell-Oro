@@ -2,17 +2,18 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
 
-public class CharacterCardStandard extends CharacterCard {
+public class StandardCharacterCard extends CharacterCard {
     private final Effect effect;
     private final Effect reverseEffect;
 
-    protected CharacterCardStandard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
+    protected StandardCharacterCard(int initialPrice, Character character, Effect effect, Effect reverseEffect) {
         super(initialPrice, character);
         this.effect = effect;
         this.reverseEffect = reverseEffect;
     }
 
     public void activateEffect(ExpertGameParameters parameters) {
+        this.setUsed();
         this.effect.activateEffect(parameters);
     }
 

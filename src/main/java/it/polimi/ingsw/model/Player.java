@@ -40,7 +40,7 @@ public class Player {
 
     //TODO sicuramente da sistemare, espone il rep
     public List<AssistantCard> getAssistantDeck() {
-        return assistantDeck;
+        return (LinkedList) ((LinkedList) assistantDeck).clone();
     }
 
     public SchoolBoard getBoard() {
@@ -55,6 +55,7 @@ public class Player {
         return this.nickname;
     }
 
+    //TODO clone?
     public SchoolBoard getSchoolBoard() {
         return schoolBoard;
     }
@@ -67,6 +68,7 @@ public class Player {
         return assistantDeck.isEmpty();
     }
 
+    //TODO maybe we don't need this anymore
     public boolean isPlayerTurn() {
         return isPlayerTurn;
     }
@@ -77,7 +79,7 @@ public class Player {
 
     public void playAssistant(int assistantIndex) {
         if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
-            //TODO throw exception
+            //TODO throw exception or let the controller do it
         }
         this.discardPileHead = assistantDeck.get(assistantIndex);
         assistantDeck.remove(assistantIndex);
@@ -87,7 +89,7 @@ public class Player {
         isPlayerTurn = !isPlayerTurn;
     }
 
-    //TODO move to game
+    //TODO move to gameController
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!getBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
@@ -103,7 +105,7 @@ public class Player {
 
     protected void playAssistant(AssistantCard a) {
         if (!assistantDeck.contains(a)) {
-            //TODO throw exception
+            //TODO throw exception or let the controller do it
         }
         this.discardPileHead = a;
         assistantDeck.remove(a);
