@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class GameController {
-    public final Player[] players;
+    private final Player[] players;
     private final TableController table;
     private GamePhase gamePhase;
     private int playedCount;
 
-    public int currentPlayer;
+    private int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
     private SchoolBoard currentPlayerBoard;
@@ -83,7 +83,7 @@ public class GameController {
         this.playedCount = 0;
     }
 
-    //TODO how to check this method is called exclusively by the currentPlayer? (Same for following methods)
+
     private void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
         if (this.gamePhase != GamePhase.PLANNING) {
             throw new IllegalActionException();
@@ -343,5 +343,13 @@ public class GameController {
         }
 
         return false;
+    }
+
+    protected int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    protected Player[] getPlayers() {
+        return players;
     }
 }

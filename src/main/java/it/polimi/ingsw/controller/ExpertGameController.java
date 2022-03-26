@@ -1,33 +1,38 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.CharacterCardFactory;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.Character;
+import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class ExpertGameController extends GameController {
 
-    private List<CharacterCard> characterCards;
+    private CharacterCard[] characterCards;
+    private CharacterCardFactory cardFactory = new CharacterCardFactory();
 
     public ExpertGameController(Player[] players) {
         //TODO how can i create an ExpertTableController and ExpertPlayer
         super(players);
-        characterCards = new ArrayList<>(drawCharactersCards());
+        drawCharactersCards();
     }
 
-    public List<CharacterCard> drawCharactersCards() {
-        int n = 8;
-        List<CharacterCard> characters = new ArrayList<>();
+    private void drawCharactersCards() {
+        int numberCard;
+        List<Character> Characters = new ArrayList<Character>();
         Random r = new Random();
+        Characters.addAll((Arrays.stream(Character.values()).toList()));
         for (int i = 0; i < 3; i++) {
-            int numberCard = r.nextInt(n);
-            //call Factory with parameter Character.values(numberCard)
+            numberCard = r.nextInt(Characters.size());
+            characterCards[i] = cardFactory.getCharacterCard(Characters.get(numberCard));
+            Characters.remove(Characters.get(numberCard));
         }
-        return characters;
     }
 
     @Override
@@ -40,13 +45,13 @@ public class ExpertGameController extends GameController {
          */
     }
 
-    public void canActivateCharacterAbility(Character character) {
+    public void canActivateCharacterAbility(CharacterCard character) {
         //TODO throw exception if the card doesn't exist on the table
-        //if (players[currentPlayer].getCoins()>character.getCurrentPrice())
+        //if (getPlayers()[getCurrentPlayer()].getCoins()>character.getCurrentPrice())
         activateCharacterAbility(character);
     }
 
-    public void activateCharacterAbility(Character character) {
-
+    public void activateCharacterAbility(CharacterCard character) {
+        
     }
 }
