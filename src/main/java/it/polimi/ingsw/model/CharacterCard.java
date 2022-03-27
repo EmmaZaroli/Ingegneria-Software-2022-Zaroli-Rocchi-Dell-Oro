@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
 
-public abstract class CharacterCard {
+public class CharacterCard {
     private final int initialPrice;
     private boolean hasCoin;
     private final Character character;

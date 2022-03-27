@@ -7,17 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CharacterCardWithSetUpAction extends CharacterCard {
-    private final SetupEffect setupEffect;
     private final List<PawnColor> students;
 
-    protected CharacterCardWithSetUpAction(int initialPrice, Character character, SetupEffect setupEffect) {
+    protected CharacterCardWithSetUpAction(int initialPrice, Character character) {
         super(initialPrice, character);
-        this.setupEffect = setupEffect;
         students = new LinkedList<>();
-    }
-
-    public void activateSetupEffect(Bag bag) {
-        this.setupEffect.activateEffect(bag, students);
     }
 
     public List<PawnColor> getStudents() {
