@@ -1,5 +1,6 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.List;
