@@ -3,9 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 public class DiningRoom {
-    private final EnumMap<PawnColor, Integer> students;
+    private final Map<PawnColor, Integer> students;
 
     public DiningRoom() {
         this.students = new EnumMap<>(PawnColor.class);
