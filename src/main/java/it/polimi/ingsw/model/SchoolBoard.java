@@ -41,7 +41,6 @@ public class SchoolBoard {
     }
 
     public int countStudentsInEntrance() {
-        //TODO same as below
         return this.entrance.size();
     }
 
@@ -58,7 +57,6 @@ public class SchoolBoard {
     }
 
     public int getTowersCount() {
-        //TODO even if now this method it is not used, it will be used by the controller to check the selected action is valid
         return this.towers;
     }
 
