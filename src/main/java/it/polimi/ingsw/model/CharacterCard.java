@@ -13,7 +13,7 @@ public class CharacterCard {
         this.hasCoin = false;
     }
 
-    public boolean hasCoins() {
+    public boolean hasCoin() {
         return this.hasCoin;
     }
 

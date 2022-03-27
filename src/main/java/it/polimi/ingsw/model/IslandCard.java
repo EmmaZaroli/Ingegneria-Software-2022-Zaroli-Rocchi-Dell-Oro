@@ -19,7 +19,7 @@ public class IslandCard {
         students.add(student);
     }
 
-    public void movePawnsOnIsland(List<PawnColor> p) {
+    public void movePawnOnIsland(List<PawnColor> p) {
         students.addAll(p);
     }
 
@@ -27,6 +27,7 @@ public class IslandCard {
         return students;
     }
 
+    //TODO set?
     public int countInfluence(List<PawnColor> professors, Tower towerColor) {
         int influence = 0;
         for (PawnColor p : students) {
@@ -44,7 +45,7 @@ public class IslandCard {
         return size;
     }
 
-    public void addTower() {
+    public void incrementSize() {
         this.size++;
     }
 

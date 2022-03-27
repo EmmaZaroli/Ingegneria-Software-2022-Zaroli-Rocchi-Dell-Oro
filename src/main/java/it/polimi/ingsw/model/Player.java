@@ -43,6 +43,7 @@ public class Player {
         return (LinkedList) ((LinkedList) assistantDeck).clone();
     }
 
+    //TODO same method, two names
     public SchoolBoard getBoard() {
         return this.schoolBoard;
     }
