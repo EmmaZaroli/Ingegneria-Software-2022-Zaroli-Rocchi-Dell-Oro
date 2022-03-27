@@ -38,12 +38,12 @@ public class Player {
         return assistantDeck.get(assistantIndex);
     }
 
-    //TODO sicuramente da sistemare, espone il rep
+
     public List<AssistantCard> getAssistantDeck() {
         return (LinkedList) ((LinkedList) assistantDeck).clone();
     }
 
-    //TODO same method, two names
+
     public SchoolBoard getBoard() {
         return this.schoolBoard;
     }
@@ -54,11 +54,6 @@ public class Player {
 
     public String getNickname() {
         return this.nickname;
-    }
-
-    //TODO clone?
-    public SchoolBoard getSchoolBoard() {
-        return schoolBoard;
     }
 
     public Wizzard getWizzard() {
@@ -90,19 +85,6 @@ public class Player {
         isPlayerTurn = !isPlayerTurn;
     }
 
-    //TODO move to gameController
-    public void tryStealProfessor(PawnColor color, Player player) {
-        if (!getBoard().isThereProfessor(color) &&
-                player.getBoard().isThereProfessor(color) &&
-                getBoard().getStudentsInDiningRoom(color) > player.getBoard().getStudentsInDiningRoom(color)) {
-            try {
-                player.getBoard().removeProfessor(color);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            getBoard().addProfessor(color);
-        }
-    }
 
     protected void playAssistant(AssistantCard a) {
         if (!assistantDeck.contains(a)) {

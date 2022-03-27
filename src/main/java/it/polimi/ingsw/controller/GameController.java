@@ -106,6 +106,19 @@ public class GameController {
         this.movedPawn();
     }
 
+    public void tryStealProfessor(PawnColor color, Player player) {
+        if (!players[currentPlayer].getBoard().isThereProfessor(color) &&
+                player.getBoard().isThereProfessor(color) &&
+                players[currentPlayer].getBoard().getStudentsInDiningRoom(color) > player.getBoard().getStudentsInDiningRoom(color)) {
+            try {
+                player.getBoard().removeProfessor(color);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            players[currentPlayer].getBoard().addProfessor(color);
+        }
+    }
+
     public void moveStudentToIsle(PawnColor pawn, int isle) {
         this.table.movePawnOnIsland(pawn, isle);
         this.movedPawn();
@@ -156,17 +169,20 @@ public class GameController {
         if (this.table.canBuildTower(player.getBoard().getTowerColor())) {
             Pair result = this.table.buildTower(player.getBoard().getTowerColor());
             Arrays.stream(this.players)
-                    .filter(x -> x.getSchoolBoard().getTowerColor() == result.tower())
+                    .filter(x -> x.getBoard().getTowerColor() == result.tower())
                     .forEach(x -> {
                         try {
-                            x.getSchoolBoard().addTowers(result.size());
+                            x.getBoard().addTowers(result.size());
                         } catch (Exception e) {
                             //TODO this is not the proper way of handling exceptions
                             e.printStackTrace();
                         }
                     });
+            for (int i = 0; i < result.size(); i++) {
+                player.getBoard().removeTower();
+                checkImmediateGameOver();
+            }
         }
-        checkImmediateGameOver();
     }
 
     private boolean canPlayAssistant(AssistantCard assistant) {
@@ -208,7 +224,7 @@ public class GameController {
         } else {
             //It will also check the current player with itself, but this should not cause problems
             for (Player p : players) {
-                players[currentPlayer].tryStealProfessor(color, p);
+                tryStealProfessor(color, p);
             }
         }
     }
