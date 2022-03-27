@@ -117,7 +117,7 @@ public class TableController {
         if (islandLeft.getTower().equals(towerColor)) {
             islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandLeft.getStudentsFromIsland());
             islandCards.remove(Math.floorMod(islandWithMotherNature - 1, islandCards.size()));
-            islandCards.get(islandWithMotherNature).setSize();
+            islandCards.get(islandWithMotherNature).addTower();
             islandWithMotherNature -= 1;
         }
         //left
@@ -125,7 +125,7 @@ public class TableController {
         if (islandLeft.getTower().equals(towerColor)) {
             islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandRight.getStudentsFromIsland());
             islandCards.remove(Math.floorMod(islandWithMotherNature + 1, islandCards.size()));
-            islandCards.get(islandWithMotherNature).setSize();
+            islandCards.get(islandWithMotherNature).addTower();
         }
     }
 

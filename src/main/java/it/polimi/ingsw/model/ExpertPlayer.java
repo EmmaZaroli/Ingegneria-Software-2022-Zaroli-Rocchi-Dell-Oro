@@ -6,9 +6,9 @@ import it.polimi.ingsw.model.enums.Wizzard;
 public class ExpertPlayer extends Player {
     private int coins;
 
-    public ExpertPlayer(String nickname, Wizzard wizzard, Tower tower, int coins) {
+    public ExpertPlayer(String nickname, Wizzard wizzard, Tower tower) {
         super(nickname, wizzard, tower);
-        this.coins = coins;
+        this.coins = 1;
     }
 
     public int getCoins() {
