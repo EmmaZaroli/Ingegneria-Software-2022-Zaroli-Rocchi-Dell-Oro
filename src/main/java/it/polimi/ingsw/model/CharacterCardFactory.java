@@ -20,34 +20,34 @@ public class CharacterCardFactory {
     }
 
     private CharacterCard get1() {
-        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_ONE);
+        return new CharacterCardWithSetUpAction(Character.CHARACTER_ONE.getInitialPrice(), Character.CHARACTER_ONE);
     }
 
     private CharacterCard get2() {
-        return new CharacterCard(2, Character.CHARACTER_TWO);
+        return new CharacterCard(Character.CHARACTER_TWO.getInitialPrice(), Character.CHARACTER_TWO);
     }
 
     private CharacterCard get4() {
-        return new CharacterCard(1, Character.CHARACTER_FOUR);
+        return new CharacterCard(Character.CHARACTER_FOUR.getInitialPrice(), Character.CHARACTER_FOUR);
     }
 
     private CharacterCard get6() {
-        return new CharacterCard(3, Character.CHARACTER_SIX);
+        return new CharacterCard(Character.CHARACTER_SIX.getInitialPrice(), Character.CHARACTER_SIX);
     }
 
     private CharacterCard get7() {
-        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_SEVEN);
+        return new CharacterCardWithSetUpAction(Character.CHARACTER_SEVEN.getInitialPrice(), Character.CHARACTER_SEVEN);
     }
 
     private CharacterCard get8() {
-        return new CharacterCard(2, Character.CHARACTER_EIGHT);
+        return new CharacterCard(Character.CHARACTER_EIGHT.getInitialPrice(), Character.CHARACTER_EIGHT);
     }
 
     private CharacterCard get9() {
-        return new CharacterCard(3, Character.CHARACTER_NINE);
+        return new CharacterCard(Character.CHARACTER_NINE.getInitialPrice(), Character.CHARACTER_NINE);
     }
 
     private CharacterCard get11() {
-        return new CharacterCardWithSetUpAction(2, Character.CHARACTER_ELEVEN);
+        return new CharacterCardWithSetUpAction(Character.CHARACTER_ELEVEN.getInitialPrice(), Character.CHARACTER_ELEVEN);
     }
 }
