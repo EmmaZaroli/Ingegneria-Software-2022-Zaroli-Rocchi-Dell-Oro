@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.PawnColor;
+
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 
@@ -73,6 +73,7 @@ public class Player {
         isPlayerTurn = playerTurn;
     }
 
+    //TODO we already have this method, can we delete it ?
     public void playAssistant(int assistantIndex) {
         if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
             //TODO throw exception or let the controller do it
