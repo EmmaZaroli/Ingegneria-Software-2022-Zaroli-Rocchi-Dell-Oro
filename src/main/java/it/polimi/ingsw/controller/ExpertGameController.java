@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Random;
 
 public class ExpertGameController extends GameController {
-
     private CharacterCard[] characterCards;
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
     private Effect[] effects;
