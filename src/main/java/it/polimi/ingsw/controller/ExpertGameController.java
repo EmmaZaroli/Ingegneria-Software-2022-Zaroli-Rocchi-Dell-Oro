@@ -16,6 +16,7 @@ public class ExpertGameController extends GameController {
 
     private CharacterCard[] characterCards;
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
+    private Effect[] effects;
 
     public ExpertGameController(Player[] players) {
         //TODO how can i create an ExpertTableController and ExpertPlayer
@@ -52,6 +53,5 @@ public class ExpertGameController extends GameController {
     }
 
     public void activateCharacterAbility(CharacterCard character) {
-        
     }
 }

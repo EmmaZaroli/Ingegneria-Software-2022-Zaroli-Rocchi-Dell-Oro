@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.ExpertGameParameters;
+
 public interface Effect {
-    public void activateEffect(Object ... args);
-    public void reverseEffect(Object ... args);
 }
