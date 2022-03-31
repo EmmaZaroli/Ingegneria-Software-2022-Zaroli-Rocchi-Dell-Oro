@@ -43,12 +43,12 @@ public class ExpertGameController extends GameController {
          */
     }
 
-    public void canActivateCharacterAbility(CharacterCard character) {
+    public void canActivateCharacterAbility(int characterIndex) {
         //TODO throw exception if the card doesn't exist on the table
         //if (getPlayers()[getCurrentPlayer()].getCoins()>character.getCurrentPrice())
-        activateCharacterAbility(character);
+        activateCharacterAbility(characterIndex);
     }
 
-    public void activateCharacterAbility(CharacterCard character) {
+    public void activateCharacterAbility(int characterIndex) {
     }
 }
