@@ -15,7 +15,7 @@ public class ExpertPlayer extends Player {
         return this.coins;
     }
 
-    public void addCoins() {
-        coins++;
+    public void addCoin() {
+        this.coins++;
     }
 }

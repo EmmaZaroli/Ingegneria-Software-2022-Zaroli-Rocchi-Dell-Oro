@@ -115,17 +115,17 @@ public class TableController {
         //right
         IslandCard islandLeft = islandCards.get(Math.floorMod(islandWithMotherNature - 1, islandCards.size()));
         if (islandLeft.getTower().equals(towerColor)) {
-            islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandLeft.getStudentsFromIsland());
+            islandCards.get(islandWithMotherNature).movePawnOnIsland(islandLeft.getStudentsFromIsland());
             islandCards.remove(Math.floorMod(islandWithMotherNature - 1, islandCards.size()));
-            islandCards.get(islandWithMotherNature).addTower();
+            islandCards.get(islandWithMotherNature).incrementSize();
             islandWithMotherNature -= 1;
         }
         //left
         IslandCard islandRight = islandCards.get(Math.floorMod(islandWithMotherNature + 1, islandCards.size()));
         if (islandLeft.getTower().equals(towerColor)) {
-            islandCards.get(islandWithMotherNature).movePawnsOnIsland(islandRight.getStudentsFromIsland());
+            islandCards.get(islandWithMotherNature).movePawnOnIsland(islandRight.getStudentsFromIsland());
             islandCards.remove(Math.floorMod(islandWithMotherNature + 1, islandCards.size()));
-            islandCards.get(islandWithMotherNature).addTower();
+            islandCards.get(islandWithMotherNature).incrementSize();
         }
     }
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.PawnColor;
+
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 
@@ -38,10 +38,11 @@ public class Player {
         return assistantDeck.get(assistantIndex);
     }
 
-    //TODO sicuramente da sistemare, espone il rep
+
     public List<AssistantCard> getAssistantDeck() {
         return (LinkedList) ((LinkedList) assistantDeck).clone();
     }
+
 
     public SchoolBoard getBoard() {
         return this.schoolBoard;
@@ -53,11 +54,6 @@ public class Player {
 
     public String getNickname() {
         return this.nickname;
-    }
-
-    //TODO clone?
-    public SchoolBoard getSchoolBoard() {
-        return schoolBoard;
     }
 
     public Wizzard getWizzard() {
@@ -77,6 +73,7 @@ public class Player {
         isPlayerTurn = playerTurn;
     }
 
+    //TODO we already have this method, can we delete it ?
     public void playAssistant(int assistantIndex) {
         if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
             //TODO throw exception or let the controller do it
@@ -89,19 +86,6 @@ public class Player {
         isPlayerTurn = !isPlayerTurn;
     }
 
-    //TODO move to gameController
-    public void tryStealProfessor(PawnColor color, Player player) {
-        if (!getBoard().isThereProfessor(color) &&
-                player.getBoard().isThereProfessor(color) &&
-                getBoard().getStudentsInDiningRoom(color) > player.getBoard().getStudentsInDiningRoom(color)) {
-            try {
-                player.getBoard().removeProfessor(color);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            getBoard().addProfessor(color);
-        }
-    }
 
     protected void playAssistant(AssistantCard a) {
         if (!assistantDeck.contains(a)) {

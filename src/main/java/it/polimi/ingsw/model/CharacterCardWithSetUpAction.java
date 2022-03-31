@@ -22,6 +22,7 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
         students.add(color);
     }
 
+    //TODO finally something sw-eng compliant. Let's copy this thing in other classes
     public void addStudent(List<PawnColor> colors) {
         this.students.addAll(colors);
     }
