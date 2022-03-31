@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CharacterCardFactory;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.Character;
-import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.Random;
 
 public class ExpertGameController extends GameController {
-
     private CharacterCard[] characterCards;
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
     private Effect[] effects;
@@ -46,12 +43,12 @@ public class ExpertGameController extends GameController {
          */
     }
 
-    public void canActivateCharacterAbility(CharacterCard character) {
+    public void canActivateCharacterAbility(int characterIndex) {
         //TODO throw exception if the card doesn't exist on the table
         //if (getPlayers()[getCurrentPlayer()].getCoins()>character.getCurrentPrice())
-        activateCharacterAbility(character);
+        activateCharacterAbility(characterIndex);
     }
 
-    public void activateCharacterAbility(CharacterCard character) {
+    public void activateCharacterAbility(int characterIndex) {
     }
 }
