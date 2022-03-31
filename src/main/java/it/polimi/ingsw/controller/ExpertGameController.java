@@ -4,8 +4,6 @@ import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CharacterCardFactory;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.Character;
-import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
