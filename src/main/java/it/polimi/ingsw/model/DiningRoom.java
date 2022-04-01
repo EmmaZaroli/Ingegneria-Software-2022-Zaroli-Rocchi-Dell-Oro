@@ -9,7 +9,10 @@ public class DiningRoom {
     private final Map<PawnColor, Integer> students;
 
     public DiningRoom() {
+
         this.students = new EnumMap<>(PawnColor.class);
+        for (PawnColor p : PawnColor.values())
+            students.put(p, 0);
     }
 
     //Adds a student and returns true if the player is supposed to take one coin from the table
