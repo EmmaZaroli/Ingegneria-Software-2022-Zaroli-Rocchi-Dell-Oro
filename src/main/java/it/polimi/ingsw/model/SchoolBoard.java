@@ -57,7 +57,7 @@ public class SchoolBoard {
     }
 
     public int getTowersCount() {
-       return this.towers;
+        return this.towers;
     }
 
     public boolean isThereProfessor(PawnColor color) {
@@ -79,5 +79,9 @@ public class SchoolBoard {
 
     public void removeTower() {
         towers--;
+    }
+
+    public boolean isStudentInEntrance(PawnColor color) {
+        return entrance.contains(color);
     }
 }

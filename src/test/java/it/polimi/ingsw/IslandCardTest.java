@@ -5,13 +5,13 @@ import static org.junit.Assert.*;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import org.junit.Before;
+import junit.framework.TestCase;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.*;
 
-public class IslandCardTest {
+class IslandCardTest extends TestCase {
 
     IslandCard islandCard1 = new IslandCard();
 

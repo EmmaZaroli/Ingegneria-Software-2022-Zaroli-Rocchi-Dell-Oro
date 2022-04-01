@@ -6,11 +6,12 @@ import it.polimi.ingsw.model.enums.PlayerCountIcon;
 
 import static org.junit.Assert.*;
 
+import junit.framework.TestCase;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
 
-class CloudTileTest {
+class CloudTileTest extends TestCase {
 
 
     @Test
