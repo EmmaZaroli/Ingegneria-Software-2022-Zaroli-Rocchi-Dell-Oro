@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -25,12 +25,42 @@ class SchoolBoardTest extends TestCase {
     }
 
     @Test
-    void t1() {
+    void movingStudents() {
         schoolBoard.addStudentsToEntrance(this.studentsGenerator());
         assertEquals(7, schoolBoard.countStudentsInEntrance());
         schoolBoard.moveStudentFromEntranceToDiningRoom(PawnColor.RED);
         if (schoolBoard.isStudentInEntrance(PawnColor.RED))
             schoolBoard.moveStudentFromEntranceToDiningRoom(PawnColor.RED);
         assertEquals(1, schoolBoard.getStudentsInDiningRoom(PawnColor.RED));
+    }
+
+    private int countProfessor(PawnColor pawnColor) {
+        int i = 0;
+        for (PawnColor p : schoolBoard.getProfessors()) {
+            if (p.equals(pawnColor)) i++;
+        }
+        return i;
+    }
+
+    @Test
+    void movingProfessors() {
+        schoolBoard.addProfessor(PawnColor.RED);
+        assertEquals(1, countProfessor(PawnColor.RED));
+        if (!schoolBoard.isThereProfessor(PawnColor.RED)) {
+            schoolBoard.addProfessor(PawnColor.RED);
+        }
+        assertEquals(1, countProfessor(PawnColor.RED));
+        assertEquals(1, schoolBoard.countProfessors());
+        schoolBoard.removeProfessor(PawnColor.RED);
+        assertEquals(0, schoolBoard.countProfessors());
+    }
+
+    @Test
+    void movingTowers() {
+        schoolBoard.addTowers(1);
+        assertEquals(9, schoolBoard.getTowersCount());
+        assertEquals(Tower.BLACK, schoolBoard.getTowerColor());
+        schoolBoard.removeTower();
+        assertEquals(8, schoolBoard.getTowersCount());
     }
 }

@@ -87,7 +87,7 @@ public class Player {
     }
 
 
-    protected void playAssistant(AssistantCard a) {
+    public void playAssistant(AssistantCard a) {
         if (!assistantDeck.contains(a)) {
             //TODO throw exception or let the controller do it
         }
