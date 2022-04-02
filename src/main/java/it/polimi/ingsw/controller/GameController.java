@@ -11,12 +11,13 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
 import it.polimi.ingsw.utils.Pair;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.io.Serializable;
+import java.util.*;
 
-public class GameController {
+//TODO the whole controller (and model) must be serializable
+public class GameController implements Serializable {
+    private final UUID gameUUID = UUID.randomUUID();
+
     private final Player[] players;
     private final TableController table;
     private GamePhase gamePhase;
@@ -367,5 +368,9 @@ public class GameController {
 
     protected Player[] getPlayers() {
         return players;
+    }
+
+    public UUID getGameId() {
+        return this.gameUUID;
     }
 }
