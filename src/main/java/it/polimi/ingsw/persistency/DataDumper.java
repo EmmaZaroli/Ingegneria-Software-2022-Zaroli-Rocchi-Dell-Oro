@@ -6,6 +6,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +35,7 @@ public class DataDumper {
      * Serializes the Game controller and writes it on a file
      * @param game The game to serialize
      */
-    public void serializeAndWrite(GameController game) {
+    public void saveGame(GameController game) {
         try {
             try (FileOutputStream fileOutputStream = new FileOutputStream(game.getGameId() + SERIALIZED_FILE_FORMAT)) {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -46,11 +49,49 @@ public class DataDumper {
     }
 
     /**
-     * Reads and deserializes a Game controller from a file with the specified name
-     * @param sourceFile the name of the file containing the serialized game
+     * Removes a game from the list of saved games
+     * @param gameId The ID of the game to remove
+     */
+    public void removeGameFromMemory(UUID gameId) {
+        Path filePath = Paths.get(gameId + SERIALIZED_FILE_FORMAT);
+        try {
+            Files.delete(filePath);
+        }  catch(IOException e) {
+            this.logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Reads and deserializes a Game controller from persistent memory
+     * @param gameId The identifier of the requested game
      * @return The deserialized game
      */
-    public GameController readAndDeserialize(String sourceFile) {
+    public GameController getGame(UUID gameId) throws GameNotFoundException {
+        File folder = new File(".");
+        Optional<String> fileName = Arrays.stream(folder.list())
+                .filter(x -> x.contains(gameId.toString() + SERIALIZED_FILE_FORMAT))
+                .findAny();
+        if(fileName.isEmpty()) {
+            this.logger.log(Level.SEVERE, "No game found with id {0}", gameId);
+            throw new GameNotFoundException();
+        }
+
+        return readAndDeserialize(fileName.get());
+    }
+
+    /**
+     * Returns a list containing all the games saved on persistent memory
+     * @return The list of all deserialized games
+     */
+    public List<GameController> getAllGames() {
+        File folder = new File(".");
+        return Arrays.stream(folder.list())
+                .filter(x -> x.contains(SERIALIZED_FILE_FORMAT))
+                .map(this::readAndDeserialize)
+                .toList();
+    }
+
+    private GameController readAndDeserialize(String sourceFile) {
         ObjectInputStream objectInputStream;
         GameController gameController = null;
         try {
@@ -64,18 +105,5 @@ public class DataDumper {
         }
 
         return gameController;
-    }
-
-    /**
-     * Removes a game from the list of saved games
-     * @param gameId The ID of the game to remove
-     */
-    public void removeGameFromMemory(UUID gameId) {
-        Path filePath = Paths.get(gameId + SERIALIZED_FILE_FORMAT);
-        try {
-            Files.delete(filePath);
-        }  catch(IOException e) {
-            this.logger.log(Level.SEVERE, e.getMessage(), e);
-        }
     }
 }
