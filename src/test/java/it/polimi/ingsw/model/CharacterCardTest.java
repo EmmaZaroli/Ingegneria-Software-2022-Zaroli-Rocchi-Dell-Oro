@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 import junit.framework.TestCase;
-import org.junit.After;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,10 +19,10 @@ class CharacterCardTest extends TestCase {
             deck.add(factory.getCharacterCard(c));
         }
         System.out.println(deck.get(0).getCharacter());
-        assertEquals(1, deck.get(0).getCurrentPrice());
+        Assertions.assertEquals(1, deck.get(0).getCurrentPrice());
         deck.get(0).setUsed();
-        assertTrue(deck.get(0).hasCoin());
-        assertEquals(2, deck.get(0).getCurrentPrice());
+        Assertions.assertTrue(deck.get(0).hasCoin());
+        Assertions.assertEquals(2, deck.get(0).getCurrentPrice());
     }
 
     @Test
@@ -38,6 +38,6 @@ class CharacterCardTest extends TestCase {
         if (c.getStudents().contains(PawnColor.RED)) {
             i--;
         }
-        assertEquals(0, i);
+        Assertions.assertEquals(0, i);
     }
 }

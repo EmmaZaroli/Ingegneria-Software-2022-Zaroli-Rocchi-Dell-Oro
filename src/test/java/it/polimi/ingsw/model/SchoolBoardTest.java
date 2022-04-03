@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,11 +27,11 @@ class SchoolBoardTest extends TestCase {
     @Test
     void movingStudents() {
         schoolBoard.addStudentsToEntrance(this.studentsGenerator());
-        assertEquals(7, schoolBoard.countStudentsInEntrance());
+        Assertions.assertEquals(7, schoolBoard.countStudentsInEntrance());
         schoolBoard.moveStudentFromEntranceToDiningRoom(PawnColor.RED);
         if (schoolBoard.isStudentInEntrance(PawnColor.RED))
             schoolBoard.moveStudentFromEntranceToDiningRoom(PawnColor.RED);
-        assertEquals(1, schoolBoard.getStudentsInDiningRoom(PawnColor.RED));
+        Assertions.assertEquals(1, schoolBoard.getStudentsInDiningRoom(PawnColor.RED));
     }
 
     private int countProfessor(PawnColor pawnColor) {
@@ -45,22 +45,22 @@ class SchoolBoardTest extends TestCase {
     @Test
     void movingProfessors() {
         schoolBoard.addProfessor(PawnColor.RED);
-        assertEquals(1, countProfessor(PawnColor.RED));
+        Assertions.assertEquals(1, countProfessor(PawnColor.RED));
         if (!schoolBoard.isThereProfessor(PawnColor.RED)) {
             schoolBoard.addProfessor(PawnColor.RED);
         }
-        assertEquals(1, countProfessor(PawnColor.RED));
-        assertEquals(1, schoolBoard.countProfessors());
+        Assertions.assertEquals(1, countProfessor(PawnColor.RED));
+        Assertions.assertEquals(1, schoolBoard.countProfessors());
         schoolBoard.removeProfessor(PawnColor.RED);
-        assertEquals(0, schoolBoard.countProfessors());
+        Assertions.assertEquals(0, schoolBoard.countProfessors());
     }
 
     @Test
     void movingTowers() {
         schoolBoard.addTowers(1);
-        assertEquals(9, schoolBoard.getTowersCount());
-        assertEquals(Tower.BLACK, schoolBoard.getTowerColor());
+        Assertions.assertEquals(9, schoolBoard.getTowersCount());
+        Assertions.assertEquals(Tower.BLACK, schoolBoard.getTowerColor());
         schoolBoard.removeTower();
-        assertEquals(8, schoolBoard.getTowersCount());
+        Assertions.assertEquals(8, schoolBoard.getTowersCount());
     }
 }

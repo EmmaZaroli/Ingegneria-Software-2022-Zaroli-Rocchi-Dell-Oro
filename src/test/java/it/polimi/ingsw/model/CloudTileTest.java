@@ -1,11 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
-
-import static org.junit.Assert.*;
-
 import junit.framework.TestCase;
 import org.junit.jupiter.api.*;
 
@@ -22,7 +18,7 @@ class CloudTileTest extends TestCase {
         students.add(PawnColor.RED);
         students.add(PawnColor.GREEN);
         cloud.addStudents(students);
-        assertEquals(cloud.takeStudentsFromCloud(), students);
+        Assertions.assertEquals(cloud.takeStudentsFromCloud(), students);
     }
 
 

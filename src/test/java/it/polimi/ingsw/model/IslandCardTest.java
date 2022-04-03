@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import static org.junit.Assert.*;
-
-import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import junit.framework.TestCase;
@@ -28,33 +25,33 @@ class IslandCardTest extends TestCase {
     void PawnOnIsland() {
         List<PawnColor> list = listPawnColor();
         islandCard1.movePawnOnIsland(list);
-        assertEquals(list, islandCard1.getStudentsFromIsland());
+        Assertions.assertEquals(list, islandCard1.getStudentsFromIsland());
         islandCard1.movePawnOnIsland(PawnColor.BLUE);
         list.add(PawnColor.BLUE);
-        assertEquals(list, islandCard1.getStudentsFromIsland());
+        Assertions.assertEquals(list, islandCard1.getStudentsFromIsland());
     }
 
     @Test
     void Tower() {
         islandCard1.setTower(Tower.BLACK);
-        assertEquals(islandCard1.getTower(), Tower.BLACK);
+        Assertions.assertEquals(Tower.BLACK, islandCard1.getTower());
     }
 
     @Test
     void size() {
         islandCard1.incrementSize();
-        assertEquals(islandCard1.getSize(), 2);
+        Assertions.assertEquals(2, islandCard1.getSize());
     }
 
     @Test
     void influence1() {
         List<PawnColor> list1 = new ArrayList<>();
         islandCard1.setTower(Tower.BLACK);
-        assertEquals(islandCard1.countInfluence(list1, Tower.BLACK), 1);
+        Assertions.assertEquals(1, islandCard1.countInfluence(list1, Tower.BLACK));
         list1.add(PawnColor.YELLOW);
-        assertEquals(islandCard1.countInfluence(list1, Tower.BLACK), 1);
+        Assertions.assertEquals(1, islandCard1.countInfluence(list1, Tower.BLACK));
         list1.add(PawnColor.PINK);
-        assertEquals(islandCard1.countInfluence(list1, Tower.BLACK), 1);
+        Assertions.assertEquals(1, islandCard1.countInfluence(list1, Tower.BLACK));
     }
 
     @Test
@@ -62,10 +59,10 @@ class IslandCardTest extends TestCase {
         List<PawnColor> list = listPawnColor();
         islandCard1.movePawnOnIsland(list);
         islandCard1.setTower(Tower.BLACK);
-        assertEquals(islandCard1.countInfluence(list, Tower.BLACK), 4);
-        assertEquals(islandCard1.countInfluence(list, Tower.WHITE), 3);
-        assertEquals(islandCard1.countInfluence(list, Tower.NONE), 3);
-        assertEquals(islandCard1.countInfluence(list, Tower.GREY), 3);
+        Assertions.assertEquals(4, islandCard1.countInfluence(list, Tower.BLACK));
+        Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.WHITE));
+        Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.NONE));
+        Assertions.assertEquals(islandCard1.countInfluence(list, Tower.GREY), 3);
 
     }
 

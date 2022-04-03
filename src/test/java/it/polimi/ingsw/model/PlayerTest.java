@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class PlayerTest extends TestCase {
@@ -13,13 +11,13 @@ class PlayerTest extends TestCase {
     ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE);
 
     @Test
-    void PlayerTest() {
-        assertTrue(player.getNickname().equals("nickname"));
-        assertTrue(player.getWizzard().equals(Wizzard.BLUE));
+    void StandardPlayerTest() {
+        Assertions.assertEquals("nickname", player.getNickname());
+        Assertions.assertEquals(Wizzard.BLUE, player.getWizzard());
         player.togglePlayerTurn();
-        assertTrue(player.isPlayerTurn());
+        Assertions.assertTrue(player.isPlayerTurn());
         player.setPlayerTurn(false);
-        assertTrue(!player.isPlayerTurn());
+        Assertions.assertFalse(player.isPlayerTurn());
         player.getBoard();
     }
 
@@ -30,8 +28,8 @@ class PlayerTest extends TestCase {
         }
         AssistantCard a = player.getAssistant(9);
         player.playAssistant(a);
-        assertEquals(a, player.getDiscardPileHead());
-        assertFalse(player.getAssistantDeck().contains(a));
+        Assertions.assertEquals(a, player.getDiscardPileHead());
+        Assertions.assertFalse(player.getAssistantDeck().contains(a));
         for (int i = 0; player.isDeckEmpty(); i++) {
             player.playAssistant(player.getAssistant(i));
         }
@@ -39,8 +37,8 @@ class PlayerTest extends TestCase {
 
     @Test
     void ExpertPlayer() {
-        assertEquals(1, expertPlayer.getCoins());
+        Assertions.assertEquals(1, expertPlayer.getCoins());
         expertPlayer.addCoin();
-        assertEquals(2, expertPlayer.getCoins());
+        Assertions.assertEquals(2, expertPlayer.getCoins());
     }
 }
