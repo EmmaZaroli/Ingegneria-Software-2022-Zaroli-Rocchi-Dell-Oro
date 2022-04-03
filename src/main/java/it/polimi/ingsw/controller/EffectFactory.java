@@ -1,7 +1,14 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.ExpertGameParameters;
+import it.polimi.ingsw.model.enums.Character;
+import it.polimi.ingsw.model.enums.PawnColor;
+
+import java.util.List;
+
 public class EffectFactory {
-    /*
+
     public Effect getEffect(Character character) {
         return switch (character) {
             case CHARACTER_ONE -> get1();
@@ -17,80 +24,103 @@ public class EffectFactory {
 
     
     private Effect get1() {
-        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_ONE, ((bag, students) -> {
-            List<PawnColor> ris = bag.drawStudents(4);
-            for (PawnColor c : ris) {
-                students.put(c, students.get(c) + 1);
+        return new SetupEffect() {
+            @Override
+            public void activateEffect(Bag bag, List<PawnColor> students) {
+                List<PawnColor> ris = bag.drawStudents(4);
+                students.addAll(ris);
             }
-        }));
+        };
     }
 
     private Effect get2() {
-        return new StandardCharacterCard(2, Character.CHARACTER_TWO, parameters -> {
-            parameters.setTakeProfessorEvenIfSameStudents(true);
-        }, parameters -> {
-            parameters.setTakeProfessorEvenIfSameStudents(false);
-        });
+        return new StandardEffect() {
+            @Override
+            public void activateEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setTakeProfessorEvenIfSameStudents(true);
+            }
+
+            @Override
+            public void reverseEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setTakeProfessorEvenIfSameStudents(false);
+            }
+        };
     }
 
     private Effect get4() {
-        return new StandardCharacterCard(1, Character.CHARACTER_FOUR, parameters -> {
-            parameters.setMotherNatureExtraMovements(2);
-        }, parameters -> {
-            parameters.setMotherNatureExtraMovements(0);
-        });
+        return new StandardEffect() {
+            @Override
+            public void activateEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setMotherNatureExtraMovements(2);
+            }
+
+            @Override
+            public void reverseEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setMotherNatureExtraMovements(0);
+            }
+        };
     }
 
     private Effect get6() {
-        return new StandardCharacterCard(3, Character.CHARACTER_SIX, parameters -> {
-            parameters.setTowersCountInInfluence(false);
-        }, parameters -> {
-            parameters.setTowersCountInInfluence(true);
-        });
+        return new StandardEffect() {
+            @Override
+            public void activateEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setTowersCountInInfluence(false);
+            }
+
+            @Override
+            public void reverseEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setTowersCountInInfluence(true);
+            }
+        };
     }
 
     private Effect get7() {
-        return new CharacterCardWithSetUpAction(1, Character.CHARACTER_SEVEN, ((bag, students) -> {
-            List<PawnColor> ris = bag.drawStudents(6);
-            for (PawnColor c : ris) {
-                students.put(c, students.get(c) + 1);
+        return new SetupEffect() {
+            @Override
+            public void activateEffect(Bag bag, List<PawnColor> students) {
+                List<PawnColor> ris = bag.drawStudents(6);
+                students.addAll(ris);
             }
-        }));
+        };
     }
 
     private Effect get8() {
-        return new StandardCharacterCard(2, Character.CHARACTER_EIGHT, parameters -> {
-            parameters.setExtraInfluence(2);
-        }, parameters -> {
-            parameters.setExtraInfluence(0);
-        });
+        return new StandardEffect() {
+            @Override
+            public void activateEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setExtraInfluence(2);
+            }
+
+            @Override
+            public void reverseEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setExtraInfluence(0);
+            }
+        };
     }
 
     private Effect get9() {
-        return new StandardCharacterCard(3, Character.CHARACTER_NINE, parameters -> {
-            //TODO how can we have here the color that the player has choosen?
-        }, parameters -> {
-            parameters.setColorWithNoInfluence(PawnColor.NONE);
-        });
+        return new StandardEffect() {
+            @Override
+            public void activateEffect(ExpertGameParameters parameters, Object... args) {
+                PawnColor color = (PawnColor) args[0];
+                parameters.setColorWithNoInfluence(color);
+            }
+
+            @Override
+            public void reverseEffect(ExpertGameParameters parameters, Object... args) {
+                parameters.setColorWithNoInfluence(PawnColor.NONE);
+            }
+        };
     }
 
     private Effect get11() {
-        return new Effect() {
+        return new SetupEffect() {
             @Override
-            public void activateEffect(Object... args) {
-
+            public void activateEffect(Bag bag, List<PawnColor> students) {
+                List<PawnColor> ris = bag.drawStudents(4);
+                students.addAll(ris);
             }
-
-            @Override
-            public void reverseEffect(Object... args) {
-
-            }
-        }
-        return new CharacterCardWithSetUpAction(2, Character.CHARACTER_ELEVEN, ((bag, students) -> {
-            List<PawnColor> ris = bag.drawStudents(4);
-            for (PawnColor c : ris) {
-                students.put(c, students.get(c) + 1);
-            }
-        }));
-    }*/
+        };
+    }
 }
