@@ -6,7 +6,7 @@ import it.polimi.ingsw.controller.exceptions.NotAllowedMotherNatureMovementExcep
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.SchoolBoard;
-import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.controller.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
 import it.polimi.ingsw.utils.Pair;
