@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
@@ -7,10 +9,13 @@ import it.polimi.ingsw.model.enums.*;
 /**
  * class Cloud tile.
  */
-public class CloudTile {
+public class CloudTile implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6L;
+
     //TODO probably it is better to place this info somewhere else
     private final PlayerCountIcon playerCountIcon;
-    private final List<PawnColor> students;
+    private final ArrayList<PawnColor> students;
 
     /**
      * Instantiates a new Cloud tile.

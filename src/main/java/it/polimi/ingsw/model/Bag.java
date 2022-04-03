@@ -3,15 +3,17 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.RandomHelper;
 
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.*;
 
-public class Bag {
+public class Bag implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 4L;
+
     private static final int PAWNS_PER_COLOR = 24;
 
-    private final Map<PawnColor, Integer> students;
+    private final EnumMap<PawnColor, Integer> students;
     private int pawnCount;
 
     public Bag() {

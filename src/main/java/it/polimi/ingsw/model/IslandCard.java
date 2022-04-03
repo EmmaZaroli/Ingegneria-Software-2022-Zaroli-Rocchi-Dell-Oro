@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
@@ -7,8 +9,11 @@ import it.polimi.ingsw.model.enums.*;
 /**
  * Island card.
  */
-public class IslandCard {
-    private final List<PawnColor> students;
+public class IslandCard implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 8L;
+
+    private final ArrayList<PawnColor> students;
     private Tower tower;
     private int size;
 

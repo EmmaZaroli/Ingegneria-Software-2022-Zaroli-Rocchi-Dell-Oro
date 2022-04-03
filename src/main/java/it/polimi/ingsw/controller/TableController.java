@@ -9,15 +9,20 @@ import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TableController {
+public class TableController implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2L;
+
     private final ArrayList<PawnColor> professors;
-    private final List<IslandCard> islandCards;
+    private final ArrayList<IslandCard> islandCards;
     private final Bag bag;
-    private final List<CloudTile> cloudTiles;
+    private final ArrayList<CloudTile> cloudTiles;
     private final int playerNumber;
     private int islandWithMotherNature;
 

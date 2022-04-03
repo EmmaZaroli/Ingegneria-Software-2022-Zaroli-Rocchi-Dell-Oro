@@ -2,10 +2,16 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * Character card.
  */
-public class CharacterCard {
+public class CharacterCard implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 5L;
+
     private final int initialPrice;
     private boolean hasCoin;
     private final Character character;

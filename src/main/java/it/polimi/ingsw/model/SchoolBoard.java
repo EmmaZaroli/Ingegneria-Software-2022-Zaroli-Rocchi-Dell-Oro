@@ -3,16 +3,21 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * School board.
  */
-public class SchoolBoard {
+public class SchoolBoard implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 10L;
+
     private final Tower towerColor;
-    private final List<PawnColor> entrance;
+    private final ArrayList<PawnColor> entrance;
     private final DiningRoom diningRoom;
-    private final Set<PawnColor> professorTable;
+    private final HashSet<PawnColor> professorTable;
     private int towers;
 
     /**
