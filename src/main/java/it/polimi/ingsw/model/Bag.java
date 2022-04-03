@@ -24,7 +24,7 @@ public class Bag implements Serializable {
         }
     }
 
-    private PawnColor drawStudent() {
+    public PawnColor drawStudent() {
         RandomHelper randomHelper = RandomHelper.getInstance();
         //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
         int random = randomHelper.getInt(pawnCount) + 1;
@@ -39,16 +39,6 @@ public class Bag implements Serializable {
         }
         //Random value, this statement should not be reached
         return PawnColor.RED;
-    }
-
-    public List<PawnColor> drawStudents(int n) {
-        List<PawnColor> drawnStudents = new LinkedList<>();
-
-        for (int i = 0; i < n; i++) {
-            drawnStudents.add(drawStudent());
-        }
-
-        return drawnStudents;
     }
 
     //Removes a pawn from the bag
