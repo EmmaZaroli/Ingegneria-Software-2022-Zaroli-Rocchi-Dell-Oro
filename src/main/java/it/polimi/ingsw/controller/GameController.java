@@ -9,13 +9,18 @@ import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.controller.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
+import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 //TODO the whole controller (and model) must be serializable
 public class GameController implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final UUID gameUUID = UUID.randomUUID();
 
     private final Player[] players;
@@ -120,6 +125,8 @@ public class GameController implements Serializable {
             this.gamePhase = pickNextPhase();
             this.currentPlayer = pickNextPlayer();
         }
+
+        DataDumper.getInstance().saveGame(this);
     }
 
     private void moveStudent(/*Message*/) {
@@ -318,6 +325,7 @@ public class GameController implements Serializable {
                 this.gamePhase = GamePhase.PLANNING;
             }
         }
+        DataDumper.getInstance().saveGame(this);
         checkTurnGameOver();
     }
 
@@ -327,6 +335,7 @@ public class GameController implements Serializable {
             return;
 
         //TODO what to do after the game has ended
+        DataDumper.getInstance().removeGameFromMemory(this.gameUUID);
     }
 
     //TODO think about a better function name
@@ -335,6 +344,8 @@ public class GameController implements Serializable {
             return;
 
         //TODO what to do after the game has ended
+
+        DataDumper.getInstance().removeGameFromMemory(this.gameUUID);
     }
 
     public boolean isImmediateGameOver() {
