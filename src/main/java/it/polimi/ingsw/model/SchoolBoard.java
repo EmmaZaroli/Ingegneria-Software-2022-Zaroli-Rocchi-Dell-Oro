@@ -80,4 +80,8 @@ public class SchoolBoard {
     public void removeTower() {
         towers--;
     }
+    
+    public boolean isStudentInEntrance(PawnColor color) {
+        return entrance.contains(color);
+    }
 }
