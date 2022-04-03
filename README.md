@@ -30,3 +30,8 @@ Number: GC10
 [Model - Initial UML](Deliverables/UML/20220315%20-%20Model%20initial.png) First lab revision  
 [Model - UML rev 2](Deliverables/UML/20220322%20-%20Model%20rev%202.png) Second lab revision  
 [Model and controller draft](Deliverables/UML/20220328%20-%20Model%20for%20peer%20review.png) Submitted for peer review
+
+### Tests coverage report
+
+Tests are automatically run by a GitHub action  
+[Test coverage report](Deliverables/Report%20Test) Last update: april 3rd
