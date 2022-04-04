@@ -52,7 +52,7 @@ public class ExpertGameController extends GameController {
     //TODO do something aboiut this function
     public boolean canActivateCharacterAbility(int characterIndex) {
         //TODO throw exception if the card doesn't exist on the table
-        if(((ExpertGameParameters)getGameParameters()).hasAlreadyActivateCharacterCard())
+        if(getGameParameters().hasAlreadyActivateCharacterCard())
             return false;
         return ((ExpertPlayer)getCurrentPlayer()).getCoins() > characterCards[characterIndex].getCurrentPrice();
     }
@@ -63,7 +63,7 @@ public class ExpertGameController extends GameController {
         else
             activateStandardEffect(characterIndex);
         ((ExpertPlayer)getCurrentPlayer()).decreaseCoins(characterCards[characterIndex].getCurrentPrice());
-        ((ExpertGameParameters)getGameParameters()).setAlreadyActivateCharacterCard(true);
+        getGameParameters().setAlreadyActivateCharacterCard(true);
     }
 
     private void activateSetupEffect(int effectIndex){
@@ -71,11 +71,11 @@ public class ExpertGameController extends GameController {
     }
 
     private void activateStandardEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).activateEffect((ExpertGameParameters) getGameParameters());
+        ((StandardEffect)effects[effectIndex]).activateEffect(getGameParameters());
     }
 
     private void activateReverseEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).reverseEffect((ExpertGameParameters) getGameParameters());
+        ((StandardEffect)effects[effectIndex]).reverseEffect(getGameParameters());
     }
 
     private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex){
@@ -107,16 +107,18 @@ public class ExpertGameController extends GameController {
     public void reverseEffect(){
         for(Effect e : effects){
             if(e instanceof StandardEffect)
-                ((StandardEffect) e).reverseEffect((ExpertGameParameters) getGameParameters());
+                ((StandardEffect) e).reverseEffect(getGameParameters());
         }
     }
 
     @Override
     protected void playerHasEndedAction(){
         reverseEffect();
-        ((ExpertGameParameters)getGameParameters()).setAlreadyActivateCharacterCard(false);
+        getGameParameters().setAlreadyActivateCharacterCard(false);
         super.playerHasEndedAction();
     }
 
-    //TODO override getGameParameters
+    public ExpertGameParameters getGameParameters(){
+        return (ExpertGameParameters) super.getGameParameters();
+    }
 }
