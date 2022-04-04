@@ -6,17 +6,23 @@ import it.polimi.ingsw.controller.exceptions.NotAllowedMotherNatureMovementExcep
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.SchoolBoard;
-import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.controller.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
+import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.*;
 
-public class GameController {
+//TODO the whole controller (and model) must be serializable
+public class GameController implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private final UUID gameUUID = UUID.randomUUID();
+
     private final Player[] players;
     private final TableController table;
     private GamePhase gamePhase;
@@ -119,6 +125,8 @@ public class GameController {
             this.gamePhase = pickNextPhase();
             this.currentPlayer = pickNextPlayer();
         }
+
+        DataDumper.getInstance().saveGame(this);
     }
 
     private void moveStudent(/*Message*/) {
@@ -317,6 +325,7 @@ public class GameController {
                 this.gamePhase = GamePhase.PLANNING;
             }
         }
+        DataDumper.getInstance().saveGame(this);
         checkTurnGameOver();
     }
 
@@ -326,6 +335,7 @@ public class GameController {
             return;
 
         //TODO what to do after the game has ended
+        DataDumper.getInstance().removeGameFromMemory(this.gameUUID);
     }
 
     //TODO think about a better function name
@@ -334,6 +344,8 @@ public class GameController {
             return;
 
         //TODO what to do after the game has ended
+
+        DataDumper.getInstance().removeGameFromMemory(this.gameUUID);
     }
 
     public boolean isImmediateGameOver() {
@@ -367,5 +379,9 @@ public class GameController {
 
     protected Player[] getPlayers() {
         return players;
+    }
+
+    public UUID getGameId() {
+        return this.gameUUID;
     }
 }

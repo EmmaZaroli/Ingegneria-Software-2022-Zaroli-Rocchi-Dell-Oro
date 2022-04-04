@@ -4,17 +4,22 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Player
  */
-public class Player {
+public class Player implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 9L;
+
     private final String nickname;
     private final Wizzard wizzard;
     private final SchoolBoard schoolBoard;
-    private final List<AssistantCard> assistantDeck;
+    private final LinkedList<AssistantCard> assistantDeck;
     private AssistantCard discardPileHead;
     private boolean isPlayerTurn;
 
@@ -137,6 +142,7 @@ public class Player {
      * @param assistantIndex the assistant index
      */
 //TODO we already have this method, can we delete it ?
+    //TODO probably it is better we use the other method and delete this
     public void playAssistant(int assistantIndex) {
         if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
             //TODO throw exception or let the controller do it

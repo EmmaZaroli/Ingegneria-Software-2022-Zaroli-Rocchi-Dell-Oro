@@ -2,14 +2,19 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
 /**
  * Dining room.
  */
-public class DiningRoom {
-    private final Map<PawnColor, Integer> students;
+public class DiningRoom implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7L;
+
+    private final EnumMap<PawnColor, Integer> students;
 
     /**
      * Instantiates a new Dining room.

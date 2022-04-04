@@ -1,9 +1,15 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * Game parameters.
  */
-public class GameParameters {
+public class GameParameters implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7L;
+
     private int initialTowersCount;
     private int initialStudentsCount;
     private int studentsToDraw;
