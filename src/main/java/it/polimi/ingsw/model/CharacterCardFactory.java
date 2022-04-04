@@ -1,11 +1,18 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
-import it.polimi.ingsw.model.enums.PawnColor;
 
-import java.util.List;
 
+/**
+ * Character card factory.
+ */
 public class CharacterCardFactory {
+    /**
+     * depending on the character, the corresponding card is instantiated
+     *
+     * @param character the character
+     * @return the character card created
+     */
     public CharacterCard getCharacterCard(Character character) {
         return switch (character) {
             case CHARACTER_ONE -> get1();

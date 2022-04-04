@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+/**
+ * Assistant card.
+ */
 public record AssistantCard(int value, int motherNatureMovement) {
 
     @Override
