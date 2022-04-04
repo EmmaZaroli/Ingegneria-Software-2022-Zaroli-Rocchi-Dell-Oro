@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
 import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -26,9 +27,9 @@ public class EffectFactory {
     private Effect get1() {
         return new SetupEffect() {
             @Override
-            public void activateEffect(Bag bag, List<PawnColor> students) {
-                List<PawnColor> ris = bag.drawStudents(4);
-                students.addAll(ris);
+            public void activateEffect(TableController table, CharacterCardWithSetUpAction character) {
+                List<PawnColor> ris = table.drawStudents(4);
+                character.addStudent(ris);
             }
         };
     }
@@ -78,9 +79,9 @@ public class EffectFactory {
     private Effect get7() {
         return new SetupEffect() {
             @Override
-            public void activateEffect(Bag bag, List<PawnColor> students) {
-                List<PawnColor> ris = bag.drawStudents(6);
-                students.addAll(ris);
+            public void activateEffect(TableController table, CharacterCardWithSetUpAction character) {
+                List<PawnColor> ris = table.drawStudents(6);
+                character.addStudent(ris);
             }
         };
     }
@@ -117,9 +118,9 @@ public class EffectFactory {
     private Effect get11() {
         return new SetupEffect() {
             @Override
-            public void activateEffect(Bag bag, List<PawnColor> students) {
-                List<PawnColor> ris = bag.drawStudents(4);
-                students.addAll(ris);
+            public void activateEffect(TableController table, CharacterCardWithSetUpAction character) {
+                List<PawnColor> ris = table.drawStudents(4);
+                character.addStudent(ris);
             }
         };
     }

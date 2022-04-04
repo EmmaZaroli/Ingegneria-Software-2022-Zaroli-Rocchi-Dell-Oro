@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.IllegalAssistantException;
 import it.polimi.ingsw.controller.exceptions.NotAllowedMotherNatureMovementException;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.GameParameters;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -18,15 +19,18 @@ import java.util.Optional;
 
 public class GameController {
     private final Player[] players;
-    private final TableController table;
+    //had to remove final from table because it would have been impossible to make it ExpertTable in ExpertGameController
+    protected TableController table;
     private GamePhase gamePhase;
     private int playedCount;
+    private GameParameters parameters;
 
     private int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
     private SchoolBoard currentPlayerBoard;
     private int movedPawns;
+
 
     //TODO who send us the players?
     public GameController(Player[] players) {
@@ -36,6 +40,7 @@ public class GameController {
             c.getBoard().addStudentsToEntrance(table.drawStudents());
         }
         this.currentPlayer = 0;
+        this.parameters = new GameParameters();
     }
 
     // starts the game thread
@@ -361,11 +366,19 @@ public class GameController {
         return false;
     }
 
-    protected int getCurrentPlayer() {
+    protected int getCurrentPlayerIndex() {
         return currentPlayer;
+    }
+
+    protected Player getCurrentPlayer() {
+        return players[currentPlayer];
     }
 
     protected Player[] getPlayers() {
         return players;
+    }
+
+    public GameParameters getGameParameters(){
+        return parameters;
     }
 }
