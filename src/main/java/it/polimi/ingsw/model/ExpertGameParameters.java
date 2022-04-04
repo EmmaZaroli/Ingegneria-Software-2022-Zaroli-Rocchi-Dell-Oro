@@ -8,6 +8,7 @@ public class ExpertGameParameters extends GameParameters {
     private boolean towersCountInInfluence;
     private int extraInfluence;
     private PawnColor colorWithNoInfluence;
+    private boolean alreadyActivateCharacterCard;
 
     public boolean isTakeProfessorEvenIfSameStudents() {
         return takeProfessorEvenIfSameStudents;
@@ -29,6 +30,10 @@ public class ExpertGameParameters extends GameParameters {
         return colorWithNoInfluence;
     }
 
+    public boolean hasAlreadyActivateCharacterCard(){
+        return alreadyActivateCharacterCard;
+    }
+
     public void setTakeProfessorEvenIfSameStudents(boolean takeProfessorEvenIfSameStudents) {
         this.takeProfessorEvenIfSameStudents = takeProfessorEvenIfSameStudents;
     }
@@ -47,5 +52,9 @@ public class ExpertGameParameters extends GameParameters {
 
     public void setColorWithNoInfluence(PawnColor colorWithNoInfluence) {
         this.colorWithNoInfluence = colorWithNoInfluence;
+    }
+
+    public void setAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard){
+        this.alreadyActivateCharacterCard = alreadyActivateCharacterCard;
     }
 }

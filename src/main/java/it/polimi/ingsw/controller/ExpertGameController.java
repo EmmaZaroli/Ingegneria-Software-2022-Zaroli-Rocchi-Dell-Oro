@@ -49,8 +49,11 @@ public class ExpertGameController extends GameController {
          */
     }
 
+    //TODO do something aboiut this function
     public boolean canActivateCharacterAbility(int characterIndex) {
         //TODO throw exception if the card doesn't exist on the table
+        if(((ExpertGameParameters)getGameParameters()).hasAlreadyActivateCharacterCard())
+            return false;
         return ((ExpertPlayer)getCurrentPlayer()).getCoins() > characterCards[characterIndex].getCurrentPrice();
     }
 
@@ -60,6 +63,7 @@ public class ExpertGameController extends GameController {
         else
             activateStandardEffect(characterIndex);
         ((ExpertPlayer)getCurrentPlayer()).decreaseCoins(characterCards[characterIndex].getCurrentPrice());
+        ((ExpertGameParameters)getGameParameters()).setAlreadyActivateCharacterCard(true);
     }
 
     private void activateSetupEffect(int effectIndex){
@@ -106,4 +110,13 @@ public class ExpertGameController extends GameController {
                 ((StandardEffect) e).reverseEffect((ExpertGameParameters) getGameParameters());
         }
     }
+
+    @Override
+    protected void playerHasEndedAction(){
+        reverseEffect();
+        ((ExpertGameParameters)getGameParameters()).setAlreadyActivateCharacterCard(false);
+        super.playerHasEndedAction();
+    }
+
+    //TODO override getGameParameters
 }

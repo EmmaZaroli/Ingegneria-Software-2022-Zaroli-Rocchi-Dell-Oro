@@ -309,7 +309,7 @@ public class GameController {
     }
 
 
-    private void playerHasEndedAction() {
+    protected void playerHasEndedAction() {
         this.gamePhase = this.pickNextPhase();
         if (this.gamePhase == GamePhase.ACTION_END) {
             this.playedCount++;
