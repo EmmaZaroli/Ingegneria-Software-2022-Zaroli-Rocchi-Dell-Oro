@@ -28,7 +28,7 @@ public class GameController {
     private int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
-    private SchoolBoard currentPlayerBoard;
+    protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
 
 

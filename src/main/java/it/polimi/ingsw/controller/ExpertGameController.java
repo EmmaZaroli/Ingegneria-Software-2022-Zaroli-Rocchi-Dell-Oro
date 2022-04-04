@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
+import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
 
 import java.util.ArrayList;
@@ -69,15 +70,27 @@ public class ExpertGameController extends GameController {
         ((StandardEffect)effects[effectIndex]).reverseEffect((ExpertGameParameters) getGameParameters());
     }
 
-    private void effect1(){
-
+    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex){
+        character.removeStudent(color);
+        table.movePawnOnIsland(color, islandIndex);
+        character.addStudent(table.drawStudents(1));
     }
 
-    private void effect7(){
+    private void effect7(CharacterCardWithSetUpAction character, List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance){
+        for(PawnColor c : colorsFromCard){
+            character.removeStudent(c);
+        }
+        for(PawnColor c : colorsFromEntrance){
+            currentPlayerBoard.removeStudentFromEntrance(c);
+        }
 
+        character.addStudent(colorsFromEntrance);
+        currentPlayerBoard.addStudentsToEntrance(colorsFromCard);
     }
 
-    private void effect11(){
-
+    private void effect11(CharacterCardWithSetUpAction character, PawnColor color){
+        character.removeStudent(color);
+        currentPlayerBoard.addStudentToDiningRoom(color);
+        character.addStudent(table.drawStudents(1));
     }
 }
