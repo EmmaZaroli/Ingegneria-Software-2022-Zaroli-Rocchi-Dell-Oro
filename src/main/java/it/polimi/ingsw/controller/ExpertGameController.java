@@ -39,11 +39,13 @@ public class ExpertGameController extends GameController {
     @Override
     public void MessageReceiver(/*Message*/) {
         /*
-         if (!Message.type().equals("EffectCard")) super(Message)
-        else{
+        if (Message.type().equals("EffectCard")) {
             canActivateCharacterAbility(Message.character());
             activateCharacterAbility(Message.character());
         }
+        else
+            super(Message)
+
          */
     }
 
@@ -94,5 +96,14 @@ public class ExpertGameController extends GameController {
         character.removeStudent(color);
         currentPlayerBoard.addStudentToDiningRoom(color);
         character.addStudent(table.drawStudents(1));
+    }
+
+    //TODO call at the end of the turn
+    //activate reverseEffect for all card, should not generate problems
+    public void reverseEffect(){
+        for(Effect e : effects){
+            if(e instanceof StandardEffect)
+                ((StandardEffect) e).reverseEffect((ExpertGameParameters) getGameParameters());
+        }
     }
 }
