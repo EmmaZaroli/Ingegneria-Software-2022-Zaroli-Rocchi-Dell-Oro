@@ -57,6 +57,7 @@ public class ExpertGameController extends GameController {
             activateSetupEffect(characterIndex);
         else
             activateStandardEffect(characterIndex);
+        ((ExpertPlayer)getCurrentPlayer()).decreaseCoins(characterCards[characterIndex].getCurrentPrice());
     }
 
     private void activateSetupEffect(int effectIndex){
