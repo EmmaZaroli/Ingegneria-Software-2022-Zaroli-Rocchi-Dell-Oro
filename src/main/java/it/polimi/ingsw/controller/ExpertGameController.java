@@ -42,6 +42,7 @@ public class ExpertGameController extends GameController {
          if (!Message.type().equals("EffectCard")) super(Message)
         else{
             canActivateCharacterAbility(Message.character());
+            activateCharacterAbility(Message.character());
         }
          */
     }
