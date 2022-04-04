@@ -27,7 +27,7 @@ public class EffectFactory {
     private Effect get1() {
         return new SetupEffect() {
             @Override
-            public void activateEffect(TableController table, CharacterCardWithSetUpAction character) {
+            public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
                 List<PawnColor> ris = table.drawStudents(4);
                 character.addStudent(ris);
             }
@@ -79,7 +79,7 @@ public class EffectFactory {
     private Effect get7() {
         return new SetupEffect() {
             @Override
-            public void activateEffect(TableController table, CharacterCardWithSetUpAction character) {
+            public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
                 List<PawnColor> ris = table.drawStudents(6);
                 character.addStudent(ris);
             }
@@ -118,7 +118,7 @@ public class EffectFactory {
     private Effect get11() {
         return new SetupEffect() {
             @Override
-            public void activateEffect(TableController table, CharacterCardWithSetUpAction character) {
+            public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
                 List<PawnColor> ris = table.drawStudents(4);
                 character.addStudent(ris);
             }

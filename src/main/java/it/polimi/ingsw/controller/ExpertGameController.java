@@ -58,7 +58,7 @@ public class ExpertGameController extends GameController {
     }
 
     private void activateSetupEffect(int effectIndex){
-        ((SetupEffect)effects[effectIndex]).activateEffect(table, (CharacterCardWithSetUpAction) characterCards[effectIndex]);
+        ((SetupEffect)effects[effectIndex]).setupEffect(table, (CharacterCardWithSetUpAction) characterCards[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex){
@@ -67,5 +67,17 @@ public class ExpertGameController extends GameController {
 
     private void activateReverseEffect(int effectIndex){
         ((StandardEffect)effects[effectIndex]).reverseEffect((ExpertGameParameters) getGameParameters());
+    }
+
+    private void effect1(){
+
+    }
+
+    private void effect7(){
+
+    }
+
+    private void effect11(){
+
     }
 }
