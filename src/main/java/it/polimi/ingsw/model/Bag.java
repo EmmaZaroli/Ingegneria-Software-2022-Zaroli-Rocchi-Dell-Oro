@@ -19,8 +19,10 @@ public class Bag implements Serializable {
     public Bag() {
         this.students = new EnumMap<>(PawnColor.class);
         for (PawnColor pc : PawnColor.values()) {
-            students.put(pc, PAWNS_PER_COLOR);
-            this.pawnCount += PAWNS_PER_COLOR;
+            if(pc != PawnColor.NONE) {
+                students.put(pc, PAWNS_PER_COLOR);
+                this.pawnCount += PAWNS_PER_COLOR;
+            }
         }
     }
 
@@ -37,8 +39,8 @@ public class Bag implements Serializable {
                 return e.getKey();
             }
         }
-        //Random value, this statement should not be reached
-        return PawnColor.RED;
+        //This statement should not be reached
+        return PawnColor.NONE;
     }
 
     //Removes a pawn from the bag
