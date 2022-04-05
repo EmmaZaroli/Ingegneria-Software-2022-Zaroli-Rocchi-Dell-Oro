@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.controller.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.PlayerCountIcon;
+import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
@@ -206,18 +207,18 @@ public class GameController implements Serializable {
     //Builds the tower of the player with max influence
     private void buildTowers(Player player) {
         if (this.table.canBuildTower(player.getBoard().getTowerColor())) {
-            Pair result = this.table.buildTower(player.getBoard().getTowerColor());
+            Pair<Tower, Integer> result = this.table.buildTower(player.getBoard().getTowerColor());
             Arrays.stream(this.players)
-                    .filter(x -> x.getBoard().getTowerColor() == result.tower())
+                    .filter(x -> x.getBoard().getTowerColor() == result.first())
                     .forEach(x -> {
                         try {
-                            x.getBoard().addTowers(result.size());
+                            x.getBoard().addTowers(result.second());
                         } catch (Exception e) {
                             //TODO this is not the proper way of handling exceptions
                             e.printStackTrace();
                         }
                     });
-            for (int i = 0; i < result.size(); i++) {
+            for (int i = 0; i < result.second(); i++) {
                 player.getBoard().removeTower();
                 checkImmediateGameOver();
             }
@@ -390,8 +391,9 @@ public class GameController implements Serializable {
         return players;
     }
 
-    public GameParameters getGameParameters(){
+    public GameParameters getGameParameters() {
         return parameters;
+    }
 
     public UUID getGameId() {
         return this.gameUUID;
