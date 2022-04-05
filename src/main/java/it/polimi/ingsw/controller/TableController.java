@@ -73,6 +73,10 @@ public class TableController implements Serializable {
         return studentsDrawn;
     }
 
+    public List<PawnColor> drawStudents(int n){
+        return bag.drawStudents(n);
+    }
+
     public void fillClouds() {
         List<PawnColor> studentsDrawn = new LinkedList<>();
         for (CloudTile cloud : cloudTiles) {

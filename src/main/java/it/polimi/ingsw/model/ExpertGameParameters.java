@@ -11,6 +11,7 @@ public class ExpertGameParameters extends GameParameters {
     private boolean towersCountInInfluence;
     private int extraInfluence;
     private PawnColor colorWithNoInfluence;
+    private boolean alreadyActivateCharacterCard;
 
     /**
      * @return true if the player can take control of the professors even
@@ -50,6 +51,10 @@ public class ExpertGameParameters extends GameParameters {
         return colorWithNoInfluence;
     }
 
+    public boolean hasAlreadyActivateCharacterCard(){
+        return alreadyActivateCharacterCard;
+    }
+  
     /**
      * Sets take professor even if same students.
      *
@@ -93,5 +98,9 @@ public class ExpertGameParameters extends GameParameters {
      */
     public void setColorWithNoInfluence(PawnColor colorWithNoInfluence) {
         this.colorWithNoInfluence = colorWithNoInfluence;
+    }
+
+    public void setAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard){
+        this.alreadyActivateCharacterCard = alreadyActivateCharacterCard;
     }
 }

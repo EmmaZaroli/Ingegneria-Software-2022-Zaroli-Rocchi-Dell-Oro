@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.IllegalAssistantException;
 import it.polimi.ingsw.controller.exceptions.NotAllowedMotherNatureMovementException;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.GameParameters;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.controller.enums.GamePhase;
@@ -24,15 +25,18 @@ public class GameController implements Serializable {
     private final UUID gameUUID = UUID.randomUUID();
 
     private final Player[] players;
-    private final TableController table;
+    //had to remove final from table because it would have been impossible to make it ExpertTable in ExpertGameController
+    protected TableController table;
     private GamePhase gamePhase;
     private int playedCount;
+    private GameParameters parameters;
 
     private int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
-    private SchoolBoard currentPlayerBoard;
+    protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
+
 
     //TODO who send us the players?
     public GameController(Player[] players) {
@@ -42,6 +46,7 @@ public class GameController implements Serializable {
             c.getBoard().addStudentsToEntrance(table.drawStudents());
         }
         this.currentPlayer = 0;
+        this.parameters = new GameParameters();
     }
 
     // starts the game thread
@@ -312,7 +317,7 @@ public class GameController implements Serializable {
     }
 
 
-    private void playerHasEndedAction() {
+    protected void playerHasEndedAction() {
         this.gamePhase = this.pickNextPhase();
         if (this.gamePhase == GamePhase.ACTION_END) {
             this.playedCount++;
@@ -373,13 +378,20 @@ public class GameController implements Serializable {
         return false;
     }
 
-    protected int getCurrentPlayer() {
+    protected int getCurrentPlayerIndex() {
         return currentPlayer;
+    }
+
+    protected Player getCurrentPlayer() {
+        return players[currentPlayer];
     }
 
     protected Player[] getPlayers() {
         return players;
     }
+
+    public GameParameters getGameParameters(){
+        return parameters;
 
     public UUID getGameId() {
         return this.gameUUID;
