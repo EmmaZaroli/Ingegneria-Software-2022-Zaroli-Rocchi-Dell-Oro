@@ -1,6 +1,14 @@
 package it.polimi.ingsw.model;
 
-public record AssistantCard(int value, int motherNatureMovement) {
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * Assistant card.
+ */
+public record AssistantCard(int value, int motherNatureMovement) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 3L;
 
     @Override
     public boolean equals(Object o) {

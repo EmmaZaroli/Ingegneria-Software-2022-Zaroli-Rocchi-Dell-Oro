@@ -3,15 +3,17 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.RandomHelper;
 
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.*;
 
-public class Bag {
+public class Bag implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 4L;
+
     private static final int PAWNS_PER_COLOR = 24;
 
-    private final Map<PawnColor, Integer> students;
+    private final EnumMap<PawnColor, Integer> students;
     private int pawnCount;
 
     public Bag() {
@@ -22,7 +24,7 @@ public class Bag {
         }
     }
 
-    private PawnColor drawStudent() {
+    public PawnColor drawStudent() {
         RandomHelper randomHelper = RandomHelper.getInstance();
         //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
         int random = randomHelper.getInt(pawnCount) + 1;
@@ -37,16 +39,6 @@ public class Bag {
         }
         //Random value, this statement should not be reached
         return PawnColor.RED;
-    }
-
-    public List<PawnColor> drawStudents(int n) {
-        List<PawnColor> drawnStudents = new LinkedList<>();
-
-        for (int i = 0; i < n; i++) {
-            drawnStudents.add(drawStudent());
-        }
-
-        return drawnStudents;
     }
 
     //Removes a pawn from the bag

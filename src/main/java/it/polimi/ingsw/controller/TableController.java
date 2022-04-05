@@ -9,15 +9,21 @@ import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
-public class TableController {
+public class TableController implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2L;
+
     private final ArrayList<PawnColor> professors;
-    private final List<IslandCard> islandCards;
+    private final ArrayList<IslandCard> islandCards;
     private final Bag bag;
-    private final List<CloudTile> cloudTiles;
+    private final ArrayList<CloudTile> cloudTiles;
     private final int playerNumber;
     private int islandWithMotherNature;
 
@@ -56,9 +62,13 @@ public class TableController {
     public List<PawnColor> drawStudents() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
         if (playerNumber == 2) {
-            studentsDrawn.addAll(bag.drawStudents(7));
+            for(int i = 0; i < 7; i++) {
+                studentsDrawn.add(bag.drawStudent());
+            }
         } else {
-            studentsDrawn.addAll(bag.drawStudents(9));
+            for(int i = 0; i < 7; i++) {
+                studentsDrawn.add(bag.drawStudent());
+            }
         }
         return studentsDrawn;
     }
@@ -68,12 +78,16 @@ public class TableController {
     }
 
     public void fillClouds() {
-        List<PawnColor> studentsDrawn;
+        List<PawnColor> studentsDrawn = new LinkedList<>();
         for (CloudTile cloud : cloudTiles) {
             if (playerNumber == 2) {
-                studentsDrawn = bag.drawStudents(3);
+                for(int i = 0; i < 3; i++) {
+                    studentsDrawn.add(bag.drawStudent());
+                }
             } else {
-                studentsDrawn = bag.drawStudents(4);
+                for(int i = 0; i < 4; i++) {
+                    studentsDrawn.add(bag.drawStudent());
+                }
             }
             cloud.addStudents(studentsDrawn);
             studentsDrawn.clear();
