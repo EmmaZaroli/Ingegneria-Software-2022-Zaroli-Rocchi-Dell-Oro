@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.model.enums.PlayerCountIcon;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.*;
 

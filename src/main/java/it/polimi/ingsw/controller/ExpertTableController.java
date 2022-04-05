@@ -1,22 +1,18 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.enums.PlayerCountIcon;
+import it.polimi.ingsw.model.ExpertTable;
 
 public class ExpertTableController extends TableController {
-    private int coins;
-
-    public ExpertTableController(PlayerCountIcon playerCountIcon) {
-        super(playerCountIcon);
-        coins = playerCountIcon.equals(PlayerCountIcon.TWO_FOUR) ? 18 : 17;
+    public ExpertTableController(ExpertTable table) {
+        super(table);
     }
 
-    public void PickCoin() {
+    public void takeCoin() {
         //TODO check if coins > 0
-        coins--;
+        ((ExpertTable) table).takeCoin();
     }
 
-    public void DepositCoins(int coins) {
-        this.coins += coins;
+    public void depositCoins(int coins) {
+        ((ExpertTable) table).depositCoins(coins);
     }
 }

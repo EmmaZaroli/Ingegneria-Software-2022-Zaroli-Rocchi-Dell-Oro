@@ -14,16 +14,12 @@ public class CloudTile implements Serializable {
     private static final long serialVersionUID = 6L;
 
     //TODO probably it is better to place this info somewhere else
-    private final PlayerCountIcon playerCountIcon;
     private final ArrayList<PawnColor> students;
 
     /**
      * Instantiates a new Cloud tile.
-     *
-     * @param playerCountIcon the player count icon
      */
-    public CloudTile(PlayerCountIcon playerCountIcon) {
-        this.playerCountIcon = playerCountIcon;
+    public CloudTile() {
         students = new ArrayList<>();
     }
 

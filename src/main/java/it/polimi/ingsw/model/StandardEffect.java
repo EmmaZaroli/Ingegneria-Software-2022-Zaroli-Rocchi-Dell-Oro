@@ -1,8 +1,6 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.ExpertGameParameters;
-
-public interface StandardEffect extends Effect{
+public interface StandardEffect extends Effect {
     public void activateEffect(ExpertGameParameters parameters, Object ... args);
     public void reverseEffect(ExpertGameParameters parameters, Object ... args);
 }
