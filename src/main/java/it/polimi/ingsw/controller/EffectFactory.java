@@ -13,7 +13,7 @@ import java.util.List;
 
 public class EffectFactory {
 
-    public Effect getEffect(Character character) {
+    public static Effect getEffect(Character character) {
         return switch (character) {
             case CHARACTER_ONE -> get1();
             case CHARACTER_TWO -> get2();
@@ -25,8 +25,8 @@ public class EffectFactory {
             case CHARACTER_ELEVEN -> get11();
         };
     }
-
-    private Effect get1() {
+    
+    private static Effect get1() {
         return new SetupEffect() {
             @Override
             public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
@@ -36,7 +36,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get2() {
+    private static Effect get2() {
         return new StandardEffect() {
             @Override
             public void activateEffect(ExpertGameParameters parameters, Object... args) {
@@ -50,7 +50,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get4() {
+    private static Effect get4() {
         return new StandardEffect() {
             @Override
             public void activateEffect(ExpertGameParameters parameters, Object... args) {
@@ -64,7 +64,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get6() {
+    private static Effect get6() {
         return new StandardEffect() {
             @Override
             public void activateEffect(ExpertGameParameters parameters, Object... args) {
@@ -78,7 +78,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get7() {
+    private static Effect get7() {
         return new SetupEffect() {
             @Override
             public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
@@ -88,7 +88,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get8() {
+    private static Effect get8() {
         return new StandardEffect() {
             @Override
             public void activateEffect(ExpertGameParameters parameters, Object... args) {
@@ -102,7 +102,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get9() {
+    private static Effect get9() {
         return new StandardEffect() {
             @Override
             public void activateEffect(ExpertGameParameters parameters, Object... args) {
@@ -117,7 +117,7 @@ public class EffectFactory {
         };
     }
 
-    private Effect get11() {
+    private static Effect get11() {
         return new SetupEffect() {
             @Override
             public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
