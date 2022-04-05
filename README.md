@@ -35,3 +35,7 @@ Number: GC10
 
 Tests are automatically run by a GitHub action  
 [Test coverage report](Deliverables/Report%20Test) Last update: april 3rd
+
+## Peer reviews
+
+[GC20's class diagram review](Deliverables/Peer%20Review/First-Peer-Review.docx)
