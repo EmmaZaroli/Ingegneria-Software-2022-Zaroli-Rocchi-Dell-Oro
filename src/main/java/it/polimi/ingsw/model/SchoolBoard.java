@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,7 +12,7 @@ import java.util.*;
 /**
  * School board.
  */
-public class SchoolBoard implements Serializable {
+public class SchoolBoard extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 10L;
 
@@ -50,6 +52,8 @@ public class SchoolBoard implements Serializable {
      * @return true if the player is supposed to take one coin from the table, false otherwise
      */
     public boolean addStudentToDiningRoom(PawnColor color) {
+        notify(new Message() {
+        });
         return diningRoom.addStudent(color);
     }
 
@@ -59,6 +63,8 @@ public class SchoolBoard implements Serializable {
      * @param color the colors of the students
      */
     public void addStudentsToEntrance(List<PawnColor> color) {
+        notify(new Message() {
+        });
         entrance.addAll(color);
     }
 
@@ -69,6 +75,8 @@ public class SchoolBoard implements Serializable {
      */
     public void addTowers(int n) {
         towers += n;
+        notify(new Message() {
+        });
     }
 
     /**
@@ -144,6 +152,8 @@ public class SchoolBoard implements Serializable {
      */
     public boolean moveStudentFromEntranceToDiningRoom(PawnColor student) {
         removeStudentFromEntrance(student);
+        notify(new Message() {
+        });
         return addStudentToDiningRoom(student);
     }
 
@@ -154,6 +164,8 @@ public class SchoolBoard implements Serializable {
      * @return true if the specified element is present in the Set otherwise it returns false
      */
     public boolean removeProfessor(PawnColor color) {
+        notify(new Message() {
+        });
         return professorTable.remove(color);
     }
 
@@ -164,6 +176,8 @@ public class SchoolBoard implements Serializable {
      */
     public void removeStudentFromEntrance(PawnColor color) {
         entrance.remove(color);
+        notify(new Message() {
+        });
     }
 
     /**
@@ -171,6 +185,8 @@ public class SchoolBoard implements Serializable {
      */
     public void removeTower() {
         towers--;
+        notify(new Message() {
+        });
     }
 
     /**
