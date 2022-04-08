@@ -22,6 +22,7 @@ public class GameController implements Observer {
     protected Game game;
     protected TableController tableController;
 
+    //TODO we need to receive also the virtualViews and add them as observers of the model's classes
     public GameController(Game game, TableController tableController){
         this.game = game;
         this.tableController = tableController;
@@ -52,7 +53,6 @@ public class GameController implements Observer {
         this.game.setCurrentPlayer(0);
         this.game.setGamePhase(PLANNING);
     }
-
     @Override
     public void update(Message message) {
         switch (game.getGamePhase()) {
@@ -100,6 +100,7 @@ public class GameController implements Observer {
         if (!this.canPlayAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex))) {
             throw new IllegalAssistantException();
         }
+
         players[game.getCurrentPlayer()]
                 .playAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex));
 
