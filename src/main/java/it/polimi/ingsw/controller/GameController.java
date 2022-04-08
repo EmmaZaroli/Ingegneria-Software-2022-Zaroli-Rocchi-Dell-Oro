@@ -7,6 +7,8 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
@@ -16,7 +18,7 @@ import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 //TODO the whole controller (and model) must be serializable
-public class GameController {
+public class GameController implements Observer {
     protected Game game;
     protected TableController tableController;
 
@@ -30,7 +32,7 @@ public class GameController {
         this.tableController = new TableController(game.getTable());
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
-            for(int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
+            for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
                 students.add(tableController.getBag().drawStudent());
             }
             c.getBoard().addStudentsToEntrance(students);
@@ -45,7 +47,8 @@ public class GameController {
         this.game.setGamePhase(PLANNING);
     }
 
-    public void MessageReceiver(/*Message*/) {
+    @Override
+    public void update(Message message) {
         switch (game.getGamePhase()) {
             case PLANNING:
                 //check(Message) ->message.nickname.equals(currentPlayer)

@@ -2,13 +2,22 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 
-public class VirtualView implements Observer {
+public class VirtualView extends Observable implements Observer {
+    /**
+     * The user owning the view.
+     */
+    private final String nickname;
 
+    /**
+     * The connection to the client.
+     */
     ClientHandler clientHandler;
 
-    public VirtualView(ClientHandler clientHandler) {
+    public VirtualView(ClientHandler clientHandler, String nickname) {
+        this.nickname = nickname;
         this.clientHandler = clientHandler;
     }
 
@@ -16,34 +25,19 @@ public class VirtualView implements Observer {
         return clientHandler;
     }
 
-    public void askNickname() {
-
+    public String getPlayerNickname() {
+        return nickname;
     }
 
-    public void askNumberOfPlayer() {
-
+    /**
+     * Receives a message coming from the client.
+     *
+     * @param message a message coming from the client
+     */
+    public void notifyGame(Message message) {
+        //before sending the message to the controller, it should add the nickname of the player ?
+        notify(message);
     }
-
-    public void askGameMode() {
-
-    }
-
-    public void askAssistantCard() {
-
-    }
-
-    public void askMovePawn() {
-
-    }
-
-    public void askStepMotherNature() {
-
-    }
-
-    public void askCloudTiles() {
-
-    }
-
 
     /**
      * Receives a notification from the model that something has change
