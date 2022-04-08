@@ -22,7 +22,7 @@ public class GameController implements Observer {
     protected Game game;
     protected TableController tableController;
 
-    //TODO who send us the players?
+    //TODO we need to receive also the virtualViews and add them as observers of the model's classes
     public GameController(Player[] players) {
         this.init(players);
     }
