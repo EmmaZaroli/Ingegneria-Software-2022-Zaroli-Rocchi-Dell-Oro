@@ -5,11 +5,13 @@ import java.io.Serializable;
 import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.observer.Observable;
 
 /**
  * class Cloud tile.
  */
-public class CloudTile implements Serializable {
+public class CloudTile extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 6L;
 
@@ -31,6 +33,8 @@ public class CloudTile implements Serializable {
 //method to add students
     public void addStudents(List<PawnColor> student) {
         students.addAll(student);
+        notify(new Message() {
+        });
     }
 
     /**
@@ -42,6 +46,8 @@ public class CloudTile implements Serializable {
     public List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
         this.students.clear();
+        notify(new Message() {
+        });
         return copy;
     }
 }
