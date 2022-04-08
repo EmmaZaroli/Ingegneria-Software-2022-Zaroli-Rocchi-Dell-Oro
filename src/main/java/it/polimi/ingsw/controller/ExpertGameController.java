@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.network.message.Message;
 
 import java.util.*;
 
@@ -51,7 +52,7 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    public void MessageReceiver(/*Message*/) {
+    public void update(Message message) {
         /*
         if (Message.type().equals("EffectCard")) {
             canActivateCharacterAbility(Message.character());
@@ -66,14 +67,14 @@ public class ExpertGameController extends GameController {
     //TODO do something aboiut this function
     public boolean canActivateCharacterAbility(int characterIndex) {
         //TODO throw exception if the card doesn't exist on the table
-        if(getGameParameters().hasAlreadyActivateCharacterCard())
+        if (getGameParameters().hasAlreadyActivateCharacterCard())
             return false;
         return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() >
                 getGame().getCharacterCards()[characterIndex].getCurrentPrice();
     }
 
     public void activateCharacterAbility(int characterIndex) {
-        if(getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
+        if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
             activateSetupEffect(characterIndex);
         else
             activateStandardEffect(characterIndex);
@@ -83,7 +84,7 @@ public class ExpertGameController extends GameController {
         getGameParameters().setAlreadyActivateCharacterCard(true);
     }
 
-    private void activateSetupEffect(int effectIndex){
+    private void activateSetupEffect(int effectIndex) {
         ((SetupEffect) effects[effectIndex])
                 .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
@@ -96,17 +97,17 @@ public class ExpertGameController extends GameController {
         ((StandardEffect)effects[effectIndex]).reverseEffect(getGameParameters());
     }
 
-    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex){
+    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex) {
         character.removeStudent(color);
         tableController.movePawnOnIsland(color, islandIndex);
         character.addStudent(tableController.drawStudents(1));
     }
 
-    private void effect7(CharacterCardWithSetUpAction character, List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance){
-        for(PawnColor c : colorsFromCard){
+    private void effect7(CharacterCardWithSetUpAction character, List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance) {
+        for (PawnColor c : colorsFromCard) {
             character.removeStudent(c);
         }
-        for(PawnColor c : colorsFromEntrance){
+        for (PawnColor c : colorsFromEntrance) {
             game.getPlayers()[game.getCurrentPlayer()].getBoard().removeStudentFromEntrance(c);
         }
 
@@ -114,7 +115,7 @@ public class ExpertGameController extends GameController {
         game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentsToEntrance(colorsFromCard);
     }
 
-    private void effect11(CharacterCardWithSetUpAction character, PawnColor color){
+    private void effect11(CharacterCardWithSetUpAction character, PawnColor color) {
         character.removeStudent(color);
         game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);
         character.addStudent(tableController.drawStudents(1));
@@ -130,13 +131,13 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    protected void playerHasEndedAction(){
+    protected void playerHasEndedAction() {
         reverseEffect();
         getGameParameters().setAlreadyActivateCharacterCard(false);
         super.playerHasEndedAction();
     }
 
-    public ExpertGameParameters getGameParameters(){
+    public ExpertGameParameters getGameParameters() {
         return (ExpertGameParameters) super.game.getParameters();
     }
 
