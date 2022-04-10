@@ -11,6 +11,11 @@ public class ExpertGameController extends GameController {
     private CharacterCard[] characterCards;
     private Effect[] effects;
 
+    public ExpertGameController(ExpertGame game, ExpertTableController tableController){
+        super(game, tableController);
+        drawCharactersCards();
+    }
+
     public ExpertGameController(ExpertPlayer[] players) {
         super(players);
         drawCharactersCards();

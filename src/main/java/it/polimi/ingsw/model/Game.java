@@ -25,6 +25,13 @@ public class Game implements Serializable {
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
 
+    public Game(Player[] players, Table table, GameParameters parameters){
+        this.players = players;
+        this.table = table;
+        this.currentPlayer = 0;
+        this.parameters = parameters;
+    }
+
     public Game(Player[] players) {
         this.init(players);
     }
