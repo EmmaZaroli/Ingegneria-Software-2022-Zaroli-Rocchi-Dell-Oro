@@ -1,5 +1,6 @@
 package it.polimi.ingsw.observer;
 
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.message.Message;
 
 import java.util.*;
@@ -29,6 +30,12 @@ public class Observable {
     public void notify(Message message) {
         for (Observer observer : observers) {
             observer.update(message);
+        }
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
         }
     }
 }

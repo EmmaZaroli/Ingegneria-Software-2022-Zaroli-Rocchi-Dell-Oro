@@ -4,6 +4,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
@@ -172,7 +173,7 @@ public class Player extends Observable implements Serializable {
         }
         this.discardPileHead = a;
         assistantDeck.remove(a);
-        notify(new Message() {
+        notify(new Message(this.getNickname(), MessageType.OTHER_MESSAGE) {
         });
     }
 }

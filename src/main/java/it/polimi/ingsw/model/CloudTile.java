@@ -5,7 +5,9 @@ import java.io.Serializable;
 import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.network.message.CloudMessage;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.observer.Observable;
 
 /**
@@ -33,7 +35,7 @@ public class CloudTile extends Observable implements Serializable {
 //method to add students
     public void addStudents(List<PawnColor> student) {
         students.addAll(student);
-        notify(new Message() {
+        notify(new CloudMessage("server", MessageType.CLOUD, this) {
         });
     }
 
@@ -46,7 +48,7 @@ public class CloudTile extends Observable implements Serializable {
     public List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
         this.students.clear();
-        notify(new Message() {
+        notify(new CloudMessage("server", MessageType.CLOUD, this) {
         });
         return copy;
     }
