@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
@@ -95,8 +96,7 @@ public class Game extends Observable implements Serializable {
 
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
-        notify(new Message() {
-        });
+        notifyObservers();
     }
 
     public void setPlayedCount(int playedCount) {
@@ -105,8 +105,7 @@ public class Game extends Observable implements Serializable {
 
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
-        notify(new Message() {
-        });
+        //notify newPlayerMessage(...)
     }
 
     public void setFirstPlayerInRound(int firstPlayerInRound) {

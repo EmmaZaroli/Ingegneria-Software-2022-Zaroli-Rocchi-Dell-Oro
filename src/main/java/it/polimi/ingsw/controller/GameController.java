@@ -78,6 +78,12 @@ public class GameController implements Observer {
         }
     }
 
+    //not sure what to do with this one
+    @Override
+    public void update() {
+
+    }
+
     /*private void planning(Message) {
         switch (Message):
             case fillClouds:
