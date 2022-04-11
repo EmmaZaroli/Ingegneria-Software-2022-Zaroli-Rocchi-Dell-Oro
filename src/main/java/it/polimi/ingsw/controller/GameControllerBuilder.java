@@ -2,6 +2,11 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.enums.GameMode;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
+import it.polimi.ingsw.model.ExpertGameParameters;
+import it.polimi.ingsw.model.ExpertPlayer;
+import it.polimi.ingsw.model.GameParameters;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 
@@ -29,12 +34,19 @@ public class GameControllerBuilder {
         return this;
     }
 
-    public GameController build(){
+    public GameController build() throws InvalidPlayerNumberException {
+        //checkPlayerNumberValidity();
         return switch (gameMode){
             case NORMAL_MODE -> buildNormalGameController();
             case EXPERT_MODE -> buildExpertGameController();
         };
     }
+
+    /*
+    private void checkPlayerNumberValidity() throws InvalidPlayerNumberException {
+        if(playersNames.size() != playersNumber.getNumber())
+            throw new InvalidPlayerNumberException((playersNames.size() > playersNumber.getNumber()) ? InvalidPlayerNumberException.ExceptionType.TOO_MANY_PLAYERS : InvalidPlayerNumberException.ExceptionType.NOT_ENOUGH_PLAYERS);
+    }*/
 
     private GameController buildNormalGameController(){
         Player[] players = new Player[playersNames.size()];
@@ -72,5 +84,5 @@ public class GameControllerBuilder {
 
     //TODO similar code in buildNormalGameController() and buildExpertGameController(), is there a way to generalize it?
     //TODO maybe create function for building players, expertplayers, tablecontroller, experttablecontroller...
-    //TODO check if the size of playerNames equals playerNumbers
+
 }
