@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.SchoolBoard;
-import it.polimi.ingsw.network.ClientHandler;
+import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.message.ChangedPhaseMessage;
 import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.observer.Observable;
@@ -19,16 +19,16 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
     /**
      * The connection to the client.
      */
-    private final ClientHandler clientHandler;
+    private final Endpoint clientHandler;
     private final Game game;
 
-    public VirtualView(ClientHandler clientHandler, String nickname, Game game) {
+    public VirtualView(Endpoint clientHandler, String nickname, Game game) {
         this.nickname = nickname;
         this.clientHandler = clientHandler;
         this.game = game;
     }
 
-    public ClientHandler getClientHandler() {
+    public Endpoint getClientHandler() {
         return clientHandler;
     }
 
