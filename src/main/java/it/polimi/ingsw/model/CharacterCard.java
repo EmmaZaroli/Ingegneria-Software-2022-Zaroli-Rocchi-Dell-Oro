@@ -56,7 +56,6 @@ public class CharacterCard extends Observable implements Serializable {
      */
     protected void setUsed() {
         this.hasCoin = true;
-        notify(new Message() {
-        });
+        notify(this);
     }
 }

@@ -35,8 +35,7 @@ public class IslandCard extends Observable implements Serializable {
      */
     public void movePawnOnIsland(PawnColor student) {
         students.add(student);
-        notify(new Message() {
-        });
+        notify(this);
     }
 
     /**
@@ -46,8 +45,7 @@ public class IslandCard extends Observable implements Serializable {
      */
     public void movePawnOnIsland(List<PawnColor> outsideStudents) {
         students.addAll(outsideStudents);
-        notify(new Message() {
-        });
+        notify(this);
     }
 
     /**
@@ -94,8 +92,7 @@ public class IslandCard extends Observable implements Serializable {
      */
     public void incrementSize() {
         this.size++;
-        notify(new Message() {
-        });
+        notify(this);
     }
 
     /**
@@ -114,7 +111,6 @@ public class IslandCard extends Observable implements Serializable {
      */
     public void setTower(Tower tower) {
         this.tower = tower;
-        notify(new Message() {
-        });
+        notify(this);
     }
 }

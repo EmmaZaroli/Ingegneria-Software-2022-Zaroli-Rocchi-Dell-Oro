@@ -7,7 +7,7 @@ import it.polimi.ingsw.network.message.Message;
 
 import java.util.*;
 
-public class ExpertGameController extends GameController {
+public class ExpertGameController<T> extends GameController<T> {
 
     private CharacterCard[] characterCards;
     private Effect[] effects;
@@ -52,7 +52,7 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    public void update(Message message) {
+    public void update(T message) {
         /*
         if (Message.type().equals("EffectCard")) {
             canActivateCharacterAbility(Message.character());

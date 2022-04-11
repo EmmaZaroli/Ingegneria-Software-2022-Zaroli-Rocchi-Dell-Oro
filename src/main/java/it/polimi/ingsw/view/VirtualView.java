@@ -1,13 +1,16 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.network.ClientHandler;
 import it.polimi.ingsw.network.message.ChangedPhaseMessage;
 import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 
-public class VirtualView extends Observable implements Observer {
+public class VirtualView<T> extends Observable<T> implements Observer<T> {
     /**
      * The user owning the view.
      */
@@ -39,33 +42,40 @@ public class VirtualView extends Observable implements Observer {
      * @param message a message coming from the client
      */
     public void notifyGame(Message message) {
-        //before sending the message to the controller, it should add the nickname of the player ?
-        notify(message);
-    }
-
-    /**
-     * Receives a notification from the model through a message that something has change
-     * The message is sent over the network to the client's View.
-     */
-    @Override
-    public void update(Message message) {
-        //update board message
-        clientHandler.sendMessage(message);
+        //TODO before sending the message to the controller, it should add the nickname of the player ?
+        notify((T) message);
     }
 
     /**
      * Receives a notification from the model
      * create a message depending on the game phase
      */
+
     @Override
-    public void update() {
-        if (game.getPlayers()[game.getCurrentPlayer()].getNickname().equals(this.nickname)) {
-            switch (game.getGamePhase()) {
-                case PLANNING -> clientHandler.sendMessage(new GetDeckMessage(this.nickname, MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
-                case ACTION_MOVE_STUDENTS -> clientHandler.sendMessage(new ChangedPhaseMessage(this.nickname, MessageType.ACTION_MOVE_STUDENTS, "move" + game.getParameters().getStudentsToMove() + "students"));
-                case ACTION_MOVE_MOTHER_NATURE -> clientHandler.sendMessage(new ChangedPhaseMessage(this.nickname, MessageType.ACTION_MOVE_MOTHER_NATURE, ""));
-                case ACTION_CHOOSE_CLOUD -> clientHandler.sendMessage(new ChangedPhaseMessage(this.nickname, MessageType.ACTION_CHOOSE_CLOUD, ""));
+    public void update(T message) {
+        String currentPlayer = game.getPlayers()[game.getCurrentPlayer()].getNickname();
+        //TODO do we need to send every message to every player?
+
+        if (message.getClass().isInstance(game)) {
+            if (currentPlayer.equals(this.nickname)) {
+                switch (game.getGamePhase()) {
+                    case PLANNING -> clientHandler.sendMessage(new GetDeckMessage(this.nickname, MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
+                    case ACTION_MOVE_STUDENTS -> clientHandler.sendMessage(new ChangedPhaseMessage(this.nickname, MessageType.ACTION_MOVE_STUDENTS, "move" + game.getParameters().getStudentsToMove() + "students"));
+                    case ACTION_MOVE_MOTHER_NATURE -> clientHandler.sendMessage(new ChangedPhaseMessage(this.nickname, MessageType.ACTION_MOVE_MOTHER_NATURE, ""));
+                    case ACTION_CHOOSE_CLOUD -> clientHandler.sendMessage(new ChangedPhaseMessage(this.nickname, MessageType.ACTION_CHOOSE_CLOUD, ""));
+                }
             }
+        }
+        if (message.getClass().equals(CloudTile.class)) {
+            clientHandler.sendMessage(new CloudMessage(MessageType.CLOUD, (CloudTile) message));
+        }
+        if (message.getClass().equals(IslandCard.class)) {
+
+        }
+
+        //maybe it's the only one that we should send only to the current player?
+        if (message.getClass().equals(SchoolBoard.class)) {
+            clientHandler.sendMessage(new BoardMessage(currentPlayer, MessageType.BOARD, (SchoolBoard) message));
         }
     }
 }

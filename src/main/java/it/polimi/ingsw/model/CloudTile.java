@@ -17,7 +17,7 @@ public class CloudTile extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 6L;
 
-    //TODO probably it is better to place this info somewhere else
+    //TODO add an identifier?
     private final ArrayList<PawnColor> students;
 
     /**
@@ -35,8 +35,7 @@ public class CloudTile extends Observable implements Serializable {
 //method to add students
     public void addStudents(List<PawnColor> student) {
         students.addAll(student);
-        notify(new CloudMessage("server", MessageType.CLOUD, this) {
-        });
+        notify(this);
     }
 
     /**
@@ -48,8 +47,7 @@ public class CloudTile extends Observable implements Serializable {
     public List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
         this.students.clear();
-        notify(new CloudMessage("server", MessageType.CLOUD, this) {
-        });
+        notify(this);
         return copy;
     }
 }

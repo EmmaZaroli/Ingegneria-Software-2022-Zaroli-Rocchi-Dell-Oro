@@ -157,8 +157,8 @@ public class Player extends Observable implements Serializable {
             //TODO throw exception or let the controller do it
         }
         this.discardPileHead = a;
+        notify(a);
         assistantDeck.remove(a);
-        notify(new Message(this.getNickname(), MessageType.OTHER_MESSAGE) {
-        });
+
     }
 }

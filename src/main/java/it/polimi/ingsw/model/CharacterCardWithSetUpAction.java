@@ -38,8 +38,7 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      */
     public void addStudent(PawnColor color) {
         students.add(color);
-        notify(new Message() {
-        });
+        notify(this);
     }
 
     /**
@@ -50,8 +49,7 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
 //TODO finally something sw-eng compliant. Let's copy this thing in other classes
     public void addStudent(List<PawnColor> colors) {
         this.students.addAll(colors);
-        notify(new Message() {
-        });
+        notify(this);
     }
 
     /**
@@ -61,7 +59,6 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      */
     public void removeStudent(PawnColor color) {
         students.remove(color);
-        notify(new Message() {
-        });
+        notify(this);
     }
 }

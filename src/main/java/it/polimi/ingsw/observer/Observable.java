@@ -5,16 +5,16 @@ import it.polimi.ingsw.network.message.Message;
 
 import java.util.*;
 
-public class Observable {
+public class Observable<T> {
 
-    private final List<Observer> observers = new ArrayList<>();
+    private final List<Observer<T>> observers = new ArrayList<>();
 
     /**
      * Adds an observer.
      *
      * @param observer the observer to be added.
      */
-    public void addObserver(Observer observer) {
+    public void addObserver(Observer<T> observer) {
         observers.add(observer);
     }
 
@@ -27,15 +27,9 @@ public class Observable {
         observers.remove(observer);
     }
 
-    public void notify(Message message) {
-        for (Observer observer : observers) {
+    public void notify(T message) {
+        for (Observer<T> observer : observers) {
             observer.update(message);
-        }
-    }
-
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update();
         }
     }
 }
