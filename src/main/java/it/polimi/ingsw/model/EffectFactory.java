@@ -1,8 +1,7 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
-import it.polimi.ingsw.model.ExpertGameParameters;
+import it.polimi.ingsw.controller.TableController;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
@@ -23,7 +22,6 @@ public class EffectFactory {
         };
     }
 
-    
     private Effect get1() {
         return new SetupEffect() {
             @Override

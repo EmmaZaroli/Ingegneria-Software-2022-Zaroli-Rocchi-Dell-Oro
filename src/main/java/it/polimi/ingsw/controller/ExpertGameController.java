@@ -3,7 +3,6 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.model.enums.PlayerCountIcon;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,16 +10,19 @@ import java.util.List;
 import java.util.Random;
 
 public class ExpertGameController extends GameController {
-    private CharacterCard[] characterCards;
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
     private EffectFactory effectFactory = new EffectFactory();
-    private Effect[] effects;
+    private TableController table;
 
-    public ExpertGameController(Player[] players) {
-        //TODO how can i create an ExpertTableController and ExpertPlayer
+    public ExpertGameController(ExpertPlayer[] players) {
         super(players);
-        this.table = players.length == 3 ? new ExpertTableController(PlayerCountIcon.THREE) : new ExpertTableController(PlayerCountIcon.TWO_FOUR);
         drawCharactersCards();
+    }
+
+    @Override
+    protected void init(Player[] players) {
+        this.game = new ExpertGame(players);
+        this.table = new ExpertTableController(getGame().getTable());
     }
 
     private void drawCharactersCards() {
@@ -30,8 +32,8 @@ public class ExpertGameController extends GameController {
         Characters.addAll((Arrays.stream(Character.values()).toList()));
         for (int i = 0; i < 3; i++) {
             numberCard = r.nextInt(Characters.size());
-            characterCards[i] = cardFactory.getCharacterCard(Characters.get(numberCard));
-            effects[i] = effectFactory.getEffect(Characters.get(numberCard));
+            getGame().getCharacterCards()[i] = cardFactory.getCharacterCard(Characters.get(numberCard));
+            getGame().getEffects()[i] = effectFactory.getEffect(Characters.get(numberCard));
             Characters.remove(Characters.get(numberCard));
         }
     }
@@ -54,28 +56,32 @@ public class ExpertGameController extends GameController {
         //TODO throw exception if the card doesn't exist on the table
         if(getGameParameters().hasAlreadyActivateCharacterCard())
             return false;
-        return ((ExpertPlayer)getCurrentPlayer()).getCoins() > characterCards[characterIndex].getCurrentPrice();
+        return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() >
+                getGame().getCharacterCards()[characterIndex].getCurrentPrice();
     }
 
     public void activateCharacterAbility(int characterIndex) {
-        if(characterCards[characterIndex] instanceof CharacterCardWithSetUpAction)
+        if(getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
             activateSetupEffect(characterIndex);
         else
             activateStandardEffect(characterIndex);
-        ((ExpertPlayer)getCurrentPlayer()).decreaseCoins(characterCards[characterIndex].getCurrentPrice());
+        getGame()
+                .getPlayers()[game.getCurrentPlayer()]
+                .decreaseCoins((getGame()).getCharacterCards()[characterIndex].getCurrentPrice());
         getGameParameters().setAlreadyActivateCharacterCard(true);
     }
 
     private void activateSetupEffect(int effectIndex){
-        ((SetupEffect)effects[effectIndex]).setupEffect(table, (CharacterCardWithSetUpAction) characterCards[effectIndex]);
+        ((SetupEffect) getGame().getEffects()[effectIndex])
+                .setupEffect(table, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).activateEffect(getGameParameters());
+        ((StandardEffect)getGame().getEffects()[effectIndex]).activateEffect(getGameParameters());
     }
 
     private void activateReverseEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).reverseEffect(getGameParameters());
+        ((StandardEffect)getGame().getEffects()[effectIndex]).reverseEffect(getGameParameters());
     }
 
     private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex){
@@ -89,23 +95,23 @@ public class ExpertGameController extends GameController {
             character.removeStudent(c);
         }
         for(PawnColor c : colorsFromEntrance){
-            currentPlayerBoard.removeStudentFromEntrance(c);
+            game.getPlayers()[game.getCurrentPlayer()].getBoard().removeStudentFromEntrance(c);
         }
 
         character.addStudent(colorsFromEntrance);
-        currentPlayerBoard.addStudentsToEntrance(colorsFromCard);
+        game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentsToEntrance(colorsFromCard);
     }
 
     private void effect11(CharacterCardWithSetUpAction character, PawnColor color){
         character.removeStudent(color);
-        currentPlayerBoard.addStudentToDiningRoom(color);
+        game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);
         character.addStudent(table.drawStudents(1));
     }
 
     //TODO call at the end of the turn
     //activate reverseEffect for all card, should not generate problems
     public void reverseEffect(){
-        for(Effect e : effects){
+        for(Effect e : ((ExpertGame)game).getEffects()){
             if(e instanceof StandardEffect)
                 ((StandardEffect) e).reverseEffect(getGameParameters());
         }
@@ -119,6 +125,10 @@ public class ExpertGameController extends GameController {
     }
 
     public ExpertGameParameters getGameParameters(){
-        return (ExpertGameParameters) super.getGameParameters();
+        return (ExpertGameParameters) super.game.getParameters();
+    }
+
+    public ExpertGame getGame() {
+        return (ExpertGame) this.game;
     }
 }

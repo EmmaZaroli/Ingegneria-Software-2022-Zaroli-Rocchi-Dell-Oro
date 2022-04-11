@@ -1,6 +1,7 @@
 package it.polimi.ingsw.persistency;
 
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Game;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -35,7 +36,7 @@ public class DataDumper {
      * Serializes the Game controller and writes it on a file
      * @param game The game to serialize
      */
-    public void saveGame(GameController game) {
+    public void saveGame(Game game) {
         try {
             try (FileOutputStream fileOutputStream = new FileOutputStream(game.getGameId() + SERIALIZED_FILE_FORMAT)) {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -86,7 +87,7 @@ public class DataDumper {
     public List<GameController> getAllGames() {
         File folder = new File(".");
         return Arrays.stream(folder.list())
-                .filter(x -> x.contains(SERIALIZED_FILE_FORMAT))
+                .filter(x -> x.endsWith(SERIALIZED_FILE_FORMAT))
                 .map(this::readAndDeserialize)
                 .toList();
     }

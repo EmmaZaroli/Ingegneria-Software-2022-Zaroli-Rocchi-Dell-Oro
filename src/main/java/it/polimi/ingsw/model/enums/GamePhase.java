@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.enums;
+package it.polimi.ingsw.model.enums;
 
 public enum GamePhase {
     PLANNING,
