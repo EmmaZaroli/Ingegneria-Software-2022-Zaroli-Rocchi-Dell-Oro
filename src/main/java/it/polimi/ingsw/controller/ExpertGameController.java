@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class ExpertGameController extends GameController {
+public class ExpertGameController<T> extends GameController<T> {
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
     private EffectFactory effectFactory = new EffectFactory();
     private TableController table;
@@ -40,7 +40,7 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    public void update(Message message) {
+    public void update(T message) {
         /*
         if (Message.type().equals("EffectCard")) {
             canActivateCharacterAbility(Message.character());

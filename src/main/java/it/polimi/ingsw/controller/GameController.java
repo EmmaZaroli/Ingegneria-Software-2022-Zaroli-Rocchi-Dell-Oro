@@ -18,7 +18,7 @@ import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 //TODO the whole controller (and model) must be serializable
-public class GameController implements Observer {
+public class GameController<T> implements Observer<T> {
     protected Game game;
     protected TableController tableController;
 
@@ -48,7 +48,7 @@ public class GameController implements Observer {
     }
 
     @Override
-    public void update(Message message) {
+    public void update(T message) {
         switch (game.getGamePhase()) {
             case PLANNING:
                 //check(Message) ->message.nickname.equals(currentPlayer)
@@ -72,11 +72,6 @@ public class GameController implements Observer {
         }
     }
 
-    //not sure what to do with this one
-    @Override
-    public void update() {
-
-    }
 
     /*private void planning(Message) {
         switch (Message):
@@ -376,4 +371,6 @@ public class GameController implements Observer {
         }
         return false;
     }
+
+
 }

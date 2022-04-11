@@ -87,7 +87,7 @@ public class Game extends Observable implements Serializable {
 
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
-        notifyObservers();
+        notify();
     }
 
     public void setPlayedCount(int playedCount) {
