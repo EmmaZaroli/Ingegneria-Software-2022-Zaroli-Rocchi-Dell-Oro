@@ -14,7 +14,6 @@ public class Game implements Serializable {
     private final UUID gameUUID = UUID.randomUUID();
 
     private final Player[] players;
-    //had to remove final from table because it would have been impossible to make it ExpertTable in ExpertGameController
     protected Table table;
     private GamePhase gamePhase;
     private int playedCount;
@@ -28,7 +27,6 @@ public class Game implements Serializable {
 
     public Game(Player[] players) {
         this.players = players;
-        //TODO how to handle tableController?
         this.table = new Table(this.players.length);
         this.currentPlayer = 0;
         this.parameters = new GameParameters();

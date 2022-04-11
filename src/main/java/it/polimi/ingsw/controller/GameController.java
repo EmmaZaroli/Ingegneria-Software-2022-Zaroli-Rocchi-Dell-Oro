@@ -91,7 +91,8 @@ public class GameController {
         if (!this.canPlayAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex))) {
             throw new IllegalAssistantException();
         }
-        players[game.getCurrentPlayer()].playAssistant(assistantIndex);
+        players[game.getCurrentPlayer()]
+                .playAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex));
 
         this.playerHasEndedPlanning();
     }

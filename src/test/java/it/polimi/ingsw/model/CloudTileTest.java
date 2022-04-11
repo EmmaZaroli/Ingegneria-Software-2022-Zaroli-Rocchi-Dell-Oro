@@ -11,7 +11,7 @@ class CloudTileTest extends TestCase {
 
     @Test
     void TakeStudentFromCloud() {
-        CloudTile cloud = new CloudTile(PlayerCountIcon.TWO_FOUR);
+        CloudTile cloud = new CloudTile();
         List<PawnColor> students = new ArrayList<>();
         students.add(PawnColor.BLUE);
         students.add(PawnColor.RED);

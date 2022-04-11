@@ -28,18 +28,19 @@ public class Bag implements Serializable {
 
     public PawnColor drawStudent() {
         RandomHelper randomHelper = RandomHelper.getInstance();
-        //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
-        int random = randomHelper.getInt(pawnCount) + 1;
-        int pos = 0;
+        if(pawnCount > 0) {
+            //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
+            int random = randomHelper.getInt(pawnCount) + 1;
+            int pos = 0;
 
-        for (Map.Entry<PawnColor, Integer> e : students.entrySet()) {
-            pos += e.getValue();
-            if (random <= pos) {
-                removePawn(e.getKey());
-                return e.getKey();
+            for (Map.Entry<PawnColor, Integer> e : students.entrySet()) {
+                pos += e.getValue();
+                if (random <= pos) {
+                    removePawn(e.getKey());
+                    return e.getKey();
+                }
             }
         }
-        //This statement should not be reached
         return PawnColor.NONE;
     }
 
