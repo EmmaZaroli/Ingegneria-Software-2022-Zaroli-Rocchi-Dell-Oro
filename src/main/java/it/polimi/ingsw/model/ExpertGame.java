@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 public class ExpertGame extends Game {
 
     private CharacterCard[] characterCards;
-    private Effect[] effects;
 
     public ExpertGame(Player[] players) {
         super(players);
@@ -20,10 +19,6 @@ public class ExpertGame extends Game {
         return characterCards;
     }
 
-    public Effect[] getEffects() {
-        return effects;
-    }
-
     @Override
     public ExpertPlayer[] getPlayers() {
         return (ExpertPlayer[]) super.getPlayers();
@@ -31,5 +26,10 @@ public class ExpertGame extends Game {
 
     public ExpertTable getTable() {
         return (ExpertTable) getTable();
+    }
+
+    //TODO fix this up, it's not ok
+    public void addCharacterCards(CharacterCard[] cards){
+        this.characterCards = cards;
     }
 }
