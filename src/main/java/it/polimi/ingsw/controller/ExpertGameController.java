@@ -12,7 +12,6 @@ import java.util.Random;
 public class ExpertGameController extends GameController {
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
     private EffectFactory effectFactory = new EffectFactory();
-    private TableController table;
 
     public ExpertGameController(ExpertPlayer[] players) {
         super(players);
@@ -22,7 +21,6 @@ public class ExpertGameController extends GameController {
     @Override
     protected void init(Player[] players) {
         this.game = new ExpertGame(players);
-        this.table = new ExpertTableController(getGame().getTable());
     }
 
     private void drawCharactersCards() {
@@ -73,7 +71,7 @@ public class ExpertGameController extends GameController {
 
     private void activateSetupEffect(int effectIndex){
         ((SetupEffect) getGame().getEffects()[effectIndex])
-                .setupEffect(table, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
+                .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex){
@@ -86,8 +84,8 @@ public class ExpertGameController extends GameController {
 
     private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex){
         character.removeStudent(color);
-        table.movePawnOnIsland(color, islandIndex);
-        character.addStudent(table.drawStudents(1));
+        tableController.movePawnOnIsland(color, islandIndex);
+        character.addStudent(tableController.drawStudents(1));
     }
 
     private void effect7(CharacterCardWithSetUpAction character, List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance){
@@ -105,7 +103,7 @@ public class ExpertGameController extends GameController {
     private void effect11(CharacterCardWithSetUpAction character, PawnColor color){
         character.removeStudent(color);
         game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);
-        character.addStudent(table.drawStudents(1));
+        character.addStudent(tableController.drawStudents(1));
     }
 
     //TODO call at the end of the turn
