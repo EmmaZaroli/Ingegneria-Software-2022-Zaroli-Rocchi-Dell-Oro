@@ -13,19 +13,23 @@ public class Game implements Serializable {
 
     private final UUID gameUUID = UUID.randomUUID();
 
-    private final Player[] players;
+    protected Player[] players;
     protected Table table;
     private GamePhase gamePhase;
     private int playedCount;
-    private GameParameters parameters;
+    protected GameParameters parameters;
 
-    private int currentPlayer;
+    protected int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
 
     public Game(Player[] players) {
+        this.init(players);
+    }
+
+    protected void init(Player[] players){
         this.players = players;
         this.table = new Table(this.players.length);
         this.currentPlayer = 0;

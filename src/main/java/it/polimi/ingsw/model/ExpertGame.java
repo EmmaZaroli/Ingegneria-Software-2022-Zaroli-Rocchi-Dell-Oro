@@ -9,6 +9,13 @@ public class ExpertGame extends Game {
         super(players);
     }
 
+    protected void init(Player[] players){
+        this.players = players;
+        this.table = new ExpertTable(this.players.length);
+        this.currentPlayer = 0;
+        this.parameters = new ExpertGameParameters();
+    }
+
     public CharacterCard[] getCharacterCards() {
         return characterCards;
     }

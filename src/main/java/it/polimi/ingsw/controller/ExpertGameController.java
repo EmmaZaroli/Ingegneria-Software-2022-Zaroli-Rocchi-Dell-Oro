@@ -4,10 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ExpertGameController extends GameController {
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
@@ -21,6 +18,14 @@ public class ExpertGameController extends GameController {
     @Override
     protected void init(Player[] players) {
         this.game = new ExpertGame(players);
+        this.tableController = new ExpertTableController((ExpertTable)(game.getTable()));
+        LinkedList<PawnColor> students = new LinkedList<>();
+        for (Player c : game.getPlayers()) {
+            for(int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
+                students.add(tableController.getBag().drawStudent());
+            }
+            c.getBoard().addStudentsToEntrance(students);
+        }
     }
 
     private void drawCharactersCards() {
