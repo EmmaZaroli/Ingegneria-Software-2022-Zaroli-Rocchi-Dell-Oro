@@ -7,9 +7,14 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import java.util.*;
 
 public class ExpertGameController extends GameController {
-    private CharacterCardFactory cardFactory = new CharacterCardFactory();
-    private EffectFactory effectFactory = new EffectFactory();
+
+    private CharacterCard[] characterCards;
     private Effect[] effects;
+
+    public ExpertGameController(ExpertGame game, ExpertTableController tableController){
+        super(game, tableController);
+        drawCharactersCards();
+    }
 
     public ExpertGameController(ExpertPlayer[] players) {
         super(players);
@@ -38,8 +43,8 @@ public class ExpertGameController extends GameController {
         CharacterCard[] cards = new CharacterCard[3];
         for (int i = 0; i < 3; i++) {
             numberCard = r.nextInt(Characters.size());
-            cards[i] = cardFactory.getCharacterCard(Characters.get(numberCard));
-            effects[i] = effectFactory.getEffect(Characters.get(numberCard));
+            characterCards[i] = CharacterCardFactory.getCharacterCard(Characters.get(numberCard));
+            effects[i] = EffectFactory.getEffect(Characters.get(numberCard));
             Characters.remove(Characters.get(numberCard));
         }
         getGame().addCharacterCards(cards);

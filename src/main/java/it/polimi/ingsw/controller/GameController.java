@@ -20,6 +20,11 @@ public class GameController {
     protected Game game;
     protected TableController tableController;
 
+    public GameController(Game game, TableController tableController){
+        this.game = game;
+        this.tableController = tableController;
+    }
+
     //TODO who send us the players?
     public GameController(Player[] players) {
         this.init(players);
@@ -28,6 +33,7 @@ public class GameController {
     protected void init(Player[] players) {
         this.game = new Game(players);
         this.tableController = new TableController(game.getTable());
+        //TODO what is this part for?
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
             for(int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {

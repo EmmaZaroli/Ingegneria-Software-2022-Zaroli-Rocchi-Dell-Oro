@@ -4,6 +4,10 @@ public class ExpertGame extends Game {
 
     private CharacterCard[] characterCards;
 
+    public ExpertGame(ExpertPlayer[] players, ExpertTable table, ExpertGameParameters parameters){
+        super(players, table, parameters);
+    }
+
     public ExpertGame(Player[] players) {
         super(players);
     }
