@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.enums.GameMode;
+import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.ExpertGameParameters;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class GameControllerBuilder {
     private GameMode gameMode = GameMode.NORMAL_MODE;   //if no GameMode is specified, the default mode will be normal
-    //private PlayerCountIcon playersNumber = PlayerCountIcon.THREE;  //if no player number is specified, the default number will be three
+    private PlayersNumber playersNumber = PlayersNumber.THREE;  //if no player number is specified, the default number will be three
     private List<String> playersNames = new LinkedList<>();
 
     public GameControllerBuilder gameMode(GameMode gameMode){
@@ -23,11 +24,10 @@ public class GameControllerBuilder {
         return this;
     }
 
-    /*
-    public GameControllerBuilder playersNumber(PlayerCountIcon playersNumber){
+    public GameControllerBuilder playersNumber(PlayersNumber playersNumber){
         this.playersNumber = playersNumber;
         return this;
-    }*/
+    }
 
     public GameControllerBuilder player(String name){
         this.playersNames.add(name);
@@ -35,18 +35,17 @@ public class GameControllerBuilder {
     }
 
     public GameController build() throws InvalidPlayerNumberException {
-        //checkPlayerNumberValidity();
+        checkPlayerNumberValidity();
         return switch (gameMode){
             case NORMAL_MODE -> buildNormalGameController();
             case EXPERT_MODE -> buildExpertGameController();
         };
     }
 
-    /*
     private void checkPlayerNumberValidity() throws InvalidPlayerNumberException {
-        if(playersNames.size() != playersNumber.getNumber())
-            throw new InvalidPlayerNumberException((playersNames.size() > playersNumber.getNumber()) ? InvalidPlayerNumberException.ExceptionType.TOO_MANY_PLAYERS : InvalidPlayerNumberException.ExceptionType.NOT_ENOUGH_PLAYERS);
-    }*/
+        if(playersNames.size() != playersNumber.getPlayersNumber())
+            throw new InvalidPlayerNumberException((playersNames.size() > playersNumber.getPlayersNumber()) ? InvalidPlayerNumberException.ExceptionType.TOO_MANY_PLAYERS : InvalidPlayerNumberException.ExceptionType.NOT_ENOUGH_PLAYERS);
+    }
 
     private GameController buildNormalGameController(){
         Player[] players = new Player[playersNames.size()];
