@@ -13,6 +13,7 @@ import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
@@ -333,7 +334,6 @@ public class GameController<T> implements Observer<T> {
     public void checkImmediateGameOver() {
         if (!isImmediateGameOver())
             return;
-
         //TODO what to do after the game has ended
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
@@ -342,21 +342,27 @@ public class GameController<T> implements Observer<T> {
     public void checkTurnGameOver() {
         if (!isTurnGameOver())
             return;
-
+        //TODO the game end when the round does, we can set a boolean RoundGameOver
         //TODO what to do after the game has ended
-
+        game.callWin(whoIsWinner());
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     public boolean isImmediateGameOver() {
         //check if any player has build his last tower
         for (Player p : game.getPlayers()) {
-            if (p.getBoard().getTowersCount() == 0)
+            if (p.getBoard().getTowersCount() == 0) {
+                game.callWin(p.getNickname());
                 return true;
+            }
         }
 
         //check if only 3 island group remain on the table
-        return tableController.countIslands() == 3;
+        if (tableController.countIslands() == 3) {
+            game.callWin(whoIsWinner());
+            return true;
+        }
+        return false;
     }
 
     public boolean isTurnGameOver() {
@@ -370,6 +376,39 @@ public class GameController<T> implements Observer<T> {
                 return true;
         }
         return false;
+    }
+
+    //TODO we need to simplify this
+    private String whoIsWinner() {
+        //check number of tower left
+        List<Integer> towersCount = new ArrayList<>();
+        for (Player p : game.getPlayers()) {
+            towersCount.add(p.getBoard().getTowersCount());
+        }
+        List<Integer> sortedList = towersCount.stream().sorted().collect(Collectors.toList());
+        if (sortedList.get(0) < sortedList.get(1)) {
+            for (Player p : game.getPlayers()) {
+                if (p.getBoard().getTowersCount() == sortedList.get(0)) {
+                    return p.getNickname();
+                }
+            }
+        }
+
+        //else check number of professors
+        List<Integer> professorsCount = new ArrayList<>();
+        for (Player p : game.getPlayers()) {
+            professorsCount.add(p.getBoard().countProfessors());
+        }
+        List<Integer> professorsSortedList = professorsCount.stream().sorted().collect(Collectors.toList());
+        if (professorsSortedList.get(0) < professorsSortedList.get(1)) {
+            for (Player p : game.getPlayers()) {
+                if (p.getBoard().countProfessors() == professorsSortedList.get(0)) {
+                    return p.getNickname();
+                }
+            }
+        }
+        // it arrives here only if there are 2 player with the same number of tower and professors
+        return "draw";
     }
 
 

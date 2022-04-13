@@ -87,7 +87,7 @@ public class Game extends Observable implements Serializable {
 
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
-        notify();
+        notify(gamePhase);
     }
 
     public void setPlayedCount(int playedCount) {
@@ -96,7 +96,7 @@ public class Game extends Observable implements Serializable {
 
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
-        //notify newPlayerMessage(...)
+        notify(players[currentPlayer]);
     }
 
     public void setFirstPlayerInRound(int firstPlayerInRound) {
@@ -109,5 +109,9 @@ public class Game extends Observable implements Serializable {
 
     public void setMovedPawns(int movedPawns) {
         this.movedPawns = movedPawns;
+    }
+
+    public void callWin(String nicknameWinner) {
+        notify(nicknameWinner);
     }
 }
