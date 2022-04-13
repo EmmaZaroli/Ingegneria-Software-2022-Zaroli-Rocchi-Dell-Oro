@@ -9,6 +9,7 @@ import java.util.*;
 public class ExpertGameController extends GameController {
     private CharacterCardFactory cardFactory = new CharacterCardFactory();
     private EffectFactory effectFactory = new EffectFactory();
+    private Effect[] effects;
 
     public ExpertGameController(ExpertPlayer[] players) {
         super(players);
@@ -33,12 +34,15 @@ public class ExpertGameController extends GameController {
         List<Character> Characters = new ArrayList<Character>();
         Random r = new Random();
         Characters.addAll((Arrays.stream(Character.values()).toList()));
+        //TODO parameterise 3
+        CharacterCard[] cards = new CharacterCard[3];
         for (int i = 0; i < 3; i++) {
             numberCard = r.nextInt(Characters.size());
-            getGame().getCharacterCards()[i] = cardFactory.getCharacterCard(Characters.get(numberCard));
-            getGame().getEffects()[i] = effectFactory.getEffect(Characters.get(numberCard));
+            cards[i] = cardFactory.getCharacterCard(Characters.get(numberCard));
+            effects[i] = effectFactory.getEffect(Characters.get(numberCard));
             Characters.remove(Characters.get(numberCard));
         }
+        getGame().addCharacterCards(cards);
     }
 
     @Override
@@ -75,16 +79,16 @@ public class ExpertGameController extends GameController {
     }
 
     private void activateSetupEffect(int effectIndex){
-        ((SetupEffect) getGame().getEffects()[effectIndex])
+        ((SetupEffect) effects[effectIndex])
                 .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex){
-        ((StandardEffect)getGame().getEffects()[effectIndex]).activateEffect(getGameParameters());
+        ((StandardEffect)effects[effectIndex]).activateEffect(getGameParameters());
     }
 
     private void activateReverseEffect(int effectIndex){
-        ((StandardEffect)getGame().getEffects()[effectIndex]).reverseEffect(getGameParameters());
+        ((StandardEffect)effects[effectIndex]).reverseEffect(getGameParameters());
     }
 
     private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex){
@@ -114,7 +118,7 @@ public class ExpertGameController extends GameController {
     //TODO call at the end of the turn
     //activate reverseEffect for all card, should not generate problems
     public void reverseEffect(){
-        for(Effect e : ((ExpertGame)game).getEffects()){
+        for(Effect e : effects){
             if(e instanceof StandardEffect)
                 ((StandardEffect) e).reverseEffect(getGameParameters());
         }
