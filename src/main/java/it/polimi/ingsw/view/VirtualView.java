@@ -1,9 +1,7 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.model.CloudTile;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.IslandCard;
-import it.polimi.ingsw.model.SchoolBoard;
+import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.message.ChangedPhaseMessage;
 import it.polimi.ingsw.network.message.*;
@@ -56,7 +54,7 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
         String currentPlayer = game.getPlayers()[game.getCurrentPlayer()].getNickname();
         //TODO do we need to send every message to every player?
 
-        if (message.getClass().isInstance(game)) {
+        if (message.getClass().equals(GamePhase.class)) {
             if (currentPlayer.equals(this.nickname)) {
                 switch (game.getGamePhase()) {
                     case PLANNING -> clientHandler.sendMessage(new GetDeckMessage(this.nickname, MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
@@ -66,16 +64,31 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
                 }
             }
         }
+
+        if (message.getClass().equals(Player.class)) {
+            clientHandler.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.CHANGE_PLAYER, ""));
+        }
+
         if (message.getClass().equals(CloudTile.class)) {
             clientHandler.sendMessage(new CloudMessage(MessageType.CLOUD, (CloudTile) message));
         }
-        if (message.getClass().equals(IslandCard.class)) {
 
+        if (message.getClass().equals(IslandCard.class)) {
+            clientHandler.sendMessage(new IslandMessage(MessageType.ISLAND, (IslandCard) message));
         }
 
         //maybe it's the only one that we should send only to the current player?
         if (message.getClass().equals(SchoolBoard.class)) {
-            clientHandler.sendMessage(new BoardMessage(currentPlayer, MessageType.BOARD, (SchoolBoard) message));
+            clientHandler.sendMessage(new SchoolBoardMessage(currentPlayer, MessageType.BOARD, (SchoolBoard) message));
+        }
+
+        //game over
+        if (message.getClass().equals(String.class)) {
+            if (((String) message).equals("draw")) {
+                clientHandler.sendMessage(new WinMessage(MessageType.DRAW, false));
+            } else {
+                clientHandler.sendMessage(new WinMessage(MessageType.GAME_OVER, ((String) message).equals(this.nickname)));
+            }
         }
     }
 }
