@@ -1,7 +1,11 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.Effect;
+import it.polimi.ingsw.controller.SetupEffect;
+import it.polimi.ingsw.controller.StandardEffect;
 import it.polimi.ingsw.controller.TableController;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
+import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
