@@ -140,21 +140,6 @@ public class Player extends Observable implements Serializable {
     }
 
     /**
-     * Plays assistant card by removing it from the deck and put it in the discard pile head
-     *
-     * @param assistantIndex the assistant index
-     */
-//TODO we already have this method, can we delete it ?
-    //TODO probably it is better we use the other method and delete this
-    public void playAssistant(int assistantIndex) {
-        if (assistantIndex >= assistantDeck.size() || assistantIndex < 0) {
-            //TODO throw exception or let the controller do it
-        }
-        this.discardPileHead = assistantDeck.get(assistantIndex);
-        assistantDeck.remove(assistantIndex);
-    }
-
-    /**
      * Toggle player turn.
      */
     public void togglePlayerTurn() {

@@ -29,8 +29,8 @@ class BagTest {
         assertEquals(24, drawnStudents.get(PawnColor.YELLOW));
         assertEquals(24, drawnStudents.get(PawnColor.GREEN));
         assertEquals(24, drawnStudents.get(PawnColor.PINK));
+        assertEquals(0, drawnStudents.get(PawnColor.NONE));
 
-        //This doesn't make sense but makes 100% coverage on the model
-        assertThrows(Exception.class, () -> b.drawStudent());
+        assertEquals(PawnColor.NONE, b.drawStudent());
     }
 }

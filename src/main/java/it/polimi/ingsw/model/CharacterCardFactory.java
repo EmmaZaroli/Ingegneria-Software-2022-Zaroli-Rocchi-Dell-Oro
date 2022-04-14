@@ -13,7 +13,7 @@ public class CharacterCardFactory {
      * @param character the character
      * @return the character card created
      */
-    public CharacterCard getCharacterCard(Character character) {
+    public static CharacterCard getCharacterCard(Character character) {
         return switch (character) {
             case CHARACTER_ONE -> get1();
             case CHARACTER_TWO -> get2();
@@ -26,35 +26,35 @@ public class CharacterCardFactory {
         };
     }
 
-    private CharacterCard get1() {
+    private static CharacterCard get1() {
         return new CharacterCardWithSetUpAction(Character.CHARACTER_ONE.getInitialPrice(), Character.CHARACTER_ONE);
     }
 
-    private CharacterCard get2() {
+    private static CharacterCard get2() {
         return new CharacterCard(Character.CHARACTER_TWO.getInitialPrice(), Character.CHARACTER_TWO);
     }
 
-    private CharacterCard get4() {
+    private static CharacterCard get4() {
         return new CharacterCard(Character.CHARACTER_FOUR.getInitialPrice(), Character.CHARACTER_FOUR);
     }
 
-    private CharacterCard get6() {
+    private static CharacterCard get6() {
         return new CharacterCard(Character.CHARACTER_SIX.getInitialPrice(), Character.CHARACTER_SIX);
     }
 
-    private CharacterCard get7() {
+    private static CharacterCard get7() {
         return new CharacterCardWithSetUpAction(Character.CHARACTER_SEVEN.getInitialPrice(), Character.CHARACTER_SEVEN);
     }
 
-    private CharacterCard get8() {
+    private static CharacterCard get8() {
         return new CharacterCard(Character.CHARACTER_EIGHT.getInitialPrice(), Character.CHARACTER_EIGHT);
     }
 
-    private CharacterCard get9() {
+    private static CharacterCard get9() {
         return new CharacterCard(Character.CHARACTER_NINE.getInitialPrice(), Character.CHARACTER_NINE);
     }
 
-    private CharacterCard get11() {
+    private static CharacterCard get11() {
         return new CharacterCardWithSetUpAction(Character.CHARACTER_ELEVEN.getInitialPrice(), Character.CHARACTER_ELEVEN);
     }
 }

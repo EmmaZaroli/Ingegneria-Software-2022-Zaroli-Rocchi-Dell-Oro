@@ -16,22 +16,31 @@ public class Game extends Observable implements Serializable {
 
     private final UUID gameUUID = UUID.randomUUID();
 
-    private final Player[] players;
-    //had to remove final from table because it would have been impossible to make it ExpertTable in ExpertGameController
+    protected Player[] players;
     protected Table table;
     private GamePhase gamePhase;
     private int playedCount;
-    private GameParameters parameters;
+    protected GameParameters parameters;
 
-    private int currentPlayer;
+    protected int currentPlayer;
     //TODO this value is used but never initialized
     private int firstPlayerInRound;
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
 
-    public Game(Player[] players) {
+    public Game(Player[] players, Table table, GameParameters parameters){
         this.players = players;
-        //TODO how to handle tableController?
+        this.table = table;
+        this.currentPlayer = 0;
+        this.parameters = parameters;
+    }
+
+    public Game(Player[] players) {
+        this.init(players);
+    }
+
+    protected void init(Player[] players){
+        this.players = players;
         this.table = new Table(this.players.length);
         this.currentPlayer = 0;
         this.parameters = new GameParameters();

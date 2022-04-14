@@ -24,6 +24,12 @@ public class GameController<T> implements Observer<T> {
     protected TableController tableController;
 
     //TODO we need to receive also the virtualViews and add them as observers of the model's classes
+    public GameController(Game game, TableController tableController){
+        this.game = game;
+        this.tableController = tableController;
+    }
+
+    //TODO who send us the players?
     public GameController(Player[] players) {
         this.init(players);
     }
@@ -31,6 +37,7 @@ public class GameController<T> implements Observer<T> {
     protected void init(Player[] players) {
         this.game = new Game(players);
         this.tableController = new TableController(game.getTable());
+        //TODO what is this part for?
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
             for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
@@ -47,7 +54,6 @@ public class GameController<T> implements Observer<T> {
         this.game.setCurrentPlayer(0);
         this.game.setGamePhase(PLANNING);
     }
-
     @Override
     public void update(T message) {
         switch (game.getGamePhase()) {
@@ -96,7 +102,9 @@ public class GameController<T> implements Observer<T> {
         if (!this.canPlayAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex))) {
             throw new IllegalAssistantException();
         }
-        players[game.getCurrentPlayer()].playAssistant(assistantIndex);
+
+        players[game.getCurrentPlayer()]
+                .playAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex));
 
         this.playerHasEndedPlanning();
     }
