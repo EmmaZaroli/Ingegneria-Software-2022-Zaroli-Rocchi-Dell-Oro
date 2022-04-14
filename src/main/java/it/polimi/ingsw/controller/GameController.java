@@ -196,8 +196,22 @@ public class GameController {
             }
         }
 
+        //if two player have se same max influence, no tower is build
+        if(isInfluenceDraw(maxInfluencePlayer, maxInfluence))
+            return;
+
         //if the maxInfluence is 0, none of the player has a professor
         if (maxInfluence != 0) this.buildTowers(maxInfluencePlayer);
+    }
+
+    private boolean isInfluenceDraw(Player player, int influence){
+        for(Player p : game.getPlayers()){
+            if(!p.equals(player)){
+                if(influence == tableController.countInfluenceOnIsland(p.getBoard().getProfessors(), p.getBoard().getTowerColor()))
+                    return true;
+            }
+        }
+        return false;
     }
 
     //Builds the tower of the player with max influence
