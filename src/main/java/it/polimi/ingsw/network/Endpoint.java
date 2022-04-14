@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.network.message.Message;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;

@@ -3,6 +3,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
+import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,7 +15,7 @@ import java.util.List;
 /**
  * Player
  */
-public class Player implements Serializable {
+public class Player extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 9L;
 
@@ -154,6 +157,8 @@ public class Player implements Serializable {
             //TODO throw exception or let the controller do it
         }
         this.discardPileHead = a;
+        notify(a);
         assistantDeck.remove(a);
+
     }
 }

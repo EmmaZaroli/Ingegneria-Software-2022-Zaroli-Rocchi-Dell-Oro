@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.network.message.Message;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      */
     public void addStudent(PawnColor color) {
         students.add(color);
+        notify(this);
     }
 
     /**
@@ -47,6 +49,7 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
 //TODO finally something sw-eng compliant. Let's copy this thing in other classes
     public void addStudent(List<PawnColor> colors) {
         this.students.addAll(colors);
+        notify(this);
     }
 
     /**
@@ -56,5 +59,6 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      */
     public void removeStudent(PawnColor color) {
         students.remove(color);
+        notify(this);
     }
 }

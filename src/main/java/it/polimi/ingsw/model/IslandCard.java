@@ -5,14 +5,16 @@ import java.io.Serializable;
 import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.observer.Observable;
 
 /**
  * Island card.
  */
-public class IslandCard implements Serializable {
+public class IslandCard extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 8L;
-
+    //TODO add an identifier
     private final ArrayList<PawnColor> students;
     private Tower tower;
     private int size;
@@ -33,6 +35,7 @@ public class IslandCard implements Serializable {
      */
     public void movePawnOnIsland(PawnColor student) {
         students.add(student);
+        notify(this);
     }
 
     /**
@@ -42,6 +45,7 @@ public class IslandCard implements Serializable {
      */
     public void movePawnOnIsland(List<PawnColor> outsideStudents) {
         students.addAll(outsideStudents);
+        notify(this);
     }
 
     /**
@@ -88,6 +92,7 @@ public class IslandCard implements Serializable {
      */
     public void incrementSize() {
         this.size++;
+        notify(this);
     }
 
     /**
@@ -106,5 +111,6 @@ public class IslandCard implements Serializable {
      */
     public void setTower(Tower tower) {
         this.tower = tower;
+        notify(this);
     }
 }

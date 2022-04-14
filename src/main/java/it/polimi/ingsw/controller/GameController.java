@@ -7,19 +7,23 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 //TODO the whole controller (and model) must be serializable
-public class GameController {
+public class GameController<T> implements Observer<T> {
     protected Game game;
     protected TableController tableController;
 
+    //TODO we need to receive also the virtualViews and add them as observers of the model's classes
     public GameController(Game game, TableController tableController){
         this.game = game;
         this.tableController = tableController;
@@ -36,7 +40,7 @@ public class GameController {
         //TODO what is this part for?
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
-            for(int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
+            for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
                 students.add(tableController.getBag().drawStudent());
             }
             c.getBoard().addStudentsToEntrance(students);
@@ -50,8 +54,8 @@ public class GameController {
         this.game.setCurrentPlayer(0);
         this.game.setGamePhase(PLANNING);
     }
-
-    public void MessageReceiver(/*Message*/) {
+    @Override
+    public void update(T message) {
         switch (game.getGamePhase()) {
             case PLANNING:
                 //check(Message) ->message.nickname.equals(currentPlayer)
@@ -75,6 +79,7 @@ public class GameController {
         }
     }
 
+
     /*private void planning(Message) {
         switch (Message):
             case fillClouds:
@@ -97,6 +102,7 @@ public class GameController {
         if (!this.canPlayAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex))) {
             throw new IllegalAssistantException();
         }
+
         players[game.getCurrentPlayer()]
                 .playAssistant(players[game.getCurrentPlayer()].getAssistant(assistantIndex));
 
@@ -350,7 +356,6 @@ public class GameController {
     public void checkImmediateGameOver() {
         if (!isImmediateGameOver())
             return;
-
         //TODO what to do after the game has ended
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
@@ -359,21 +364,27 @@ public class GameController {
     public void checkTurnGameOver() {
         if (!isTurnGameOver())
             return;
-
+        //TODO the game end when the round does, we can set a boolean RoundGameOver
         //TODO what to do after the game has ended
-
+        game.callWin(whoIsWinner());
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     public boolean isImmediateGameOver() {
         //check if any player has build his last tower
         for (Player p : game.getPlayers()) {
-            if (p.getBoard().getTowersCount() == 0)
+            if (p.getBoard().getTowersCount() == 0) {
+                game.callWin(p.getNickname());
                 return true;
+            }
         }
 
         //check if only 3 island group remain on the table
-        return tableController.countIslands() == 3;
+        if (tableController.countIslands() == 3) {
+            game.callWin(whoIsWinner());
+            return true;
+        }
+        return false;
     }
 
     public boolean isTurnGameOver() {
@@ -388,4 +399,39 @@ public class GameController {
         }
         return false;
     }
+
+    //TODO we need to simplify this
+    private String whoIsWinner() {
+        //check number of tower left
+        List<Integer> towersCount = new ArrayList<>();
+        for (Player p : game.getPlayers()) {
+            towersCount.add(p.getBoard().getTowersCount());
+        }
+        List<Integer> sortedList = towersCount.stream().sorted().collect(Collectors.toList());
+        if (sortedList.get(0) < sortedList.get(1)) {
+            for (Player p : game.getPlayers()) {
+                if (p.getBoard().getTowersCount() == sortedList.get(0)) {
+                    return p.getNickname();
+                }
+            }
+        }
+
+        //else check number of professors
+        List<Integer> professorsCount = new ArrayList<>();
+        for (Player p : game.getPlayers()) {
+            professorsCount.add(p.getBoard().countProfessors());
+        }
+        List<Integer> professorsSortedList = professorsCount.stream().sorted().collect(Collectors.toList());
+        if (professorsSortedList.get(0) < professorsSortedList.get(1)) {
+            for (Player p : game.getPlayers()) {
+                if (p.getBoard().countProfessors() == professorsSortedList.get(0)) {
+                    return p.getNickname();
+                }
+            }
+        }
+        // it arrives here only if there are 2 player with the same number of tower and professors
+        return "draw";
+    }
+
+
 }

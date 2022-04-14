@@ -33,9 +33,16 @@ public class ExpertPlayer extends Player {
      */
     public void addCoin() {
         this.coins++;
+        notify(coins);
     }
 
-    public void decreaseCoins(int n){
-        this.coins += n;
+    /**
+     * remove n coins from the player
+     *
+     * @param n
+     */
+    public void decreaseCoins(int n) {
+        this.coins -= n;
+        notify(coins);
     }
 }
