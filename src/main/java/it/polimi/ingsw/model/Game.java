@@ -27,8 +27,9 @@ public class Game extends Observable implements Serializable {
     private int firstPlayerInRound;
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
+    private boolean gameOver = false;
 
-    public Game(Player[] players, Table table, GameParameters parameters){
+    public Game(Player[] players, Table table, GameParameters parameters) {
         this.players = players;
         this.table = table;
         this.currentPlayer = 0;
@@ -39,7 +40,7 @@ public class Game extends Observable implements Serializable {
         this.init(players);
     }
 
-    protected void init(Player[] players){
+    protected void init(Player[] players) {
         this.players = players;
         this.table = new Table(this.players.length);
         this.currentPlayer = 0;
@@ -121,6 +122,11 @@ public class Game extends Observable implements Serializable {
     }
 
     public void callWin(String nicknameWinner) {
+        this.gameOver = true;
         notify(nicknameWinner);
+    }
+
+    public boolean isGameOver() {
+        return this.gameOver;
     }
 }

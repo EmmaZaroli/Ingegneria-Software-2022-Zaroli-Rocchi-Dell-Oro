@@ -12,5 +12,7 @@ public enum MessageType {
     ASSISTANT_CARD,
     CHARACTER_CARD,
     GAME_OVER,
-    DRAW
+    DRAW,
+    ERROR,
+    COINS
 }
