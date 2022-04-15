@@ -4,8 +4,7 @@ import it.polimi.ingsw.network.Endpoint;
 
 public class User {
     private final String nickname;
-    private Endpoint endpoint;
-    private boolean online;
+    private final Endpoint endpoint;
 
     public User(String nickname, Endpoint endpoint) {
         this.nickname = nickname;
@@ -18,21 +17,5 @@ public class User {
 
     public Endpoint getEndpoint() {
         return endpoint;
-    }
-
-    public boolean isOnline() {
-        return online;
-    }
-
-    public void setOnline(){
-        this.online = true;
-    }
-
-    public void setOffline(){
-        this.online = false;
-    }
-
-    public void setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
     }
 }
