@@ -44,6 +44,15 @@ public class GameControllerBuilder {
         };
     }
 
+    public GameControllerBuilder reset(){
+        this.playersNames.clear();
+        return this;
+    }
+
+    public boolean isGameFull(){
+        return playersNames.size() == playersNumber.getPlayersNumber();
+    }
+
     private void checkPlayerNumberValidity() throws InvalidPlayerNumberException {
         if(playersNames.size() != playersNumber.getPlayersNumber())
             throw new InvalidPlayerNumberException((playersNames.size() > playersNumber.getPlayersNumber()) ? InvalidPlayerNumberException.Reason.TOO_MANY_PLAYERS : InvalidPlayerNumberException.Reason.NOT_ENOUGH_PLAYERS);
