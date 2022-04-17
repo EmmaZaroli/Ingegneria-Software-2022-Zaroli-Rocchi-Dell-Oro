@@ -35,6 +35,10 @@ public class GameController<T> implements Observer<T> {
         this.tableController = new TableController(game.getTable());
     }
 
+    /*public String[] getPlayersNames(){
+        return Arrays.stream(game.getPlayers()).map(player -> player.getNickname()).toArray(String[]::new);
+    }*/
+
     //TODO move away from here. The game controller controls ONLY the game
     // starts the game thread
     //@Override

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.applications;
 
+import it.polimi.ingsw.applications.enums.NicknameStatus;
 import it.polimi.ingsw.controller.enums.GameMode;
 import it.polimi.ingsw.controller.enums.PlayersNumber;
+import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
 
@@ -21,18 +23,34 @@ public class UserHandler implements Runnable{
     public void run() {
         //TODO ask for nickname
         String nickname = new String("");
-        //TODO check if nickname is from disconnected player
-        //TODO check if nickname is from a player already connected
+        NicknameStatus nicknameStatus = server.checkNicknameStatus(nickname);
+        switch (nicknameStatus){
+            case FROM_CONNECTED_PLAYER -> {
+                //re-ask for nickname
+            }
+            case FROM_DISCONNECTED_PLAYER -> {
+                reconnectPlayer(nickname);
+            }
+        }
         User user = new User(nickname, endpoint);
 
         //TODO ask for game type (GameMode and PlayersNumber)
         GameMode selectedGameMode = GameMode.NORMAL_MODE;
         PlayersNumber selectedPlayersNumber = PlayersNumber.TWO;
 
-        enqueue(user, selectedGameMode, selectedPlayersNumber);
+        //TODO manage this exception
+        try {
+            enqueue(user, selectedGameMode, selectedPlayersNumber);
+        } catch (InvalidPlayerNumberException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void enqueue(User User, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber){
-        //server.enqueue(user, selectedGameMode, selectedPlayersNumber)
+    private void enqueue(User user, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
+        server.enqueueUser(user, selectedGameMode, selectedPlayersNumber);
+    }
+
+    private void reconnectPlayer(String nickname /*or maybe Uer*/){
+        //TODO
     }
 }
