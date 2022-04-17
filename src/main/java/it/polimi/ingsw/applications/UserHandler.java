@@ -50,7 +50,7 @@ public class UserHandler implements Runnable{
         server.enqueueUser(user, selectedGameMode, selectedPlayersNumber);
     }
 
-    private void reconnectPlayer(String nickname /*or maybe Uer*/){
+    private void reconnectPlayer(String nickname /*or maybe User*/){
         //TODO
     }
 }
