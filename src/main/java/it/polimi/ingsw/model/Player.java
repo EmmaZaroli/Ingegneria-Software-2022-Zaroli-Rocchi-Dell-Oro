@@ -3,8 +3,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
@@ -15,7 +13,7 @@ import java.util.List;
 /**
  * Player
  */
-public class Player extends Observable implements Serializable {
+public class Player extends Observable<Serializable> implements Serializable {
     @Serial
     private static final long serialVersionUID = 9L;
 
@@ -125,7 +123,6 @@ public class Player extends Observable implements Serializable {
     /**
      * @return true if it's the player's turn, false otherwise
      */
-//TODO maybe we don't need this anymore
     public boolean isPlayerTurn() {
         return isPlayerTurn;
     }

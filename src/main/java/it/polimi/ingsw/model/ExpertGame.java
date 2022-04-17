@@ -12,6 +12,7 @@ public class ExpertGame extends Game {
         super(players);
     }
 
+    @Override
     protected void init(Player[] players){
         this.players = players;
         this.table = new ExpertTable(this.players.length);
@@ -28,8 +29,9 @@ public class ExpertGame extends Game {
         return (ExpertPlayer[]) super.getPlayers();
     }
 
+    @Override
     public ExpertTable getTable() {
-        return (ExpertTable) getTable();
+        return (ExpertTable) super.getTable();
     }
 
     //TODO fix this up, it's not ok

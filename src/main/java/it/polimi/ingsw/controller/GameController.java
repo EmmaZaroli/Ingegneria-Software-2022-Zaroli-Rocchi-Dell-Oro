@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
-//TODO the whole controller (and model) must be serializable
 public class GameController<T> implements Observer<T> {
     protected Game game;
     protected TableController tableController;
@@ -29,7 +27,6 @@ public class GameController<T> implements Observer<T> {
         this.tableController = tableController;
     }
 
-    //TODO who send us the players?
     public GameController(Player[] players) {
         this.init(players);
     }
@@ -37,14 +34,6 @@ public class GameController<T> implements Observer<T> {
     protected void init(Player[] players) {
         this.game = new Game(players);
         this.tableController = new TableController(game.getTable());
-        //TODO what is this part for?
-        LinkedList<PawnColor> students = new LinkedList<>();
-        for (Player c : game.getPlayers()) {
-            for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
-                students.add(tableController.getBag().drawStudent());
-            }
-            c.getBoard().addStudentsToEntrance(students);
-        }
     }
 
     //TODO move away from here. The game controller controls ONLY the game
@@ -212,8 +201,8 @@ public class GameController<T> implements Observer<T> {
 
     private boolean isInfluenceDraw(Player player, int influence){
         for(Player p : game.getPlayers()){
-            if(!p.equals(player)){
-                if(influence == tableController.countInfluenceOnIsland(p.getBoard().getProfessors(), p.getBoard().getTowerColor()))
+            if(!p.equals(player) && influence == tableController
+                    .countInfluenceOnIsland(p.getBoard().getProfessors(), p.getBoard().getTowerColor())) {
                     return true;
             }
         }
@@ -294,8 +283,8 @@ public class GameController<T> implements Observer<T> {
         for (int i = 0; i < game.getPlayersCount(); i++) {
             if (game.getPlayers()[i].getBoard().getTowersCount() < game.getPlayers()[min].getBoard().getTowersCount())
                 min = i;
-            if (game.getPlayers()[i].getBoard().getTowersCount() == game.getPlayers()[min].getBoard().getTowersCount()) {
-                if (game.getPlayers()[i].getBoard().countProfessors() > game.getPlayers()[min].getBoard().countProfessors())
+            if (game.getPlayers()[i].getBoard().getTowersCount() == game.getPlayers()[min].getBoard().getTowersCount() &&
+                game.getPlayers()[i].getBoard().countProfessors() > game.getPlayers()[min].getBoard().countProfessors()) {
                     min = i;
             }
         }
@@ -329,6 +318,7 @@ public class GameController<T> implements Observer<T> {
                     if (game.getPlayers()[i].getNickname().equals(nextPlayer.get().getNickname()))
                         return i;
                 }
+                break;
             case ACTION_END:
                 return game.getCurrentPlayer();
         }
@@ -421,7 +411,7 @@ public class GameController<T> implements Observer<T> {
         for (Player p : game.getPlayers()) {
             professorsCount.add(p.getBoard().countProfessors());
         }
-        List<Integer> professorsSortedList = professorsCount.stream().sorted().collect(Collectors.toList());
+        List<Integer> professorsSortedList = professorsCount.stream().sorted().toList();
         if (professorsSortedList.get(0) < professorsSortedList.get(1)) {
             for (Player p : game.getPlayers()) {
                 if (p.getBoard().countProfessors() == professorsSortedList.get(0)) {

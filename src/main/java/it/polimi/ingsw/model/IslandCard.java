@@ -5,13 +5,12 @@ import java.io.Serializable;
 import java.util.*;
 
 import it.polimi.ingsw.model.enums.*;
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.observer.Observable;
 
 /**
  * Island card.
  */
-public class IslandCard extends Observable implements Serializable {
+public class IslandCard extends Observable<IslandCard> implements Serializable {
     @Serial
     private static final long serialVersionUID = 8L;
     //TODO add an identifier
@@ -64,8 +63,8 @@ public class IslandCard extends Observable implements Serializable {
      * @param towerColor the tower's color of the player
      * @return the total influence of that player in the islandCard
      */
-//TODO set?
-    public int countInfluence(List<PawnColor> professors, Tower towerColor) {
+
+    public int countInfluence(Set<PawnColor> professors, Tower towerColor) {
         int influence = 0;
         for (PawnColor p : students) {
             if (professors.contains(p)) {

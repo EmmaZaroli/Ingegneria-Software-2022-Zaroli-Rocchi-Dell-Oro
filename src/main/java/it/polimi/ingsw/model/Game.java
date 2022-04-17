@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
@@ -10,7 +8,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 //TODO getters to the view should not expose their rep
-public class Game extends Observable implements Serializable {
+public class Game extends Observable<Serializable> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -23,7 +21,6 @@ public class Game extends Observable implements Serializable {
     protected GameParameters parameters;
 
     protected int currentPlayer;
-    //TODO this value is used but never initialized
     private int firstPlayerInRound;
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;

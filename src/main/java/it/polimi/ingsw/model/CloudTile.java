@@ -10,11 +10,11 @@ import it.polimi.ingsw.observer.Observable;
 /**
  * class Cloud tile.
  */
-public class CloudTile extends Observable implements Serializable {
+public class CloudTile extends Observable<CloudTile> implements Serializable {
     @Serial
     private static final long serialVersionUID = 6L;
 
-    //TODO add an identifier?
+    //TODO add an identifier?...Not only to this class
     private final ArrayList<PawnColor> students;
 
     /**
@@ -27,9 +27,8 @@ public class CloudTile extends Observable implements Serializable {
     /**
      * Add students on the cloudTile
      *
-     * @param student
+     * @param student A list of students to place on the cloud
      */
-//method to add students
     public void addStudents(List<PawnColor> student) {
         students.addAll(student);
         notify(this);
@@ -40,7 +39,6 @@ public class CloudTile extends Observable implements Serializable {
      *
      * @return list of students
      */
-//method to return the students in a cloud
     public List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
         this.students.clear();

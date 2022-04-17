@@ -7,6 +7,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * A class representing the bag
+ */
 public class Bag implements Serializable {
     @Serial
     private static final long serialVersionUID = 4L;
@@ -16,6 +19,9 @@ public class Bag implements Serializable {
     private final EnumMap<PawnColor, Integer> students;
     private int pawnCount;
 
+    /**
+     * Builds the new bag
+     */
     public Bag() {
         this.students = new EnumMap<>(PawnColor.class);
         for (PawnColor pc : PawnColor.values()) {
@@ -26,6 +32,10 @@ public class Bag implements Serializable {
         }
     }
 
+    /**
+     * Draws a student and removes it from the bag
+     * @return The drawn student
+     */
     public PawnColor drawStudent() {
         RandomHelper randomHelper = RandomHelper.getInstance();
         if(pawnCount > 0) {
@@ -52,6 +62,9 @@ public class Bag implements Serializable {
         this.pawnCount--;
     }
 
+    /**
+     * @return True if the bag is empty
+     */
     public boolean isEmpty(){
         for (Map.Entry<PawnColor, Integer> e : students.entrySet()){
             if(e.getValue() > 0)

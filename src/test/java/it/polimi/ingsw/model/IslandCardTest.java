@@ -12,9 +12,16 @@ class IslandCardTest extends TestCase {
 
     IslandCard islandCard1 = new IslandCard();
 
-
     private List<PawnColor> listPawnColor() {
-        List<PawnColor> students = new ArrayList<>();
+        List<PawnColor> students = new LinkedList<>();
+        students.add(PawnColor.BLUE);
+        students.add(PawnColor.RED);
+        students.add(PawnColor.GREEN);
+        return students;
+    }
+
+    private Set<PawnColor> setPawnColor() {
+        Set<PawnColor> students = new HashSet<>();
         students.add(PawnColor.BLUE);
         students.add(PawnColor.RED);
         students.add(PawnColor.GREEN);
@@ -45,7 +52,7 @@ class IslandCardTest extends TestCase {
 
     @Test
     void influence1() {
-        List<PawnColor> list1 = new ArrayList<>();
+        Set<PawnColor> list1 = new HashSet<>();
         islandCard1.setTower(Tower.BLACK);
         Assertions.assertEquals(1, islandCard1.countInfluence(list1, Tower.BLACK));
         list1.add(PawnColor.YELLOW);
@@ -56,14 +63,13 @@ class IslandCardTest extends TestCase {
 
     @Test
     void influence2() {
-        List<PawnColor> list = listPawnColor();
-        islandCard1.movePawnOnIsland(list);
+        Set<PawnColor> list = setPawnColor();
+        islandCard1.movePawnOnIsland(list.stream().toList());
         islandCard1.setTower(Tower.BLACK);
         Assertions.assertEquals(4, islandCard1.countInfluence(list, Tower.BLACK));
         Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.WHITE));
         Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.NONE));
         Assertions.assertEquals(islandCard1.countInfluence(list, Tower.GREY), 3);
-
     }
 
 }

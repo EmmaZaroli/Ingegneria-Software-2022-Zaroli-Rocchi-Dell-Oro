@@ -15,7 +15,7 @@ public class ExpertGameParameters extends GameParameters {
 
     /**
      * @return true if the player can take control of the professors even
-     * if he has the same number of students in his sining room as the player
+     * if he has the same number of students in his dining room as the player
      * who currently controls them, false otherwise
      */
     public boolean isTakeProfessorEvenIfSameStudents() {
@@ -58,7 +58,7 @@ public class ExpertGameParameters extends GameParameters {
     /**
      * Sets take professor even if same students.
      *
-     * @param takeProfessorEvenIfSameStudents
+     * @param takeProfessorEvenIfSameStudents The value to set
      */
     public void setTakeProfessorEvenIfSameStudents(boolean takeProfessorEvenIfSameStudents) {
         this.takeProfessorEvenIfSameStudents = takeProfessorEvenIfSameStudents;
@@ -76,14 +76,14 @@ public class ExpertGameParameters extends GameParameters {
     /**
      * Sets the variable towers count in influence.
      *
-     * @param towersCountInInfluence
+     * @param towersCountInInfluence If true, towers are treated ad students while counting influence
      */
     public void setTowersCountInInfluence(boolean towersCountInInfluence) {
         this.towersCountInInfluence = towersCountInInfluence;
     }
 
     /**
-     * Sets extra influence on a island
+     * Sets extra influence on an island
      *
      * @param extraInfluence the extra influence
      */

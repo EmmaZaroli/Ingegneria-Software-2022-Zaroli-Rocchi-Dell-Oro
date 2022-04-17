@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * Dining room.
@@ -32,7 +31,6 @@ public class DiningRoom implements Serializable {
      * @param color the color of the student
      * @return true if the player is supposed to take one coin from the table, false otherwise
      */
-//
     public boolean addStudent(PawnColor color) {
         int studentsOfSelectedColor = this.students.get(color);
         studentsOfSelectedColor++;
@@ -48,7 +46,6 @@ public class DiningRoom implements Serializable {
      * @return false if the number of students its equals to 10, true otherwise
      */
     public boolean canAddStudent(PawnColor color) {
-        //TODO will be used by the controller to throw exceptions
         return this.students.get(color) < 10;
     }
 

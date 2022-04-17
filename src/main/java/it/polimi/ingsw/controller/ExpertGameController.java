@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.*;
 
@@ -38,12 +39,11 @@ public class ExpertGameController<T> extends GameController<T> {
     private void drawCharactersCards() {
         int numberCard;
         List<Character> Characters = new ArrayList<Character>();
-        Random r = new Random();
         Characters.addAll((Arrays.stream(Character.values()).toList()));
         //TODO parameterise 3
         CharacterCard[] cards = new CharacterCard[3];
         for (int i = 0; i < 3; i++) {
-            numberCard = r.nextInt(Characters.size());
+            numberCard = RandomHelper.getInstance().getInt(Characters.size());
             characterCards[i] = CharacterCardFactory.getCharacterCard(Characters.get(numberCard));
             effects[i] = EffectFactory.getEffect(Characters.get(numberCard));
             Characters.remove(Characters.get(numberCard));

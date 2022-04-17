@@ -11,6 +11,7 @@ import it.polimi.ingsw.utils.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class TableController {
     protected Table table;
@@ -77,7 +78,7 @@ public class TableController {
         table.setIslandWithMotherNature((table.getIslandWithMotherNature() + move) % table.getIslands().size());
     }
 
-    public int countInfluenceOnIsland(List<PawnColor> playerProfessors, Tower towerColor) {
+    public int countInfluenceOnIsland(Set<PawnColor> playerProfessors, Tower towerColor) {
         return table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);
     }
 
