@@ -69,7 +69,6 @@ class IslandCardTest extends TestCase {
         Assertions.assertEquals(4, islandCard1.countInfluence(list, Tower.BLACK));
         Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.WHITE));
         Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.NONE));
-        Assertions.assertEquals(islandCard1.countInfluence(list, Tower.GREY), 3);
+        Assertions.assertEquals(3, islandCard1.countInfluence(list, Tower.GREY));
     }
-
 }

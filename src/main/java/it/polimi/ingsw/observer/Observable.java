@@ -20,7 +20,7 @@ public class Observable<T> {
      *
      * @param observer the observer to be removed.
      */
-    public void removeObserver(Observer observer) {
+    public void removeObserver(Observer<T> observer) {
         observers.remove(observer);
     }
 
