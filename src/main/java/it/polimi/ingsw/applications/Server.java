@@ -1,5 +1,6 @@
 package it.polimi.ingsw.applications;
 
+import it.polimi.ingsw.applications.enums.NicknameStatus;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.GameControllerBuilder;
 import it.polimi.ingsw.controller.enums.GameMode;
@@ -113,6 +114,18 @@ public class Server {
 
     private void enqueueExpert3Players(User user){
         //TODO copy and modify enqueueNormal2Players
+    }
+
+    public NicknameStatus checkNicknameStatus(String nickname){
+        NicknameStatus status = NicknameStatus.FREE;
+
+        for(GameHandler gameHandler: normal2PlayersRunningGames){
+            status = gameHandler.checkNicknameStatus(nickname);
+            if(status != NicknameStatus.FREE)
+                break;
+        }
+
+        return status;
     }
 
 }
