@@ -10,7 +10,7 @@ public class InvalidPlayerNumberException extends Exception{
         NOT_ENOUGH_PLAYERS
     }
 
-    private ExceptionType exceptionType;
+    private final ExceptionType exceptionType;
 
     public InvalidPlayerNumberException(ExceptionType exceptionType) {
         this.exceptionType = exceptionType;

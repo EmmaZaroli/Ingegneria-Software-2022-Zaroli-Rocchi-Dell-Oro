@@ -3,8 +3,8 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.message.ChangedPhaseMessage;
-import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.messages.ChangedPhaseMessage;
+import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
 

@@ -5,13 +5,13 @@ public enum PlayersNumber {
     THREE(3),
     FOUR(4);
 
-    private int playersNumber;
+    private final int number;
 
     public int getPlayersNumber() {
-        return playersNumber;
+        return number;
     }
 
     PlayersNumber(int playersNumber) {
-        this.playersNumber = playersNumber;
+        this.number = playersNumber;
     }
 }

@@ -2,21 +2,19 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class CharacterCardTest extends TestCase {
-    CharacterCardFactory factory = new CharacterCardFactory();
+class CharacterCardTest {
     List<CharacterCard> deck = new ArrayList<>();
 
     @Test
     void AllCharacterCard() {
         for (Character c : Character.values()) {
-            deck.add(factory.getCharacterCard(c));
+            deck.add(CharacterCardFactory.getCharacterCard(c));
         }
         System.out.println(deck.get(0).getCharacter());
         Assertions.assertEquals(1, deck.get(0).getCurrentPrice());
@@ -28,7 +26,7 @@ class CharacterCardTest extends TestCase {
     @Test
     void CharacterCardWithSetUpAction() {
         List<PawnColor> l1 = new ArrayList<>();
-        CharacterCardWithSetUpAction c = (CharacterCardWithSetUpAction) factory.getCharacterCard(Character.CHARACTER_SEVEN);
+        CharacterCardWithSetUpAction c = (CharacterCardWithSetUpAction) CharacterCardFactory.getCharacterCard(Character.CHARACTER_SEVEN);
         l1.add(PawnColor.BLUE);
         l1.add(PawnColor.PINK);
         c.addStudent(l1);

@@ -1,10 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.Effect;
-import it.polimi.ingsw.controller.SetupEffect;
-import it.polimi.ingsw.controller.StandardEffect;
-import it.polimi.ingsw.controller.TableController;
-import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
 import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -12,6 +7,8 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import java.util.List;
 
 public class EffectFactory {
+
+    private EffectFactory() {}
 
     public static Effect getEffect(Character character) {
         return switch (character) {
@@ -27,12 +24,9 @@ public class EffectFactory {
     }
     
     private static Effect get1() {
-        return new SetupEffect() {
-            @Override
-            public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
-                List<PawnColor> ris = table.drawStudents(4);
-                character.addStudent(ris);
-            }
+        return (SetupEffect) (table, character) -> {
+            List<PawnColor> ris = table.drawStudents(4);
+            character.addStudent(ris);
         };
     }
 
@@ -79,12 +73,9 @@ public class EffectFactory {
     }
 
     private static Effect get7() {
-        return new SetupEffect() {
-            @Override
-            public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
-                List<PawnColor> ris = table.drawStudents(6);
-                character.addStudent(ris);
-            }
+        return (SetupEffect) (table, character) -> {
+            List<PawnColor> ris = table.drawStudents(6);
+            character.addStudent(ris);
         };
     }
 
@@ -118,12 +109,9 @@ public class EffectFactory {
     }
 
     private static Effect get11() {
-        return new SetupEffect() {
-            @Override
-            public void setupEffect(TableController table, CharacterCardWithSetUpAction character) {
-                List<PawnColor> ris = table.drawStudents(4);
-                character.addStudent(ris);
-            }
+        return (SetupEffect) (table, character) -> {
+            List<PawnColor> ris = table.drawStudents(4);
+            character.addStudent(ris);
         };
     }
 }

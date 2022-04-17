@@ -12,11 +12,11 @@ import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
+//TODO remove this generic...
 public class GameController<T> implements Observer<T> {
     protected Game game;
     protected TableController tableController;
@@ -279,7 +279,6 @@ public class GameController<T> implements Observer<T> {
         //TODO maybe throw an exception if the game is not over?
         //TODO don't call every time game.getPlayers() but save them in a variable
         int min = 0;
-        boolean flag = false;
         for (int i = 0; i < game.getPlayersCount(); i++) {
             if (game.getPlayers()[i].getBoard().getTowersCount() < game.getPlayers()[min].getBoard().getTowersCount())
                 min = i;
@@ -310,7 +309,7 @@ public class GameController<T> implements Observer<T> {
                 Optional<Player> nextPlayer = Arrays.stream(game.getPlayers())
                         .filter((Player p) ->
                                 p.getDiscardPileHead().value() >= game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().value())
-                        .min(Comparator.comparing(p -> ((p.getDiscardPileHead().value()))));
+                        .min(Comparator.comparing(p -> (p.getDiscardPileHead().value())));
 
                 if (nextPlayer.isEmpty()) nextPlayer = Optional.of(game.getPlayers()[0]);
 
@@ -397,7 +396,7 @@ public class GameController<T> implements Observer<T> {
         for (Player p : game.getPlayers()) {
             towersCount.add(p.getBoard().getTowersCount());
         }
-        List<Integer> sortedList = towersCount.stream().sorted().collect(Collectors.toList());
+        List<Integer> sortedList = towersCount.stream().sorted().toList();
         if (sortedList.get(0) < sortedList.get(1)) {
             for (Player p : game.getPlayers()) {
                 if (p.getBoard().getTowersCount() == sortedList.get(0)) {
@@ -422,6 +421,4 @@ public class GameController<T> implements Observer<T> {
         // it arrives here only if there are 2 player with the same number of tower and professors
         return "draw";
     }
-
-
 }

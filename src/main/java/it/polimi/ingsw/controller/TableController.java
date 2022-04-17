@@ -87,9 +87,9 @@ public class TableController {
         return (towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor));
     }
 
-    public Pair buildTower(Tower towerColor) {
+    public Pair<Tower, Integer> buildTower(Tower towerColor) {
         Tower towerOnIsland = table.getIslands().get(table.getIslandWithMotherNature()).getTower();
-        Pair pair = new Pair(towerOnIsland, table.getIslands().get(table.getIslandWithMotherNature()).getSize());
+        Pair<Tower, Integer> pair = new Pair<>(towerOnIsland, table.getIslands().get(table.getIslandWithMotherNature()).getSize());
         table.getIslands().get(table.getIslandWithMotherNature()).setTower(towerColor);
         tryUnifyIslands(towerColor);
         return pair;

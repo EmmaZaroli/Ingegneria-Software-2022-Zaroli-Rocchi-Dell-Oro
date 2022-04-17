@@ -1,6 +1,5 @@
 package it.polimi.ingsw.persistency;
 
-import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
 
 import java.io.*;
@@ -67,7 +66,7 @@ public class DataDumper {
      * @param gameId The identifier of the requested game
      * @return The deserialized game
      */
-    public GameController getGame(UUID gameId) throws GameNotFoundException {
+    public Game getGame(UUID gameId) throws GameNotFoundException {
         File folder = new File(".");
         Optional<String> fileName = Arrays.stream(folder.list())
                 .filter(x -> x.contains(gameId.toString() + SERIALIZED_FILE_FORMAT))
@@ -84,7 +83,7 @@ public class DataDumper {
      * Returns a list containing all the games saved on persistent memory
      * @return The list of all deserialized games
      */
-    public List<GameController> getAllGames() {
+    public List<Game> getAllGames() {
         File folder = new File(".");
         return Arrays.stream(folder.list())
                 .filter(x -> x.endsWith(SERIALIZED_FILE_FORMAT))
@@ -92,13 +91,13 @@ public class DataDumper {
                 .toList();
     }
 
-    private GameController readAndDeserialize(String sourceFile) {
+    private Game readAndDeserialize(String sourceFile) {
         ObjectInputStream objectInputStream;
-        GameController gameController = null;
+        Game gameController = null;
         try {
             try (FileInputStream fileInputStream = new FileInputStream(sourceFile)) {
                 objectInputStream = new ObjectInputStream(fileInputStream);
-                gameController = (GameController) objectInputStream.readObject();
+                gameController = (Game) objectInputStream.readObject();
                 objectInputStream.close();
             }
         }  catch(IOException | ClassNotFoundException e) {
