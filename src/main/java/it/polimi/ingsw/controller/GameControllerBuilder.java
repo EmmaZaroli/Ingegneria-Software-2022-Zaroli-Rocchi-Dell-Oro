@@ -11,6 +11,8 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,54 +36,82 @@ public class GameControllerBuilder {
         return this;
     }
 
-    public GameController build() throws InvalidPlayerNumberException {
+    public GameController build() throws InvalidPlayerNumberException, Exception {
         checkPlayerNumberValidity();
         return switch (gameMode){
-            case NORMAL_MODE -> buildNormalGameController();
-            case EXPERT_MODE -> buildExpertGameController();
+            case NORMAL_MODE -> buildGame(GameController.class, Player.class, Table.class, TableController.class, GameParameters.class, Game.class);
+            case EXPERT_MODE -> buildGame(ExpertGameController.class, ExpertPlayer.class, ExpertTable.class, ExpertTableController.class, ExpertGameParameters.class, ExpertGame.class);
         };
     }
 
     private void checkPlayerNumberValidity() throws InvalidPlayerNumberException {
         if(playersNames.size() != playersNumber.getPlayersNumber())
-            throw new InvalidPlayerNumberException((playersNames.size() > playersNumber.getPlayersNumber()) ? InvalidPlayerNumberException.ExceptionType.TOO_MANY_PLAYERS : InvalidPlayerNumberException.ExceptionType.NOT_ENOUGH_PLAYERS);
+            throw new InvalidPlayerNumberException((playersNames.size() > playersNumber.getPlayersNumber()) ? InvalidPlayerNumberException.Reason.TOO_MANY_PLAYERS : InvalidPlayerNumberException.Reason.NOT_ENOUGH_PLAYERS);
     }
 
-    private GameController buildNormalGameController(){
-        Player[] players = new Player[playersNames.size()];
+    //TODO if the following works, remove this
+//    private GameController buildNormalGameController(){
+//        Player[] players = new Player[playersNames.size()];
+//        for(int i = 0; i < players.length; i++){
+//            players[i] = new Player(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
+//        }
+//
+//        Table table = new Table(playersNames.size());
+//
+//        TableController tableController = new TableController(table);
+//
+//        GameParameters parameters = new GameParameters();
+//
+//        Game game = new Game(players, table, parameters);
+//
+//        return new GameController(game, tableController);
+//    }
+//
+//    private ExpertGameController buildExpertGameController(){
+//        ExpertPlayer[] players = new ExpertPlayer[playersNames.size()];
+//        for(int i = 0; i < players.length; i++){
+//            players[i] = new ExpertPlayer(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
+//        }
+//
+//        ExpertTable table = new ExpertTable(playersNames.size());
+//
+//        ExpertTableController tableController = new ExpertTableController(table);
+//
+//        ExpertGameParameters parameters = new ExpertGameParameters();
+//
+//        ExpertGame game = new ExpertGame(players, table, parameters);
+//
+//        return new ExpertGameController(game, tableController);
+//    }
+
+    //TODO it will probably crash
+    private <TReturn extends GameController,
+            TPlayer extends Player,
+            TTable extends Table,
+            TTableController extends TableController,
+            TParameters extends GameParameters,
+            TGame extends Game>
+    TReturn buildGame(
+            Class returnType,
+            Class playerType,
+            Class tableType,
+            Class tableControllerType,
+            Class parametersType,
+            Class gameType) throws Exception{
+
+        TPlayer[] players = (TPlayer[]) Array.newInstance(playerType, playersNames.size());
         for(int i = 0; i < players.length; i++){
-            players[i] = new Player(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
+            players[i] = (TPlayer) returnType.getConstructor().newInstance(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
         }
 
-        Table table = new Table(playersNames.size());
+        TTable table = (TTable) tableType.getConstructor().newInstance(playersNames.size());
 
-        TableController tableController = new TableController(table);
+        TTableController tableController = (TTableController) tableControllerType.getConstructor().newInstance(table);
 
-        GameParameters parameters = new GameParameters();
+        TParameters parameters = (TParameters) parametersType.getConstructor().newInstance();
 
-        Game game = new Game(players, table, parameters);
+        TGame game = (TGame) gameType.getConstructor().newInstance(players, table, parameters);
 
-        return new GameController(game, tableController);
+        return (TReturn) returnType.getConstructor().newInstance(game, tableController);
     }
-
-    private ExpertGameController buildExpertGameController(){
-        ExpertPlayer[] players = new ExpertPlayer[playersNames.size()];
-        for(int i = 0; i < players.length; i++){
-            players[i] = new ExpertPlayer(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
-        }
-
-        ExpertTable table = new ExpertTable(playersNames.size());
-
-        ExpertTableController tableController = new ExpertTableController(table);
-
-        ExpertGameParameters parameters = new ExpertGameParameters();
-
-        ExpertGame game = new ExpertGame(players, table, parameters);
-
-        return new ExpertGameController(game, tableController);
-    }
-
-    //TODO similar code in buildNormalGameController() and buildExpertGameController(), is there a way to generalize it?
-    //TODO maybe create function for building players, expertplayers, tablecontroller, experttablecontroller...
-
 }
