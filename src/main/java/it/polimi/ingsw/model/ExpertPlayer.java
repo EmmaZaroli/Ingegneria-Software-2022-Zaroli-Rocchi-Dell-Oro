@@ -39,7 +39,7 @@ public class ExpertPlayer extends Player {
     /**
      * remove n coins from the player
      *
-     * @param n
+     * @param n The coins to remove
      */
     public void decreaseCoins(int n) {
         this.coins -= n;

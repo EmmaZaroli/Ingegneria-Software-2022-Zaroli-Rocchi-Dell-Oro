@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
@@ -10,7 +9,7 @@ import java.io.Serializable;
 /**
  * Character card.
  */
-public class CharacterCard extends Observable implements Serializable {
+public class CharacterCard extends Observable<CharacterCard> implements Serializable {
     @Serial
     private static final long serialVersionUID = 5L;
 

@@ -11,6 +11,7 @@ import it.polimi.ingsw.utils.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class TableController {
     protected Table table;
@@ -77,7 +78,7 @@ public class TableController {
         table.setIslandWithMotherNature((table.getIslandWithMotherNature() + move) % table.getIslands().size());
     }
 
-    public int countInfluenceOnIsland(List<PawnColor> playerProfessors, Tower towerColor) {
+    public int countInfluenceOnIsland(Set<PawnColor> playerProfessors, Tower towerColor) {
         return table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);
     }
 
@@ -86,9 +87,9 @@ public class TableController {
         return (towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor));
     }
 
-    public Pair buildTower(Tower towerColor) {
+    public Pair<Tower, Integer> buildTower(Tower towerColor) {
         Tower towerOnIsland = table.getIslands().get(table.getIslandWithMotherNature()).getTower();
-        Pair pair = new Pair(towerOnIsland, table.getIslands().get(table.getIslandWithMotherNature()).getSize());
+        Pair<Tower, Integer> pair = new Pair<>(towerOnIsland, table.getIslands().get(table.getIslandWithMotherNature()).getSize());
         table.getIslands().get(table.getIslandWithMotherNature()).setTower(towerColor);
         tryUnifyIslands(towerColor);
         return pair;

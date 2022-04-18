@@ -1,6 +1,6 @@
 package it.polimi.ingsw.applications;
 
-import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.persistency.DataDumper;
 
 import java.util.List;
@@ -11,8 +11,7 @@ public class Server {
         new Server();
     }
 
-    //TODO we need a runnable wrapper around GameController
-    private List<GameController> loadSavedGames() {
+    private List<Game> loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
         return dd.getAllGames();
     }

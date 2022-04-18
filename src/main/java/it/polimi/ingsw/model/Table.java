@@ -34,7 +34,7 @@ public class Table implements Serializable {
         initialized.addAll((Arrays.stream(PawnColor.values()).toList()));
         initialized.addAll((Arrays.stream(PawnColor.values()).toList()));
         for (int i = 0; i < 12; i++) {
-            if (i - initialPosition != 6 && initialPosition - i != 6) {
+            if (Math.abs(i - initialPosition) != 6) {
                 int pawnColor = random.getInt(initialized.size());
                 islandCards.get((i + initialPosition) % 12).movePawnOnIsland(initialized.get(pawnColor));
                 initialized.remove(pawnColor);

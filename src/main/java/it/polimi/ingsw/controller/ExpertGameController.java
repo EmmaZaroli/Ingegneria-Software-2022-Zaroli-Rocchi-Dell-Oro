@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.*;
 
@@ -37,16 +37,14 @@ public class ExpertGameController<T> extends GameController<T> {
 
     private void drawCharactersCards() {
         int numberCard;
-        List<Character> Characters = new ArrayList<Character>();
-        Random r = new Random();
-        Characters.addAll((Arrays.stream(Character.values()).toList()));
-        //TODO parameterise 3
+        List<Character> characters = new ArrayList<>(Arrays.asList(Character.values()));
+        //TODO parameterize 3
         CharacterCard[] cards = new CharacterCard[3];
         for (int i = 0; i < 3; i++) {
-            numberCard = r.nextInt(Characters.size());
-            characterCards[i] = CharacterCardFactory.getCharacterCard(Characters.get(numberCard));
-            effects[i] = EffectFactory.getEffect(Characters.get(numberCard));
-            Characters.remove(Characters.get(numberCard));
+            numberCard = RandomHelper.getInstance().getInt(characters.size());
+            characterCards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));
+            effects[i] = EffectFactory.getEffect(characters.get(numberCard));
+            characters.remove(characters.get(numberCard));
         }
         getGame().addCharacterCards(cards);
     }
@@ -64,7 +62,7 @@ public class ExpertGameController<T> extends GameController<T> {
          */
     }
 
-    //TODO do something aboiut this function
+    //TODO do something about this function
     public boolean canActivateCharacterAbility(int characterIndex) {
         //TODO throw exception if the card doesn't exist on the table
         if (getGameParameters().hasAlreadyActivateCharacterCard())
@@ -125,8 +123,8 @@ public class ExpertGameController<T> extends GameController<T> {
     //activate reverseEffect for all card, should not generate problems
     public void reverseEffect(){
         for(Effect e : effects){
-            if(e instanceof StandardEffect)
-                ((StandardEffect) e).reverseEffect(getGameParameters());
+            if(e instanceof StandardEffect effect)
+                effect.reverseEffect(getGameParameters());
         }
     }
 

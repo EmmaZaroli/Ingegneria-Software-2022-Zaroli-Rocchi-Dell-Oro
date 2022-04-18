@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
@@ -12,7 +11,7 @@ import java.util.*;
 /**
  * School board.
  */
-public class SchoolBoard extends Observable implements Serializable {
+public class SchoolBoard extends Observable<SchoolBoard> implements Serializable {
     @Serial
     private static final long serialVersionUID = 10L;
 
@@ -99,8 +98,8 @@ public class SchoolBoard extends Observable implements Serializable {
      *
      * @return the professors
      */
-    public List<PawnColor> getProfessors() {
-        return this.professorTable.stream().toList();
+    public Set<PawnColor> getProfessors() {
+        return this.professorTable;
     }
 
     /**

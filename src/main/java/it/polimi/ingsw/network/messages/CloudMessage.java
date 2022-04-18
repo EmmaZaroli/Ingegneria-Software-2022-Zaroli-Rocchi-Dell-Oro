@@ -1,9 +1,6 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
-
-import java.util.List;
 
 public class CloudMessage extends Message {
 

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.observer;
 
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.network.message.Message;
-
 import java.util.*;
 
 public class Observable<T> {
@@ -23,7 +20,7 @@ public class Observable<T> {
      *
      * @param observer the observer to be removed.
      */
-    public void removeObserver(Observer observer) {
+    public void removeObserver(Observer<T> observer) {
         observers.remove(observer);
     }
 
