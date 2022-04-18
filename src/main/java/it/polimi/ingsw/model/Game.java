@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.exceptions.ErrorException;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.observer.Observable;
 
