@@ -1,13 +1,16 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.lang.invoke.WrongMethodTypeException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Table implements Serializable {
 
@@ -25,7 +28,7 @@ public class Table implements Serializable {
         this.playersNumber = playersNumber;
         islandCards = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
-            this.islandCards.add(new IslandCard());
+            this.islandCards.add(new IslandCard(java.util.UUID.randomUUID()));
         }
         RandomHelper random = RandomHelper.getInstance();
         int initialPosition = random.getInt(12);
@@ -42,10 +45,10 @@ public class Table implements Serializable {
         }
         this.bag = new Bag();
         cloudTiles = new ArrayList<>();
-        this.cloudTiles.add(new CloudTile());
-        this.cloudTiles.add(new CloudTile());
+        this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
+        this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
         if (playersNumber == 3) {
-            this.cloudTiles.add(new CloudTile());
+            this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
         }
         professors = new ArrayList<>();
         professors.addAll(Arrays.asList(PawnColor.values()));
@@ -57,6 +60,15 @@ public class Table implements Serializable {
 
     public List<IslandCard> getIslands() {
         return this.islandCards;
+    }
+
+    public IslandCard getIsland(UUID uuid) throws WrongUUIDException {
+        for (IslandCard island : this.islandCards) {
+            if (island.getUuid().equals(uuid)) {
+                return island;
+            }
+        }
+        throw new WrongUUIDException();
     }
 
     public int getIslandWithMotherNature() {

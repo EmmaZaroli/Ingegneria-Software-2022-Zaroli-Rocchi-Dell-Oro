@@ -1,8 +1,12 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.network.messages.CharacterCardMessage;
+import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.*;
@@ -12,7 +16,7 @@ public class ExpertGameController<T> extends GameController<T> {
     private CharacterCard[] characterCards;
     private Effect[] effects;
 
-    public ExpertGameController(ExpertGame game, ExpertTableController tableController){
+    public ExpertGameController(ExpertGame game, ExpertTableController tableController) {
         super(game, tableController);
         drawCharactersCards();
     }
@@ -25,10 +29,10 @@ public class ExpertGameController<T> extends GameController<T> {
     @Override
     protected void init(Player[] players) {
         this.game = new ExpertGame(players);
-        this.tableController = new ExpertTableController((ExpertTable)(game.getTable()));
+        this.tableController = new ExpertTableController((ExpertTable) (game.getTable()));
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
-            for(int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
+            for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
                 students.add(tableController.getBag().drawStudent());
             }
             c.getBoard().addStudentsToEntrance(students);
@@ -50,16 +54,28 @@ public class ExpertGameController<T> extends GameController<T> {
     }
 
     @Override
-    public void update(T message) {
-        /*
-        if (Message.type().equals("EffectCard")) {
-            canActivateCharacterAbility(Message.character());
-            activateCharacterAbility(Message.character());
+    public void update(T m) {
+        Message message = (Message) m;
+        if (message.getType().equals(MessageType.CHARACTER_CARD)) {
+            CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
+            //TODO it definitely needs fixing
+            int index = 0;
+            int flag = 0;
+            for (int i = 0; i < getGame().getCharacterCards().length; i++) {
+                if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
+                    index = i;
+                    flag = 1;
+                }
+            }
+            if (flag == 0) {
+                // TODO throw card not found exception
+            }
+            canActivateCharacterAbility(index);
+            activateCharacterAbility(index);
+        } else {
+            super.update(m);
+            //TODO how to check if the player need to take a coin ?
         }
-        else
-            super(Message)
-
-         */
     }
 
     //TODO do something about this function
@@ -87,17 +103,21 @@ public class ExpertGameController<T> extends GameController<T> {
                 .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
-    private void activateStandardEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).activateEffect(getGameParameters());
+    private void activateStandardEffect(int effectIndex) {
+        ((StandardEffect) effects[effectIndex]).activateEffect(getGameParameters());
     }
 
-    private void activateReverseEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).reverseEffect(getGameParameters());
+    private void activateReverseEffect(int effectIndex) {
+        ((StandardEffect) effects[effectIndex]).reverseEffect(getGameParameters());
     }
 
-    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex) {
+    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
         character.removeStudent(color);
-        tableController.movePawnOnIsland(color, islandIndex);
+        try {
+            tableController.movePawnOnIsland(color, islandIndex);
+        } catch (WrongUUIDException e) {
+            e.printStackTrace();
+        }
         character.addStudent(tableController.drawStudents(1));
     }
 
@@ -121,9 +141,9 @@ public class ExpertGameController<T> extends GameController<T> {
 
     //TODO call at the end of the turn
     //activate reverseEffect for all card, should not generate problems
-    public void reverseEffect(){
-        for(Effect e : effects){
-            if(e instanceof StandardEffect effect)
+    public void reverseEffect() {
+        for (Effect e : effects) {
+            if (e instanceof StandardEffect effect)
                 effect.reverseEffect(getGameParameters());
         }
     }

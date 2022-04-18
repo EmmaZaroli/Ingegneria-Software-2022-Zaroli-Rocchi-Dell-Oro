@@ -69,7 +69,7 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
         }
 
         if (message.getClass().equals(CloudTile.class)) {
-            clientHandler.sendMessage(new CloudMessage(MessageType.CLOUD, (CloudTile) message));
+            clientHandler.sendMessage(new CloudMessage("server", MessageType.CLOUD, (CloudTile) message));
         }
 
         if (message.getClass().equals(IslandCard.class)) {

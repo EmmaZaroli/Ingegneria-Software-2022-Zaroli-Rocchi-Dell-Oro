@@ -5,12 +5,11 @@ import it.polimi.ingsw.model.enums.Tower;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
 import java.util.*;
 
 class IslandCardTest extends TestCase {
 
-    IslandCard islandCard1 = new IslandCard();
+    IslandCard islandCard1 = new IslandCard(UUID.randomUUID());
 
     private List<PawnColor> listPawnColor() {
         List<PawnColor> students = new LinkedList<>();

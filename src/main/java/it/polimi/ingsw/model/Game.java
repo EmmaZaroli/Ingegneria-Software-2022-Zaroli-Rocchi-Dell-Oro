@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.exceptions.ErrorException;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.observer.Observable;
 
@@ -121,6 +122,10 @@ public class Game extends Observable<Serializable> implements Serializable {
     public void callWin(String nicknameWinner) {
         this.gameOver = true;
         notify(nicknameWinner);
+    }
+
+    public void throwException(Exception e) {
+        notify(e);
     }
 
     public boolean isGameOver() {

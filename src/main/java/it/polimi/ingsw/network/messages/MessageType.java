@@ -3,6 +3,8 @@ package it.polimi.ingsw.network.messages;
 public enum MessageType {
     CHANGE_PLAYER,
     PLANNING,
+    ACTION_MOVE_STUDENTS_ON_ISLAND,
+    ACTION_MOVE_STUDENTS_ON_BOARD,
     ACTION_MOVE_STUDENTS,
     ACTION_MOVE_MOTHER_NATURE,
     ACTION_CHOOSE_CLOUD,
