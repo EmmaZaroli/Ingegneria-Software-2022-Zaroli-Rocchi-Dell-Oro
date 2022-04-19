@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.Effect;
+
 public class ExpertGame extends Game {
 
     private CharacterCard[] characterCards;
+    private Effect[] effects;
 
-    public ExpertGame(ExpertPlayer[] players, ExpertTable table, ExpertGameParameters parameters){
+    public ExpertGame(ExpertPlayer[] players, ExpertTable table, ExpertGameParameters parameters) {
         super(players, table, parameters);
     }
 
@@ -13,7 +16,7 @@ public class ExpertGame extends Game {
     }
 
     @Override
-    protected void init(Player[] players){
+    protected void init(Player[] players) {
         this.players = players;
         this.table = new ExpertTable(this.players.length);
         this.currentPlayer = 0;
@@ -22,6 +25,10 @@ public class ExpertGame extends Game {
 
     public CharacterCard[] getCharacterCards() {
         return characterCards.clone();
+    }
+
+    public Effect[] getEffects() {
+        return effects.clone();
     }
 
     @Override
@@ -35,7 +42,11 @@ public class ExpertGame extends Game {
     }
 
     //TODO fix this up, it's not ok
-    public void addCharacterCards(CharacterCard[] cards){
+    public void addCharacterCards(CharacterCard[] cards) {
         this.characterCards = cards;
+    }
+
+    public void addEffects(Effect[] effects) {
+        this.effects = effects;
     }
 }

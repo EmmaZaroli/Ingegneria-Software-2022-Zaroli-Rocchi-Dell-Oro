@@ -39,13 +39,16 @@ public class GameController<T> implements Observer<T> {
     // starts the game thread
     //@Override
     public void run() {
-        this.game.setCurrentPlayer(0);
         fillClouds();
+        for (Player player : game.getPlayers()) {
+            player.getBoard().addStudentsToEntrance(tableController.drawStudents());
+        }
+        this.game.setCurrentPlayer(0);
         this.game.setGamePhase(PLANNING);
     }
 
     private void checkMessage(Message message) throws WrongPlayerException {
-        if (!message.getNickname().equals(game.getPlayers()[game.getCurrentPlayer()])) {
+        if (!message.getNickname().equals(game.getPlayers()[game.getCurrentPlayer()].getNickname())) {
             throw new WrongPlayerException();
         }
     }
@@ -57,7 +60,7 @@ public class GameController<T> implements Observer<T> {
         try {
             checkMessage(message);
         } catch (WrongPlayerException e) {
-            e.printStackTrace();
+            game.throwException(e);
         }
         switch (game.getGamePhase()) {
             case PLANNING:
@@ -67,22 +70,26 @@ public class GameController<T> implements Observer<T> {
                 moveStudent(message);
                 break;
             case ACTION_MOVE_MOTHER_NATURE:
-                if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE))
+                if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
                     try {
                         moveMotherNature(((MoveMotherNatureMessage) message).getSteps());
                     } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
-                        e.printStackTrace();
+                        game.throwException(e);
                     }
+                } else game.throwException(new IllegalActionException());
                 break;
             case ACTION_CHOOSE_CLOUD:
-                try {
-                    pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                    e.printStackTrace();
-                }
+                if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                    try {
+                        pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                    } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                        game.throwException(e);
+                    }
+                } else game.throwException(new IllegalActionException());
                 break;
             case ACTION_END:
                 //should not go here, the player doesn't do anything in this phase
+                game.throwException(new IllegalActionException());
                 break;
         }
     }
@@ -92,13 +99,11 @@ public class GameController<T> implements Observer<T> {
         if (message.getType().equals(MessageType.ASSISTANT_CARD)) {
             try {
                 this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard().value());
-            } catch (IllegalActionException e) {
-                e.printStackTrace();
-            } catch (IllegalAssistantException e) {
-                e.printStackTrace();
+            } catch (IllegalActionException | IllegalAssistantException e) {
+                game.throwException(e);
             }
         } else {
-            //exception message wrong
+            game.throwException(new IllegalActionException());
         }
     }
 
@@ -156,18 +161,18 @@ public class GameController<T> implements Observer<T> {
                 try {
                     moveStudentOnIsland(((MoveStudentMessage) message).getStudentColor(), ((MoveStudentMessage) message).getIslandCard().getUuid());
                 } catch (WrongUUIDException e) {
-                    e.printStackTrace();
+                    game.throwException(e);
                 }
                 break;
             case ACTION_MOVE_STUDENTS_ON_BOARD:
                 try {
                     moveStudentToDiningRoom(((MoveStudentMessage) message).getStudentColor());
                 } catch (IllegalActionException e) {
-                    e.printStackTrace();
+                    game.throwException(e);
                 }
                 break;
             default:
-                //error message type unexpected
+                game.throwException(new IllegalActionException());
         }
     }
 
@@ -187,7 +192,7 @@ public class GameController<T> implements Observer<T> {
             try {
                 player.getBoard().removeProfessor(color);
             } catch (Exception e) {
-                //TODO Nooooooooooooooooooo
+                //TODO do we need to send this one to the player?
                 e.printStackTrace();
             }
             game.getCurrentPlayerSchoolBoard().addProfessor(color);
@@ -280,7 +285,7 @@ public class GameController<T> implements Observer<T> {
 
     //Checks if the current player has the highest number of students of the given color in his dining room
     //If so, proceeds to move the professor to the player's professor table
-    private void checkProfessorsStatus(PawnColor color) {
+    void checkProfessorsStatus(PawnColor color) {
         //first try to check if it's still available on the table, if so it's useless to do the second check
         if (this.tableController.takeProfessor(color)) {
             game.getPlayers()[game.getCurrentPlayer()].getBoard().addProfessor(color);
@@ -304,7 +309,7 @@ public class GameController<T> implements Observer<T> {
         return this.game.getPlayedCount() == this.game.getPlayersCount();
     }
 
-    private void movedPawn() {
+    void movedPawn() {
         //TODO increment instead of get + 1
         game.setMovedPawns(game.getMovedPawns() + 1);
         if (this.game.getMovedPawns() == game.getPlayersCount() + 1) {
@@ -313,15 +318,16 @@ public class GameController<T> implements Observer<T> {
         }
     }
 
+    //TODO does the same thing as whoIsWinner(), maybe we can cancel this
     public int winner() {
         //TODO maybe throw an exception if the game is not over?
-        //TODO don't call every time game.getPlayers() but save them in a variable
+        Player[] players = game.getPlayers();
         int min = 0;
         for (int i = 0; i < game.getPlayersCount(); i++) {
-            if (game.getPlayers()[i].getBoard().getTowersCount() < game.getPlayers()[min].getBoard().getTowersCount())
+            if (players[i].getBoard().getTowersCount() < players[min].getBoard().getTowersCount())
                 min = i;
-            if (game.getPlayers()[i].getBoard().getTowersCount() == game.getPlayers()[min].getBoard().getTowersCount() &&
-                    game.getPlayers()[i].getBoard().countProfessors() > game.getPlayers()[min].getBoard().countProfessors()) {
+            if (players[i].getBoard().getTowersCount() == players[min].getBoard().getTowersCount() &&
+                    players[i].getBoard().countProfessors() > players[min].getBoard().countProfessors()) {
                 min = i;
             }
         }
