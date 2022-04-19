@@ -7,7 +7,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-//TODO getters to the view should not expose their rep
 public class Game extends Observable<Serializable> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -53,7 +52,7 @@ public class Game extends Observable<Serializable> implements Serializable {
     }
 
     public Player[] getPlayers() {
-        return players;
+        return players.clone();
     }
 
     public int getPlayersCount() {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.exceptions.NoCoinsAvailableException;
 import it.polimi.ingsw.model.ExpertTable;
 
 public class ExpertTableController extends TableController {
@@ -7,8 +8,10 @@ public class ExpertTableController extends TableController {
         super(table);
     }
 
-    public void takeCoin() {
-        //TODO check if coins > 0
+    public void takeCoin() throws NoCoinsAvailableException{
+        if (((ExpertTable) table).getCoins() < 0) {
+            throw new NoCoinsAvailableException();
+        }
         ((ExpertTable) table).takeCoin();
     }
 

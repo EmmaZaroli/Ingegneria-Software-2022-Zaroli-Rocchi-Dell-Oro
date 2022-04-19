@@ -19,7 +19,6 @@ public class DiningRoom implements Serializable {
      * Instantiates a new Dining room.
      */
     public DiningRoom() {
-
         this.students = new EnumMap<>(PawnColor.class);
         for (PawnColor p : PawnColor.values())
             students.put(p, 0);

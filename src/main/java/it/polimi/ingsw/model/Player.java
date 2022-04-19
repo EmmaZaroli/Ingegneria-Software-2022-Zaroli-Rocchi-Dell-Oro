@@ -150,9 +150,6 @@ public class Player extends Observable<Serializable> implements Serializable {
      * @param a the assistant card
      */
     public void playAssistant(AssistantCard a) {
-        if (!assistantDeck.contains(a)) {
-            //TODO throw exception or let the controller do it
-        }
         this.discardPileHead = a;
         notify(a);
         assistantDeck.remove(a);

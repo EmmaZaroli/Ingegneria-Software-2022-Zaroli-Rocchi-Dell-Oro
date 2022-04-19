@@ -4,19 +4,18 @@ package it.polimi.ingsw.controller.exceptions;
  * Signals that in GameControllerBuilder the specified PlayerCount does not match the actual number of player passed to the builder
  */
 public class InvalidPlayerNumberException extends Exception{
-    //TODO find a better name for the enum
-    public enum ExceptionType{
+    public enum Reason {
         TOO_MANY_PLAYERS,
         NOT_ENOUGH_PLAYERS
     }
 
-    private final ExceptionType exceptionType;
+    private final Reason reason;
 
-    public InvalidPlayerNumberException(ExceptionType exceptionType) {
-        this.exceptionType = exceptionType;
+    public InvalidPlayerNumberException(Reason reason) {
+        this.reason = reason;
     }
 
-    public ExceptionType getExceptionType() {
-        return exceptionType;
+    public Reason getExceptionType() {
+        return reason;
     }
 }

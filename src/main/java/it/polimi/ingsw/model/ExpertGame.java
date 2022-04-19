@@ -21,7 +21,7 @@ public class ExpertGame extends Game {
     }
 
     public CharacterCard[] getCharacterCards() {
-        return characterCards;
+        return characterCards.clone();
     }
 
     @Override

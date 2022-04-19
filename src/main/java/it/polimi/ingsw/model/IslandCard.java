@@ -64,7 +64,7 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
      * @return the students from islandCard
      */
     public List<PawnColor> getStudentsFromIsland() {
-        return students;
+        return (List) students.clone();
     }
 
     /**
