@@ -12,7 +12,6 @@ import it.polimi.ingsw.network.messages.Message;
 import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
-import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.*;
 
@@ -97,7 +96,7 @@ public class ExpertGameController<T> extends GameController<T> {
      * @param card the card that the player selected
      * @return Pair (true,cardIndex) if the card is on the table, (false,null) otherwise
      */
-    private Pair isCardOnTable(CharacterCard card) {
+    private Pair<Boolean, Integer> isCardOnTable(CharacterCard card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
                 return new Pair(true, i);
