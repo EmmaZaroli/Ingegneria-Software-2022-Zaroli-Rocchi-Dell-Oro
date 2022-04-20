@@ -17,9 +17,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+//TODO Think about splitting gameController and controller
+//TODO applications should contain only Client and Server
 public class Server {
-    private int port;
+    private final int port;
+
+    private static Logger logger = Logger.getLogger(Server.class.getName());
 
     private final GameControllerBuilder normal2PlayersBuilder = new GameControllerBuilder();
     private final GameControllerBuilder normal3PlayersBuilder = new GameControllerBuilder();
@@ -33,12 +39,23 @@ public class Server {
 
     public static void main(String[] args) {
         //TODO start thread
-        Server server = new Server(10000);
-        try {
-            server.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if(args.length < 1 || !args[0].equals("--port") || !isNumeric(args[1])) {
+            logger.log(Level.SEVERE, MessagesHelper.noPort);
+        } else {
+            int port = Integer.parseInt(args[1]);
+
+            Server server = new Server(port);
+            try {
+                server.startServer();
+            } catch (IOException e) {
+                //TODO
+            }
         }
+    }
+
+    private static boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
     }
 
     public Server(int port){
@@ -52,10 +69,10 @@ public class Server {
         try{
             serverSocket = new ServerSocket(port);
         }catch (IOException e){
-            System.err.println(e.getMessage()); //port not available
+            logger.log(Level.SEVERE, MessagesHelper.portNotAvailable);
             return;
         }
-        System.out.println("Server ready");
+        logger.log(Level.INFO, MessagesHelper.serverStarted);
         while (true){
             try{
                 Socket socket = serverSocket.accept();

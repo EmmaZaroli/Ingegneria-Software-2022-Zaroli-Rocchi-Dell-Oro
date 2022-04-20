@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.messages.Message;
 import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
+import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.*;
 
