@@ -167,9 +167,9 @@ public class Server {
 
     public void reconnectPlayer(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
-        //TODO this may cause to throw an exception
         if (gameHandler.isPresent()) {
-            gameHandler.get();
+            GameHandler gh = gameHandler.get();
+            //TODO
         }
     }
 }

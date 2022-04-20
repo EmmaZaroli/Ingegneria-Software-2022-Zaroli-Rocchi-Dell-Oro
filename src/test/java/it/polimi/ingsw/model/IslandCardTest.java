@@ -3,7 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ class IslandCardTest extends TestCase {
     }
 
     @Test
-    void PawnOnIsland() {
+    void placePawnOnIsland() {
         List<PawnColor> list = listPawnColor();
         islandCard1.movePawnOnIsland(list);
         Assertions.assertEquals(list, islandCard1.getStudentsFromIsland());
@@ -38,7 +39,7 @@ class IslandCardTest extends TestCase {
     }
 
     @Test
-    void Tower() {
+    void setTower() {
         islandCard1.setTower(Tower.BLACK);
         Assertions.assertEquals(Tower.BLACK, islandCard1.getTower());
     }
@@ -50,7 +51,7 @@ class IslandCardTest extends TestCase {
     }
 
     @Test
-    void influence1() {
+    void influenceWithoutProfessors() {
         Set<PawnColor> list1 = new HashSet<>();
         islandCard1.setTower(Tower.BLACK);
         Assertions.assertEquals(1, islandCard1.countInfluence(list1, Tower.BLACK));
@@ -61,7 +62,7 @@ class IslandCardTest extends TestCase {
     }
 
     @Test
-    void influence2() {
+    void influenceWithProfessors() {
         Set<PawnColor> list = setPawnColor();
         islandCard1.movePawnOnIsland(list.stream().toList());
         islandCard1.setTower(Tower.BLACK);

@@ -11,7 +11,7 @@ class PlayerTest extends TestCase {
     ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE);
 
     @Test
-    void StandardPlayerTest() {
+    void createStandardPlayer() {
         Assertions.assertEquals("nickname", player.getNickname());
         Assertions.assertEquals(Wizzard.BLUE, player.getWizzard());
         player.togglePlayerTurn();
@@ -22,7 +22,7 @@ class PlayerTest extends TestCase {
     }
 
     @Test
-    void AssistantCards() {
+    void createAssistantCards() {
         for (int i = 0; i < 10; i++) {
             System.out.println(player.getAssistant(i).value() + " " + player.getAssistant(i).motherNatureMovement());
         }
@@ -36,7 +36,7 @@ class PlayerTest extends TestCase {
     }
 
     @Test
-    void ExpertPlayer() {
+    void createExpertPlayer() {
         Assertions.assertEquals(1, expertPlayer.getCoins());
         expertPlayer.addCoin();
         Assertions.assertEquals(2, expertPlayer.getCoins());
