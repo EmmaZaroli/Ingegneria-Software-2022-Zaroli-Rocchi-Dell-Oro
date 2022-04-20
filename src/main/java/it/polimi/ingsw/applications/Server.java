@@ -83,10 +83,11 @@ public class Server {
         serverSocket.close();
     }
 
-    //TODO we need a runnable wrapper around GameController
     private List<GameController> loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
-        return dd.getAllGames();
+        return null;
+        //TODO create a controller for every game, start the thread
+        //return dd.getAllGames();
     }
 
     public void enqueueUser(User user, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
