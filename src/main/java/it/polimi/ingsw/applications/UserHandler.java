@@ -26,7 +26,7 @@ public class UserHandler implements Runnable{
         NicknameStatus nicknameStatus = server.checkNicknameStatus(nickname);
         switch (nicknameStatus){
             case FROM_CONNECTED_PLAYER -> {
-                //re-ask for nickname
+                //TODO re-ask for nickname
             }
             case FROM_DISCONNECTED_PLAYER -> {
                 reconnectPlayer(nickname);
@@ -51,6 +51,6 @@ public class UserHandler implements Runnable{
     }
 
     private void reconnectPlayer(String nickname /*or maybe User*/){
-        //TODO
+        server.reconnectPlayer(nickname, endpoint);
     }
 }

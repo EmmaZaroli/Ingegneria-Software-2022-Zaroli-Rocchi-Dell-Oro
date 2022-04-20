@@ -6,6 +6,7 @@ import it.polimi.ingsw.controller.GameControllerBuilder;
 import it.polimi.ingsw.controller.enums.GameMode;
 import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
+import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -126,6 +128,32 @@ public class Server {
         }
 
         return status;
+    }
+
+    private Optional<GameHandler> getGameByPlayer(String nickname){
+        for(GameHandler gameHandler: normal2PlayersRunningGames){
+            if(gameHandler.containsUser(nickname))
+                return Optional.of(gameHandler);
+        }
+        for(GameHandler gameHandler: normal3PlayersRunningGames){
+            if(gameHandler.containsUser(nickname))
+                return Optional.of(gameHandler);
+        }
+        for(GameHandler gameHandler: expert2PlayersRunningGames){
+            if(gameHandler.containsUser(nickname))
+                return Optional.of(gameHandler);
+        }
+        for(GameHandler gameHandler: expert3PlayersRunningGames){
+            if(gameHandler.containsUser(nickname))
+                return Optional.of(gameHandler);
+        }
+        return Optional.empty();
+    }
+
+    public void reconnectPlayer(String nickname, Endpoint endpoint){
+        Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
+        //TODO this may cause to throw an exception
+        gameHandler.get();
     }
 
 }
