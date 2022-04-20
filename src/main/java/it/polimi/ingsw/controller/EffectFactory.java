@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.Effect;
 import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -8,7 +9,8 @@ import java.util.List;
 
 public class EffectFactory {
 
-    private EffectFactory() {}
+    private EffectFactory() {
+    }
 
     public static Effect getEffect(Character character) {
         return switch (character) {
@@ -22,7 +24,7 @@ public class EffectFactory {
             case CHARACTER_ELEVEN -> get11();
         };
     }
-    
+
     private static Effect get1() {
         return (SetupEffect) (table, character) -> {
             List<PawnColor> ris = table.drawStudents(4);

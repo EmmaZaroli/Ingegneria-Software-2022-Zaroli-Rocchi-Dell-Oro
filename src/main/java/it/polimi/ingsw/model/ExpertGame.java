@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.Effect;
-
 public class ExpertGame extends Game {
 
     private CharacterCard[] characterCards;
@@ -41,7 +39,6 @@ public class ExpertGame extends Game {
         return (ExpertTable) super.getTable();
     }
 
-    //TODO fix this up, it's not ok
     public void addCharacterCards(CharacterCard[] cards) {
         this.characterCards = cards;
     }
