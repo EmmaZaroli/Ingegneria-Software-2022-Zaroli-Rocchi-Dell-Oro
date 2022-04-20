@@ -1,6 +1,5 @@
 package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
 
