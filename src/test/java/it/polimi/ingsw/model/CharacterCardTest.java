@@ -12,7 +12,7 @@ class CharacterCardTest {
     List<CharacterCard> deck = new ArrayList<>();
 
     @Test
-    void AllCharacterCard() {
+    void allCharacterCard() {
         for (Character c : Character.values()) {
             deck.add(CharacterCardFactory.getCharacterCard(c));
         }
@@ -24,7 +24,7 @@ class CharacterCardTest {
     }
 
     @Test
-    void CharacterCardWithSetUpAction() {
+    void characterCardWithSetUpAction() {
         List<PawnColor> l1 = new ArrayList<>();
         CharacterCardWithSetUpAction c = (CharacterCardWithSetUpAction) CharacterCardFactory.getCharacterCard(Character.CHARACTER_SEVEN);
         l1.add(PawnColor.BLUE);

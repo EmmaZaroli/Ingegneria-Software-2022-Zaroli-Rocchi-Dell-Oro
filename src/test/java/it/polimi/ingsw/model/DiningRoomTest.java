@@ -2,10 +2,11 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class DiningRoomTest extends TestCase {
-
+    
     DiningRoom diningRoom = new DiningRoom();
 
     @Test

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BagTest {
-
+    
     @Test
     void drawAllStudents() {
         EnumMap<PawnColor, Integer> drawnStudents = new EnumMap<>(PawnColor.class);
@@ -17,7 +17,7 @@ class BagTest {
         }
         Bag b = new Bag();
 
-        while(! b.isEmpty()) {
+        while (!b.isEmpty()) {
             PawnColor p = b.drawStudent();
             Integer count = drawnStudents.get(p);
             count++;
