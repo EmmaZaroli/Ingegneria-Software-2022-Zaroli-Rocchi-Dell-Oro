@@ -58,7 +58,7 @@ public class GameControllerBuilder {
     private GameController buildNormalGameController() {
         Player[] players = new Player[playersNames.size()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
+            players[i] = new Player(playersNames.get(i), Wizzard.values()[i], Tower.values()[i], players.length);
         }
 
         Table table = new Table(playersNames.size());
@@ -75,7 +75,7 @@ public class GameControllerBuilder {
     private ExpertGameController buildExpertGameController() {
         ExpertPlayer[] players = new ExpertPlayer[playersNames.size()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new ExpertPlayer(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
+            players[i] = new ExpertPlayer(playersNames.get(i), Wizzard.values()[i], Tower.values()[i], players.length);
         }
 
         ExpertTable table = new ExpertTable(playersNames.size());
