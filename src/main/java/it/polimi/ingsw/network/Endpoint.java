@@ -1,8 +1,11 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.applications.MessagesHelper;
 import it.polimi.ingsw.network.messages.Message;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +25,7 @@ public class Endpoint {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    public Endpoint(Socket socket) throws IOException{
+    public Endpoint(Socket socket) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
         this.socket = socket;
@@ -34,7 +37,7 @@ public class Endpoint {
         try {
             out.writeObject(message);
             out.flush();
-        } catch(Exception e) {
+        } catch (Exception e) {
             disconnect();
             this.notifyDisconnection();
         }
@@ -42,7 +45,7 @@ public class Endpoint {
 
     public void startReceiving() {
         this.receiverThread = new Thread(() -> {
-            while(true) {
+            while (true) {
                 handleIncomingMessage();
             }
         });
@@ -53,7 +56,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            for(MessageListener l: messageListeners) {
+            for (MessageListener l : messageListeners) {
                 l.onMessageReceived(m);
             }
         } catch (Exception e) {
@@ -66,13 +69,13 @@ public class Endpoint {
         try {
             this.receiverThread.interrupt();
             this.socket.close();
-        } catch(IOException e) {
-            logger.log(Level.SEVERE, "Error while closing an Endpoint", e);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
         }
     }
 
     public void notifyDisconnection() {
-        for(DisconnectionListener d: this.disconnectionListeners) {
+        for (DisconnectionListener d : this.disconnectionListeners) {
             d.onDisconnect();
         }
     }
