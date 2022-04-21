@@ -165,11 +165,13 @@ public class Server {
         return Optional.empty();
     }
 
+    //TODO two player may try to connect with the same username
     public void reconnectPlayer(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
         if (gameHandler.isPresent()) {
             GameHandler gh = gameHandler.get();
-            //TODO
+            gh.reconnectPlayer(nickname, endpoint);
         }
     }
+
 }
