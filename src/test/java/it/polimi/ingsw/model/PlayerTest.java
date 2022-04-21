@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class PlayerTest extends TestCase {
-    Player player = new Player("nickname", Wizzard.BLUE, Tower.BLACK);
-    ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE);
+    Player player = new Player("nickname", Wizzard.BLUE, Tower.BLACK, 2);
+    ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE, 3);
 
     @Test
     void createStandardPlayer() {

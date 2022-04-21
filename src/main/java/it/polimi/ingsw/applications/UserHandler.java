@@ -23,17 +23,15 @@ public class UserHandler implements Runnable {
         //TODO ask for nickname
         String nickname = "";
         NicknameStatus nicknameStatus = server.checkNicknameStatus(nickname);
-        switch (nicknameStatus) {
-            case FROM_CONNECTED_PLAYER -> {
-                //TODO re-ask for nickname
-            }
-            case FROM_DISCONNECTED_PLAYER -> {
+
+        if (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER) {
+            //TODO re-ask for nickname
+        } else {
+            if (nicknameStatus == NicknameStatus.FROM_DISCONNECTED_PLAYER) {
                 reconnectPlayer(nickname);
             }
-            default -> {
-                return;
-            }
         }
+
         User user = new User(nickname, endpoint);
 
         //TODO ask for game type (GameMode and PlayersNumber)

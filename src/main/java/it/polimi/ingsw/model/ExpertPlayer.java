@@ -16,8 +16,8 @@ public class ExpertPlayer extends Player {
      * @param wizzard  the wizzard
      * @param tower    the tower's color
      */
-    public ExpertPlayer(String nickname, Wizzard wizzard, Tower tower) {
-        super(nickname, wizzard, tower);
+    public ExpertPlayer(String nickname, Wizzard wizzard, Tower tower, int numberOfPlayers) {
+        super(nickname, wizzard, tower, numberOfPlayers);
         this.coins = 1;
     }
 

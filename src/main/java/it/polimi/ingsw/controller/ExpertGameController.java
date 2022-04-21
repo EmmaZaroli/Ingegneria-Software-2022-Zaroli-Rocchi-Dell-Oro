@@ -45,7 +45,6 @@ public class ExpertGameController<T> extends GameController<T> {
     private void drawCharactersCards() {
         int numberCard;
         List<Character> characters = new ArrayList<>(Arrays.asList(Character.values()));
-        //TODO parameterize 3
         CharacterCard[] cards = new CharacterCard[3];
         Effect[] effects = new Effect[3];
         for (int i = 0; i < 3; i++) {
@@ -63,11 +62,11 @@ public class ExpertGameController<T> extends GameController<T> {
         Message message = (Message) m;
         if (message.getType().equals(MessageType.CHARACTER_CARD)) {
             CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
-            Pair pair = isCardOnTable(card);
+            Pair<Boolean, Integer> pair = isCardOnTable(card);
             if (!(boolean) pair.first()) {
                 game.throwException(new IllegalCharacterException());
             }
-            int index = (int) pair.second();
+            int index = pair.second();
             canActivateCharacterAbility(index);
             activateCharacterAbility(index);
         } else {
@@ -99,10 +98,10 @@ public class ExpertGameController<T> extends GameController<T> {
     private Pair<Boolean, Integer> isCardOnTable(CharacterCard card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
-                return new Pair(true, i);
+                return new Pair<>(true, i);
             }
         }
-        return new Pair(false, null);
+        return new Pair<>(false, null);
     }
 
     //TODO do something about this function
