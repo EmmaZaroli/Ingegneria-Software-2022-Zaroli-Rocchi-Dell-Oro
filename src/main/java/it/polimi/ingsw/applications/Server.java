@@ -2,7 +2,6 @@ package it.polimi.ingsw.applications;
 
 import it.polimi.ingsw.applications.enums.NicknameStatus;
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.GameControllerBuilder;
 import it.polimi.ingsw.controller.enums.GameMode;
 import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
