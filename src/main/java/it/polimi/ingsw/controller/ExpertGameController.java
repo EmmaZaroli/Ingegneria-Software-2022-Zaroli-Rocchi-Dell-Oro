@@ -17,7 +17,7 @@ import java.util.*;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 
-public class ExpertGameController<T> extends GameController<T> {
+public class ExpertGameController extends GameController {
 
     public ExpertGameController(ExpertGame game, ExpertTableController tableController) {
         super(game, tableController);
@@ -58,8 +58,7 @@ public class ExpertGameController<T> extends GameController<T> {
     }
 
     @Override
-    public void update(T m) {
-        Message message = (Message) m;
+    public void update(Message message) {
         if (message.getType().equals(MessageType.CHARACTER_CARD)) {
             CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
             Pair<Boolean, Integer> pair = isCardOnTable(card);
@@ -70,7 +69,7 @@ public class ExpertGameController<T> extends GameController<T> {
             canActivateCharacterAbility(index);
             activateCharacterAbility(index);
         } else {
-            super.update(m);
+            super.update(message);
         }
     }
 
