@@ -1,5 +1,9 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.applications;
 
+import it.polimi.ingsw.controller.ExpertGameController;
+import it.polimi.ingsw.controller.ExpertTableController;
+import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.controller.TableController;
 import it.polimi.ingsw.controller.enums.GameMode;
 import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
