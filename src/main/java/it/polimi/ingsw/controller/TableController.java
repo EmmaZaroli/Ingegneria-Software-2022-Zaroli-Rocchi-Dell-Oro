@@ -1,5 +1,7 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.exceptions.FullCloudException;
+import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.CloudTile;
@@ -41,8 +43,11 @@ public class TableController {
         return students;
     }
 
-    public void fillClouds() {
+    public void fillClouds() throws FullCloudException {
         List<PawnColor> studentsDrawn = new LinkedList<>();
+        for (CloudTile cloudTile : table.getCloudTiles()) {
+            if (!cloudTile.takeStudentsFromCloud().isEmpty()) throw new FullCloudException();
+        }
         for (CloudTile cloud : table.getCloudTiles()) {
             if (table.getPlayersNumber() == 2) {
                 for (int i = 0; i < 3; i++) {
@@ -99,16 +104,18 @@ public class TableController {
         if (islandLeft.getTower().equals(towerColor)) {
             table.getIslands().get(table.getIslandWithMotherNature()).movePawnOnIsland(islandLeft.getStudentsFromIsland());
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
+            if (table.getIslandWithMotherNature() != 0)
+                table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
             table.getIslands().get(table.getIslandWithMotherNature()).incrementSize();
-            table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
         }
         //left
         IslandCard islandRight = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
-        if (islandLeft.getTower().equals(towerColor)) {
+        if (islandRight.getTower().equals(towerColor)) {
             table.getIslands().get(table.getIslandWithMotherNature()).movePawnOnIsland(islandRight.getStudentsFromIsland());
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
             table.getIslands().get(table.getIslandWithMotherNature()).incrementSize();
         }
+
     }
 
     public List<PawnColor> takeStudentsFromCloud(UUID uuid) throws WrongUUIDException {

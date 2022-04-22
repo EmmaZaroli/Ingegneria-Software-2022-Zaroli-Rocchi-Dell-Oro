@@ -109,7 +109,11 @@ public class GameController<T> implements Observer<T> {
 
 
     private void fillClouds() {
-        this.tableController.fillClouds();
+        try {
+            this.tableController.fillClouds();
+        } catch (FullCloudException e) {
+            game.throwException(e);
+        }
         this.game.setPlayedCount(0);
     }
 
@@ -379,7 +383,11 @@ public class GameController<T> implements Observer<T> {
                 this.game.setCurrentPlayerBoard(game.getPlayers()[this.game.getCurrentPlayer()].getBoard());
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {
-                fillClouds();
+                try {
+                    tableController.fillClouds();
+                } catch (FullCloudException e) {
+                    game.throwException(e);
+                }
                 this.game.setGamePhase(PLANNING);
             }
         }

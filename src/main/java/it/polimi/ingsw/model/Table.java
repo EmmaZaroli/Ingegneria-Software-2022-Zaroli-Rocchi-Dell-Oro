@@ -34,12 +34,12 @@ public class Table implements Serializable {
         int initialPosition = random.getInt(12);
         islandWithMotherNature = initialPosition;
         List<PawnColor> initialized = new ArrayList<>(10);
-        initialized.addAll((Arrays.stream(PawnColor.values()).toList()));
-        initialized.addAll((Arrays.stream(PawnColor.values()).toList()));
+        initialized.addAll(PawnColor.getValidValues());
+        initialized.addAll(PawnColor.getValidValues());
         for (int i = 0; i < 12; i++) {
-            if (Math.abs(i - initialPosition) != 6) {
+            if ((Math.abs(i - initialPosition) != 6) && !(islandWithMotherNature == i)) {
                 int pawnColor = random.getInt(initialized.size());
-                islandCards.get((i + initialPosition) % 12).movePawnOnIsland(initialized.get(pawnColor));
+                islandCards.get(i).movePawnOnIsland(initialized.get(pawnColor));
                 initialized.remove(pawnColor);
             }
         }
@@ -51,7 +51,7 @@ public class Table implements Serializable {
             this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
         }
         professors = new ArrayList<>();
-        professors.addAll(Arrays.asList(PawnColor.values()));
+        professors.addAll(PawnColor.getValidValues());
     }
 
     public Bag getBag() {
