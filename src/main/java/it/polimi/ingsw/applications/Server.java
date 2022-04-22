@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.enums.GameMode;
 import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;
 
@@ -90,11 +91,10 @@ public class Server {
         serverSocket.close();
     }
 
-    private List<GameController> loadSavedGames() {
+    private void loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
-        return null;
+        List<Game> games = dd.getAllGames();
         //TODO create a controller for every game, start the thread
-        //return dd.getAllGames();
     }
 
     public void enqueueUser(User user, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
