@@ -71,12 +71,12 @@ public class GameHandlerBuilder {
     }
 
     private Game buildNormalGameModel(){
-        Player[] players = new Player[users.size()];
+        Player[] players = new Player[playersNumber.getPlayersNumber()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], players.length);
+            players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
         }
 
-        Table table = new Table(users.size());
+        Table table = new Table(playersNumber.getPlayersNumber());
 
         GameParameters parameters = new GameParameters();
 
@@ -84,12 +84,12 @@ public class GameHandlerBuilder {
     }
 
     private Game buildExpertGameModel(){
-        ExpertPlayer[] players = new ExpertPlayer[users.size()];
+        ExpertPlayer[] players = new ExpertPlayer[playersNumber.getPlayersNumber()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], players.length);
+            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
         }
 
-        ExpertTable table = new ExpertTable(users.size());
+        ExpertTable table = new ExpertTable(playersNumber.getPlayersNumber());
 
         ExpertGameParameters parameters = new ExpertGameParameters();
 
@@ -150,12 +150,10 @@ public class GameHandlerBuilder {
 //    }
 
     private VirtualView[] buildVirtualViews(Game gameModel){
-        VirtualView[] virtualViews = new VirtualView[users.size()];
+        VirtualView[] virtualViews = new VirtualView[playersNumber.getPlayersNumber()];
         for(int i = 0; i < virtualViews.length; i++){
             virtualViews[i] = new VirtualView(users.get(i).getEndpoint(), users.get(i).getNickname(), gameModel);
         }
         return virtualViews;
     }
-
-    //TODO change user.size with playersnumber
 }

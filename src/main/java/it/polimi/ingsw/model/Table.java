@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Table implements Serializable {
-
+//TODO change int playersNumber with PlayersNumber
     @Serial
     private static final long serialVersionUID = 2L;
 
