@@ -13,15 +13,22 @@ import it.polimi.ingsw.observer.Observable;
 public class CloudTile extends Observable<CloudTile> implements Serializable {
     @Serial
     private static final long serialVersionUID = 6L;
-
-    //TODO add an identifier?...Not only to this class
+    private final UUID uuid;
     private final ArrayList<PawnColor> students;
 
     /**
      * Instantiates a new Cloud tile.
      */
-    public CloudTile() {
+    public CloudTile(UUID uuid) {
+        this.uuid = uuid;
         students = new ArrayList<>();
+    }
+
+    /**
+     * @return the uuid of the cloudTile
+     */
+    public UUID getUuid() {
+        return this.uuid;
     }
 
     /**

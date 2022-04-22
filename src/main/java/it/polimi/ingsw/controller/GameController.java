@@ -1,12 +1,11 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.exceptions.IllegalActionException;
-import it.polimi.ingsw.controller.exceptions.IllegalAssistantException;
-import it.polimi.ingsw.controller.exceptions.NotAllowedMotherNatureMovementException;
+import it.polimi.ingsw.controller.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
@@ -22,7 +21,7 @@ public class GameController<T> implements Observer<T> {
     protected TableController tableController;
 
     //TODO we need to receive also the virtualViews and add them as observers of the model's classes
-    public GameController(Game game, TableController tableController){
+    public GameController(Game game, TableController tableController) {
         this.game = game;
         this.tableController = tableController;
     }
@@ -40,46 +39,81 @@ public class GameController<T> implements Observer<T> {
     // starts the game thread
     //@Override
     public void run() {
+        fillClouds();
+        for (Player player : game.getPlayers()) {
+            player.getBoard().addStudentsToEntrance(tableController.drawStudents());
+        }
         this.game.setCurrentPlayer(0);
         this.game.setGamePhase(PLANNING);
     }
+
+    private void checkMessage(Message message) throws WrongPlayerException {
+        if (!message.getNickname().equals(game.getPlayers()[game.getCurrentPlayer()].getNickname())) {
+            throw new WrongPlayerException();
+        }
+    }
+
+
     @Override
-    public void update(T message) {
+    public void update(T m) {
+        Message message = (Message) m;
+        try {
+            checkMessage(message);
+        } catch (WrongPlayerException e) {
+            game.throwException(e);
+        }
         switch (game.getGamePhase()) {
             case PLANNING:
-                //check(Message) ->message.nickname.equals(currentPlayer)
-                //planning();
+                planning(message);
                 break;
             case ACTION_MOVE_STUDENTS:
-                //check(Message) ->message.nickname.equals(currentPlayer)
-                moveStudent(/*Message*/);
+                moveStudent(message);
                 break;
             case ACTION_MOVE_MOTHER_NATURE:
-                //check(Message) ->message.nickname.equals(currentPlayer)
-                //moveMotherNature(Message.steps());
+                if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                    try {
+                        moveMotherNature(((MoveMotherNatureMessage) message).getSteps());
+                    } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
+                        game.throwException(e);
+                    }
+                } else game.throwException(new IllegalActionException());
                 break;
             case ACTION_CHOOSE_CLOUD:
-                //check(Message) ->message.nickname.equals(currentPlayer)
-                //pickStudentsFromCloud(Message.cloudindex());
+                if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                    try {
+                        pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                    } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                        game.throwException(e);
+                    }
+                } else game.throwException(new IllegalActionException());
                 break;
             case ACTION_END:
                 //should not go here, the player doesn't do anything in this phase
+                game.throwException(new IllegalActionException());
                 break;
         }
     }
 
 
-    /*private void planning(Message) {
-        switch (Message):
-            case fillClouds:
-                this.fillClouds(); //only one time possible
-            case playAssistant:
-                this.playAssistant(Message.index())
+    private void planning(Message message) {
+        if (message.getType().equals(MessageType.ASSISTANT_CARD)) {
+            try {
+                this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard().value());
+            } catch (IllegalActionException | IllegalAssistantException e) {
+                game.throwException(e);
+            }
+        } else {
+            game.throwException(new IllegalActionException());
+        }
     }
-    */
+
 
     private void fillClouds() {
-        this.tableController.fillClouds();
+        try {
+            this.tableController.fillClouds();
+        } catch (FullCloudException e) {
+            game.throwException(e);
+        }
         this.game.setPlayedCount(0);
     }
 
@@ -125,14 +159,25 @@ public class GameController<T> implements Observer<T> {
         DataDumper.getInstance().saveGame(game);
     }
 
-    private void moveStudent(/*Message*/) {
-        /* switch(message) {
-            case OnIsland:
-                moveStudentOnIsland(message.pawn());
+    private void moveStudent(Message message) {
+        switch (message.getType()) {
+            case ACTION_MOVE_STUDENTS_ON_ISLAND:
+                try {
+                    moveStudentOnIsland(((MoveStudentMessage) message).getStudentColor(), ((MoveStudentMessage) message).getIslandCard().getUuid());
+                } catch (WrongUUIDException e) {
+                    game.throwException(e);
+                }
                 break;
-            case OnDiningRoom:
-                moveStudentToDiningRoom(message.pawn());
-         */
+            case ACTION_MOVE_STUDENTS_ON_BOARD:
+                try {
+                    moveStudentToDiningRoom(((MoveStudentMessage) message).getStudentColor());
+                } catch (IllegalActionException e) {
+                    game.throwException(e);
+                }
+                break;
+            default:
+                game.throwException(new IllegalActionException());
+        }
     }
 
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
@@ -151,15 +196,15 @@ public class GameController<T> implements Observer<T> {
             try {
                 player.getBoard().removeProfessor(color);
             } catch (Exception e) {
-                //TODO Nooooooooooooooooooo
+                //TODO do we need to send this one to the player?
                 e.printStackTrace();
             }
             game.getCurrentPlayerSchoolBoard().addProfessor(color);
         }
     }
 
-    public void moveStudentToIsle(PawnColor pawn, int isle) {
-        this.tableController.movePawnOnIsland(pawn, isle);
+    public void moveStudentOnIsland(PawnColor pawn, UUID uuid) throws WrongUUIDException {
+        this.tableController.movePawnOnIsland(pawn, uuid);
         this.movedPawn();
     }
 
@@ -192,18 +237,18 @@ public class GameController<T> implements Observer<T> {
         }
 
         //if two player have se same max influence, no tower is build
-        if(isInfluenceDraw(maxInfluencePlayer, maxInfluence))
+        if (isInfluenceDraw(maxInfluencePlayer, maxInfluence))
             return;
 
         //if the maxInfluence is 0, none of the player has a professor
         if (maxInfluence != 0) this.buildTowers(maxInfluencePlayer);
     }
 
-    private boolean isInfluenceDraw(Player player, int influence){
-        for(Player p : game.getPlayers()){
-            if(!p.equals(player) && influence == tableController
+    private boolean isInfluenceDraw(Player player, int influence) {
+        for (Player p : game.getPlayers()) {
+            if (!p.equals(player) && influence == tableController
                     .countInfluenceOnIsland(p.getBoard().getProfessors(), p.getBoard().getTowerColor())) {
-                    return true;
+                return true;
             }
         }
         return false;
@@ -230,19 +275,21 @@ public class GameController<T> implements Observer<T> {
         }
     }
 
-    public void pickStudentsFromCloud(int cloudIndex) throws IllegalActionException {
+    public void pickStudentsFromCloud(UUID uuid) throws IllegalActionException, EmptyCloudException, WrongUUIDException {
         if (this.game.getGamePhase() != GamePhase.ACTION_CHOOSE_CLOUD) {
             throw new IllegalActionException();
         }
-        //TODO check params validity
-        List<PawnColor> studentsFromCloud = this.tableController.takeStudentsFromCloud(cloudIndex);
+        List<PawnColor> studentsFromCloud = this.tableController.takeStudentsFromCloud(uuid);
+        if (studentsFromCloud.isEmpty()) {
+            throw new EmptyCloudException();
+        }
         game.getCurrentPlayerBoard().addStudentsToEntrance(studentsFromCloud);
         this.playerHasEndedAction();
     }
 
     //Checks if the current player has the highest number of students of the given color in his dining room
     //If so, proceeds to move the professor to the player's professor table
-    private void checkProfessorsStatus(PawnColor color) {
+    void checkProfessorsStatus(PawnColor color) {
         //first try to check if it's still available on the table, if so it's useless to do the second check
         if (this.tableController.takeProfessor(color)) {
             game.getPlayers()[game.getCurrentPlayer()].getBoard().addProfessor(color);
@@ -266,7 +313,7 @@ public class GameController<T> implements Observer<T> {
         return this.game.getPlayedCount() == this.game.getPlayersCount();
     }
 
-    private void movedPawn() {
+    void movedPawn() {
         //TODO increment instead of get + 1
         game.setMovedPawns(game.getMovedPawns() + 1);
         if (this.game.getMovedPawns() == game.getPlayersCount() + 1) {
@@ -275,16 +322,17 @@ public class GameController<T> implements Observer<T> {
         }
     }
 
+    //TODO does the same thing as whoIsWinner(), maybe we can cancel this
     public int winner() {
         //TODO maybe throw an exception if the game is not over?
-        //TODO don't call every time game.getPlayers() but save them in a variable
+        Player[] players = game.getPlayers();
         int min = 0;
         for (int i = 0; i < game.getPlayersCount(); i++) {
-            if (game.getPlayers()[i].getBoard().getTowersCount() < game.getPlayers()[min].getBoard().getTowersCount())
+            if (players[i].getBoard().getTowersCount() < players[min].getBoard().getTowersCount())
                 min = i;
-            if (game.getPlayers()[i].getBoard().getTowersCount() == game.getPlayers()[min].getBoard().getTowersCount() &&
-                game.getPlayers()[i].getBoard().countProfessors() > game.getPlayers()[min].getBoard().countProfessors()) {
-                    min = i;
+            if (players[i].getBoard().getTowersCount() == players[min].getBoard().getTowersCount() &&
+                    players[i].getBoard().countProfessors() > players[min].getBoard().countProfessors()) {
+                min = i;
             }
         }
         //return player with the minimum number of towers
@@ -335,6 +383,11 @@ public class GameController<T> implements Observer<T> {
                 this.game.setCurrentPlayerBoard(game.getPlayers()[this.game.getCurrentPlayer()].getBoard());
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {
+                try {
+                    tableController.fillClouds();
+                } catch (FullCloudException e) {
+                    game.throwException(e);
+                }
                 this.game.setGamePhase(PLANNING);
             }
         }

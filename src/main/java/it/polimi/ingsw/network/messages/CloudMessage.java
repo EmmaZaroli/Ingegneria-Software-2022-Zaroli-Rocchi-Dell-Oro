@@ -6,8 +6,8 @@ public class CloudMessage extends Message {
 
     private CloudTile cloud;
 
-    public CloudMessage(MessageType messageType, CloudTile cloud) {
-        super("server", messageType);
+    public CloudMessage(String nickname, MessageType messageType, CloudTile cloud) {
+        super(nickname, messageType);
         this.cloud = cloud;
     }
 

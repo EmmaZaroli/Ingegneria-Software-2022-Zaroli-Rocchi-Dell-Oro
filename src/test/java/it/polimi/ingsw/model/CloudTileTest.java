@@ -11,7 +11,7 @@ class CloudTileTest extends TestCase {
 
     @Test
     void TakeStudentFromCloud() {
-        CloudTile cloud = new CloudTile();
+        CloudTile cloud = new CloudTile(java.util.UUID.randomUUID());
         List<PawnColor> students = new ArrayList<>();
         students.add(PawnColor.BLUE);
         students.add(PawnColor.RED);

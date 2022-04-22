@@ -1,18 +1,25 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.exceptions.IllegalActionException;
+import it.polimi.ingsw.controller.exceptions.IllegalCharacterException;
+import it.polimi.ingsw.controller.exceptions.NoCoinsAvailableException;
+import it.polimi.ingsw.controller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.network.messages.CharacterCardMessage;
+import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.network.messages.MessageType;
+import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.util.*;
 
+import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
+
 public class ExpertGameController<T> extends GameController<T> {
 
-    private CharacterCard[] characterCards;
-    private Effect[] effects;
-
-    public ExpertGameController(ExpertGame game, ExpertTableController tableController){
+    public ExpertGameController(ExpertGame game, ExpertTableController tableController) {
         super(game, tableController);
         drawCharactersCards();
     }
@@ -25,10 +32,10 @@ public class ExpertGameController<T> extends GameController<T> {
     @Override
     protected void init(Player[] players) {
         this.game = new ExpertGame(players);
-        this.tableController = new ExpertTableController((ExpertTable)(game.getTable()));
+        this.tableController = new ExpertTableController((ExpertTable) (game.getTable()));
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
-            for(int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
+            for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
                 students.add(tableController.getBag().drawStudent());
             }
             c.getBoard().addStudentsToEntrance(students);
@@ -40,31 +47,66 @@ public class ExpertGameController<T> extends GameController<T> {
         List<Character> characters = new ArrayList<>(Arrays.asList(Character.values()));
         //TODO parameterize 3
         CharacterCard[] cards = new CharacterCard[3];
+        Effect[] effects = new Effect[3];
         for (int i = 0; i < 3; i++) {
             numberCard = RandomHelper.getInstance().getInt(characters.size());
-            characterCards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));
+            cards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));
             effects[i] = EffectFactory.getEffect(characters.get(numberCard));
             characters.remove(characters.get(numberCard));
         }
         getGame().addCharacterCards(cards);
+        getGame().addEffects(effects);
     }
 
     @Override
-    public void update(T message) {
-        /*
-        if (Message.type().equals("EffectCard")) {
-            canActivateCharacterAbility(Message.character());
-            activateCharacterAbility(Message.character());
+    public void update(T m) {
+        Message message = (Message) m;
+        if (message.getType().equals(MessageType.CHARACTER_CARD)) {
+            CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
+            Pair pair = isCardOnTable(card);
+            if (!(boolean) pair.first()) {
+                game.throwException(new IllegalCharacterException());
+            }
+            int index = (int) pair.second();
+            canActivateCharacterAbility(index);
+            activateCharacterAbility(index);
+        } else {
+            super.update(m);
         }
-        else
-            super(Message)
+    }
 
-         */
+    @Override
+    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
+        if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {
+            throw new IllegalActionException();
+        }
+        if (this.game.getCurrentPlayerBoard().moveStudentFromEntranceToDiningRoom(pawn)) {
+            try {
+                ((ExpertTableController) tableController).takeCoin();
+            } catch (NoCoinsAvailableException e) {
+                game.throwException(e);
+            }
+            getGame().getPlayers()[game.getCurrentPlayer()].addCoin();
+        }
+        this.checkProfessorsStatus(pawn);
+        this.movedPawn();
+    }
+
+    /**
+     * @param card the card that the player selected
+     * @return Pair (true,cardIndex) if the card is on the table, (false,null) otherwise
+     */
+    private Pair isCardOnTable(CharacterCard card) {
+        for (int i = 0; i < getGame().getCharacterCards().length; i++) {
+            if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
+                return new Pair(true, i);
+            }
+        }
+        return new Pair(false, null);
     }
 
     //TODO do something about this function
     public boolean canActivateCharacterAbility(int characterIndex) {
-        //TODO throw exception if the card doesn't exist on the table
         if (getGameParameters().hasAlreadyActivateCharacterCard())
             return false;
         return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() >
@@ -76,28 +118,34 @@ public class ExpertGameController<T> extends GameController<T> {
             activateSetupEffect(characterIndex);
         else
             activateStandardEffect(characterIndex);
+        int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();
         getGame()
                 .getPlayers()[game.getCurrentPlayer()]
-                .decreaseCoins((getGame()).getCharacterCards()[characterIndex].getCurrentPrice());
+                .decreaseCoins(cardPrice);
+        ((ExpertTableController) tableController).depositCoins(cardPrice);
         getGameParameters().setAlreadyActivateCharacterCard(true);
     }
 
     private void activateSetupEffect(int effectIndex) {
-        ((SetupEffect) effects[effectIndex])
+        ((SetupEffect) getGame().getEffects()[effectIndex])
                 .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
-    private void activateStandardEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).activateEffect(getGameParameters());
+    private void activateStandardEffect(int effectIndex) {
+        ((StandardEffect) getGame().getEffects()[effectIndex]).activateEffect(getGameParameters());
     }
 
-    private void activateReverseEffect(int effectIndex){
-        ((StandardEffect)effects[effectIndex]).reverseEffect(getGameParameters());
+    private void activateReverseEffect(int effectIndex) {
+        ((StandardEffect) getGame().getEffects()[effectIndex]).reverseEffect(getGameParameters());
     }
 
-    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, int islandIndex) {
+    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
         character.removeStudent(color);
-        tableController.movePawnOnIsland(color, islandIndex);
+        try {
+            tableController.movePawnOnIsland(color, islandIndex);
+        } catch (WrongUUIDException e) {
+            e.printStackTrace();
+        }
         character.addStudent(tableController.drawStudents(1));
     }
 
@@ -121,9 +169,9 @@ public class ExpertGameController<T> extends GameController<T> {
 
     //TODO call at the end of the turn
     //activate reverseEffect for all card, should not generate problems
-    public void reverseEffect(){
-        for(Effect e : effects){
-            if(e instanceof StandardEffect effect)
+    public void reverseEffect() {
+        for (Effect e : getGame().getEffects()) {
+            if (e instanceof StandardEffect effect)
                 effect.reverseEffect(getGameParameters());
         }
     }

@@ -14,17 +14,28 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
     @Serial
     private static final long serialVersionUID = 8L;
     //TODO add an identifier
+    private final UUID uuid;
     private final ArrayList<PawnColor> students;
     private Tower tower;
     private int size;
 
     /**
      * Instantiates a new Island card.
+     *
+     * @param uuid
      */
-    public IslandCard() {
+    public IslandCard(UUID uuid) {
+        this.uuid = uuid;
         this.students = new ArrayList<>();
         tower = Tower.NONE;
         size = 1;
+    }
+
+    /**
+     * @return the uuid of the islandCard
+     */
+    public UUID getUuid() {
+        return this.uuid;
     }
 
     /**

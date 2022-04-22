@@ -122,6 +122,10 @@ public class Game extends Observable<Serializable> implements Serializable {
         notify(nicknameWinner);
     }
 
+    public void throwException(Exception e) {
+        notify(e);
+    }
+
     public boolean isGameOver() {
         return this.gameOver;
     }
