@@ -117,9 +117,7 @@ public class Server {
                 normal2PlayersBuilder.player(user);
 
                 if (normal2PlayersBuilder.isGameFull()) {
-                    //TODO have to pass virtualview and socket
-                    GameController gameController = normal2PlayersBuilder.build();
-                    GameHandler gameHandler = new GameHandler(gameController);
+                    GameHandler gameHandler = normal2PlayersBuilder.build();
                     normal2PlayersRunningGames.add(gameHandler);
                     gameHandler.start();
                     normal2PlayersBuilder.reset();
@@ -128,16 +126,49 @@ public class Server {
         }
     }
 
-    private void enqueueNormal3Players(User user) {
-        //TODO copy and modify enqueueNormal2Players
+    private void enqueueNormal3Players(User user) throws InvalidPlayerNumberException {
+        synchronized (normal3PlayersBuilder) {
+            synchronized (normal3PlayersRunningGames) {
+                normal3PlayersBuilder.player(user);
+
+                if (normal3PlayersBuilder.isGameFull()) {
+                    GameHandler gameHandler = normal3PlayersBuilder.build();
+                    normal3PlayersRunningGames.add(gameHandler);
+                    gameHandler.start();
+                    normal3PlayersBuilder.reset();
+                }
+            }
+        }
     }
 
-    private void enqueueExpert2Players(User user) {
-        //TODO copy and modify enqueueNormal2Players
+    private void enqueueExpert2Players(User user) throws InvalidPlayerNumberException {
+        synchronized (expert2PlayersBuilder) {
+            synchronized (expert2PlayersRunningGames) {
+                expert2PlayersBuilder.player(user);
+
+                if (expert2PlayersBuilder.isGameFull()) {
+                    GameHandler gameHandler = expert2PlayersBuilder.build();
+                    expert2PlayersRunningGames.add(gameHandler);
+                    gameHandler.start();
+                    expert2PlayersBuilder.reset();
+                }
+            }
+        }
     }
 
-    private void enqueueExpert3Players(User user) {
-        //TODO copy and modify enqueueNormal2Players
+    private void enqueueExpert3Players(User user) throws InvalidPlayerNumberException {
+        synchronized (expert3PlayersBuilder) {
+            synchronized (expert3PlayersRunningGames) {
+                expert3PlayersBuilder.player(user);
+
+                if (expert3PlayersBuilder.isGameFull()) {
+                    GameHandler gameHandler = expert3PlayersBuilder.build();
+                    expert3PlayersRunningGames.add(gameHandler);
+                    gameHandler.start();
+                    expert3PlayersBuilder.reset();
+                }
+            }
+        }
     }
 
     public NicknameStatus checkNicknameStatus(String nickname) {
