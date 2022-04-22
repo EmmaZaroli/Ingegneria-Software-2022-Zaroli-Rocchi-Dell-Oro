@@ -371,7 +371,7 @@ public class GameController implements Observer<Message> {
                         return i;
                 }
                 break;
-            case ACTION_END:
+            default:
                 return game.getCurrentPlayer();
         }
         return 0;

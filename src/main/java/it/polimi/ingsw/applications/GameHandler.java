@@ -6,10 +6,10 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.view.VirtualView;
 
-public class GameHandler extends Thread{
+public class GameHandler extends Thread {
     GameController gameController;
     Game gameModel; //this is superfluous
-    VirtualView virtualViews[];
+    VirtualView[] virtualViews;
     User[] users;
 
     public GameHandler(User[] users, GameController gameController, Game gameModel, VirtualView[] virtualViews) {
@@ -24,10 +24,10 @@ public class GameHandler extends Thread{
 
     }
 
-    public NicknameStatus checkNicknameStatus(String nickname){
+    public NicknameStatus checkNicknameStatus(String nickname) {
         NicknameStatus status = NicknameStatus.FREE;
-        for(User user: users){
-            if(user.getNickname().equals(nickname)) {
+        for (User user : users) {
+            if (user.getNickname().equals(nickname)) {
                 if (user.isOnline())
                     status = NicknameStatus.FROM_CONNECTED_PLAYER;
                 else
@@ -37,17 +37,17 @@ public class GameHandler extends Thread{
         return status;
     }
 
-    public boolean containsUser(String nickname){
-        for(User user: users){
-            if(user.getNickname().equals(nickname))
+    public boolean containsUser(String nickname) {
+        for (User user : users) {
+            if (user.getNickname().equals(nickname))
                 return true;
         }
         return false;
     }
 
-    public void reconnectPlayer(String nickname, Endpoint endpoint){
-        for(User user: users){
-            if (user.getNickname().equals(nickname)){
+    public void reconnectPlayer(String nickname, Endpoint endpoint) {
+        for (User user : users) {
+            if (user.getNickname().equals(nickname)) {
                 user.setEndpoint(endpoint);
                 user.setOnline();
             }

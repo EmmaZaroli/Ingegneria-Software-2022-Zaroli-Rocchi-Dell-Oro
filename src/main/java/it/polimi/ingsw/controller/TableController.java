@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.FullCloudException;
-import it.polimi.ingsw.controller.exceptions.IllegalActionException;
 import it.polimi.ingsw.controller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.CloudTile;
