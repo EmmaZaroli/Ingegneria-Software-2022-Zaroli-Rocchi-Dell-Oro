@@ -26,10 +26,10 @@ public class Server {
 
     private static Logger logger = Logger.getLogger(Server.class.getName());
 
-    private final GameControllerBuilder normal2PlayersBuilder = new GameControllerBuilder();
-    private final GameControllerBuilder normal3PlayersBuilder = new GameControllerBuilder();
-    private final GameControllerBuilder expert2PlayersBuilder = new GameControllerBuilder();
-    private final GameControllerBuilder expert3PlayersBuilder = new GameControllerBuilder();
+    private final GameHandlerBuilder normal2PlayersBuilder = new GameHandlerBuilder();
+    private final GameHandlerBuilder normal3PlayersBuilder = new GameHandlerBuilder();
+    private final GameHandlerBuilder expert2PlayersBuilder = new GameHandlerBuilder();
+    private final GameHandlerBuilder expert3PlayersBuilder = new GameHandlerBuilder();
 
     private final List<GameHandler> normal2PlayersRunningGames = new LinkedList<>();
     private final List<GameHandler> normal3PlayersRunningGames = new LinkedList<>();
@@ -57,6 +57,14 @@ public class Server {
 
     public Server(int port) {
         this.port = port;
+        this.normal2PlayersBuilder.gameMode(GameMode.NORMAL_MODE);
+        this.normal2PlayersBuilder.playersNumber(PlayersNumber.TWO);
+        this.normal3PlayersBuilder.gameMode(GameMode.NORMAL_MODE);
+        this.normal3PlayersBuilder.playersNumber(PlayersNumber.THREE);
+        this.expert2PlayersBuilder.gameMode(GameMode.EXPERT_MODE);
+        this.expert2PlayersBuilder.playersNumber(PlayersNumber.TWO);
+        this.expert3PlayersBuilder.gameMode(GameMode.EXPERT_MODE);
+        this.expert3PlayersBuilder.playersNumber(PlayersNumber.THREE);
     }
 
     public void startServer() throws IOException {
@@ -106,7 +114,7 @@ public class Server {
     private void enqueueNormal2Players(User user) throws InvalidPlayerNumberException {
         synchronized (normal2PlayersBuilder) {
             synchronized (normal2PlayersRunningGames) {
-                normal2PlayersBuilder.player(user.getNickname());
+                normal2PlayersBuilder.player(user);
 
                 if (normal2PlayersBuilder.isGameFull()) {
                     //TODO have to pass virtualview and socket

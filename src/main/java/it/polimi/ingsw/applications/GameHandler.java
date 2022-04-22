@@ -2,16 +2,21 @@ package it.polimi.ingsw.applications;
 
 import it.polimi.ingsw.applications.enums.NicknameStatus;
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.view.VirtualView;
 
 public class GameHandler extends Thread{
     GameController gameController;
+    Game gameModel; //this is superfluous
+    VirtualView virtualViews[];
     User[] users;
 
-    public GameHandler(GameController gameController) {
+    public GameHandler(User[] users, GameController gameController, Game gameModel, VirtualView[] virtualViews) {
+        this.users = users;
         this.gameController = gameController;
-        //TODO get users
-        //TODO get view
+        this.gameModel = gameModel;
+        this.virtualViews = virtualViews;
     }
 
     @Override
