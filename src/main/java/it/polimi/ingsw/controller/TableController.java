@@ -112,6 +112,9 @@ public class TableController {
         if (islandRight.getTower().equals(towerColor)) {
             table.getIslands().get(table.getIslandWithMotherNature()).movePawnOnIsland(islandRight.getStudentsFromIsland());
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
+            if (table.getIslandWithMotherNature() == table.getIslands().size()) {
+                table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
+            }
             table.getIslands().get(table.getIslandWithMotherNature()).incrementSize();
         }
 

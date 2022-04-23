@@ -202,7 +202,7 @@ class TableControllerTest extends TestCase {
             System.out.println("- right unification: ");
             table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
             List<PawnColor> island1 = new ArrayList<>(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
-            tableController3Player.moveMotherNature(-1);
+            tableController3Player.moveMotherNature(11);
             island1.addAll(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             Assertions.assertTrue(tableController3Player.canBuildTower(Tower.BLACK));
 
@@ -257,8 +257,10 @@ class TableControllerTest extends TestCase {
 
         @Test
         void EachSideUnification() {
+            //forced on critical 10-11-0
             System.out.println("- each side unification: ");
 
+            tableController3Player.moveMotherNature(10 - table3Player.getIslandWithMotherNature());
             table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
             List<PawnColor> island1 = new ArrayList<>(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             tableController3Player.moveMotherNature(2);
