@@ -1,11 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.observer.Observable;
+
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
-
-import it.polimi.ingsw.model.enums.*;
-import it.polimi.ingsw.observer.Observable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Island card.
@@ -13,7 +17,6 @@ import it.polimi.ingsw.observer.Observable;
 public class IslandCard extends Observable<IslandCard> implements Serializable {
     @Serial
     private static final long serialVersionUID = 8L;
-    //TODO add an identifier
     private final UUID uuid;
     private final ArrayList<PawnColor> students;
     private Tower tower;

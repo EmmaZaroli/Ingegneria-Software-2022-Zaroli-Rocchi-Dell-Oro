@@ -1,7 +1,9 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.exceptions.*;
-import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -16,7 +18,7 @@ import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 //TODO remove this generic...
-public class GameController<T> implements Observer<T> {
+public class GameController implements Observer<Message> {
     protected Game game;
     protected TableController tableController;
 
@@ -34,6 +36,10 @@ public class GameController<T> implements Observer<T> {
         this.game = new Game(players);
         this.tableController = new TableController(game.getTable());
     }
+
+    /*public String[] getPlayersNames(){
+        return Arrays.stream(game.getPlayers()).map(player -> player.getNickname()).toArray(String[]::new);
+    }*/
 
     //TODO move away from here. The game controller controls ONLY the game
     // starts the game thread
@@ -55,8 +61,7 @@ public class GameController<T> implements Observer<T> {
 
 
     @Override
-    public void update(T m) {
-        Message message = (Message) m;
+    public void update(Message message) {
         try {
             checkMessage(message);
         } catch (WrongPlayerException e) {
@@ -366,7 +371,7 @@ public class GameController<T> implements Observer<T> {
                         return i;
                 }
                 break;
-            case ACTION_END:
+            default:
                 return game.getCurrentPlayer();
         }
         return 0;

@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class PlayerTest extends TestCase {
-    Player player = new Player("nickname", Wizzard.BLUE, Tower.BLACK);
-    ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE);
+    Player player = new Player("nickname", Wizzard.BLUE, Tower.BLACK, 2);
+    ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE, 3);
 
     @Test
-    void StandardPlayerTest() {
+    void createStandardPlayer() {
         Assertions.assertEquals("nickname", player.getNickname());
         Assertions.assertEquals(Wizzard.BLUE, player.getWizzard());
         player.togglePlayerTurn();
@@ -22,7 +22,7 @@ class PlayerTest extends TestCase {
     }
 
     @Test
-    void AssistantCards() {
+    void createAssistantCards() {
         for (int i = 0; i < 10; i++) {
             System.out.println(player.getAssistant(i).value() + " " + player.getAssistant(i).motherNatureMovement());
         }
@@ -36,7 +36,7 @@ class PlayerTest extends TestCase {
     }
 
     @Test
-    void ExpertPlayer() {
+    void createExpertPlayer() {
         Assertions.assertEquals(1, expertPlayer.getCoins());
         expertPlayer.addCoin();
         Assertions.assertEquals(2, expertPlayer.getCoins());

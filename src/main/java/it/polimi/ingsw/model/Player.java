@@ -31,29 +31,28 @@ public class Player extends Observable<Serializable> implements Serializable {
      * @param wizzard  the wizzard's type
      * @param tower    the tower's color
      */
-    public Player(String nickname, Wizzard wizzard, Tower tower) {
-        this(nickname, wizzard, tower, false);
+    public Player(String nickname, Wizzard wizzard, Tower tower, int numberOfPlayers) {
+        this(nickname, wizzard, tower, false, numberOfPlayers);
     }
 
     /**
      * Instantiates a new Player, creating the Assistant's deck and the school board
      *
-     * @param nickname     the nickname
-     * @param wizzard      the wizzard
-     * @param tower        the tower
+     * @param nickname        the nickname
+     * @param wizzard         the wizzard
+     * @param tower           the tower
+     * @param numberOfPlayers the number of players of the game this player will be added to
      * @param isPlayerTurn
      */
-    public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn) {
+    public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers) {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.discardPileHead = null;
 
         this.isPlayerTurn = isPlayerTurn;
-        this.schoolBoard = new SchoolBoard(8, tower);
-        //TODO parametrizzare numero di torri
+        this.schoolBoard = new SchoolBoard(numberOfPlayers == 2 ? 8 : 6, tower);
         this.assistantDeck = new LinkedList<>();
         for (int i = 0; i < 10; i++) {
-            //TODO parametrizzare il numero di carte
             this.assistantDeck.add(new AssistantCard(i + 1, ((i / 2) + 1)));
         }
     }

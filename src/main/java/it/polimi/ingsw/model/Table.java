@@ -6,14 +6,12 @@ import it.polimi.ingsw.utils.RandomHelper;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.lang.invoke.WrongMethodTypeException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class Table implements Serializable {
-
+    //TODO change int playersNumber with PlayersNumber
     @Serial
     private static final long serialVersionUID = 2L;
 
@@ -37,7 +35,7 @@ public class Table implements Serializable {
         initialized.addAll(PawnColor.getValidValues());
         initialized.addAll(PawnColor.getValidValues());
         for (int i = 0; i < 12; i++) {
-            if ((Math.abs(i - initialPosition) != 6) && !(islandWithMotherNature == i)) {
+            if ((Math.abs(i - initialPosition) != 6) && (islandWithMotherNature != i)) {
                 int pawnColor = random.getInt(initialized.size());
                 islandCards.get(i).movePawnOnIsland(initialized.get(pawnColor));
                 initialized.remove(pawnColor);

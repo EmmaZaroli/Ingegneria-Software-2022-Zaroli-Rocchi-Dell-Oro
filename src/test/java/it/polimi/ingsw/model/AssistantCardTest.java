@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class AssistantCardTest extends TestCase {
+class AssistantCardTest {
 
     @Test
     void equalCards() {

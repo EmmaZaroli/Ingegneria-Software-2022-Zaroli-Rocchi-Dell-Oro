@@ -10,7 +10,7 @@ class GameParametersTest extends TestCase {
     ExpertGameParameters expertGameParameters = new ExpertGameParameters();
 
     @Test
-    void Testing() {
+    void initValues() {
         gameParameters.setInitialStudentsCount(10);
         gameParameters.setInitialTowersCount(8);
         gameParameters.setStudentsToDraw(3);
@@ -22,7 +22,7 @@ class GameParametersTest extends TestCase {
     }
 
     @Test
-    void expertTesting() {
+    void expertInitValues() {
         expertGameParameters.setInitialStudentsCount(10);
         expertGameParameters.setMotherNatureExtraMovements(1);
         expertGameParameters.setTowersCountInInfluence(true);

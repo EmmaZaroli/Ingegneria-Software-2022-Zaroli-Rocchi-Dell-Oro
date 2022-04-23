@@ -17,7 +17,7 @@ import java.util.*;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 
-public class ExpertGameController<T> extends GameController<T> {
+public class ExpertGameController extends GameController {
 
     public ExpertGameController(ExpertGame game, ExpertTableController tableController) {
         super(game, tableController);
@@ -45,7 +45,6 @@ public class ExpertGameController<T> extends GameController<T> {
     private void drawCharactersCards() {
         int numberCard;
         List<Character> characters = new ArrayList<>(Arrays.asList(Character.values()));
-        //TODO parameterize 3
         CharacterCard[] cards = new CharacterCard[3];
         Effect[] effects = new Effect[3];
         for (int i = 0; i < 3; i++) {
@@ -59,19 +58,18 @@ public class ExpertGameController<T> extends GameController<T> {
     }
 
     @Override
-    public void update(T m) {
-        Message message = (Message) m;
+    public void update(Message message) {
         if (message.getType().equals(MessageType.CHARACTER_CARD)) {
             CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
-            Pair pair = isCardOnTable(card);
+            Pair<Boolean, Integer> pair = isCardOnTable(card);
             if (!(boolean) pair.first()) {
                 game.throwException(new IllegalCharacterException());
             }
-            int index = (int) pair.second();
+            int index = pair.second();
             canActivateCharacterAbility(index);
             activateCharacterAbility(index);
         } else {
-            super.update(m);
+            super.update(message);
         }
     }
 
@@ -96,13 +94,13 @@ public class ExpertGameController<T> extends GameController<T> {
      * @param card the card that the player selected
      * @return Pair (true,cardIndex) if the card is on the table, (false,null) otherwise
      */
-    private Pair isCardOnTable(CharacterCard card) {
+    private Pair<Boolean, Integer> isCardOnTable(CharacterCard card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
-                return new Pair(true, i);
+                return new Pair<>(true, i);
             }
         }
-        return new Pair(false, null);
+        return new Pair<>(false, null);
     }
 
     //TODO do something about this function
