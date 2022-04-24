@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.applications.MessagesHelper;
+import it.polimi.ingsw.network.messages.GametypeRequestMessage;
 import it.polimi.ingsw.network.messages.Message;
 
 import java.io.IOException;
@@ -55,6 +56,18 @@ public class Endpoint {
 
     public Message syncronizeRecive() throws IOException, ClassNotFoundException {
         return (Message) in.readObject();
+    }
+
+    public Message syncronizeRecive(Class messageClass){
+        Message message = null;//TODO is this ok?
+        do{
+            try {
+                message = syncronizeRecive();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }while (!(messageClass.isInstance(message)));
+        return message;
     }
 
     private void handleIncomingMessage() {
