@@ -7,10 +7,7 @@ import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.messages.GametypeResponseMessage;
-import it.polimi.ingsw.network.messages.Message;
-import it.polimi.ingsw.network.messages.MessageType;
-import it.polimi.ingsw.network.messages.NicknameResponseMessage;
+import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -43,7 +40,7 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         NicknameStatus nicknameStatus;
         do{
             endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
-            //TODO listen for user to propose a nickname
+            nickname = ((NicknameProposalMessage) endpoint.syncronizeRecive(NicknameProposalMessage.class)).getNickname();
             nicknameStatus = server.checkNicknameStatus(nickname);
         }while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER);
 
@@ -68,9 +65,9 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
     private void connectPlayer(String nickname){
         User user = new User(nickname, endpoint);
 
-        //TODO listen for game type (GameMode and PlayersNumber)
-        GameMode selectedGameMode = GameMode.NORMAL_MODE;
-        PlayersNumber selectedPlayersNumber = PlayersNumber.TWO;
+        GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.syncronizeRecive(GametypeRequestMessage.class);
+        GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
+        PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
 
         //TODO is the way this exception is managed ok?
         try {
