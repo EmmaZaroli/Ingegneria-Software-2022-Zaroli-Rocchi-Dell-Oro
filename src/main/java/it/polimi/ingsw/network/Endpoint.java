@@ -53,6 +53,10 @@ public class Endpoint {
         receiverThread.start();
     }
 
+    public Message syncronizeRecive() throws IOException, ClassNotFoundException {
+        return (Message) in.readObject();
+    }
+
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
