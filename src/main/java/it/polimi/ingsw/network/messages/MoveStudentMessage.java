@@ -8,12 +8,12 @@ public class MoveStudentMessage extends Message {
     private final PawnColor studentColor;
     private IslandCard islandCard;
 
-    protected MoveStudentMessage(String nickname, MessageType messageType, PawnColor color) {
+    public MoveStudentMessage(String nickname, MessageType messageType, PawnColor color) {
         super(nickname, messageType);
         this.studentColor = color;
     }
 
-    public void setCloudTile(IslandCard island) {
+    public void setIslandCard(IslandCard island) {
         this.islandCard = island;
     }
 
