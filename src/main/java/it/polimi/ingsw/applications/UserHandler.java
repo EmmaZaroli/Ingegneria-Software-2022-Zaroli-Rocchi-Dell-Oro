@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
@@ -60,21 +59,5 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
 
     private void reconnectPlayer(String nickname /*or maybe User*/) {
         server.reconnectPlayer(nickname, endpoint);
-    }
-
-    private void connectPlayer(String nickname){
-        User user = new User(nickname, endpoint);
-
-        GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.syncronizeRecive(GametypeRequestMessage.class);
-        GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
-        PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
-
-        //TODO is the way this exception is managed ok?
-        try {
-            enqueue(user, selectedGameMode, selectedPlayersNumber);
-            endpoint.sendMessage(new GametypeResponseMessage(nickname, MessageType.GAMETYPE_RESPONSE, true));
-        } catch (InvalidPlayerNumberException e) {
-            e.printStackTrace();
-        }
     }
 }
