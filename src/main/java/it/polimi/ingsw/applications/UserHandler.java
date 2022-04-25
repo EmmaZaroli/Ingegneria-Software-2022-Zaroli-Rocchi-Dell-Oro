@@ -6,8 +6,7 @@ import it.polimi.ingsw.controller.enums.PlayersNumber;
 import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -36,29 +35,21 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
 
     @Override
     public void run() {
-        //TODO ask for nickname
         String nickname = "";
-        NicknameStatus nicknameStatus = server.checkNicknameStatus(nickname);
+        NicknameStatus nicknameStatus;
+        do{
+            endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
+            nickname = ((NicknameProposalMessage) endpoint.syncronizeRecive(NicknameProposalMessage.class)).getNickname();
+            nicknameStatus = server.checkNicknameStatus(nickname);
+        }while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER);
 
-        if (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER) {
-            //TODO re-ask for nickname
-        } else {
-            if (nicknameStatus == NicknameStatus.FROM_DISCONNECTED_PLAYER) {
-                reconnectPlayer(nickname);
-            }
+        if (nicknameStatus == NicknameStatus.FROM_DISCONNECTED_PLAYER) {
+            endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_DISCONNECTED_PLAYER));
+            reconnectPlayer(nickname);
         }
-
-        User user = new User(nickname, endpoint);
-
-        //TODO ask for game type (GameMode and PlayersNumber)
-        GameMode selectedGameMode = GameMode.NORMAL_MODE;
-        PlayersNumber selectedPlayersNumber = PlayersNumber.TWO;
-
-        //TODO manage this exception
-        try {
-            enqueue(user, selectedGameMode, selectedPlayersNumber);
-        } catch (InvalidPlayerNumberException e) {
-            e.printStackTrace();
+        else {
+            endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
+            connectPlayer(nickname);
         }
     }
 
