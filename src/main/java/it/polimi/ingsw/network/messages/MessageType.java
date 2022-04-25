@@ -16,5 +16,9 @@ public enum MessageType {
     GAME_OVER,
     DRAW,
     ERROR,
-    COINS
+    COINS,
+    NICKNAME_PROPOSAL,
+    NICKNAME_RESPONSE,
+    GAMETYPE_REQUEST,
+    GAMETYPE_RESPONSE
 }
