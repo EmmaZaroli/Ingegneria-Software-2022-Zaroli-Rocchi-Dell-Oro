@@ -63,8 +63,6 @@ public class GameHandlerBuilder {
 
     private Game buildGameModel() {
         return switch (gameMode) {
-//            case NORMAL_MODE -> buildGame(GameController.class, Player.class, Table.class, TableController.class, GameParameters.class, Game.class);
-//            case EXPERT_MODE -> buildGame(ExpertGameController.class, ExpertPlayer.class, ExpertTable.class, ExpertTableController.class, ExpertGameParameters.class, ExpertGame.class);
             case NORMAL_MODE -> buildNormalGameModel();
             case EXPERT_MODE -> buildExpertGameModel();
         };
@@ -98,14 +96,11 @@ public class GameHandlerBuilder {
 
     private GameController buildGameController(Game gameModel) {
         return switch (gameMode) {
-//            case NORMAL_MODE -> buildGame(GameController.class, Player.class, Table.class, TableController.class, GameParameters.class, Game.class);
-//            case EXPERT_MODE -> buildGame(ExpertGameController.class, ExpertPlayer.class, ExpertTable.class, ExpertTableController.class, ExpertGameParameters.class, ExpertGame.class);
             case NORMAL_MODE -> buildNormalGameController(gameModel);
             case EXPERT_MODE -> buildExpertGameController(gameModel);
         };
     }
 
-    //TODO if the following works, remove this
     private GameController buildNormalGameController(Game gameModel) {
         TableController tableController = new TableController(gameModel.getTable());
 
@@ -117,37 +112,6 @@ public class GameHandlerBuilder {
 
         return new ExpertGameController((ExpertGame) gameModel, tableController);
     }
-
-    //TODO it will probably crash
-//    private <TReturn extends GameController,
-//            TPlayer extends Player,
-//            TTable extends Table,
-//            TTableController extends TableController,
-//            TParameters extends GameParameters,
-//            TGame extends Game>
-//    TReturn buildGame(
-//            Class returnType,
-//            Class playerType,
-//            Class tableType,
-//            Class tableControllerType,
-//            Class parametersType,
-//            Class gameType) throws Exception{
-//
-//        TPlayer[] players = (TPlayer[]) Array.newInstance(playerType, playersNames.size());
-//        for(int i = 0; i < players.length; i++){
-//            players[i] = (TPlayer) returnType.getConstructor().newInstance(playersNames.get(i), Wizzard.values()[i], Tower.values()[i]);
-//        }
-//
-//        TTable table = (TTable) tableType.getConstructor().newInstance(playersNames.size());
-//
-//        TTableController tableController = (TTableController) tableControllerType.getConstructor().newInstance(table);
-//
-//        TParameters parameters = (TParameters) parametersType.getConstructor().newInstance();
-//
-//        TGame game = (TGame) gameType.getConstructor().newInstance(players, table, parameters);
-//
-//        return (TReturn) returnType.getConstructor().newInstance(game, tableController);
-//    }
 
     private VirtualView[] buildVirtualViews(Game gameModel) {
         VirtualView[] virtualViews = new VirtualView[playersNumber.getPlayersNumber()];
