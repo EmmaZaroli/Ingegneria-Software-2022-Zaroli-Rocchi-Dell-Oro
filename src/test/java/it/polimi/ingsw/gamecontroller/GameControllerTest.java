@@ -1,7 +1,5 @@
-package it.polimi.ingsw.controller;
+package it.polimi.ingsw.gamecontroller;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.controller.TableController;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.IslandCard;
@@ -12,10 +10,6 @@ import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 import it.polimi.ingsw.network.messages.*;
 import junit.framework.TestCase;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.internal.MethodSorter;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -83,7 +77,7 @@ class GameControllerTest extends TestCase {
         MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
         gameController.update(WrongMessage);
         //Correct Message
-        IslandCard island = tableController.table.getIslands().get(0);
+        IslandCard island = game.getTable().getIslands().get(0);
         MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
         message1.setIslandCard(island);
         gameController.update(message1);
