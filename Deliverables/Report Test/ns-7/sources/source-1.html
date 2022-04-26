@@ -1,81 +1,79 @@
-
-
-
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
-  <title>Coverage Report > DataDumper</title>
-  <style type="text/css">
+    <title>Coverage Report > DataDumper</title>
+    <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/highlight-idea.css";
-  </style>
-  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+
+    </style>
+    <script type="text/javascript" src="../../js/highlight.pack.js"></script>
 </head>
 
 <body>
 <div class="content">
-<div class="breadCrumbs">
-Current scope:     <a href="../../index.html">all classes</a>
-    <span class="separator">|</span>
-    <a href="../index.html">it.polimi.ingsw.persistency</a>
-</div>
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">it.polimi.ingsw.persistency</a>
+    </div>
 
-<h1>Coverage Summary for Class: DataDumper (it.polimi.ingsw.persistency)</h1>
+    <h1>Coverage Summary for Class: DataDumper (it.polimi.ingsw.persistency)</h1>
 
-<table class="coverageStats">
-<tr>
-  <th class="name">Class</th>
-<th class="coverageStat 
+    <table class="coverageStats">
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
 ">
-  Class, %
-</th>
-<th class="coverageStat 
+                Class, %
+            </th>
+            <th class="coverageStat
 ">
-  Method, %
-</th>
-<th class="coverageStat 
+                Method, %
+            </th>
+            <th class="coverageStat
 ">
-  Line, %
-</th>
-</tr>
-<tr>
-  <td class="name">DataDumper</td>
-<td class="coverageStat">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">DataDumper</td>
+            <td class="coverageStat">
   <span class="percent">
     0%
   </span>
-  <span class="absValue">
+                <span class="absValue">
     (0/1)
   </span>
-</td>
-<td class="coverageStat">
+            </td>
+            <td class="coverageStat">
   <span class="percent">
     0%
   </span>
-  <span class="absValue">
+                <span class="absValue">
     (0/8)
   </span>
-</td>
-<td class="coverageStat">
+            </td>
+            <td class="coverageStat">
   <span class="percent">
     0%
   </span>
-  <span class="absValue">
+                <span class="absValue">
     (0/40)
   </span>
-</td>
-</tr>
+            </td>
+        </tr>
 
-</table>
+    </table>
 
-<br/>
-<br/>
+    <br/>
+    <br/>
 
 
-<pre>
+    <pre>
 <div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.persistency;
 <i class="no-highlight">2</i>&nbsp;
-<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.controller.GameController;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.gamecontroller.GameController;
 <i class="no-highlight">4</i>&nbsp;
 <i class="no-highlight">5</i>&nbsp;import java.io.*;
 <i class="no-highlight">6</i>&nbsp;import java.nio.file.Files;
@@ -128,7 +126,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">53</i>&nbsp;     * @param gameId The ID of the game to remove
 <i class="no-highlight">54</i>&nbsp;     */
 <i class="no-highlight">55</i>&nbsp;    public void removeGameFromMemory(UUID gameId) {
-<b class="nc"><i class="no-highlight">56</i>&nbsp;        Path filePath = Paths.get(gameId + SERIALIZED_FILE_FORMAT);</b>
+<b class="nc"><i
+        class="no-highlight">56</i>&nbsp;        Path filePath = Paths.get(gameId + SERIALIZED_FILE_FORMAT);</b>
 <i class="no-highlight">57</i>&nbsp;        try {
 <b class="nc"><i class="no-highlight">58</i>&nbsp;            Files.delete(filePath);</b>
 <b class="nc"><i class="no-highlight">59</i>&nbsp;        }  catch(IOException e) {</b>
@@ -161,7 +160,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">86</i>&nbsp;    public List&lt;GameController&gt; getAllGames() {
 <b class="nc"><i class="no-highlight">87</i>&nbsp;        File folder = new File(&quot;.&quot;);</b>
 <b class="nc"><i class="no-highlight">88</i>&nbsp;        return Arrays.stream(folder.list())</b>
-<b class="nc"><i class="no-highlight">89</i>&nbsp;                .filter(x -&gt; x.contains(SERIALIZED_FILE_FORMAT))</b>
+<b class="nc"><i
+        class="no-highlight">89</i>&nbsp;                .filter(x -&gt; x.contains(SERIALIZED_FILE_FORMAT))</b>
 <b class="nc"><i class="no-highlight">90</i>&nbsp;                .map(this::readAndDeserialize)</b>
 <b class="nc"><i class="no-highlight">91</i>&nbsp;                .toList();</b>
 <i class="no-highlight">92</i>&nbsp;    }
@@ -204,10 +204,11 @@ Current scope:     <a href="../../index.html">all classes</a>
         }
     }
 })();
+
 </script>
 
 <div class="footer">
-    
+
     <div style="float:right;">generated on 2022-04-03 17:21</div>
 </div>
 </body>

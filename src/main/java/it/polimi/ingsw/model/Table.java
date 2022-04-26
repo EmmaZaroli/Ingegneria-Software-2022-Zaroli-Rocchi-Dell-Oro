@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.exceptions.WrongUUIDException;
+import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.RandomHelper;
 
