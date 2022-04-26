@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 public class ExpertGame extends Game {
 
     private CharacterCard[] characterCards;
-    private Effect[] effects;
+
 
     public ExpertGame(ExpertPlayer[] players, ExpertTable table, ExpertGameParameters parameters) {
         super(players, table, parameters);
@@ -25,10 +25,6 @@ public class ExpertGame extends Game {
         return characterCards.clone();
     }
 
-    public Effect[] getEffects() {
-        return effects.clone();
-    }
-
     @Override
     public ExpertPlayer[] getPlayers() {
         return (ExpertPlayer[]) super.getPlayers();
@@ -42,8 +38,5 @@ public class ExpertGame extends Game {
     public void addCharacterCards(CharacterCard[] cards) {
         this.characterCards = cards;
     }
-
-    public void addEffects(Effect[] effects) {
-        this.effects = effects;
-    }
+    
 }

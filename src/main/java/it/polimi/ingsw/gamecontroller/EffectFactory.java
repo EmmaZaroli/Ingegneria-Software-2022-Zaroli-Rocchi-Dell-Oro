@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gamecontroller;
 
-import it.polimi.ingsw.model.Effect;
 import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;

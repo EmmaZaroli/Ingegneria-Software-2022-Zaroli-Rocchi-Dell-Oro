@@ -18,6 +18,7 @@ import java.util.*;
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 
 public class ExpertGameController extends GameController {
+    private Effect[] effects;
 
     public ExpertGameController(ExpertGame game, ExpertTableController tableController) {
         super(game, tableController);
@@ -42,6 +43,14 @@ public class ExpertGameController extends GameController {
         }
     }
 
+    public Effect[] getEffects() {
+        return effects.clone();
+    }
+
+    public void addEffects(Effect[] effects) {
+        this.effects = effects;
+    }
+
     private void drawCharactersCards() {
         int numberCard;
         List<Character> characters = new ArrayList<>(Arrays.asList(Character.values()));
@@ -54,7 +63,7 @@ public class ExpertGameController extends GameController {
             characters.remove(characters.get(numberCard));
         }
         getGame().addCharacterCards(cards);
-        getGame().addEffects(effects);
+        addEffects(effects);
     }
 
     @Override
@@ -125,16 +134,16 @@ public class ExpertGameController extends GameController {
     }
 
     private void activateSetupEffect(int effectIndex) {
-        ((SetupEffect) getGame().getEffects()[effectIndex])
+        ((SetupEffect) getEffects()[effectIndex])
                 .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex) {
-        ((StandardEffect) getGame().getEffects()[effectIndex]).activateEffect(getGameParameters());
+        ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());
     }
 
     private void activateReverseEffect(int effectIndex) {
-        ((StandardEffect) getGame().getEffects()[effectIndex]).reverseEffect(getGameParameters());
+        ((StandardEffect) getEffects()[effectIndex]).reverseEffect(getGameParameters());
     }
 
     private void effect1(CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
@@ -165,10 +174,9 @@ public class ExpertGameController extends GameController {
         character.addStudent(tableController.drawStudents(1));
     }
 
-    //TODO call at the end of the turn
     //activate reverseEffect for all card, should not generate problems
     public void reverseEffect() {
-        for (Effect e : getGame().getEffects()) {
+        for (Effect e : getEffects()) {
             if (e instanceof StandardEffect effect)
                 effect.reverseEffect(getGameParameters());
         }
