@@ -4,9 +4,11 @@ import it.polimi.ingsw.applications.enums.NicknameStatus;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.messages.GameStartingMessage;
+import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.view.VirtualView;
 
-public class GameHandler extends Thread {
+public class GameHandler {
     GameController gameController;
     Game gameModel; //this is superfluous
     VirtualView[] virtualViews;
@@ -19,9 +21,10 @@ public class GameHandler extends Thread {
         this.virtualViews = virtualViews;
     }
 
-    @Override
-    public void run() {
-
+    public void start(){
+        for (User user : users){
+            user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING));
+        }
     }
 
     public NicknameStatus checkNicknameStatus(String nickname) {

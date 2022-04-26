@@ -37,17 +37,16 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
     public void run() {
         String nickname = "";
         NicknameStatus nicknameStatus;
-        do{
+        do {
             endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
             nickname = ((NicknameProposalMessage) endpoint.syncronizeRecive(NicknameProposalMessage.class)).getNickname();
             nicknameStatus = server.checkNicknameStatus(nickname);
-        }while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER);
+        } while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER);
 
         if (nicknameStatus == NicknameStatus.FROM_DISCONNECTED_PLAYER) {
             endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_DISCONNECTED_PLAYER));
             reconnectPlayer(nickname);
-        }
-        else {
+        } else {
             endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
             connectPlayer(nickname);
         }
@@ -59,5 +58,21 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
 
     private void reconnectPlayer(String nickname /*or maybe User*/) {
         server.reconnectPlayer(nickname, endpoint);
+    }
+
+    private void connectPlayer(String nickname) {
+        User user = new User(nickname, endpoint);
+
+        GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.syncronizeRecive(GametypeRequestMessage.class);
+        GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
+        PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
+
+        //TODO is the way this exception is managed ok?
+        try {
+            enqueue(user, selectedGameMode, selectedPlayersNumber);
+            endpoint.sendMessage(new GametypeResponseMessage(nickname, MessageType.GAME_TYPE_RESPONSE, true));
+        } catch (InvalidPlayerNumberException e) {
+            e.printStackTrace();
+        }
     }
 }

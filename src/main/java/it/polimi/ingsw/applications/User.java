@@ -1,6 +1,7 @@
 package it.polimi.ingsw.applications;
 
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.messages.Message;
 
 public class User {
     private final String nickname;
@@ -34,5 +35,9 @@ public class User {
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public void sendMessage(Message message){
+        endpoint.sendMessage(message);
     }
 }
