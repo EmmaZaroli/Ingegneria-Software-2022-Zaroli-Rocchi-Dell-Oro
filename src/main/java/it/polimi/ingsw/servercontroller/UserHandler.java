@@ -28,6 +28,7 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         this.server = server;
     }
 
+    //TODO  remove from listener
     @Override
     public void onDisconnect() {
         //TODO dispatch to the controller
