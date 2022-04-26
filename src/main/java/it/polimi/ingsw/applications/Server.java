@@ -210,5 +210,6 @@ public class Server {
             GameHandler gh = gameHandler.get();
             gh.reconnectPlayer(nickname, endpoint);
         }
+        //TODO send whole game status
     }
 }
