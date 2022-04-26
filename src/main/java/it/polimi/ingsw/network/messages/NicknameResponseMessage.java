@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.applications.enums.NicknameStatus;
+import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 public class NicknameResponseMessage extends Message {
     private final NicknameStatus nicknameStatus;

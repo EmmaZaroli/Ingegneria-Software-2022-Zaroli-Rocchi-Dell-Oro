@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.applications.MessagesHelper;
-import it.polimi.ingsw.network.messages.GametypeRequestMessage;
+import it.polimi.ingsw.servercontroller.MessagesHelper;
 import it.polimi.ingsw.network.messages.Message;
 
 import java.io.IOException;
@@ -58,15 +57,15 @@ public class Endpoint {
         return (Message) in.readObject();
     }
 
-    public Message syncronizeRecive(Class messageClass){
+    public Message syncronizeRecive(Class messageClass) {
         Message message = null;//TODO is this ok?
-        do{
+        do {
             try {
                 message = syncronizeRecive();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }while (!(messageClass.isInstance(message)));
+        } while (!(messageClass.isInstance(message)));
         return message;
     }
 

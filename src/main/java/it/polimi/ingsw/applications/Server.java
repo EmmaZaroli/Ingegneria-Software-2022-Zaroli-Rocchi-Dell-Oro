@@ -1,9 +1,10 @@
 package it.polimi.ingsw.applications;
 
-import it.polimi.ingsw.applications.enums.NicknameStatus;
-import it.polimi.ingsw.controller.enums.GameMode;
-import it.polimi.ingsw.controller.enums.PlayersNumber;
-import it.polimi.ingsw.controller.exceptions.InvalidPlayerNumberException;
+import it.polimi.ingsw.servercontroller.*;
+import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;

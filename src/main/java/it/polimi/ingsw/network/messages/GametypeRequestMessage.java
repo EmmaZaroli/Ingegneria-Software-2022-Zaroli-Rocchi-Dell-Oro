@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.controller.enums.GameMode;
-import it.polimi.ingsw.controller.enums.PlayersNumber;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 
 public class GametypeRequestMessage extends Message {
     private final GameMode gameMode;
