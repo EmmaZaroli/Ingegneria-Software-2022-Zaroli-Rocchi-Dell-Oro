@@ -8,7 +8,7 @@ import java.util.EnumMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BagTest {
-    
+
     @Test
     void drawAllStudents() {
         EnumMap<PawnColor, Integer> drawnStudents = new EnumMap<>(PawnColor.class);

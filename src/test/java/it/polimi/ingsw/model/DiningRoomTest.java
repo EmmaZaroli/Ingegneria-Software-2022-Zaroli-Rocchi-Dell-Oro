@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class DiningRoomTest extends TestCase {
-    
+
     DiningRoom diningRoom = new DiningRoom();
 
     @Test

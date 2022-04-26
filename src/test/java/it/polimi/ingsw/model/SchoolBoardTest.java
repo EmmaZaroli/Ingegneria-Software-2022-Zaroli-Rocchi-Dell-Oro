@@ -54,7 +54,7 @@ class SchoolBoardTest extends TestCase {
         schoolBoard.removeProfessor(PawnColor.RED);
         Assertions.assertEquals(0, schoolBoard.countProfessors());
     }
-    
+
     @Test
     void movingTowers() {
         schoolBoard.addTowers(1);

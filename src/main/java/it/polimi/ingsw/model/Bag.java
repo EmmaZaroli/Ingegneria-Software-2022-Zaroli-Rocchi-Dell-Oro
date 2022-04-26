@@ -25,7 +25,7 @@ public class Bag implements Serializable {
     public Bag() {
         this.students = new EnumMap<>(PawnColor.class);
         for (PawnColor pc : PawnColor.values()) {
-            if(pc != PawnColor.NONE) {
+            if (pc != PawnColor.NONE) {
                 students.put(pc, PAWNS_PER_COLOR);
                 this.pawnCount += PAWNS_PER_COLOR;
             }
@@ -34,11 +34,12 @@ public class Bag implements Serializable {
 
     /**
      * Draws a student and removes it from the bag
+     *
      * @return The drawn student
      */
     public PawnColor drawStudent() {
         RandomHelper randomHelper = RandomHelper.getInstance();
-        if(pawnCount > 0) {
+        if (pawnCount > 0) {
             //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
             int random = randomHelper.getInt(pawnCount) + 1;
             int pos = 0;
@@ -65,9 +66,9 @@ public class Bag implements Serializable {
     /**
      * @return True if the bag is empty
      */
-    public boolean isEmpty(){
-        for (Map.Entry<PawnColor, Integer> e : students.entrySet()){
-            if(e.getValue() > 0)
+    public boolean isEmpty() {
+        for (Map.Entry<PawnColor, Integer> e : students.entrySet()) {
+            if (e.getValue() > 0)
                 return false;
         }
         return true;

@@ -8,7 +8,8 @@ import it.polimi.ingsw.model.enums.Character;
  */
 public class CharacterCardFactory {
     //Prevent this class to be instantiated
-    private CharacterCardFactory() {}
+    private CharacterCardFactory() {
+    }
 
     /**
      * Returns the card corresponding to the character

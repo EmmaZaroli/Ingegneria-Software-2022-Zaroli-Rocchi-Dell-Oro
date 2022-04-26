@@ -51,10 +51,10 @@ public class ExpertGameParameters extends GameParameters {
         return colorWithNoInfluence;
     }
 
-    public boolean hasAlreadyActivateCharacterCard(){
+    public boolean hasAlreadyActivateCharacterCard() {
         return alreadyActivateCharacterCard;
     }
-  
+
     /**
      * Sets take professor even if same students.
      *
@@ -100,7 +100,7 @@ public class ExpertGameParameters extends GameParameters {
         this.colorWithNoInfluence = colorWithNoInfluence;
     }
 
-    public void setAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard){
+    public void setAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard) {
         this.alreadyActivateCharacterCard = alreadyActivateCharacterCard;
     }
 }

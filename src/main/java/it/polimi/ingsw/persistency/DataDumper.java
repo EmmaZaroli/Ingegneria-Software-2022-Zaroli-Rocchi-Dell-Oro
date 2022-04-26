@@ -25,6 +25,7 @@ public class DataDumper {
 
     /**
      * Returns the instance for this context
+     *
      * @return The Data dumper
      */
     public static DataDumper getInstance() {
@@ -33,6 +34,7 @@ public class DataDumper {
 
     /**
      * Serializes the Game controller and writes it on a file
+     *
      * @param game The game to serialize
      */
     public void saveGame(Game game) {
@@ -42,7 +44,7 @@ public class DataDumper {
                 objectOutputStream.writeObject(game);
                 objectOutputStream.close();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             //In case of error there's not much to do...
             this.logger.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -50,19 +52,21 @@ public class DataDumper {
 
     /**
      * Removes a game from the list of saved games
+     *
      * @param gameId The ID of the game to remove
      */
     public void removeGameFromMemory(UUID gameId) {
         Path filePath = Paths.get(gameId + SERIALIZED_FILE_FORMAT);
         try {
             Files.delete(filePath);
-        }  catch(IOException e) {
+        } catch (IOException e) {
             this.logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
     /**
      * Reads and deserializes a Game controller from persistent memory
+     *
      * @param gameId The identifier of the requested game
      * @return The deserialized game
      */
@@ -71,7 +75,7 @@ public class DataDumper {
         Optional<String> fileName = Arrays.stream(folder.list())
                 .filter(x -> x.contains(gameId.toString() + SERIALIZED_FILE_FORMAT))
                 .findAny();
-        if(fileName.isEmpty()) {
+        if (fileName.isEmpty()) {
             this.logger.log(Level.SEVERE, "No game found with id {0}", gameId);
             throw new GameNotFoundException();
         }
@@ -81,6 +85,7 @@ public class DataDumper {
 
     /**
      * Returns a list containing all the games saved on persistent memory
+     *
      * @return The list of all deserialized games
      */
     public List<Game> getAllGames() {
@@ -100,7 +105,7 @@ public class DataDumper {
                 gameController = (Game) objectInputStream.readObject();
                 objectInputStream.close();
             }
-        }  catch(IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             this.logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
