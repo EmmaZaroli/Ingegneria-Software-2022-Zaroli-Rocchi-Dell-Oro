@@ -10,8 +10,11 @@ import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserHandler implements Runnable, DisconnectionListener, MessageListener {
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Endpoint endpoint;
     private final Server server;
 
@@ -67,12 +70,11 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
         PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
 
-        //TODO is the way this exception is managed ok?
         try {
             enqueue(user, selectedGameMode, selectedPlayersNumber);
             endpoint.sendMessage(new GametypeResponseMessage(nickname, MessageType.GAME_TYPE_RESPONSE, true));
         } catch (InvalidPlayerNumberException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
         }
     }
 }
