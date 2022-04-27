@@ -9,10 +9,20 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cli extends View {
     private final PrintStream out;
     private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    private PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
 
     public Cli(Network network) {
         out = System.out;
@@ -87,6 +97,7 @@ public class Cli extends View {
         out.println("How many players are you going to play with? [2/3] ");
         playersNumber = Integer.parseInt(readLine());
         //TODO check if the number is 2 or 3
+        setNumberOfPlayer(playersNumber);
         listeners.firePropertyChange("gameSettings", gameMode, playersNumber);
     }
 
@@ -132,8 +143,24 @@ public class Cli extends View {
         listeners.firePropertyChange("assistantCard", true, deck.get(card));
     }
 
+    public void updateAssistantCardPlayed(AssistantCard card, String player) {
+        if (!player.equals(getNickname())) {
+            out.println(player + " has played ");
+        } else out.println("you have played ");
+        out.println("   _____     ");
+        out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
+        out.println("  |     |    ");
+        out.println("  |_____|    ");
+
+
+    }
+
     public void askMotherNatureSteps() {
 
+    }
+
+    public void updateCurrentPlayer(String otherPlayer) {
+        out.println("it's " + otherPlayer + "turn");
     }
 
     public void updateCloud(CloudTile cloud) {
@@ -144,8 +171,22 @@ public class Cli extends View {
 
     }
 
-    public void updateSchoolBoard(SchoolBoard schoolBoard) {
+    public void updateSchoolBoard(String player, SchoolBoard schoolBoard) {
+        out.println(player + " board:");
+        boardPrinter.printBoard(schoolBoard);
+    }
 
+    public void win() {
+        out.println("Well done, you won the game!");
+    }
+
+    public void lose() {
+        out.println("Game ended, you lost!");
+    }
+
+    //TODO maybe send who tied
+    public void draw() {
+        out.println("The game ended in a tie! ");
     }
 
     /**
@@ -158,7 +199,7 @@ public class Cli extends View {
     }
 
     public void error() {
-        out.println();
+        out.println("");
     }
 
 
