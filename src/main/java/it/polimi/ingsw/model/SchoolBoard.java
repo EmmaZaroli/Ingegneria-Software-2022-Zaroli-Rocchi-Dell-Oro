@@ -190,4 +190,11 @@ public class SchoolBoard extends Observable<SchoolBoard> implements Serializable
     public boolean isStudentInEntrance(PawnColor color) {
         return entrance.contains(color);
     }
+
+    /**
+     * @return the students in the entrance
+     */
+    public List<PawnColor> getEntrance() {
+        return this.entrance;
+    }
 }
