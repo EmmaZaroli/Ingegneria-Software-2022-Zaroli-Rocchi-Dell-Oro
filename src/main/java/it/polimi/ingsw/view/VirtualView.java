@@ -7,31 +7,23 @@ import it.polimi.ingsw.network.messages.ChangedPhaseMessage;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.observer.Observer;
+import it.polimi.ingsw.servercontroller.User;
 
 public class VirtualView<T> extends Observable<T> implements Observer<T> {
-    /**
-     * The user owning the view.
-     */
-    private final String nickname;
-
-    /**
-     * The connection to the client.
-     */
-    private final Endpoint clientHandler;
+    private final User user;
     private final Game game;
 
-    public VirtualView(Endpoint clientHandler, String nickname, Game game) {
-        this.nickname = nickname;
-        this.clientHandler = clientHandler;
+    public VirtualView(User user, Game game) {
+        this.user = user;
         this.game = game;
     }
 
     public Endpoint getClientHandler() {
-        return clientHandler;
+        return user.getEndpoint();
     }
 
     public String getPlayerNickname() {
-        return nickname;
+        return user.getNickname();
     }
 
     /**
@@ -57,31 +49,31 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
         // sent to every player
         if (message.getClass().equals(GamePhase.class)) {
             switch (game.getGamePhase()) {
-                case PLANNING -> clientHandler.sendMessage(new GetDeckMessage(currentPlayer, MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
-                case ACTION_MOVE_STUDENTS -> clientHandler.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.ACTION_MOVE_STUDENTS, "move" + game.getParameters().getStudentsToMove() + "students"));
-                case ACTION_MOVE_MOTHER_NATURE -> clientHandler.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.ACTION_MOVE_MOTHER_NATURE, ""));
-                case ACTION_CHOOSE_CLOUD -> clientHandler.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.ACTION_CHOOSE_CLOUD, ""));
+                case PLANNING -> user.sendMessage(new GetDeckMessage(currentPlayer, MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
+                case ACTION_MOVE_STUDENTS -> user.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.ACTION_MOVE_STUDENTS, "move" + game.getParameters().getStudentsToMove() + "students"));
+                case ACTION_MOVE_MOTHER_NATURE -> user.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.ACTION_MOVE_MOTHER_NATURE, ""));
+                case ACTION_CHOOSE_CLOUD -> user.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.ACTION_CHOOSE_CLOUD, ""));
             }
         }
 
         if (message.getClass().equals(Player.class)) {
-            clientHandler.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.CHANGE_PLAYER, ""));
+            user.sendMessage(new ChangedPhaseMessage(currentPlayer, MessageType.CHANGE_PLAYER, ""));
         }
 
         if (message.getClass().equals(CloudTile.class)) {
-            clientHandler.sendMessage(new CloudMessage("server", MessageType.CLOUD, (CloudTile) message));
+            user.sendMessage(new CloudMessage("server", MessageType.CLOUD, (CloudTile) message));
         }
 
         if (message.getClass().equals(IslandCard.class)) {
-            clientHandler.sendMessage(new IslandMessage(MessageType.ISLAND, (IslandCard) message));
+            user.sendMessage(new IslandMessage(MessageType.ISLAND, (IslandCard) message));
         }
 
         if (message.getClass().equals(AssistantCard.class)) {
-            clientHandler.sendMessage(new AssistantPlayedMessage(currentPlayer, MessageType.ASSISTANT_CARD, (AssistantCard) message));
+            user.sendMessage(new AssistantPlayedMessage(currentPlayer, MessageType.ASSISTANT_CARD, (AssistantCard) message));
         }
 
         if (message.getClass().equals(CharacterCard.class)) {
-            clientHandler.sendMessage(new CharacterCardMessage(currentPlayer, MessageType.CHARACTER_CARD, (CharacterCard) message));
+            user.sendMessage(new CharacterCardMessage(currentPlayer, MessageType.CHARACTER_CARD, (CharacterCard) message));
         }
 
 
@@ -89,25 +81,25 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
             //game over, sent to every player
             if (game.isGameOver()) {
                 if (((String) message).equals("draw")) {
-                    clientHandler.sendMessage(new WinMessage(MessageType.DRAW, false));
+                    user.sendMessage(new WinMessage(MessageType.DRAW, false));
                 } else {
-                    clientHandler.sendMessage(new WinMessage(MessageType.GAME_OVER, ((String) message).equals(this.nickname)));
+                    user.sendMessage(new WinMessage(MessageType.GAME_OVER, ((String) message).equals(this.user.getNickname())));
                 }
             }
             //error sent only to the current player
-            else if (this.nickname.equals(currentPlayer)) {
-                clientHandler.sendMessage(new ErrorMessage(currentPlayer, (String) message));
+            else if (this.user.getNickname().equals(currentPlayer)) {
+                user.sendMessage(new ErrorMessage(currentPlayer, (String) message));
             }
         }
 
         //sends only to the current player
-        if (message.getClass().equals(SchoolBoard.class) && currentPlayer.equals(this.nickname)) {
-            clientHandler.sendMessage(new SchoolBoardMessage(currentPlayer, MessageType.BOARD, (SchoolBoard) message));
+        if (message.getClass().equals(SchoolBoard.class) && currentPlayer.equals(this.user.getNickname())) {
+            user.sendMessage(new SchoolBoardMessage(currentPlayer, MessageType.BOARD, (SchoolBoard) message));
         }
 
         //player's coins varied
-        if (message.getClass().equals(Integer.class) && currentPlayer.equals(this.nickname)) {
-            clientHandler.sendMessage(new CoinMessage(currentPlayer, (int) message));
+        if (message.getClass().equals(Integer.class) && currentPlayer.equals(this.user.getNickname())) {
+            user.sendMessage(new CoinMessage(currentPlayer, (int) message));
         }
 
     }
