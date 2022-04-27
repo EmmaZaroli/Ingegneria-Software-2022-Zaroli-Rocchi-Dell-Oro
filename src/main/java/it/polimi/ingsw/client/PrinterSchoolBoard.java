@@ -16,26 +16,34 @@ public class PrinterSchoolBoard {
     public static final String ANSI_WHITE = "\u001B[37m";
     public static final String FULL_CIRCLE = "●";
     public static final String EMPTY_CIRCLE = ANSI_WHITE + FULL_CIRCLE + ANSI_RESET;
+    public static final String CIRCLE = "○";
+    public static final String COIN = "⦿";
 
     public void printBoard(SchoolBoard board) {
         PrintStream out = System.out;
 
         //print board
         int actualEntranceSize = board.getEntrance().size();
-        out.println(" _______________________");
+        out.println(" _____________________________");
+
         //first line
         String student = 0 >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
         if (student.equals(FULL_CIRCLE)) student = assignColor(board.getEntrance().get(0), student);
-        out.println("|   " + student + "                   |");
+        out.print("|   " + student + " ");
+        studentsTable(0, board);
+
+        int rows = 1;
         for (int i = 1; i < 9; i++) {
             String student1 = i >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
             if (student1.equals(FULL_CIRCLE)) student1 = assignColor(board.getEntrance().get(i), student1);
             i++;
             String student2 = i >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
             if (student2.equals(FULL_CIRCLE)) student2 = assignColor(board.getEntrance().get(i), student2);
-            out.println("| " + student1 + " " + student2 + "                   |");
+            out.print("| " + student1 + " " + student2 + " ");
+            studentsTable(rows, board);
+            rows++;
         }
-        out.println("|_______________________|");
+        out.println("|_____________________________|");
 
     }
 
@@ -51,6 +59,52 @@ public class PrinterSchoolBoard {
             default -> assignedColor = ANSI_WHITE;
         }
         return assignedColor + student + ANSI_RESET;
+    }
+
+    private void studentsTable(int rows, SchoolBoard board) {
+        int i = 0;
+        String colorRow;
+        PawnColor color;
+        switch (rows) {
+            case 0:
+                colorRow = ANSI_GREEN;
+                color = PawnColor.GREEN;
+                break;
+            case 1:
+                colorRow = ANSI_RED;
+                color = PawnColor.RED;
+                break;
+            case 2:
+                colorRow = ANSI_YELLOW;
+                color = PawnColor.YELLOW;
+                break;
+            case 3:
+                colorRow = ANSI_PURPLE;
+                color = PawnColor.PINK;
+                break;
+            case 4:
+                colorRow = ANSI_BLUE;
+                color = PawnColor.BLUE;
+                break;
+            default:
+                colorRow = ANSI_WHITE;
+                color = PawnColor.NONE;
+                break;
+        }
+        int occupiedCells = board.getStudentsInDiningRoom(color);
+        for (i = 0; i < occupiedCells; i++) {
+            if ((i + 1) % 3 == 0) {
+                System.out.print(" " + colorRow + COIN + ANSI_RESET);
+            } else
+                System.out.print(" " + colorRow + FULL_CIRCLE + ANSI_RESET);
+        }
+        for (int j = i; j < 10; j++) {
+            if ((j + 1) % 3 == 0) {
+                System.out.print(" " + colorRow + COIN + ANSI_RESET);
+            } else
+                System.out.print(" " + colorRow + CIRCLE + ANSI_RESET);
+        }
+        System.out.println(" |");
     }
 
 }
