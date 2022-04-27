@@ -5,6 +5,7 @@ package it.polimi.ingsw.client;
  */
 abstract class View {
     private String nickname;
+    private int numberOfPlayer;
 
     public String getNickname() {
         return nickname;
@@ -12,5 +13,13 @@ abstract class View {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public int getNumberOfPlayer() {
+        return numberOfPlayer;
+    }
+
+    public void setNumberOfPlayer(int numberOfPlayer) {
+        this.numberOfPlayer = numberOfPlayer;
     }
 }

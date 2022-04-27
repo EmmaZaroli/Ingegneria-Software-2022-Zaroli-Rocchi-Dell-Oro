@@ -100,7 +100,6 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
             }
         }
 
-        //sends only to the current player
         if (message.getClass().equals(SchoolBoard.class) && currentPlayer.equals(this.nickname)) {
             clientHandler.sendMessage(new SchoolBoardMessage(currentPlayer, MessageType.BOARD, (SchoolBoard) message));
         }
