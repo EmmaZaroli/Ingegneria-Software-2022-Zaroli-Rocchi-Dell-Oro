@@ -53,4 +53,11 @@ public class CloudTile extends Observable implements Serializable {
         notify(this);
         return copy;
     }
+
+    /**
+     * @return the list of student on the cloud
+     */
+    public List<PawnColor> getStudentsFromCloud() {
+        return (List<PawnColor>) students.clone();
+    }
 }
