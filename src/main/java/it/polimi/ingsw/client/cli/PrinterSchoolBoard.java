@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.PawnColor;
