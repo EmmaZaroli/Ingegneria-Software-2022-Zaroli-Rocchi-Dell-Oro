@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.enums.Tower;
 import java.io.PrintStream;
 
 public class PrinterSchoolBoard {
+    public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
@@ -14,24 +15,32 @@ public class PrinterSchoolBoard {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_GREY = "\u001B[37m";
     public static final String FULL_CIRCLE = "●";
     public static final String EMPTY_CIRCLE = ANSI_WHITE + FULL_CIRCLE + ANSI_RESET;
     public static final String CIRCLE = "○";
     public static final String COIN = "⦿";
+    public static final String PROFESSOR_EMPTY = "⬡";
+    public static final String PROFESSOR_FULL = "⬢";
+    public static final String TOWER_WHITE = "\uD83D\uDEE2";
+    public static final String TOWER_BLACK = ANSI_BLACK + "\uD83D\uDEE2" + ANSI_RESET;
+    public static final String TOWER_GREY = ANSI_WHITE + "\uD83D\uDEE2" + ANSI_RESET;
+
 
     public void printBoard(SchoolBoard board) {
         PrintStream out = System.out;
 
         //print board
         int actualEntranceSize = board.getEntrance().size();
-        out.println(" _____________________________");
+        int countTowers = 0;
+        out.println(" _______________________________________");
 
         //first line
         String student = 0 >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
         if (student.equals(FULL_CIRCLE)) student = assignColor(board.getEntrance().get(0), student);
         out.print("|   " + student + " ");
         studentsTable(0, board);
-
+        System.out.println("        |");
         int rows = 1;
         for (int i = 1; i < 9; i++) {
             String student1 = i >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
@@ -41,9 +50,11 @@ public class PrinterSchoolBoard {
             if (student2.equals(FULL_CIRCLE)) student2 = assignColor(board.getEntrance().get(i), student2);
             out.print("| " + student1 + " " + student2 + " ");
             studentsTable(rows, board);
+            countTowers = Towers(board.getTowersCount(), board.getTowerColor(), countTowers);
+            System.out.println(" |");
             rows++;
         }
-        out.println("|_____________________________|");
+        out.println("|________________________________________|");
 
     }
 
@@ -93,10 +104,7 @@ public class PrinterSchoolBoard {
         }
         int occupiedCells = board.getStudentsInDiningRoom(color);
         for (i = 0; i < occupiedCells; i++) {
-            if ((i + 1) % 3 == 0) {
-                System.out.print(" " + colorRow + COIN + ANSI_RESET);
-            } else
-                System.out.print(" " + colorRow + FULL_CIRCLE + ANSI_RESET);
+            System.out.print(" " + colorRow + FULL_CIRCLE + ANSI_RESET);
         }
         for (int j = i; j < 10; j++) {
             if ((j + 1) % 3 == 0) {
@@ -104,7 +112,29 @@ public class PrinterSchoolBoard {
             } else
                 System.out.print(" " + colorRow + CIRCLE + ANSI_RESET);
         }
-        System.out.println(" |");
+        if (board.isThereProfessor(color)) {
+            System.out.print("  " + colorRow + PROFESSOR_FULL + ANSI_RESET);
+        } else
+            System.out.print("  " + colorRow + PROFESSOR_EMPTY + ANSI_RESET);
+
     }
+
+    private int Towers(int towerOnBoard, Tower color, int countTowers) {
+        String towerColor;
+        switch (color) {
+            case BLACK -> towerColor = TOWER_BLACK;
+            case WHITE -> towerColor = TOWER_WHITE;
+            case GREY -> towerColor = TOWER_GREY;
+            default -> towerColor = ANSI_WHITE;
+        }
+        for (int i = 0; i < 2; i++) {
+            if (countTowers < towerOnBoard) {
+                countTowers++;
+                System.out.print("  " + towerColor);
+            } else System.out.print("    ");
+        }
+        return countTowers;
+    }
+
 
 }
