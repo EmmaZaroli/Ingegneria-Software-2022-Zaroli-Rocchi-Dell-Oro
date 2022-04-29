@@ -1,5 +1,8 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.client.cli;
 
+import it.polimi.ingsw.client.InputParsen;
+import it.polimi.ingsw.client.Network;
+import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
@@ -9,10 +12,12 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class Cli extends View {
     private final PrintStream out;
+    private final Scanner in;
+    private final InputParsen inputParsen;
     private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -23,9 +28,12 @@ public class Cli extends View {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
     private PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
+    private PrinterClouds cloudPrinter = new PrinterClouds();
 
     public Cli(Network network) {
         out = System.out;
+        in = new Scanner(System.in);
+        inputParsen = new InputParsen();
         listeners.addPropertyChangeListener("action", network);
     }
 
@@ -58,16 +66,19 @@ public class Cli extends View {
      * @return the string read from the input.
      */
     public String readLine() {
-        //TODO read from input
-        return "";
+        String input = null;
+        input = in.nextLine();
+        return input;
     }
 
-    //TODO maybe its better if we open a scan and set a boolean is your turn
     public void askPlayerNickname() {
+        boolean valid = false;
         String nickname;
-        out.println("Enter your nickname: ");
-        //TODO exception if nickname = null
-        nickname = readLine();
+        do {
+            out.println("Enter your nickname: ");
+            nickname = readLine();
+            valid = inputParsen.checkUsername(nickname);
+        } while (!valid);
         setNickname(nickname);
         listeners.firePropertyChange("nickname", true, nickname);
     }
@@ -97,7 +108,6 @@ public class Cli extends View {
         out.println("How many players are you going to play with? [2/3] ");
         playersNumber = Integer.parseInt(readLine());
         //TODO check if the number is 2 or 3
-        setNumberOfPlayer(playersNumber);
         listeners.firePropertyChange("gameSettings", gameMode, playersNumber);
     }
 
@@ -140,6 +150,8 @@ public class Cli extends View {
         out.println();
         int card;
         card = Integer.parseInt(readLine());
+        //TODO check if the number is valid
+        setCardThrown(deck.get(card));
         listeners.firePropertyChange("assistantCard", true, deck.get(card));
     }
 
@@ -151,19 +163,30 @@ public class Cli extends View {
         out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
         out.println("  |     |    ");
         out.println("  |_____|    ");
-
-
     }
 
     public void askMotherNatureSteps() {
-
+        out.println("How many steps do you want to move mother nature? ");
+        int steps = Integer.parseInt(readLine());
+        //TODO check if number is <0 or >cardplayed.steps
     }
 
-    public void updateCurrentPlayer(String otherPlayer) {
+    public void updateCurrentPlayersTurn(String otherPlayer) {
         out.println("it's " + otherPlayer + "turn");
     }
 
     public void updateCloud(CloudTile cloud) {
+        if (clouds.size() < 2) {
+            clouds.add(cloud);
+        } else {
+            for (int i = 0; i < 2; i++) {
+                if (clouds.get(i).getUuid().equals(cloud.getUuid())) {
+                    clouds.remove(i);
+                    clouds.add(i, cloud);
+                }
+            }
+        }
+        if (clouds.size() == 2) cloudPrinter.printClouds(clouds);
 
     }
 
@@ -198,7 +221,7 @@ public class Cli extends View {
         System.exit(1);
     }
 
-    public void error() {
+    public void error(String error) {
         out.println("");
     }
 
