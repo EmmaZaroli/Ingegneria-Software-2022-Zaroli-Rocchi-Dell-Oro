@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.network.messages.Message;
 
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
@@ -30,7 +29,6 @@ public class Cli extends View {
     public static final String ANSI_WHITE = "\u001B[37m";
     private PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
     private PrinterClouds cloudPrinter = new PrinterClouds();
-    private PrinterIslands islandsPrinter = new PrinterIslands();
 
     public Cli(Network network) {
         out = System.out;
@@ -61,10 +59,6 @@ public class Cli extends View {
         }
     }
 
-    @Override
-    public void onMessageReceived(Message message) {
-        //TODO handle messages
-    }
 
     /**
      * Reads a line from the standard input.
@@ -85,8 +79,7 @@ public class Cli extends View {
             nickname = readLine();
             valid = inputParsen.checkUsername(nickname);
         } while (!valid);
-        //TODO
-        //setNickname(nickname);
+        setNickname(nickname);
         listeners.firePropertyChange("nickname", true, nickname);
     }
 
@@ -158,8 +151,7 @@ public class Cli extends View {
         int card;
         card = Integer.parseInt(readLine());
         //TODO check if the number is valid
-        //TODO
-        //setCardThrown(deck.get(card));
+        setCardThrown(deck.get(card));
         listeners.firePropertyChange("assistantCard", true, deck.get(card));
     }
 
@@ -199,7 +191,7 @@ public class Cli extends View {
     }
 
     public void updateIslands(IslandCard island) {
-        islandsPrinter.printIslands();
+
     }
 
     public void updateSchoolBoard(String player, SchoolBoard schoolBoard) {
@@ -232,4 +224,6 @@ public class Cli extends View {
     public void error(String error) {
         out.println("");
     }
+
+
 }
