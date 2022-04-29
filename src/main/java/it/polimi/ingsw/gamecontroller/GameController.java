@@ -357,9 +357,7 @@ public class GameController implements Observer<Message> {
 
     private void changePlayer() {
         int nextPlayer = pickNextPlayer();
-        //TODO create in game a method changePlayer
-        this.game.setCurrentPlayer(nextPlayer);
-        this.game.setCurrentPlayerBoard(game.getCurrentPlayerSchoolBoard());
+        game.changePlayer(nextPlayer);
 
         if (!virtualViews[nextPlayer].isOnline())
             changePlayer();

@@ -129,4 +129,9 @@ public class Game extends Observable<Serializable> implements Serializable {
     public boolean isGameOver() {
         return this.gameOver;
     }
+
+    public void changePlayer(int playerIndex) {
+        setCurrentPlayer(playerIndex);
+        setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
+    }
 }
