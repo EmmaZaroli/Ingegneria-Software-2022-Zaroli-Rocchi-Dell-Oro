@@ -26,6 +26,10 @@ public class VirtualView<T> extends Observable<T> implements Observer<T> {
         return user.getNickname();
     }
 
+    public boolean isOnline() {
+        return user.isOnline();
+    }
+
     /**
      * Receives a message coming from the client.
      *

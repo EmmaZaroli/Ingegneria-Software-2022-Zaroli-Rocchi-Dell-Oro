@@ -12,6 +12,8 @@ import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +29,9 @@ class GameControllerTest extends TestCase {
     Player[] players = {player1, player2};
     Game game = new Game(players);
     TableController tableController = new TableController(game.getTable());
-    GameController gameController = new GameController(game, tableController);
+    VirtualView[] virtualViews = new VirtualView[2];
+    //TODO initialize virtualViews
+    GameController gameController = new GameController(game, tableController, virtualViews);
 
 
     @BeforeEach

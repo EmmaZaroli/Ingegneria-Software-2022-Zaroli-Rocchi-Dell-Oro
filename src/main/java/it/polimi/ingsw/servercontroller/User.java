@@ -1,9 +1,10 @@
 package it.polimi.ingsw.servercontroller;
 
+import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.messages.Message;
 
-public class User {
+public class User implements DisconnectionListener {
     private final String nickname;
     private Endpoint endpoint;
     private boolean online;
@@ -39,5 +40,10 @@ public class User {
 
     public void sendMessage(Message message) {
         endpoint.sendMessage(message);
+    }
+
+    @Override
+    public void onDisconnect() {
+        setOffline();
     }
 }

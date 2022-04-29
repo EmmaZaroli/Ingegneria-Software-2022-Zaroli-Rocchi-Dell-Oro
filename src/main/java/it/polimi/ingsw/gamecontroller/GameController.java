@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
 
@@ -21,11 +22,13 @@ import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 public class GameController implements Observer<Message> {
     protected Game game;
     protected TableController tableController;
+    protected VirtualView[] virtualViews;
 
     //TODO we need to receive also the virtualViews and add them as observers of the model's classes
-    public GameController(Game game, TableController tableController) {
+    public GameController(Game game, TableController tableController, VirtualView[] virtualViews) {
         this.game = game;
         this.tableController = tableController;
+        this.virtualViews = virtualViews;
     }
 
     public GameController(Player[] players) {
@@ -153,12 +156,11 @@ public class GameController implements Observer<Message> {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
 
         if (!this.isTurnComplete()) {
-            this.game.setCurrentPlayer(pickNextPlayer());
-            this.game.setCurrentPlayerBoard(game.getCurrentPlayerSchoolBoard());
+            changePlayer();
         } else {
             this.game.setPlayedCount(0);
             this.game.setGamePhase(pickNextPhase());
-            this.game.setCurrentPlayer(pickNextPlayer());
+            changePlayer();
         }
 
         DataDumper.getInstance().saveGame(game);
@@ -353,6 +355,16 @@ public class GameController implements Observer<Message> {
         };
     }
 
+    private void changePlayer() {
+        int nextPlayer = pickNextPlayer();
+        //TODO create in game a method changePlayer
+        this.game.setCurrentPlayer(nextPlayer);
+        this.game.setCurrentPlayerBoard(game.getCurrentPlayerSchoolBoard());
+
+        if (!virtualViews[nextPlayer].isOnline())
+            changePlayer();
+    }
+
     //TODO hopefully it will become less complex
     private int pickNextPlayer() {
         switch (game.getGamePhase()) {
@@ -383,9 +395,7 @@ public class GameController implements Observer<Message> {
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             if (!this.isTurnComplete()) {
-                //TODO I'm repeating this snippet too many times, move into pickNextPlayer?
-                this.game.setCurrentPlayer(pickNextPlayer());
-                this.game.setCurrentPlayerBoard(game.getPlayers()[this.game.getCurrentPlayer()].getBoard());
+                changePlayer();
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {
                 try {

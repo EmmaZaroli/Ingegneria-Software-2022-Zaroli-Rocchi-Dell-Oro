@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.messages.Message;
 import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
 
@@ -20,8 +21,8 @@ import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 public class ExpertGameController extends GameController {
     private Effect[] effects;
 
-    public ExpertGameController(ExpertGame game, ExpertTableController tableController) {
-        super(game, tableController);
+    public ExpertGameController(ExpertGame game, ExpertTableController tableController, VirtualView[] virtualViews) {
+        super(game, tableController, virtualViews);
         drawCharactersCards();
     }
 

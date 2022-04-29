@@ -56,8 +56,8 @@ public class GameHandlerBuilder {
 
     private GameHandler buildGameHandler() {
         Game gameModel = buildGameModel();
-        GameController gameController = buildGameController(gameModel);
         VirtualView[] virtualViews = buildVirtualViews(gameModel);
+        GameController gameController = buildGameController(gameModel, virtualViews);
         return new GameHandler(users.toArray(new User[0]), gameController, gameModel, virtualViews);
     }
 
@@ -94,23 +94,23 @@ public class GameHandlerBuilder {
         return new ExpertGame(players, table, parameters);
     }
 
-    private GameController buildGameController(Game gameModel) {
+    private GameController buildGameController(Game gameModel, VirtualView[] virtualViews) {
         return switch (gameMode) {
-            case NORMAL_MODE -> buildNormalGameController(gameModel);
-            case EXPERT_MODE -> buildExpertGameController(gameModel);
+            case NORMAL_MODE -> buildNormalGameController(gameModel, virtualViews);
+            case EXPERT_MODE -> buildExpertGameController(gameModel, virtualViews);
         };
     }
 
-    private GameController buildNormalGameController(Game gameModel) {
+    private GameController buildNormalGameController(Game gameModel, VirtualView[] virtualViews) {
         TableController tableController = new TableController(gameModel.getTable());
 
-        return new GameController(gameModel, tableController);
+        return new GameController(gameModel, tableController, virtualViews);
     }
 
-    private ExpertGameController buildExpertGameController(Game gameModel) {
+    private ExpertGameController buildExpertGameController(Game gameModel, VirtualView[] virtualViews) {
         ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable());
 
-        return new ExpertGameController((ExpertGame) gameModel, tableController);
+        return new ExpertGameController((ExpertGame) gameModel, tableController, virtualViews);
     }
 
     private VirtualView[] buildVirtualViews(Game gameModel) {
