@@ -134,4 +134,8 @@ public class Game extends Observable<Serializable> implements Serializable {
         setCurrentPlayer(playerIndex);
         setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
     }
+
+    public Player getPlayer(int playerIndex) {
+        return players[playerIndex];
+    }
 }

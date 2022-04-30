@@ -12,6 +12,7 @@ public class User implements DisconnectionListener {
     public User(String nickname, Endpoint endpoint) {
         this.nickname = nickname;
         this.endpoint = endpoint;
+        this.endpoint.addDisconnectionListener(this);
     }
 
     public String getNickname() {

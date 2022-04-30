@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
@@ -19,7 +20,7 @@ import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 //TODO remove this generic...
-public class GameController implements Observer<Message> {
+public class GameController implements Observer<Message>, DisconnectionListener {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
@@ -359,7 +360,7 @@ public class GameController implements Observer<Message> {
         int nextPlayer = pickNextPlayer();
         game.changePlayer(nextPlayer);
 
-        if (!virtualViews[nextPlayer].isOnline())
+        if (!game.getPlayer(game.getCurrentPlayer()).isOnline())
             changePlayer();
     }
 
@@ -371,9 +372,11 @@ public class GameController implements Observer<Message> {
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
                 Optional<Player> nextPlayer = Arrays.stream(game.getPlayers())
                         .filter((Player p) ->
-                                p.getDiscardPileHead().value() >= game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().value())
+                                p.getDiscardPileHead().value() > game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().value())
                         .min(Comparator.comparing(p -> (p.getDiscardPileHead().value())));
 
+                //TODO what if it's the last player
+                //TODO what if two player had played the same car
                 if (nextPlayer.isEmpty()) nextPlayer = Optional.of(game.getPlayers()[0]);
 
                 for (int i = 0; i < game.getPlayers().length; i++) {
@@ -486,5 +489,12 @@ public class GameController implements Observer<Message> {
         }
         // it arrives here only if there are 2 player with the same number of tower and professors
         return "draw";
+    }
+
+    @Override
+    public void onDisconnect() {
+        for (int i = 0; i < virtualViews.length; i++)
+            game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+        //TODO check there is at least two online
     }
 }

@@ -166,6 +166,13 @@ public class Player extends Observable<Serializable> implements Serializable {
         //TODO notify
     }
 
+    public void setOnline(boolean isOnline) {
+        if (isOnline)
+            setOnline();
+        else
+            setOnline();
+    }
+
     public void setOffline() {
         this.isOnline = false;
         //TODO notify

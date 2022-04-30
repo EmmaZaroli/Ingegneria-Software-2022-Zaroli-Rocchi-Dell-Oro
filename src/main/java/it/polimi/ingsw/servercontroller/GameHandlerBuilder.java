@@ -95,21 +95,22 @@ public class GameHandlerBuilder {
     }
 
     private GameController buildGameController(Game gameModel, VirtualView[] virtualViews) {
-        return switch (gameMode) {
+        GameController gameController = switch (gameMode) {
             case NORMAL_MODE -> buildNormalGameController(gameModel, virtualViews);
             case EXPERT_MODE -> buildExpertGameController(gameModel, virtualViews);
         };
+        for (VirtualView virtualView : virtualViews)
+            virtualView.getClientHandler().addDisconnectionListener(gameController);
+        return gameController;
     }
 
     private GameController buildNormalGameController(Game gameModel, VirtualView[] virtualViews) {
         TableController tableController = new TableController(gameModel.getTable());
-
         return new GameController(gameModel, tableController, virtualViews);
     }
 
     private ExpertGameController buildExpertGameController(Game gameModel, VirtualView[] virtualViews) {
         ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable());
-
         return new ExpertGameController((ExpertGame) gameModel, tableController, virtualViews);
     }
 
