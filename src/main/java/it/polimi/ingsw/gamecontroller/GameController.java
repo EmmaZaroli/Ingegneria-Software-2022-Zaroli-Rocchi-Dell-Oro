@@ -24,6 +24,7 @@ public class GameController implements Observer<Message>, DisconnectionListener 
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
+    private final Timer timer = new Timer();
 
     //TODO we need to receive also the virtualViews and add them as observers of the model's classes
     public GameController(Game game, TableController tableController, VirtualView[] virtualViews) {
@@ -495,6 +496,17 @@ public class GameController implements Observer<Message>, DisconnectionListener 
     public void onDisconnect() {
         for (int i = 0; i < virtualViews.length; i++)
             game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-        //TODO check there is at least two online
+        if (game.howManyPlayersOnline() < 2)
+            notEnoughtOnline();
+    }
+
+    private void notEnoughtOnline() {
+        //TODO set in game WAITING_PHASE or something similar
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //TODO call gameover
+            }
+        }, 2 * 60 * 1000); //TODO parameterize this
     }
 }

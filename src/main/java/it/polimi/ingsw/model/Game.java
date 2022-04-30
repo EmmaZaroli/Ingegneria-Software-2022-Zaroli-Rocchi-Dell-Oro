@@ -5,6 +5,7 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Game extends Observable<Serializable> implements Serializable {
@@ -137,5 +138,9 @@ public class Game extends Observable<Serializable> implements Serializable {
 
     public Player getPlayer(int playerIndex) {
         return players[playerIndex];
+    }
+
+    public int howManyPlayersOnline() {
+        return (int) Arrays.stream(players).filter(p -> p.isOnline()).count();
     }
 }
