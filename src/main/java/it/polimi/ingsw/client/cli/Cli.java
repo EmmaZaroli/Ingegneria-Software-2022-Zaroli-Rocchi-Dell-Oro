@@ -29,6 +29,7 @@ public class Cli extends View {
     public static final String ANSI_WHITE = "\u001B[37m";
     private PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
     private PrinterClouds cloudPrinter = new PrinterClouds();
+    private PrinterIslands islandsPrinter = new PrinterIslands();
 
     public Cli(Network network) {
         out = System.out;
@@ -191,7 +192,7 @@ public class Cli extends View {
     }
 
     public void updateIslands(IslandCard island) {
-
+        islandsPrinter.printIslands();
     }
 
     public void updateSchoolBoard(String player, SchoolBoard schoolBoard) {
