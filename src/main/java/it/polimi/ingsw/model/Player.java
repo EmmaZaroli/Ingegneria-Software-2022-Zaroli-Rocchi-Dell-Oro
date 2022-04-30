@@ -23,6 +23,7 @@ public class Player extends Observable<Serializable> implements Serializable {
     private final LinkedList<AssistantCard> assistantDeck;
     private AssistantCard discardPileHead;
     private boolean isPlayerTurn;
+    private boolean isOnline;
 
     /**
      * Instantiates a new Player, sets by default isPlayerTurn to false
@@ -32,7 +33,7 @@ public class Player extends Observable<Serializable> implements Serializable {
      * @param tower    the tower's color
      */
     public Player(String nickname, Wizzard wizzard, Tower tower, int numberOfPlayers) {
-        this(nickname, wizzard, tower, false, numberOfPlayers);
+        this(nickname, wizzard, tower, false, numberOfPlayers, true);
     }
 
     /**
@@ -44,7 +45,7 @@ public class Player extends Observable<Serializable> implements Serializable {
      * @param numberOfPlayers the number of players of the game this player will be added to
      * @param isPlayerTurn
      */
-    public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers) {
+    public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers, boolean isOnline) {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.discardPileHead = null;
@@ -55,6 +56,7 @@ public class Player extends Observable<Serializable> implements Serializable {
         for (int i = 0; i < 10; i++) {
             this.assistantDeck.add(new AssistantCard(i + 1, ((i / 2) + 1)));
         }
+        this.isOnline = isOnline;
     }
 
     /**
@@ -126,6 +128,10 @@ public class Player extends Observable<Serializable> implements Serializable {
         return isPlayerTurn;
     }
 
+    public boolean isOnline() {
+        return isOnline;
+    }
+
     /**
      * Sets player turn
      *
@@ -153,5 +159,15 @@ public class Player extends Observable<Serializable> implements Serializable {
         notify(a);
         assistantDeck.remove(a);
 
+    }
+
+    public void setOnline() {
+        this.isOnline = true;
+        //TODO notify
+    }
+
+    public void setOffline() {
+        this.isOnline = false;
+        //TODO notify
     }
 }
