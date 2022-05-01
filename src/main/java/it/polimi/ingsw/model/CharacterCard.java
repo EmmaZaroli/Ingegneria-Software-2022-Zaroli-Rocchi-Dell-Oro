@@ -57,6 +57,11 @@ public class CharacterCard implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof CharacterCard)) return false;
 

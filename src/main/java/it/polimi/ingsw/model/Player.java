@@ -137,17 +137,16 @@ public class Player extends Observable implements Serializable {
      *
      * @param playerTurn
      */
-    public void setPlayerTurn(boolean playerTurn) {
+    protected void setPlayerTurn(boolean playerTurn) {
         isPlayerTurn = playerTurn;
     }
 
     /**
      * Toggle player turn.
      */
-    public void togglePlayerTurn() {
+    protected void togglePlayerTurn() {
         isPlayerTurn = !isPlayerTurn;
     }
-
 
     /**
      * Plays assistant card by removing it from the deck and put it in the discard pile head

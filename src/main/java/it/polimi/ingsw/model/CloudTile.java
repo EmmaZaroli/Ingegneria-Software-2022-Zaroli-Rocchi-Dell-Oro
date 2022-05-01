@@ -38,9 +38,8 @@ public class CloudTile extends Observable implements Serializable {
      *
      * @param student A list of students to place on the cloud
      */
-    public void addStudents(List<PawnColor> student) {
+    protected void addStudents(List<PawnColor> student) {
         students.addAll(student);
-        notify(this);
     }
 
     /**
@@ -48,7 +47,7 @@ public class CloudTile extends Observable implements Serializable {
      *
      * @return list of students
      */
-    public List<PawnColor> takeStudentsFromCloud() {
+    protected List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
         this.students.clear();
         notify(this);

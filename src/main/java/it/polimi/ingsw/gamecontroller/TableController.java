@@ -45,7 +45,7 @@ public class TableController {
     public void fillClouds() throws FullCloudException {
         List<PawnColor> studentsDrawn = new LinkedList<>();
         for (CloudTile cloudTile : table.getCloudTiles()) {
-            if (!cloudTile.takeStudentsFromCloud().isEmpty()) throw new FullCloudException();
+            if (!table.takeStudentsFromCloud(cloudTile).isEmpty()) throw new FullCloudException();
         }
         for (CloudTile cloud : table.getCloudTiles()) {
             if (table.getPlayersNumber() == 2) {
@@ -57,7 +57,7 @@ public class TableController {
                     studentsDrawn.add(table.getBag().drawStudent());
                 }
             }
-            cloud.addStudents(studentsDrawn);
+            table.addStudents(cloud, studentsDrawn);
             studentsDrawn.clear();
         }
     }
@@ -123,7 +123,7 @@ public class TableController {
     public List<PawnColor> takeStudentsFromCloud(UUID uuid) throws WrongUUIDException {
         for (CloudTile cloud : table.getCloudTiles()) {
             if (cloud.getUuid().equals(uuid)) {
-                return cloud.takeStudentsFromCloud();
+                return table.takeStudentsFromCloud(cloud);
             }
         }
         throw new WrongUUIDException();

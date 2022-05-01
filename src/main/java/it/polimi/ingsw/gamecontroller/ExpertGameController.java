@@ -94,7 +94,7 @@ public class ExpertGameController extends GameController {
             } catch (NoCoinsAvailableException e) {
                 game.throwException(e);
             }
-            getGame().getPlayers()[game.getCurrentPlayer()].addCoin();
+            getGame().addCoin(getGame().getPlayers()[game.getCurrentPlayer()]);
         }
         this.checkProfessorsStatus(pawn);
         this.movedPawn();
@@ -127,9 +127,7 @@ public class ExpertGameController extends GameController {
         else
             activateStandardEffect(characterIndex);
         int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();
-        getGame()
-                .getPlayers()[game.getCurrentPlayer()]
-                .decreaseCoins(cardPrice);
+        getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);
         ((ExpertTableController) tableController).depositCoins(cardPrice);
         getGameParameters().setAlreadyActivateCharacterCard(true);
     }

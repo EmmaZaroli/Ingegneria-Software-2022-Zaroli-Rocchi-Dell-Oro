@@ -80,4 +80,14 @@ public class ExpertGame extends Game {
                     notify((CharacterCardWithSetUpAction) x.clone());
                 });
     }
+
+    public void addCoin(ExpertPlayer player) {
+        player.addCoin();
+        notify(player);
+    }
+
+    public void decreaseCoins(ExpertPlayer player, int n) {
+        player.decreaseCoins(n);
+        notify(player);
+    }
 }

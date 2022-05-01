@@ -96,6 +96,17 @@ public class Table extends Observable implements Serializable {
         notify(island);
     }
 
+    public void addStudents(CloudTile cloud, List<PawnColor> students) {
+        cloud.addStudents(students);
+        notify(cloud);
+    }
+
+    public List<PawnColor> takeStudentsFromCloud(CloudTile cloud) {
+        List<PawnColor> retVal = cloud.takeStudentsFromCloud();
+        notify(cloud);
+        return retVal;
+    }
+
     public int getIslandWithMotherNature() {
         return this.islandWithMotherNature;
     }
