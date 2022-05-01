@@ -103,8 +103,8 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
     /**
      * Increment size when an islandCard is been connected to another one
      */
-    public void incrementSize() {
-        this.size++;
+    public void incrementSize(int sizeIslandConnected) {
+        this.size = this.size + sizeIslandConnected;
         notify(this);
     }
 
