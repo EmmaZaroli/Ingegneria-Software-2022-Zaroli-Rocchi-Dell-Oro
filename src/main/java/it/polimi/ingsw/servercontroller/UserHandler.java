@@ -1,14 +1,14 @@
 package it.polimi.ingsw.servercontroller;
 
 import it.polimi.ingsw.applications.Server;
-import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -44,11 +44,11 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         String nickname = "";
         NicknameStatus nicknameStatus;
 
-        nickname = ((NicknameProposalMessage) endpoint.syncronizeRecive(NicknameProposalMessage.class)).getNickname();
+        nickname = ((NicknameProposalMessage) endpoint.synchronizedReceive(NicknameProposalMessage.class)).getNickname();
         nicknameStatus = server.checkNicknameStatus(nickname);
         while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER) {
             endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
-            nickname = ((NicknameProposalMessage) endpoint.syncronizeRecive(NicknameProposalMessage.class)).getNickname();
+            nickname = ((NicknameProposalMessage) endpoint.synchronizedReceive(NicknameProposalMessage.class)).getNickname();
             nicknameStatus = server.checkNicknameStatus(nickname);
         }
 
@@ -72,7 +72,7 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
     private void connectPlayer(String nickname) {
         User user = new User(nickname, endpoint);
 
-        GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.syncronizeRecive(GametypeRequestMessage.class);
+        GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.synchronizedReceive(GametypeRequestMessage.class);
         GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
         PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
 

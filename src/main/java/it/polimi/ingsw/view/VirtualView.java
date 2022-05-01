@@ -55,7 +55,7 @@ public class VirtualView extends Observable implements ModelObserver {
 
     @Override
     public void update(IslandCard message) {
-        user.sendMessage(new IslandMessage(MessageType.ISLAND, (IslandCard) message));
+        user.sendMessage(new IslandMessage(MessageType.ISLAND, message));
     }
 
     @Override
@@ -84,12 +84,17 @@ public class VirtualView extends Observable implements ModelObserver {
 
     @Override
     public void update(AssistantCard message) {
-        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), MessageType.ASSISTANT_CARD, (AssistantCard) message));
+        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), MessageType.ASSISTANT_CARD, message));
     }
 
     @Override
     public void update(SchoolBoard message) {
-        user.sendMessage(new SchoolBoardMessage(getCurrentPlayer(), MessageType.BOARD, (SchoolBoard) message));
+        user.sendMessage(new SchoolBoardMessage(getCurrentPlayer(), MessageType.BOARD, message));
+    }
+
+    @Override
+    public void update(Exception message) {
+        user.sendMessage(new ErrorMessage(getCurrentPlayer(), game.getLastError().getMessage()));
     }
 
     /**

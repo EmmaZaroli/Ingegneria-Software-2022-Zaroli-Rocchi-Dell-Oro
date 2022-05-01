@@ -26,11 +26,6 @@ public class ExpertGameController extends GameController {
         drawCharactersCards();
     }
 
-    public ExpertGameController(ExpertPlayer[] players) {
-        super(players);
-        drawCharactersCards();
-    }
-
     @Override
     protected void init(Player[] players) {
         this.game = new ExpertGame(players);
@@ -56,7 +51,7 @@ public class ExpertGameController extends GameController {
         int numberCard;
         List<Character> characters = new ArrayList<>(Arrays.asList(Character.values()));
         CharacterCard[] cards = new CharacterCard[3];
-        Effect[] effects = new Effect[3];
+        Effect[] newEffects = new Effect[3];
         for (int i = 0; i < 3; i++) {
             numberCard = RandomHelper.getInstance().getInt(characters.size());
             cards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));
@@ -64,7 +59,7 @@ public class ExpertGameController extends GameController {
             characters.remove(characters.get(numberCard));
         }
         getGame().addCharacterCards(cards);
-        addEffects(effects);
+        addEffects(newEffects);
     }
 
     @Override
@@ -76,8 +71,11 @@ public class ExpertGameController extends GameController {
                 game.throwException(new IllegalCharacterException());
             }
             int index = pair.second();
-            canActivateCharacterAbility(index);
-            activateCharacterAbility(index);
+            if (canActivateCharacterAbility(index)) {
+                activateCharacterAbility(index);
+            } else {
+                //TODO reply with error
+            }
         } else {
             super.update(message);
         }
@@ -113,7 +111,6 @@ public class ExpertGameController extends GameController {
         return new Pair<>(false, null);
     }
 
-    //TODO do something about this function
     public boolean canActivateCharacterAbility(int characterIndex) {
         if (getGameParameters().hasAlreadyActivateCharacterCard())
             return false;
@@ -150,7 +147,7 @@ public class ExpertGameController extends GameController {
         try {
             tableController.movePawnOnIsland(color, islandIndex);
         } catch (WrongUUIDException e) {
-            e.printStackTrace();
+            game.setError(e);
         }
         game.addStudent(character, tableController.drawStudents(1).get(0));
     }

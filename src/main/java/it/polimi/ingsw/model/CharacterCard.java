@@ -63,15 +63,8 @@ public class CharacterCard implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof CharacterCard)) return false;
+        if (!(obj instanceof CharacterCard)) return false;
 
         return ((CharacterCard) obj).character == this.character;
-    }
-
-    @Override
-    protected Object clone() {
-        CharacterCard retVal = new CharacterCard(this.initialPrice, this.character);
-        retVal.setUsed();
-        return retVal;
     }
 }

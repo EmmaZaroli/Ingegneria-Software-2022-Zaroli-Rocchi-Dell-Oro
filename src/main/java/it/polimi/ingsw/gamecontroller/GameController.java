@@ -19,36 +19,24 @@ import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 //TODO implement ViewObserver
+//TODO add observables/observers
 public class GameController implements DisconnectionListener {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
     private final Timer timer = new Timer();
 
-    //TODO we need to receive also the virtualViews and add them as observers of the model's classes
     public GameController(Game game, TableController tableController, VirtualView[] virtualViews) {
         this.game = game;
         this.tableController = tableController;
         this.virtualViews = virtualViews;
-    }
-
-    public GameController(Player[] players) {
-        this.init(players);
+        this.init(game.getPlayers());
     }
 
     protected void init(Player[] players) {
         this.game = new Game(players);
         this.tableController = new TableController(game.getTable());
-    }
 
-    /*public String[] getPlayersNames(){
-        return Arrays.stream(game.getPlayers()).map(player -> player.getNickname()).toArray(String[]::new);
-    }*/
-
-    //TODO move away from here. The game controller controls ONLY the game
-    // starts the game thread
-    //@Override
-    public void run() {
         fillClouds();
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
@@ -154,7 +142,7 @@ public class GameController implements DisconnectionListener {
     private void playerHasEndedPlanning() {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
 
-        if (!this.isTurnComplete()) {
+        if (this.isTurnComplete()) {
             changePlayer();
         } else {
             this.game.setPlayedCount(0);
@@ -198,13 +186,9 @@ public class GameController implements DisconnectionListener {
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
-                game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color) > player.getBoard().getStudentsInDiningRoom(color)) {
-            try {
-                player.getBoard().removeProfessor(color);
-            } catch (Exception e) {
-                //TODO do we need to send this one to the player?
-                e.printStackTrace();
-            }
+                game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
+                        > player.getBoard().getStudentsInDiningRoom(color)) {
+            player.getBoard().removeProfessor(color);
             game.getCurrentPlayerSchoolBoard().addProfessor(color);
         }
     }
@@ -266,14 +250,7 @@ public class GameController implements DisconnectionListener {
             Pair<Tower, Integer> result = this.tableController.buildTower(player.getBoard().getTowerColor());
             Arrays.stream(this.game.getPlayers())
                     .filter(x -> x.getBoard().getTowerColor() == result.first())
-                    .forEach(x -> {
-                        try {
-                            x.getBoard().addTowers(result.second());
-                        } catch (Exception e) {
-                            //TODO this is not the proper way of handling exceptions
-                            e.printStackTrace();
-                        }
-                    });
+                    .forEach(x -> x.getBoard().addTowers(result.second()));
             for (int i = 0; i < result.second(); i++) {
                 player.getBoard().removeTower();
                 checkImmediateGameOver();
@@ -320,8 +297,7 @@ public class GameController implements DisconnectionListener {
     }
 
     void movedPawn() {
-        //TODO increment instead of get + 1
-        game.setMovedPawns(game.getMovedPawns() + 1);
+        game.movePawn();
         if (this.game.getMovedPawns() == game.getPlayersCount() + 1) {
             this.game.setMovedPawns(0);
             this.playerHasEndedAction();
@@ -374,7 +350,7 @@ public class GameController implements DisconnectionListener {
                         .min(Comparator.comparing(p -> (p.getDiscardPileHead().value())));
 
                 //TODO what if it's the last player
-                //TODO what if two player had played the same car
+                //TODO what if two player had played the same card
                 if (nextPlayer.isEmpty()) nextPlayer = Optional.of(game.getPlayers()[0]);
 
                 for (int i = 0; i < game.getPlayers().length; i++) {
@@ -393,7 +369,7 @@ public class GameController implements DisconnectionListener {
         this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
-            if (!this.isTurnComplete()) {
+            if (this.isTurnComplete()) {
                 changePlayer();
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {

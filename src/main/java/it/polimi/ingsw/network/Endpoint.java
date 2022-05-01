@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.servercontroller.MessagesHelper;
 import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.servercontroller.MessagesHelper;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -53,15 +53,16 @@ public class Endpoint {
         receiverThread.start();
     }
 
-    public Message syncronizeRecive() throws IOException, ClassNotFoundException {
+    public Message synchronizedReceive() throws IOException, ClassNotFoundException {
         return (Message) in.readObject();
     }
 
-    public Message syncronizeRecive(Class messageClass) {
+    //TODO I don't think reflection is the best way to do this
+    public Message synchronizedReceive(Class messageClass) {
         Message message = null;//TODO is this ok?
         do {
             try {
-                message = syncronizeRecive();
+                message = synchronizedReceive();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -56,4 +56,14 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
     protected void removeStudent(PawnColor color) {
         students.remove(color);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

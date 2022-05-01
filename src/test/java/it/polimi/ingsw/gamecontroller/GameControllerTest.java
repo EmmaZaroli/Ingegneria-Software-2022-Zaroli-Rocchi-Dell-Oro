@@ -33,10 +33,8 @@ class GameControllerTest extends TestCase {
     //TODO initialize virtualViews
     GameController gameController = new GameController(game, tableController, virtualViews);
 
-
     @BeforeEach
-    public void Planning() {
-        gameController.run();
+    public void planning() {
         Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());
         Assertions.assertEquals(7, player2.getBoard().countStudentsInEntrance());
 
@@ -79,7 +77,8 @@ class GameControllerTest extends TestCase {
     }
 
     @Test
-    void Action_Move_Student() {
+    void actionMoveStudent() {
+
         //Wrong Messages
         MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
         gameController.update(WrongMessage);

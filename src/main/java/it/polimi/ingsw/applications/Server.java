@@ -1,13 +1,13 @@
 package it.polimi.ingsw.applications;
 
-import it.polimi.ingsw.servercontroller.*;
-import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;
+import it.polimi.ingsw.servercontroller.*;
+import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,8 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//TODO Think about splitting gameController and controller
-//TODO applications should contain only Client and Server
 public class Server {
     private final int port;
 
@@ -66,6 +64,8 @@ public class Server {
         this.expert2PlayersBuilder.playersNumber(PlayersNumber.TWO);
         this.expert3PlayersBuilder.gameMode(GameMode.EXPERT_MODE);
         this.expert3PlayersBuilder.playersNumber(PlayersNumber.THREE);
+
+        this.loadSavedGames();
     }
 
     public void startServer() throws IOException {

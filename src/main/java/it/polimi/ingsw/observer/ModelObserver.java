@@ -21,4 +21,6 @@ public interface ModelObserver extends Observer {
     void update(AssistantCard message);
 
     void update(SchoolBoard message);
+
+    void update(Exception message);
 }

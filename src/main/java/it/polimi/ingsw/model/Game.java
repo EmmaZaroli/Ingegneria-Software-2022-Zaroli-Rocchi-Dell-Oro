@@ -26,6 +26,8 @@ public class Game extends Observable implements Serializable {
     private int movedPawns;
     private boolean gameOver = false;
 
+    private Exception error;
+
     public Game(Player[] players, Table table, GameParameters parameters) {
         this.players = players;
         this.table = table;
@@ -118,6 +120,10 @@ public class Game extends Observable implements Serializable {
         this.movedPawns = movedPawns;
     }
 
+    public void movePawn() {
+        this.movedPawns++;
+    }
+
     public void callWin(String nicknameWinner) {
         this.gameOver = true;
         notify(nicknameWinner);
@@ -136,11 +142,20 @@ public class Game extends Observable implements Serializable {
         setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
     }
 
+    public void setError(Exception e) {
+        this.error = e;
+        notify(this.error);
+    }
+
+    public Exception getLastError() {
+        return this.error;
+    }
+
     public Player getPlayer(int playerIndex) {
         return players[playerIndex];
     }
 
     public int howManyPlayersOnline() {
-        return (int) Arrays.stream(players).filter(p -> p.isOnline()).count();
+        return (int) Arrays.stream(players).filter(Player::isOnline).count();
     }
 }
