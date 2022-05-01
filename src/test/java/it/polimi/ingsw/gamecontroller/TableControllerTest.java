@@ -8,7 +8,10 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.utils.Pair;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -154,13 +157,13 @@ class TableControllerTest extends TestCase {
         @BeforeEach
         void positioning() {
 
-            table3Player.getIslands().get(motherNature).movePawnOnIsland(PawnColor.BLUE);
-            table3Player.getIslands().get(motherNature).movePawnOnIsland(PawnColor.RED);
+            table3Player.movePawnOnIsland(table3Player.getIslands().get(motherNature), PawnColor.BLUE);
+            table3Player.movePawnOnIsland(table3Player.getIslands().get(motherNature), PawnColor.RED);
         }
 
         @Test
         void countInfluence() {
-            table3Player.getIslands().get(motherNature).setTower(Tower.BLACK);
+            table3Player.setTower(table3Player.getIslands().get(motherNature), Tower.BLACK);
             Set<PawnColor> player_1 = new HashSet<>();
             player_1.addAll(Arrays.asList(PawnColor.RED, PawnColor.BLUE));
             Set<PawnColor> player_2 = new HashSet<>();
@@ -172,7 +175,7 @@ class TableControllerTest extends TestCase {
         @Test
         void RandomLeftUnification() {
             System.out.println("- left unification: ");
-            table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
+            table3Player.setTower(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()), Tower.BLACK);
             List<PawnColor> island1 = new ArrayList<>(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             tableController3Player.moveMotherNature(1);
             island1.addAll(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
@@ -200,7 +203,7 @@ class TableControllerTest extends TestCase {
         @Test
         void RandomRightUnification() {
             System.out.println("- right unification: ");
-            table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
+            table3Player.setTower(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()), Tower.BLACK);
             List<PawnColor> island1 = new ArrayList<>(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             tableController3Player.moveMotherNature(11);
             island1.addAll(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
@@ -230,7 +233,7 @@ class TableControllerTest extends TestCase {
             //force borderline unification 0-11
             System.out.println("- border line unification: ");
             tableController3Player.moveMotherNature(11 - table3Player.getIslandWithMotherNature());
-            table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
+            table3Player.setTower(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()), Tower.BLACK);
             List<PawnColor> island1 = new ArrayList<>(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             tableController3Player.moveMotherNature(1);
             island1.addAll(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
@@ -261,10 +264,10 @@ class TableControllerTest extends TestCase {
             System.out.println("- each side unification: ");
 
             tableController3Player.moveMotherNature(10 - table3Player.getIslandWithMotherNature());
-            table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
+            table3Player.setTower(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()), Tower.BLACK);
             List<PawnColor> island1 = new ArrayList<>(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             tableController3Player.moveMotherNature(2);
-            table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).setTower(Tower.BLACK);
+            table3Player.setTower(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()), Tower.BLACK);
             island1.addAll(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());
             tableController3Player.moveMotherNature(11);
             island1.addAll(table3Player.getIslands().get(table3Player.getIslandWithMotherNature()).getStudentsFromIsland());

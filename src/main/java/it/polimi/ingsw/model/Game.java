@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class Game extends Observable<Serializable> implements Serializable {
+public class Game extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

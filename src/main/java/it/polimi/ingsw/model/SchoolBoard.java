@@ -6,12 +6,15 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * School board.
  */
-public class SchoolBoard extends Observable<SchoolBoard> implements Serializable {
+public class SchoolBoard extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 10L;
 

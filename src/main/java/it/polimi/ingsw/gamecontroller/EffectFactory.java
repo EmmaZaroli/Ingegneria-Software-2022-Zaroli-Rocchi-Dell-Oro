@@ -25,9 +25,9 @@ public class EffectFactory {
     }
 
     private static Effect get1() {
-        return (SetupEffect) (table, character) -> {
+        return (SetupEffect) (game, table, character) -> {
             List<PawnColor> ris = table.drawStudents(4);
-            character.addStudent(ris);
+            game.addStudent(character, ris);
         };
     }
 
@@ -74,9 +74,9 @@ public class EffectFactory {
     }
 
     private static Effect get7() {
-        return (SetupEffect) (table, character) -> {
+        return (SetupEffect) (game, table, character) -> {
             List<PawnColor> ris = table.drawStudents(6);
-            character.addStudent(ris);
+            game.addStudent(character, ris);
         };
     }
 
@@ -110,9 +110,9 @@ public class EffectFactory {
     }
 
     private static Effect get11() {
-        return (SetupEffect) (table, character) -> {
+        return (SetupEffect) (game, table, character) -> {
             List<PawnColor> ris = table.drawStudents(4);
-            character.addStudent(ris);
+            game.addStudent(character, ris);
         };
     }
 }

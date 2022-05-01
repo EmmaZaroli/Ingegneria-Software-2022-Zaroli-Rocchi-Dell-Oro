@@ -1,16 +1,18 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.observer.Observable;
+
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
-
-import it.polimi.ingsw.model.enums.*;
-import it.polimi.ingsw.observer.Observable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * class Cloud tile.
  */
-public class CloudTile extends Observable<CloudTile> implements Serializable {
+public class CloudTile extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 6L;
     private final UUID uuid;

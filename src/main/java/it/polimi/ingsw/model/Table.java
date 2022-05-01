@@ -2,6 +2,8 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.io.Serial;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Table implements Serializable {
+public class Table extends Observable implements Serializable {
     //TODO change int playersNumber with PlayersNumber
     @Serial
     private static final long serialVersionUID = 2L;
@@ -38,6 +40,7 @@ public class Table implements Serializable {
             if ((Math.abs(i - initialPosition) != 6) && (islandWithMotherNature != i)) {
                 int pawnColor = random.getInt(initialized.size());
                 islandCards.get(i).movePawnOnIsland(initialized.get(pawnColor));
+                notify(islandCards.get(i));
                 initialized.remove(pawnColor);
             }
         }
@@ -60,6 +63,16 @@ public class Table implements Serializable {
         return this.islandCards;
     }
 
+    public void movePawnOnIsland(IslandCard island, List<PawnColor> students) {
+        island.movePawnOnIsland(students);
+        notify(island);
+    }
+
+    public void movePawnOnIsland(IslandCard island, PawnColor students) {
+        island.movePawnOnIsland(students);
+        notify(island);
+    }
+
     public IslandCard getIsland(UUID uuid) throws WrongUUIDException {
         for (IslandCard island : this.islandCards) {
             if (island.getUuid().equals(uuid)) {
@@ -67,6 +80,20 @@ public class Table implements Serializable {
             }
         }
         throw new WrongUUIDException();
+    }
+
+    public void incrementSize(IslandCard island) {
+        islandCards.stream()
+                .filter(x -> x.equals(island))
+                .forEach(x -> {
+                    x.incrementSize();
+                    notify(x);
+                });
+    }
+
+    public void setTower(IslandCard island, Tower tower) {
+        island.setTower(tower);
+        notify(island);
     }
 
     public int getIslandWithMotherNature() {

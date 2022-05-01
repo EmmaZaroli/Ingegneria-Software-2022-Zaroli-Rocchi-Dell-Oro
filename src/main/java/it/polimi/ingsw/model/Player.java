@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Player
  */
-public class Player extends Observable<Serializable> implements Serializable {
+public class Player extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 9L;
 

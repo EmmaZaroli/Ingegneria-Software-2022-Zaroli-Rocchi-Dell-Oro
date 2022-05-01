@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
@@ -19,8 +18,8 @@ import java.util.*;
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
-//TODO remove this generic...
-public class GameController implements Observer<Message>, DisconnectionListener {
+//TODO implement ViewObserver
+public class GameController implements DisconnectionListener {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
@@ -64,8 +63,6 @@ public class GameController implements Observer<Message>, DisconnectionListener 
         }
     }
 
-
-    @Override
     public void update(Message message) {
         try {
             checkMessage(message);
@@ -497,16 +494,16 @@ public class GameController implements Observer<Message>, DisconnectionListener 
         for (int i = 0; i < virtualViews.length; i++)
             game.getPlayer(i).setOnline(virtualViews[i].isOnline());
         if (game.howManyPlayersOnline() < 2)
-            notEnoughtOnline();
+            notEnoughOnline();
     }
 
-    private void notEnoughtOnline() {
+    private void notEnoughOnline() {
         //TODO set in game WAITING_PHASE or something similar
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 //TODO call gameover
             }
-        }, 2 * 60 * 1000); //TODO parameterize this
+        }, 120000); //TODO parameterize this
     }
 }

@@ -136,7 +136,7 @@ public class ExpertGameController extends GameController {
 
     private void activateSetupEffect(int effectIndex) {
         ((SetupEffect) getEffects()[effectIndex])
-                .setupEffect(tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
+                .setupEffect((ExpertGame) game, tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex) {
@@ -147,32 +147,32 @@ public class ExpertGameController extends GameController {
         ((StandardEffect) getEffects()[effectIndex]).reverseEffect(getGameParameters());
     }
 
-    private void effect1(CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
-        character.removeStudent(color);
+    private void effect1(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
+        game.removeStudent(character, color);
         try {
             tableController.movePawnOnIsland(color, islandIndex);
         } catch (WrongUUIDException e) {
             e.printStackTrace();
         }
-        character.addStudent(tableController.drawStudents(1));
+        game.addStudent(character, tableController.drawStudents(1).get(0));
     }
 
-    private void effect7(CharacterCardWithSetUpAction character, List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance) {
+    private void effect7(ExpertGame game, CharacterCardWithSetUpAction character, List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance) {
         for (PawnColor c : colorsFromCard) {
-            character.removeStudent(c);
+            game.removeStudent(character, c);
         }
         for (PawnColor c : colorsFromEntrance) {
             game.getPlayers()[game.getCurrentPlayer()].getBoard().removeStudentFromEntrance(c);
+            game.addStudent(character, c);
         }
 
-        character.addStudent(colorsFromEntrance);
         game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentsToEntrance(colorsFromCard);
     }
 
-    private void effect11(CharacterCardWithSetUpAction character, PawnColor color) {
-        character.removeStudent(color);
+    private void effect11(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color) {
+        game.removeStudent(character, color);
         game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);
-        character.addStudent(tableController.drawStudents(1));
+        game.addStudent(character, tableController.drawStudents(1).get(0));
     }
 
     //activate reverseEffect for all card, should not generate problems
