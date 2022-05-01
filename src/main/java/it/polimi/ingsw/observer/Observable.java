@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Observable {
 
-    private final List<ModelObserver> modelObservers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
     /**
      * Adds an observer.
      *
      * @param modelObserver the observer to be added.
      */
-    public void addObserver(ModelObserver modelObserver) {
-        modelObservers.add(modelObserver);
+    public void addObserver(Observer modelObserver) {
+        observers.add(modelObserver);
     }
 
     /**
@@ -22,12 +22,12 @@ public class Observable {
      * @param modelObserver the observer to be removed.
      */
     public void removeObserver(ModelObserver modelObserver) {
-        modelObservers.remove(modelObserver);
+        observers.remove(modelObserver);
     }
 
     public void notify(Object message) {
-        for (ModelObserver modelObserver : modelObservers) {
-            modelObserver.update(message);
+        for (Observer observer : observers) {
+            observer.update(message);
         }
     }
 }

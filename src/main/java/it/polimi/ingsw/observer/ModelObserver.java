@@ -6,9 +6,8 @@ import it.polimi.ingsw.model.enums.GamePhase;
 /**
  * generic interface, supports the update method
  */
-public interface ModelObserver {
-    void update(Object message);
-
+//TODO something is missing
+public interface ModelObserver extends Observer {
     void update(CharacterCard message);
 
     void update(IslandCard message);
