@@ -14,6 +14,7 @@ import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
@@ -344,17 +345,13 @@ public class GameController implements DisconnectionListener {
             case PLANNING:
                 return (game.getCurrentPlayer() + 1) % game.getPlayersCount();
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
-                Optional<Player> nextPlayer = Arrays.stream(game.getPlayers())
-                        .filter((Player p) ->
-                                p.getDiscardPileHead().value() > game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().value())
-                        .min(Comparator.comparing(p -> (p.getDiscardPileHead().value())));
-
-                //TODO what if it's the last player
+                Player nextPlayer = Arrays.stream(game.getPlayers())
+                        .sorted((p1, p2) -> Integer.compare(p1.getDiscardPileHead().value(), p2.getDiscardPileHead().value()))
+                        .toList().get(game.getPlayedCount());
                 //TODO what if two player had played the same card
-                if (nextPlayer.isEmpty()) nextPlayer = Optional.of(game.getPlayers()[0]);
 
                 for (int i = 0; i < game.getPlayers().length; i++) {
-                    if (game.getPlayers()[i].getNickname().equals(nextPlayer.get().getNickname()))
+                    if (game.getPlayer(i).getNickname().equals(nextPlayer.getNickname()))
                         return i;
                 }
                 break;
