@@ -35,8 +35,6 @@ public class GameController implements DisconnectionListener {
     }
 
     protected void init(Player[] players) {
-        this.game = new Game(players);
-        this.tableController = new TableController(game.getTable());
 
         fillClouds();
         for (Player player : game.getPlayers()) {
@@ -55,39 +53,40 @@ public class GameController implements DisconnectionListener {
     public void update(Message message) {
         try {
             checkMessage(message);
+            switch (game.getGamePhase()) {
+                case PLANNING:
+                    planning(message);
+                    break;
+                case ACTION_MOVE_STUDENTS:
+                    moveStudent(message);
+                    break;
+                case ACTION_MOVE_MOTHER_NATURE:
+                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                        try {
+                            moveMotherNature(((MoveMotherNatureMessage) message).getSteps());
+                        } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
+                            game.throwException(e);
+                        }
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_CHOOSE_CLOUD:
+                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                        try {
+                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                            game.throwException(e);
+                        }
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_END:
+                    //should not go here, the player doesn't do anything in this phase
+                    game.throwException(new IllegalActionException());
+                    break;
+            }
         } catch (WrongPlayerException e) {
             game.throwException(e);
         }
-        switch (game.getGamePhase()) {
-            case PLANNING:
-                planning(message);
-                break;
-            case ACTION_MOVE_STUDENTS:
-                moveStudent(message);
-                break;
-            case ACTION_MOVE_MOTHER_NATURE:
-                if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                    try {
-                        moveMotherNature(((MoveMotherNatureMessage) message).getSteps());
-                    } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
-                        game.throwException(e);
-                    }
-                } else game.throwException(new IllegalActionException());
-                break;
-            case ACTION_CHOOSE_CLOUD:
-                if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
-                    try {
-                        pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                    } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                        game.throwException(e);
-                    }
-                } else game.throwException(new IllegalActionException());
-                break;
-            case ACTION_END:
-                //should not go here, the player doesn't do anything in this phase
-                game.throwException(new IllegalActionException());
-                break;
-        }
+
     }
 
 
@@ -143,7 +142,7 @@ public class GameController implements DisconnectionListener {
     private void playerHasEndedPlanning() {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
 
-        if (this.isTurnComplete()) {
+        if (!this.isTurnComplete()) {
             changePlayer();
         } else {
             this.game.setPlayedCount(0);

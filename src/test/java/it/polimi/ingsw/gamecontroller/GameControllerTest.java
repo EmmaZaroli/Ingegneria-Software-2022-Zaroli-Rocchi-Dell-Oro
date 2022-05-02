@@ -61,7 +61,7 @@ class GameControllerTest extends TestCase {
         Assertions.assertEquals(10, player2.getAssistantDeck().size());
         //Correct Message
         AssistantCard cardPlayed2 = player2.getAssistant(1);
-        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player1", MessageType.ASSISTANT_CARD, cardPlayed2);
+        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", MessageType.ASSISTANT_CARD, cardPlayed2);
         gameController.update(message2);
         Assertions.assertEquals(9, player2.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
