@@ -14,7 +14,6 @@ import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
@@ -50,6 +49,14 @@ public class GameController implements DisconnectionListener {
         }
     }
 
+    private void tryMoveMotherNature(MoveMotherNatureMessage message) {
+        try {
+            moveMotherNature(message.getSteps());
+        } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
+            game.throwException(e);
+        }
+    }
+
     public void update(Message message) {
         try {
             checkMessage(message);
@@ -62,11 +69,7 @@ public class GameController implements DisconnectionListener {
                     break;
                 case ACTION_MOVE_MOTHER_NATURE:
                     if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                        try {
-                            moveMotherNature(((MoveMotherNatureMessage) message).getSteps());
-                        } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
-                            game.throwException(e);
-                        }
+                        tryMoveMotherNature((MoveMotherNatureMessage) message);
                     } else game.throwException(new IllegalActionException());
                     break;
                 case ACTION_CHOOSE_CLOUD:
@@ -89,7 +92,6 @@ public class GameController implements DisconnectionListener {
 
     }
 
-
     private void planning(Message message) {
         if (message.getType().equals(MessageType.ASSISTANT_CARD)) {
             try {
@@ -101,7 +103,6 @@ public class GameController implements DisconnectionListener {
             game.throwException(new IllegalActionException());
         }
     }
-
 
     private void fillClouds() {
         try {
@@ -345,7 +346,7 @@ public class GameController implements DisconnectionListener {
                 return (game.getCurrentPlayer() + 1) % game.getPlayersCount();
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
                 Player nextPlayer = Arrays.stream(game.getPlayers())
-                        .sorted((p1, p2) -> Integer.compare(p1.getDiscardPileHead().value(), p2.getDiscardPileHead().value()))
+                        .sorted(Comparator.comparingInt(p -> p.getDiscardPileHead().value()))
                         .toList().get(game.getPlayedCount());
                 //TODO what if two player had played the same card
 
@@ -359,7 +360,6 @@ public class GameController implements DisconnectionListener {
         }
         return 0;
     }
-
 
     protected void playerHasEndedAction() {
         this.game.setGamePhase(this.pickNextPhase());

@@ -6,11 +6,20 @@ import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.List;
 
+/**
+ * A class to build Effects
+ */
 public class EffectFactory {
 
     private EffectFactory() {
     }
 
+    /**
+     * Returns the effect related to the given character
+     *
+     * @param character The selected character
+     * @return The effect related to the given character
+     */
     public static Effect getEffect(Character character) {
         return switch (character) {
             case CHARACTER_ONE -> get1();
