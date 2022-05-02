@@ -78,7 +78,6 @@ class GameControllerTest extends TestCase {
 
     @Test
     void actionMoveStudent() {
-
         //Wrong Messages
         MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
         gameController.update(WrongMessage);
@@ -95,9 +94,7 @@ class GameControllerTest extends TestCase {
         PawnColor student2 = pawnColorInEntrance();
         message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
         gameController.update(message1);
-
-        //TODO solve this bug
-        //Assertions.assertEquals(1, game.getCurrentPlayer());
+        Assertions.assertEquals(0, game.getCurrentPlayer());
         //2.
 
         //steal professor
@@ -112,8 +109,6 @@ class GameControllerTest extends TestCase {
         message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         gameController.update(message2);
         Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
-
-        //TODO solve this bug
-        //Assertions.assertFalse(game.getPlayers()[0].getBoard().isThereProfessor(student));
+        Assertions.assertFalse(game.getPlayers()[1].getBoard().isThereProfessor(student));
     }
 }
