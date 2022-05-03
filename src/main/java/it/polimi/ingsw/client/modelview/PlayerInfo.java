@@ -9,6 +9,13 @@ public class PlayerInfo {
     private AssistantCard discardPileHead;
     private int coins;
 
+    private PlayerInfo(String nickname, SchoolBoard schoolBoard, AssistantCard discardPileHead, int coins) {
+        this.nickname = nickname;
+        this.schoolBoard = schoolBoard;
+        this.discardPileHead = discardPileHead;
+        this.coins = coins;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -23,5 +30,10 @@ public class PlayerInfo {
 
     public int getCoins() {
         return coins;
+    }
+
+    public PlayerInfo deepClone() {
+        //TODO dtos if we have time
+        return new PlayerInfo(this.nickname, this.schoolBoard, this.discardPileHead, this.coins);
     }
 }
