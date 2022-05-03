@@ -463,20 +463,22 @@ public class GameController implements DisconnectionListener {
 
     @Override
     public void onDisconnect() {
-        //when one player disconnect, this will set every player to their status (online or offline)
-        //it is redundant but it should be ok
-        for (int i = 0; i < virtualViews.length; i++)
-            game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-        if (game.howManyPlayersOnline() < 2)
-            notEnoughOnline();
+        synchronized (game) {
+            //when one player disconnect, this will set every player to their status (online or offline)
+            //it is redundant but it should be ok
+            for (int i = 0; i < virtualViews.length; i++)
+                game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+            if (game.howManyPlayersOnline() < 2)
+                notEnoughOnline();
+        }
     }
 
     private void notEnoughOnline() {
-        //TODO set in game WAITING_PHASE or something similar
+        game.setEnoughtPlayerOnline(false);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                //TODO call gameover
+                game.callGameOverFromDisconnection();
             }
         }, 120000); //TODO parameterize this
     }

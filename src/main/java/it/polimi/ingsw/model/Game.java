@@ -28,6 +28,8 @@ public class Game extends Observable implements Serializable {
 
     private Exception error;
 
+    private boolean enoughtPlayerOnline;
+
     public Game(Player[] players, Table table, GameParameters parameters) {
         this.players = players;
         this.table = table;
@@ -94,6 +96,10 @@ public class Game extends Observable implements Serializable {
         return movedPawns;
     }
 
+    public boolean isEnoughtPlayerOnline() {
+        return enoughtPlayerOnline;
+    }
+
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
         notify(gamePhase);
@@ -129,8 +135,19 @@ public class Game extends Observable implements Serializable {
         notify(nicknameWinner);
     }
 
+    public void callGameOverFromDisconnection() {
+        this.gameOver = true;
+        //TODO notify
+    }
+
     public void throwException(Exception e) {
         notify(e);
+    }
+
+    public void setEnoughtPlayerOnline(boolean enoughtPlayerOnline) {
+        this.enoughtPlayerOnline = enoughtPlayerOnline;
+        //TODO notify
+        //TODO block all action if false
     }
 
     public boolean isGameOver() {
