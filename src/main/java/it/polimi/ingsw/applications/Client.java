@@ -21,7 +21,6 @@ public class Client {
 
     public Client(View view) {
         this.view = view;
-        view.init();
-        view.askServerInfo();
+        view.start();
     }
 }

@@ -37,7 +37,8 @@ public class Cli extends View {
         //listeners.addPropertyChangeListener("action", network);
     }
 
-    public void init() {
+    @Override
+    protected void printWelcomeMessage() {
         out.println("      :::::::::: :::::::::  :::::::::::     :::     ::::    ::: ::::::::::: :::   :::  :::::::: \n" +
                 "     :+:        :+:    :+:     :+:       :+: :+:   :+:+:   :+:     :+:     :+:   :+: :+:    :+: \n" +
                 "    +:+        +:+    +:+     +:+      +:+   +:+  :+:+:+  +:+     +:+      +:+ +:+  +:+         \n" +
@@ -56,7 +57,7 @@ public class Cli extends View {
     }
 
     @Override
-    public void askServerInfo() {
+    protected void askServerInfo() {
         //TODO
     }
 
@@ -65,13 +66,13 @@ public class Cli extends View {
      *
      * @return the string read from the input.
      */
-    public String readLine() {
+    private String readLine() {
         String input = null;
         input = in.nextLine();
         return input;
     }
 
-    public void askPlayerNickname() {
+    protected void askPlayerNickname() {
         boolean valid = false;
         String nickname;
         do {
@@ -84,7 +85,7 @@ public class Cli extends View {
         listeners.firePropertyChange("nickname", true, nickname);
     }
 
-    public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
+    protected void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
 
         //clearCli();
         if (playerReconnected) {
@@ -100,7 +101,7 @@ public class Cli extends View {
 
     }
 
-    public void askGameSettings() {
+    protected void askGameSettings() {
         int playersNumber;
         String gameMode;
         out.println("Please enter the Game mode: [normal/expert]");
@@ -112,11 +113,11 @@ public class Cli extends View {
         listeners.firePropertyChange("gameSettings", gameMode, playersNumber);
     }
 
-    public void genericMessage(String message) {
+    protected void genericMessage(String message) {
         out.println(message);
     }
 
-    public void changePhase(GamePhase phase) {
+    protected void changePhase(GamePhase phase) {
         out.println("Phase: " + phase);
     }
 
@@ -125,7 +126,7 @@ public class Cli extends View {
      *
      * @param deck
      */
-    public void askAssistantCard(ArrayList<AssistantCard> deck) {
+    protected void askAssistantCard(ArrayList<AssistantCard> deck) {
 
         out.println("chose the assistant card to play: ");
         out.println();
@@ -157,7 +158,7 @@ public class Cli extends View {
         listeners.firePropertyChange("assistantCard", true, deck.get(card));
     }
 
-    public void updateAssistantCardPlayed(AssistantCard card, String player) {
+    protected void updateAssistantCardPlayed(AssistantCard card, String player) {
         if (!player.equals(getMe().getNickname())) {
             out.println(player + " has played ");
         } else out.println("you have played ");
@@ -167,17 +168,17 @@ public class Cli extends View {
         out.println("  |_____|    ");
     }
 
-    public void askMotherNatureSteps() {
+    protected void askMotherNatureSteps() {
         out.println("How many steps do you want to move mother nature? ");
         int steps = Integer.parseInt(readLine());
         //TODO check if number is <0 or >cardplayed.steps
     }
 
-    public void updateCurrentPlayersTurn(String otherPlayer) {
+    protected void updateCurrentPlayersTurn(String otherPlayer) {
         out.println("it's " + otherPlayer + "turn");
     }
 
-    public void updateCloud(CloudTile cloud) {
+    protected void updateCloud(CloudTile cloud) {
         if (getClouds().size() < 2) {
             getClouds().add(cloud);
         } else {
@@ -192,43 +193,43 @@ public class Cli extends View {
 
     }
 
-    public void updateIslands(IslandCard island) {
+    protected void updateIslands(IslandCard island) {
         islandsPrinter.printIslands();
     }
 
-    public void updateSchoolBoard(String player, SchoolBoard schoolBoard) {
+    protected void updateSchoolBoard(String player, SchoolBoard schoolBoard) {
         out.println(player + " board:");
         boardPrinter.printBoard(schoolBoard);
     }
 
-    public void win() {
+    protected void win() {
         out.println("Well done, you won the game!");
     }
 
-    public void lose() {
+    protected void lose() {
         out.println("Game ended, you lost!");
     }
 
     //TODO maybe send who tied
-    public void draw() {
+    protected void draw() {
         out.println("The game ended in a tie! ");
     }
 
     /**
      * this method is called when there's a fatal error on the server and the game needs to be closed
      */
-    public void errorAndExit(String error) {
+    protected void errorAndExit(String error) {
         out.println("\nERROR: " + error);
         out.println("EXIT.");
         System.exit(1);
     }
 
-    public void error(String error) {
+    protected void error(String error) {
         out.println("");
     }
 
     @Override
-    public void print() {
+    protected void print() {
 
     }
 }

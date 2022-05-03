@@ -16,6 +16,12 @@ public class PlayerInfo {
         this.coins = coins;
     }
 
+    public PlayerInfo with(PlayerInfo baseObject, String nickname) {
+        PlayerInfo retVal = baseObject.deepClone();
+        retVal.nickname = nickname;
+        return retVal;
+    }
+
     public String getNickname() {
         return nickname;
     }
