@@ -463,6 +463,8 @@ public class GameController implements DisconnectionListener {
 
     @Override
     public void onDisconnect() {
+        //when one player disconnect, this will set every player to their status (online or offline)
+        //it is redundant but it should be ok
         for (int i = 0; i < virtualViews.length; i++)
             game.getPlayer(i).setOnline(virtualViews[i].isOnline());
         if (game.howManyPlayersOnline() < 2)

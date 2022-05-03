@@ -23,6 +23,8 @@ public class Endpoint {
     private final List<MessageListener> messageListeners;
     private final List<DisconnectionListener> disconnectionListeners;
 
+    private boolean isOnline;
+
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     public Endpoint(Socket socket) throws IOException {
@@ -31,6 +33,11 @@ public class Endpoint {
         this.socket = socket;
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
+        this.isOnline = true;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
     }
 
     public void sendMessage(Message message) {

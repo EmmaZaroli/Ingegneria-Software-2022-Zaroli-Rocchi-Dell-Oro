@@ -4,7 +4,7 @@ import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.messages.Message;
 
-public class User implements DisconnectionListener {
+public class User {
     private final String nickname;
     private Endpoint endpoint;
     private boolean online;
@@ -12,7 +12,6 @@ public class User implements DisconnectionListener {
     public User(String nickname, Endpoint endpoint) {
         this.nickname = nickname;
         this.endpoint = endpoint;
-        this.endpoint.addDisconnectionListener(this);
     }
 
     public String getNickname() {
@@ -24,15 +23,7 @@ public class User implements DisconnectionListener {
     }
 
     public boolean isOnline() {
-        return online;
-    }
-
-    public void setOnline() {
-        this.online = true;
-    }
-
-    public void setOffline() {
-        this.online = false;
+        return endpoint.isOnline();
     }
 
     public void setEndpoint(Endpoint endpoint) {
@@ -43,8 +34,4 @@ public class User implements DisconnectionListener {
         endpoint.sendMessage(message);
     }
 
-    @Override
-    public void onDisconnect() {
-        setOffline();
-    }
 }
