@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
@@ -8,7 +10,7 @@ import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -64,53 +66,90 @@ public abstract class View implements MessageListener {
     //</editor-fold>
 
     //<editor-fold desc="Facade">
-    public abstract void init();
+    protected abstract void printWelcomeMessage();
 
-    public abstract void askServerInfo();
+    protected abstract void askServerInfo();
 
-    public abstract void askPlayerNickname();
+    protected abstract void askPlayerNickname();
 
-    public abstract void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected);
+    protected abstract void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected);
 
-    public abstract void askGameSettings();
+    protected abstract void askGameSettings();
 
-    public abstract void genericMessage(String Message);
+    protected abstract void genericMessage(String Message);
 
-    public abstract void changePhase(GamePhase phase);
+    protected abstract void changePhase(GamePhase phase);
 
-    public abstract void askAssistantCard(ArrayList<AssistantCard> deck);
+    protected abstract void askAssistantCard(ArrayList<AssistantCard> deck);
 
-    public abstract void updateAssistantCardPlayed(AssistantCard card, String player);
+    protected abstract void updateAssistantCardPlayed(AssistantCard card, String player);
 
-    public abstract void askMotherNatureSteps();
+    protected abstract void askMotherNatureSteps();
 
-    public abstract void updateCurrentPlayersTurn(String otherPlayer);
+    protected abstract void updateCurrentPlayersTurn(String otherPlayer);
 
-    public abstract void updateCloud(CloudTile cloud);
+    protected abstract void updateCloud(CloudTile cloud);
 
-    public abstract void updateIslands(IslandCard island);
+    protected abstract void updateIslands(IslandCard island);
 
-    public abstract void updateSchoolBoard(String player, SchoolBoard schoolBoard);
+    protected abstract void updateSchoolBoard(String player, SchoolBoard schoolBoard);
 
-    public abstract void win();
+    protected abstract void win();
 
-    public abstract void lose();
+    protected abstract void lose();
 
-    public abstract void draw();
+    protected abstract void draw();
 
-    public abstract void errorAndExit(String error);
+    protected abstract void errorAndExit(String error);
 
-    public abstract void error(String error);
+    protected abstract void error(String error);
 
-    public abstract void print();
+    protected abstract void print();
+    //</editor-fold>
+
+    //<editor-fold desc="Message handlers">
+    private void handleMessage(NicknameResponseMessage message) {
+        switch (message.getNicknameStatus()) {
+            case FREE -> {
+                me = me.with(me, message.getNickname());
+                this.showNicknameResult(true, false);
+                this.askGameSettings();
+            }
+            case FROM_DISCONNECTED_PLAYER -> {
+                me = me.with(me, message.getNickname());
+                this.showNicknameResult(true, true);
+                //TODO restore model view
+            }
+            case FROM_CONNECTED_PLAYER -> {
+                this.showNicknameResult(false, false);
+                this.askPlayerNickname();
+            }
+        }
+    }
+
+    private void handleMessage(GametypeResponseMessage message) {
+        if (message.isOk()) {
+            //TODO Instantiate model view?
+        } else {
+            error(ErrorMessages.PARAMETERS_ERROR);
+            this.askServerInfo();
+        }
+    }
     //</editor-fold>
 
     @Override
     public void onMessageReceived(Message message) {
         //TODO
+        if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
+        if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">
+    public void start() {
+        this.printWelcomeMessage();
+        this.askServerInfo();
+    }
+
     protected final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
@@ -124,7 +163,17 @@ public abstract class View implements MessageListener {
     }
 
     protected final void sendPlayerNickname(String nickname) {
+        Message m = new NicknameProposalMessage(nickname, MessageType.NICKNAME_PROPOSAL);
+        endpoint.sendMessage(m);
+    }
 
+    protected final void sendGameSettings(int numberOfPlayers, boolean expertGame) {
+        Message m = new GametypeRequestMessage(
+                me.getNickname(),
+                MessageType.GAME_TYPE_REQUEST,
+                expertGame ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE,
+                numberOfPlayers == 2 ? PlayersNumber.TWO : PlayersNumber.THREE);
+        endpoint.sendMessage(m);
     }
     //</editor-fold>
 }

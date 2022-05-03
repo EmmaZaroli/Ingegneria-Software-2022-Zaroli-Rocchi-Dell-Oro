@@ -9,4 +9,8 @@ public class NicknameResponseMessage extends Message {
         super(nickname, messageType);
         this.nicknameStatus = nicknameStatus;
     }
+
+    public NicknameStatus getNicknameStatus() {
+        return this.nicknameStatus;
+    }
 }
