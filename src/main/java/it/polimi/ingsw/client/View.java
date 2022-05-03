@@ -1,46 +1,42 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.MessageListener;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * View class contains a small representation of the game model
  */
-public abstract class View {
-    private String nickname;
-    private SchoolBoard board;
-    private AssistantCard cardThrown;
-    public List<CloudTile> clouds = new ArrayList<>();
+public abstract class View implements MessageListener {
+    protected boolean isExpertGame;
+    protected List<PlayerInfo> opponents;
+    protected PlayerInfo me;
+    protected List<AssistantCard> deck;
+
+    protected List<CloudTile> clouds = new ArrayList<>();
+
+    private Endpoint endpoint;
 
     public SchoolBoard getBoard() {
-        return board;
-    }
-
-    
-    public void setBoard(SchoolBoard board) {
-        this.board = board;
+        return me.getBoard();
     }
 
     public AssistantCard getCardThrown() {
-        return cardThrown;
-    }
-
-    public void setCardThrown(AssistantCard cardThrown) {
-        this.cardThrown = cardThrown;
+        return me.getDiscardPileHead();
     }
 
     public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+        return me.getNickname();
     }
 
     public abstract void init();
@@ -79,4 +75,10 @@ public abstract class View {
 
     public abstract void error(String error);
 
+    protected void startConnection(String ipAddress, int port) throws IOException {
+        Socket s = new Socket(ipAddress, port);
+        this.endpoint = new Endpoint(s);
+        this.endpoint.addMessageListener(this);
+        this.endpoint.startReceiving();
+    }
 }
