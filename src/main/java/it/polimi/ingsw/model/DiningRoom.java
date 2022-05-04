@@ -30,7 +30,7 @@ public class DiningRoom implements Serializable {
      * @param color the color of the student
      * @return true if the player is supposed to take one coin from the table, false otherwise
      */
-    public boolean addStudent(PawnColor color) {
+    protected boolean addStudent(PawnColor color) {
         int studentsOfSelectedColor = this.students.get(color);
         studentsOfSelectedColor++;
         this.students.replace(color, studentsOfSelectedColor);

@@ -9,6 +9,11 @@ public class PlayerInfo {
     private AssistantCard discardPileHead;
     private int coins;
 
+    public PlayerInfo() {
+        this.nickname = "";
+        this.coins = 0;
+    }
+
     private PlayerInfo(String nickname, SchoolBoard schoolBoard, AssistantCard discardPileHead, int coins) {
         this.nickname = nickname;
         this.schoolBoard = schoolBoard;
@@ -16,8 +21,8 @@ public class PlayerInfo {
         this.coins = coins;
     }
 
-    public PlayerInfo with(PlayerInfo baseObject, String nickname) {
-        PlayerInfo retVal = baseObject.deepClone();
+    public PlayerInfo with(String nickname) {
+        PlayerInfo retVal = this.deepClone();
         retVal.nickname = nickname;
         return retVal;
     }

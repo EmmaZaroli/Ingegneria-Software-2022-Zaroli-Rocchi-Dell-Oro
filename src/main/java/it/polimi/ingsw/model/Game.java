@@ -5,9 +5,10 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
 
-public class Game extends Observable<Serializable> implements Serializable {
+public class Game extends Observable implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -24,6 +25,10 @@ public class Game extends Observable<Serializable> implements Serializable {
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
     private boolean gameOver = false;
+
+    private Exception error;
+
+    private boolean enoughtPlayerOnline;
 
     public Game(Player[] players, Table table, GameParameters parameters) {
         this.players = players;
@@ -91,6 +96,10 @@ public class Game extends Observable<Serializable> implements Serializable {
         return movedPawns;
     }
 
+    public boolean isEnoughtPlayerOnline() {
+        return enoughtPlayerOnline;
+    }
+
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
         notify(gamePhase);
@@ -117,16 +126,53 @@ public class Game extends Observable<Serializable> implements Serializable {
         this.movedPawns = movedPawns;
     }
 
+    public void movePawn() {
+        this.movedPawns++;
+    }
+
     public void callWin(String nicknameWinner) {
         this.gameOver = true;
         notify(nicknameWinner);
+    }
+
+    public void callGameOverFromDisconnection() {
+        this.gameOver = true;
+        //TODO notify
     }
 
     public void throwException(Exception e) {
         notify(e);
     }
 
+    public void setEnoughtPlayerOnline(boolean enoughtPlayerOnline) {
+        this.enoughtPlayerOnline = enoughtPlayerOnline;
+        //TODO notify
+        //TODO block all action if false
+    }
+
     public boolean isGameOver() {
         return this.gameOver;
+    }
+
+    public void changePlayer(int playerIndex) {
+        setCurrentPlayer(playerIndex);
+        setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
+    }
+
+    public void setError(Exception e) {
+        this.error = e;
+        notify(this.error);
+    }
+
+    public Exception getLastError() {
+        return this.error;
+    }
+
+    public Player getPlayer(int playerIndex) {
+        return players[playerIndex];
+    }
+
+    public int howManyPlayersOnline() {
+        return (int) Arrays.stream(players).filter(Player::isOnline).count();
     }
 }

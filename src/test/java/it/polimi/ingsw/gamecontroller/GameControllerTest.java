@@ -12,6 +12,8 @@ import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.MessageType;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,12 +29,12 @@ class GameControllerTest extends TestCase {
     Player[] players = {player1, player2};
     Game game = new Game(players);
     TableController tableController = new TableController(game.getTable());
-    GameController gameController = new GameController(game, tableController);
-
+    VirtualView[] virtualViews = new VirtualView[2];
+    //TODO initialize virtualViews
+    GameController gameController = new GameController(game, tableController, virtualViews);
 
     @BeforeEach
-    public void Planning() {
-        gameController.run();
+    public void planning() {
         Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());
         Assertions.assertEquals(7, player2.getBoard().countStudentsInEntrance());
 
@@ -59,7 +61,7 @@ class GameControllerTest extends TestCase {
         Assertions.assertEquals(10, player2.getAssistantDeck().size());
         //Correct Message
         AssistantCard cardPlayed2 = player2.getAssistant(1);
-        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player1", MessageType.ASSISTANT_CARD, cardPlayed2);
+        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", MessageType.ASSISTANT_CARD, cardPlayed2);
         gameController.update(message2);
         Assertions.assertEquals(9, player2.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
@@ -75,7 +77,7 @@ class GameControllerTest extends TestCase {
     }
 
     @Test
-    void Action_Move_Student() {
+    void actionMoveStudent() {
         //Wrong Messages
         MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
         gameController.update(WrongMessage);
@@ -92,7 +94,7 @@ class GameControllerTest extends TestCase {
         PawnColor student2 = pawnColorInEntrance();
         message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
         gameController.update(message1);
-        Assertions.assertEquals(1, game.getCurrentPlayer());
+        Assertions.assertEquals(0, game.getCurrentPlayer());
         //2.
 
         //steal professor
@@ -107,6 +109,6 @@ class GameControllerTest extends TestCase {
         message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         gameController.update(message2);
         Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
-        Assertions.assertFalse(game.getPlayers()[0].getBoard().isThereProfessor(student));
+        Assertions.assertFalse(game.getPlayers()[1].getBoard().isThereProfessor(student));
     }
 }

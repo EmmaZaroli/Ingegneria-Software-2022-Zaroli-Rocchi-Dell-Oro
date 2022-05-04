@@ -1,12 +1,9 @@
 package it.polimi.ingsw.client.cli;
 
-import it.polimi.ingsw.client.InputParsen;
+import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.CloudTile;
-import it.polimi.ingsw.model.IslandCard;
-import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.beans.PropertyChangeSupport;
@@ -17,7 +14,7 @@ import java.util.Scanner;
 public class Cli extends View {
     private final PrintStream out;
     private final Scanner in;
-    private final InputParsen inputParsen;
+    private final InputParser inputParser;
     private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -34,7 +31,7 @@ public class Cli extends View {
     public Cli() {
         out = System.out;
         in = new Scanner(System.in);
-        inputParsen = new InputParsen();
+        inputParser = new InputParser();
         //listeners.addPropertyChangeListener("action", network);
     }
 
@@ -55,6 +52,11 @@ public class Cli extends View {
         } catch (Exception e) {
             out.println(e);
         }
+    }
+
+    @Override
+    protected void printEnqueuedMessage() {
+        //TODO
     }
 
     @Override
@@ -79,7 +81,7 @@ public class Cli extends View {
         do {
             out.println("Enter your nickname: ");
             nickname = readLine();
-            valid = inputParsen.checkUsername(nickname);
+            valid = inputParser.checkUsername(nickname);
         } while (!valid);
         //TODO
         //setNickname(nickname);

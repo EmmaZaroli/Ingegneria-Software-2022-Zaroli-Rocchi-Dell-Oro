@@ -5,7 +5,8 @@ import it.polimi.ingsw.utils.RandomHelper;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * A class representing the bag
@@ -22,7 +23,7 @@ public class Bag implements Serializable {
     /**
      * Builds the new bag
      */
-    public Bag() {
+    protected Bag() {
         this.students = new EnumMap<>(PawnColor.class);
         for (PawnColor pc : PawnColor.values()) {
             if (pc != PawnColor.NONE) {

@@ -7,44 +7,34 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
-//TODO remove this generic...
-public class GameController implements Observer<Message> {
+//TODO implement ViewObserver
+//TODO add observables/observers
+public class GameController implements DisconnectionListener {
     protected Game game;
     protected TableController tableController;
+    protected VirtualView[] virtualViews;
+    private Timer timer = new Timer();
 
-    //TODO we need to receive also the virtualViews and add them as observers of the model's classes
-    public GameController(Game game, TableController tableController) {
+    public GameController(Game game, TableController tableController, VirtualView[] virtualViews) {
         this.game = game;
         this.tableController = tableController;
-    }
-
-    public GameController(Player[] players) {
-        this.init(players);
+        this.virtualViews = virtualViews;
+        this.init(game.getPlayers());
     }
 
     protected void init(Player[] players) {
-        this.game = new Game(players);
-        this.tableController = new TableController(game.getTable());
-    }
 
-    /*public String[] getPlayersNames(){
-        return Arrays.stream(game.getPlayers()).map(player -> player.getNickname()).toArray(String[]::new);
-    }*/
-
-    //TODO move away from here. The game controller controls ONLY the game
-    // starts the game thread
-    //@Override
-    public void run() {
         fillClouds();
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
@@ -59,46 +49,48 @@ public class GameController implements Observer<Message> {
         }
     }
 
-
-    @Override
-    public void update(Message message) {
+    private void tryMoveMotherNature(MoveMotherNatureMessage message) {
         try {
-            checkMessage(message);
-        } catch (WrongPlayerException e) {
+            moveMotherNature(message.getSteps());
+        } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
             game.throwException(e);
-        }
-        switch (game.getGamePhase()) {
-            case PLANNING:
-                planning(message);
-                break;
-            case ACTION_MOVE_STUDENTS:
-                moveStudent(message);
-                break;
-            case ACTION_MOVE_MOTHER_NATURE:
-                if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                    try {
-                        moveMotherNature(((MoveMotherNatureMessage) message).getSteps());
-                    } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
-                        game.throwException(e);
-                    }
-                } else game.throwException(new IllegalActionException());
-                break;
-            case ACTION_CHOOSE_CLOUD:
-                if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
-                    try {
-                        pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                    } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                        game.throwException(e);
-                    }
-                } else game.throwException(new IllegalActionException());
-                break;
-            case ACTION_END:
-                //should not go here, the player doesn't do anything in this phase
-                game.throwException(new IllegalActionException());
-                break;
         }
     }
 
+    public void update(Message message) {
+        try {
+            checkMessage(message);
+            switch (game.getGamePhase()) {
+                case PLANNING:
+                    planning(message);
+                    break;
+                case ACTION_MOVE_STUDENTS:
+                    moveStudent(message);
+                    break;
+                case ACTION_MOVE_MOTHER_NATURE:
+                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                        tryMoveMotherNature((MoveMotherNatureMessage) message);
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_CHOOSE_CLOUD:
+                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                        try {
+                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                            game.throwException(e);
+                        }
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_END:
+                    //should not go here, the player doesn't do anything in this phase
+                    game.throwException(new IllegalActionException());
+                    break;
+            }
+        } catch (WrongPlayerException e) {
+            game.throwException(e);
+        }
+
+    }
 
     private void planning(Message message) {
         if (message.getType().equals(MessageType.ASSISTANT_CARD)) {
@@ -111,7 +103,6 @@ public class GameController implements Observer<Message> {
             game.throwException(new IllegalActionException());
         }
     }
-
 
     private void fillClouds() {
         try {
@@ -153,12 +144,11 @@ public class GameController implements Observer<Message> {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
 
         if (!this.isTurnComplete()) {
-            this.game.setCurrentPlayer(pickNextPlayer());
-            this.game.setCurrentPlayerBoard(game.getCurrentPlayerSchoolBoard());
+            changePlayer();
         } else {
             this.game.setPlayedCount(0);
             this.game.setGamePhase(pickNextPhase());
-            this.game.setCurrentPlayer(pickNextPlayer());
+            changePlayer();
         }
 
         DataDumper.getInstance().saveGame(game);
@@ -197,13 +187,9 @@ public class GameController implements Observer<Message> {
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
-                game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color) > player.getBoard().getStudentsInDiningRoom(color)) {
-            try {
-                player.getBoard().removeProfessor(color);
-            } catch (Exception e) {
-                //TODO do we need to send this one to the player?
-                e.printStackTrace();
-            }
+                game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
+                        > player.getBoard().getStudentsInDiningRoom(color)) {
+            player.getBoard().removeProfessor(color);
             game.getCurrentPlayerSchoolBoard().addProfessor(color);
         }
     }
@@ -265,14 +251,7 @@ public class GameController implements Observer<Message> {
             Pair<Tower, Integer> result = this.tableController.buildTower(player.getBoard().getTowerColor());
             Arrays.stream(this.game.getPlayers())
                     .filter(x -> x.getBoard().getTowerColor() == result.first())
-                    .forEach(x -> {
-                        try {
-                            x.getBoard().addTowers(result.second());
-                        } catch (Exception e) {
-                            //TODO this is not the proper way of handling exceptions
-                            e.printStackTrace();
-                        }
-                    });
+                    .forEach(x -> x.getBoard().addTowers(result.second()));
             for (int i = 0; i < result.second(); i++) {
                 player.getBoard().removeTower();
                 checkImmediateGameOver();
@@ -319,8 +298,7 @@ public class GameController implements Observer<Message> {
     }
 
     void movedPawn() {
-        //TODO increment instead of get + 1
-        game.setMovedPawns(game.getMovedPawns() + 1);
+        game.movePawn();
         if (this.game.getMovedPawns() == game.getPlayersCount() + 1) {
             this.game.setMovedPawns(0);
             this.playerHasEndedAction();
@@ -353,21 +331,27 @@ public class GameController implements Observer<Message> {
         };
     }
 
+    private void changePlayer() {
+        int nextPlayer = pickNextPlayer();
+        game.changePlayer(nextPlayer);
+
+        if (!game.getPlayer(game.getCurrentPlayer()).isOnline())
+            changePlayer();
+    }
+
     //TODO hopefully it will become less complex
     private int pickNextPlayer() {
         switch (game.getGamePhase()) {
             case PLANNING:
                 return (game.getCurrentPlayer() + 1) % game.getPlayersCount();
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
-                Optional<Player> nextPlayer = Arrays.stream(game.getPlayers())
-                        .filter((Player p) ->
-                                p.getDiscardPileHead().value() >= game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().value())
-                        .min(Comparator.comparing(p -> (p.getDiscardPileHead().value())));
-
-                if (nextPlayer.isEmpty()) nextPlayer = Optional.of(game.getPlayers()[0]);
+                Player nextPlayer = Arrays.stream(game.getPlayers())
+                        .sorted(Comparator.comparingInt(p -> p.getDiscardPileHead().value()))
+                        .toList().get(game.getPlayedCount());
+                //TODO what if two player had played the same card
 
                 for (int i = 0; i < game.getPlayers().length; i++) {
-                    if (game.getPlayers()[i].getNickname().equals(nextPlayer.get().getNickname()))
+                    if (game.getPlayer(i).getNickname().equals(nextPlayer.getNickname()))
                         return i;
                 }
                 break;
@@ -377,15 +361,12 @@ public class GameController implements Observer<Message> {
         return 0;
     }
 
-
     protected void playerHasEndedAction() {
         this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
-            if (!this.isTurnComplete()) {
-                //TODO I'm repeating this snippet too many times, move into pickNextPlayer?
-                this.game.setCurrentPlayer(pickNextPlayer());
-                this.game.setCurrentPlayerBoard(game.getPlayers()[this.game.getCurrentPlayer()].getBoard());
+            if (this.isTurnComplete()) {
+                changePlayer();
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {
                 try {
@@ -478,5 +459,47 @@ public class GameController implements Observer<Message> {
         }
         // it arrives here only if there are 2 player with the same number of tower and professors
         return "draw";
+    }
+
+    @Override
+    public void onDisconnect() {
+        synchronized (game) {
+            //when one player disconnect, this will set every player to their status (online or offline)
+            //it is redundant but it should be ok
+            for (int i = 0; i < virtualViews.length; i++)
+                game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+            if (game.howManyPlayersOnline() < 2 && game.isEnoughtPlayerOnline())
+                notEnoughOnline();
+        }
+    }
+
+    //called only when, previously a disconnection, there are enough player online, and then there are not
+    private void notEnoughOnline() {
+        game.setEnoughtPlayerOnline(false);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                game.callGameOverFromDisconnection();
+            }
+        }, 120000); //TODO parameterize this
+    }
+
+    //TODO make this as listener to virtualview or user
+    public void onReconnect() {
+        synchronized (game) {
+            //when one player reconnect, this will set every player to their status (online or offline)
+            //it is redundant but it should be ok
+            for (int i = 0; i < virtualViews.length; i++)
+                game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+            if (game.howManyPlayersOnline() >= 2 && !game.isEnoughtPlayerOnline())
+                enoughOnline();
+        }
+    }
+
+    //called only when, previously a reconnection, there weren't enough player online, and then there are
+    private void enoughOnline() {
+        game.setEnoughtPlayerOnline(true);
+        timer.cancel();
+        timer = new Timer();
     }
 }

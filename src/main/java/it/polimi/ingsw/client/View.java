@@ -17,6 +17,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * View class contains a small representation of the game model
@@ -32,6 +33,14 @@ public abstract class View implements MessageListener {
     private String currentPlayer;
 
     private Endpoint endpoint;
+
+    protected View() {
+        this.opponents = new LinkedList<>();
+        this.me = new PlayerInfo();
+        this.deck = new LinkedList<>();
+        this.clouds = new LinkedList<>();
+        this.tableCoins = 0;
+    }
 
     //<editor-fold desc="Getters">
     public PlayerInfo getMe() {
@@ -74,6 +83,8 @@ public abstract class View implements MessageListener {
     //<editor-fold desc="Facade">
     protected abstract void printWelcomeMessage();
 
+    protected abstract void printEnqueuedMessage();
+
     protected abstract void askServerInfo();
 
     protected abstract void askPlayerNickname();
@@ -109,12 +120,12 @@ public abstract class View implements MessageListener {
     private void handleMessage(NicknameResponseMessage message) {
         switch (message.getNicknameStatus()) {
             case FREE -> {
-                me = me.with(me, message.getNickname());
+                me = me.with(message.getNickname());
                 this.showNicknameResult(true, false);
                 this.askGameSettings();
             }
             case FROM_DISCONNECTED_PLAYER -> {
-                me = me.with(me, message.getNickname());
+                me = me.with(message.getNickname());
                 this.showNicknameResult(true, true);
                 //TODO restore model view
             }
@@ -127,7 +138,7 @@ public abstract class View implements MessageListener {
 
     private void handleMessage(GametypeResponseMessage message) {
         if (message.isOk()) {
-            //TODO Instantiate model view?
+            this.printEnqueuedMessage();
         } else {
             error(ErrorMessages.PARAMETERS_ERROR);
             this.askServerInfo();
@@ -135,21 +146,25 @@ public abstract class View implements MessageListener {
     }
 
     private void handleMessage(CloudMessage message) {
-        //if we send a message at the beginning with both clouds, we can cancel this
-        if (clouds.size() < 2) {
-            getClouds().add(message.getCloud());
-        } else {
-            for (int i = 0; i < 2; i++) {
-                if (getClouds().get(i).getUuid().equals(message.getCloud().getUuid())) {
-                    getClouds().remove(i);
-                    getClouds().add(i, message.getCloud());
-                }
-            }
-        }
-        if (getClouds().size() == 2) print();
+        //TODO dto with wither
+        Optional<CloudTile> cloud = this.clouds.stream()
+                .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
+        //TODO
     }
 
+    private void handleMessage(SchoolBoardMessage message) {
+        //TODO dto with wither
+        if (message.getNickname().equals(me.getNickname())) {
+            //TODO change my schoolboard
+        } else {
+            Optional<PlayerInfo> player = this.opponents.stream()
+                    .filter(x -> x.getNickname().equals(message.getNickname())).findFirst();
 
+            if (player.isPresent()) {
+                //TODO change schoolboard
+            }
+        }
+    }
     //</editor-fold>
 
     @Override
@@ -157,8 +172,8 @@ public abstract class View implements MessageListener {
         //TODO
         if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
         if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
-        //TODO if message instanceof getDeckMessage --> set currentPlayer to the nickname in the message,call method print() and then askAssistantCard()
-
+        if (message instanceof CloudMessage) handleMessage((CloudMessage) message);
+        if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">
@@ -191,6 +206,7 @@ public abstract class View implements MessageListener {
                 expertGame ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE,
                 numberOfPlayers == 2 ? PlayersNumber.TWO : PlayersNumber.THREE);
         endpoint.sendMessage(m);
+        this.isExpertGame = expertGame;
     }
     //</editor-fold>
 }

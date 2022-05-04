@@ -1,31 +1,32 @@
 package it.polimi.ingsw.observer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Observable<T> {
+public class Observable {
 
-    private final List<Observer<T>> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
     /**
      * Adds an observer.
      *
-     * @param observer the observer to be added.
+     * @param modelObserver the observer to be added.
      */
-    public void addObserver(Observer<T> observer) {
-        observers.add(observer);
+    public void addObserver(Observer modelObserver) {
+        observers.add(modelObserver);
     }
 
     /**
      * Removes an observer.
      *
-     * @param observer the observer to be removed.
+     * @param modelObserver the observer to be removed.
      */
-    public void removeObserver(Observer<T> observer) {
-        observers.remove(observer);
+    public void removeObserver(ModelObserver modelObserver) {
+        observers.remove(modelObserver);
     }
 
-    public void notify(T message) {
-        for (Observer<T> observer : observers) {
+    public void notify(Object message) {
+        for (Observer observer : observers) {
             observer.update(message);
         }
     }
