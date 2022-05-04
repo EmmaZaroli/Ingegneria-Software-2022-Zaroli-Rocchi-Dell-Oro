@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.client.InputParsen;
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
@@ -26,9 +27,9 @@ public class Cli extends View {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
-    private PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
-    private PrinterClouds cloudPrinter = new PrinterClouds();
-    private PrinterIslands islandsPrinter = new PrinterIslands();
+    private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
+    private final PrinterClouds cloudPrinter = new PrinterClouds();
+    private final PrinterIslands islandsPrinter = new PrinterIslands();
 
     public Cli() {
         out = System.out;
@@ -158,16 +159,6 @@ public class Cli extends View {
         listeners.firePropertyChange("assistantCard", true, deck.get(card));
     }
 
-    protected void updateAssistantCardPlayed(AssistantCard card, String player) {
-        if (!player.equals(getMe().getNickname())) {
-            out.println(player + " has played ");
-        } else out.println("you have played ");
-        out.println("   _____     ");
-        out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
-        out.println("  |     |    ");
-        out.println("  |_____|    ");
-    }
-
     protected void askMotherNatureSteps() {
         out.println("How many steps do you want to move mother nature? ");
         int steps = Integer.parseInt(readLine());
@@ -178,28 +169,48 @@ public class Cli extends View {
         out.println("it's " + otherPlayer + "turn");
     }
 
-    protected void updateCloud(CloudTile cloud) {
-        if (getClouds().size() < 2) {
-            getClouds().add(cloud);
-        } else {
-            for (int i = 0; i < 2; i++) {
-                if (getClouds().get(i).getUuid().equals(cloud.getUuid())) {
-                    getClouds().remove(i);
-                    getClouds().add(i, cloud);
+    @Override
+    protected void print() {
+        printCloud();
+        printIslands();
+        for (int i = 0; i < getOpponents().size(); i++) {
+            if (getOpponents().get(i).getNickname().equals(getCurrentPlayer())) {
+                printSchoolBoard(getMe());
+                if (i + 1 < getOpponents().size()) {
+                    printSchoolBoard(getOpponents().get(i + 1));
                 }
             }
+            printSchoolBoard(getOpponents().get(i));
         }
-        if (getClouds().size() == 2) cloudPrinter.printClouds(getClouds());
-
     }
 
-    protected void updateIslands(IslandCard island) {
+    private void printCoins() {
+        //TODO
+    }
+
+    private void printCharacterCards() {
+        //TODO
+    }
+
+    private void printCloud() {
+        cloudPrinter.printClouds(getClouds());
+    }
+
+    private void printIslands() {
         islandsPrinter.printIslands();
     }
 
-    protected void updateSchoolBoard(String player, SchoolBoard schoolBoard) {
-        out.println(player + " board:");
-        boardPrinter.printBoard(schoolBoard);
+    private void printSchoolBoard(PlayerInfo player) {
+        out.println(player.getNickname() + " board:");
+        boardPrinter.printBoard(player.getBoard());
+        printAssistantCardPlayed(player.getDiscardPileHead());
+    }
+
+    private void printAssistantCardPlayed(AssistantCard card) {
+        out.println("   _____     ");
+        out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
+        out.println("  |     |    ");
+        out.println("  |_____|    ");
     }
 
     protected void win() {
@@ -228,8 +239,5 @@ public class Cli extends View {
         out.println("");
     }
 
-    @Override
-    protected void print() {
 
-    }
 }
