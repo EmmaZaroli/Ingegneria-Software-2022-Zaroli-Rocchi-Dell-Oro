@@ -22,11 +22,16 @@ public class ServerMock implements MessageListener {
 
     @Override
     public void onMessageReceived(Message message) {
-        if (message instanceof NicknameProposalMessage) {
-            endpoint.sendMessage(new NicknameResponseMessage(message.getNickname(), MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
-        }
-        if (message instanceof GametypeRequestMessage) {
-            endpoint.sendMessage(new GametypeResponseMessage(message.getNickname(), MessageType.NICKNAME_RESPONSE, true));
+        try {
+            if (message instanceof NicknameProposalMessage) {
+                endpoint.sendMessage(new NicknameResponseMessage(message.getNickname(), MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
+            }
+            if (message instanceof GametypeRequestMessage) {
+                endpoint.sendMessage(new GametypeResponseMessage(message.getNickname(), MessageType.NICKNAME_RESPONSE, true));
+                Thread.sleep(2000);
+
+            }
+        } catch (Exception e) {
         }
     }
 }

@@ -58,6 +58,11 @@ public class Cli extends View {
     }
 
     @Override
+    protected void printEnqueuedMessage() {
+        //TODO
+    }
+
+    @Override
     protected void askServerInfo() {
         //TODO
     }
