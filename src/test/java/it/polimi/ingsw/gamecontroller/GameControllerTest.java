@@ -8,9 +8,14 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
-import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
+import it.polimi.ingsw.network.messages.MessageType;
+import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
+import it.polimi.ingsw.network.messages.MoveStudentMessage;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +63,6 @@ class GameControllerTest extends TestCase {
         gameController.update(message2);
         Assertions.assertEquals(9, player2.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
-
     }
 
     private PawnColor pawnColorInEntrance() {
@@ -71,11 +75,11 @@ class GameControllerTest extends TestCase {
     }
 
     @Test
-    public void Action_Move_Student() {
-
+    void Action_Move_Student() {
         //Wrong Messages
         MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
         gameController.update(WrongMessage);
+
         //Correct Message
         IslandCard island = game.getTable().getIslands().get(0);
         MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
@@ -88,7 +92,7 @@ class GameControllerTest extends TestCase {
         PawnColor student2 = pawnColorInEntrance();
         message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
         gameController.update(message1);
-        Assertions.assertTrue(game.getCurrentPlayer() == 1);
+        Assertions.assertEquals(1, game.getCurrentPlayer());
         //2.
 
         //steal professor
@@ -104,8 +108,5 @@ class GameControllerTest extends TestCase {
         gameController.update(message2);
         Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
         Assertions.assertFalse(game.getPlayers()[0].getBoard().isThereProfessor(student));
-
-
     }
-
 }

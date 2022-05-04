@@ -46,7 +46,7 @@ class IslandCardTest extends TestCase {
 
     @Test
     void size() {
-        islandCard1.incrementSize();
+        islandCard1.incrementSize(1);
         Assertions.assertEquals(2, islandCard1.getSize());
     }
 

@@ -116,7 +116,7 @@ public class GameHandlerBuilder {
     private VirtualView[] buildVirtualViews(Game gameModel) {
         VirtualView[] virtualViews = new VirtualView[playersNumber.getPlayersNumber()];
         for (int i = 0; i < virtualViews.length; i++) {
-            virtualViews[i] = new VirtualView(users.get(i).getEndpoint(), users.get(i).getNickname(), gameModel);
+            virtualViews[i] = new VirtualView(users.get(i), gameModel);
         }
         return virtualViews;
     }
