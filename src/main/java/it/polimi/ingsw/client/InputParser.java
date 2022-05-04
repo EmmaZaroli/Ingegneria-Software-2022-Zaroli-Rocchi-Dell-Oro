@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client;
 
-public class InputParsen {
+public class InputParser {
 
 
     //TODO maybe use exceptions
