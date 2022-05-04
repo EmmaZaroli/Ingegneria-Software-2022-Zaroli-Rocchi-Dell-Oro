@@ -484,6 +484,7 @@ public class GameController implements DisconnectionListener {
         }, 120000); //TODO parameterize this
     }
 
+    //TODO make this as listener to virtualview or user
     public void onReconnect() {
         synchronized (game) {
             //when one player reconnect, this will set every player to their status (online or offline)
