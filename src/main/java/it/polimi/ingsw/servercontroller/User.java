@@ -1,5 +1,6 @@
 package it.polimi.ingsw.servercontroller;
 
+import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.messages.Message;
 
@@ -22,15 +23,7 @@ public class User {
     }
 
     public boolean isOnline() {
-        return online;
-    }
-
-    public void setOnline() {
-        this.online = true;
-    }
-
-    public void setOffline() {
-        this.online = false;
+        return endpoint.isOnline();
     }
 
     public void setEndpoint(Endpoint endpoint) {
@@ -40,4 +33,5 @@ public class User {
     public void sendMessage(Message message) {
         endpoint.sendMessage(message);
     }
+
 }

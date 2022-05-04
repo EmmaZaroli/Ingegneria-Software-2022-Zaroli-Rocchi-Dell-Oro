@@ -12,14 +12,24 @@ import it.polimi.ingsw.utils.Pair;
 
 import java.util.*;
 
+/**
+ * A class wrapping the logic for the management of the game table
+ */
 public class TableController {
     protected Table table;
 
+    /**
+     * Creates a new controller for the given table
+     *
+     * @param table The table to associate to the controller
+     */
     public TableController(Table table) {
         this.table = table;
     }
 
-    //method to call the first time to fill the Entrance in SchoolBoard
+    /**
+     * Fills the entrances at the beginning of the game
+     */
     public List<PawnColor> drawStudents() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
         if (table.getPlayersNumber() == 2) {
@@ -34,6 +44,12 @@ public class TableController {
         return studentsDrawn;
     }
 
+    /**
+     * Draws n students from the bag
+     *
+     * @param n The number fo students to draw
+     * @return The drawn students
+     */
     public List<PawnColor> drawStudents(int n) {
         List<PawnColor> students = new LinkedList<>();
         for (int i = 0; i < n; i++) {
@@ -42,10 +58,15 @@ public class TableController {
         return students;
     }
 
+    /**
+     * Adds the students to the cloud
+     *
+     * @throws FullCloudException The cloud is not empty
+     */
     public void fillClouds() throws FullCloudException {
         List<PawnColor> studentsDrawn = new LinkedList<>();
         for (CloudTile cloudTile : table.getCloudTiles()) {
-            if (!cloudTile.takeStudentsFromCloud().isEmpty()) throw new FullCloudException();
+            if (!table.takeStudentsFromCloud(cloudTile).isEmpty()) throw new FullCloudException();
         }
         for (CloudTile cloud : table.getCloudTiles()) {
             if (table.getPlayersNumber() == 2) {
@@ -57,17 +78,28 @@ public class TableController {
                     studentsDrawn.add(table.getBag().drawStudent());
                 }
             }
-            cloud.addStudents(studentsDrawn);
+            table.addStudents(cloud, studentsDrawn);
             studentsDrawn.clear();
         }
     }
 
-
+    /**
+     * Moves a pawn on an island
+     *
+     * @param student The student to place
+     * @param uuid    The id of the target island
+     * @throws WrongUUIDException When the given id doesn't correspond to an island
+     */
     public void movePawnOnIsland(PawnColor student, UUID uuid) throws WrongUUIDException {
-        table.getIsland(uuid).movePawnOnIsland(student);
+        table.movePawnOnIsland(table.getIsland(uuid), student);
     }
 
-    //take professor
+    /**
+     * Takes a professor from the table
+     *
+     * @param professor The color of the professor to take
+     * @return True if the professor has been taken
+     */
     public boolean takeProfessor(PawnColor professor) {
         if (table.getProfessors().contains(professor)) {
             table.getProfessors().remove(professor);
@@ -76,65 +108,109 @@ public class TableController {
         return false;
     }
 
+    /**
+     * Moves Mother Nature
+     *
+     * @param move The number of steps to make
+     */
     public void moveMotherNature(int move) {
         table.setIslandWithMotherNature((table.getIslandWithMotherNature() + move) % table.getIslands().size());
     }
 
+    /**
+     * Calculates the influence on a given island
+     *
+     * @param playerProfessors The professors on the player's schoolboard
+     * @param towerColor       The color of the towers of the current player
+     * @return The calculated influence
+     */
     public int countInfluenceOnIsland(Set<PawnColor> playerProfessors, Tower towerColor) {
         return table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);
     }
 
+    /**
+     * Checks if the current player can build a tower
+     *
+     * @param towerColor The color of the towers of the player
+     * @return True if the player can build a tower
+     */
     public boolean canBuildTower(Tower towerColor) {
         Tower towerOnIsland = table.getIslands().get(table.getIslandWithMotherNature()).getTower();
         return (towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor));
     }
 
+    /**
+     * Builds a tower on the island with Mother Nature
+     *
+     * @param towerColor The color of the tower to build
+     * @return A tuple containing the color of the tower previously on the island and the number of them
+     */
     public Pair<Tower, Integer> buildTower(Tower towerColor) {
         Tower towerOnIsland = table.getIslands().get(table.getIslandWithMotherNature()).getTower();
         Pair<Tower, Integer> pair = new Pair<>(towerOnIsland, table.getIslands().get(table.getIslandWithMotherNature()).getSize());
-        table.getIslands().get(table.getIslandWithMotherNature()).setTower(towerColor);
+        table.setTower(table.getIslands().get(table.getIslandWithMotherNature()), towerColor);
         tryUnifyIslands(towerColor);
         return pair;
     }
 
+    /**
+     * Tries to unify adjacent island
+     *
+     * @param towerColor The color of the tower of the current player
+     */
     private void tryUnifyIslands(Tower towerColor) {
         //right
         IslandCard islandLeft = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
         if (islandLeft.getTower().equals(towerColor)) {
-            table.getIslands().get(table.getIslandWithMotherNature()).movePawnOnIsland(islandLeft.getStudentsFromIsland());
-            int oldSize = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size())).getSize();
+            table.movePawnOnIsland(table.getIslands().get(table.getIslandWithMotherNature()), islandLeft.getStudentsFromIsland());
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
             if (table.getIslandWithMotherNature() != 0)
                 table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
-            table.getIslands().get(table.getIslandWithMotherNature()).incrementSize(oldSize);
+            table.incrementSize(table.getIslands().get(table.getIslandWithMotherNature()));
         }
         //left
         IslandCard islandRight = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
         if (islandRight.getTower().equals(towerColor)) {
-            table.getIslands().get(table.getIslandWithMotherNature()).movePawnOnIsland(islandRight.getStudentsFromIsland());
-            int oldSize = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size())).getSize();
+            table.movePawnOnIsland(table.getIslands().get(table.getIslandWithMotherNature()), islandRight.getStudentsFromIsland());
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
             if (table.getIslandWithMotherNature() == table.getIslands().size()) {
                 table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
             }
-            table.getIslands().get(table.getIslandWithMotherNature()).incrementSize(oldSize);
+            table.incrementSize(table.getIslands().get(table.getIslandWithMotherNature()));
         }
 
     }
 
+    /**
+     * Takes the students from a cloud
+     *
+     * @param uuid The id of the cloud
+     * @return The students on the selected cloud
+     * @throws WrongUUIDException When the cloud does not exist
+     */
     public List<PawnColor> takeStudentsFromCloud(UUID uuid) throws WrongUUIDException {
         for (CloudTile cloud : table.getCloudTiles()) {
             if (cloud.getUuid().equals(uuid)) {
-                return cloud.takeStudentsFromCloud();
+                return table.takeStudentsFromCloud(cloud);
             }
         }
         throw new WrongUUIDException();
     }
 
+    /**
+     * Returns the number of islands on the table
+     *
+     * @return The number of islands
+     */
     public int countIslands() {
         return this.table.countIsland();
     }
 
+    /**
+     * Returns the bag associated to the current game
+     *
+     * @return The bag
+     */
     public Bag getBag() {
         return this.table.getBag();
     }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.servercontroller.MessagesHelper;
 import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.servercontroller.MessagesHelper;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,6 +23,8 @@ public class Endpoint {
     private final List<MessageListener> messageListeners;
     private final List<DisconnectionListener> disconnectionListeners;
 
+    private boolean isOnline;
+
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     public Endpoint(Socket socket) throws IOException {
@@ -31,6 +33,11 @@ public class Endpoint {
         this.socket = socket;
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
+        this.isOnline = true;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
     }
 
     public void sendMessage(Message message) {
@@ -53,15 +60,16 @@ public class Endpoint {
         receiverThread.start();
     }
 
-    public Message syncronizeRecive() throws IOException, ClassNotFoundException {
+    public Message synchronizedReceive() throws IOException, ClassNotFoundException {
         return (Message) in.readObject();
     }
 
-    public Message syncronizeRecive(Class messageClass) {
+    //TODO I don't think reflection is the best way to do this
+    public Message synchronizedReceive(Class messageClass) {
         Message message = null;//TODO is this ok?
         do {
             try {
-                message = syncronizeRecive();
+                message = synchronizedReceive();
             } catch (Exception e) {
                 e.printStackTrace();
             }

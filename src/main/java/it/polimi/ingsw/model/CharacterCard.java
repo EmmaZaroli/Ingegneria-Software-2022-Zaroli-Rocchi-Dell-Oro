@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Character;
-import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,7 +8,7 @@ import java.io.Serializable;
 /**
  * Character card.
  */
-public class CharacterCard extends Observable<CharacterCard> implements Serializable {
+public class CharacterCard implements Serializable {
     @Serial
     private static final long serialVersionUID = 5L;
 
@@ -55,6 +54,17 @@ public class CharacterCard extends Observable<CharacterCard> implements Serializ
      */
     protected void setUsed() {
         this.hasCoin = true;
-        notify(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CharacterCard)) return false;
+
+        return ((CharacterCard) obj).character == this.character;
     }
 }

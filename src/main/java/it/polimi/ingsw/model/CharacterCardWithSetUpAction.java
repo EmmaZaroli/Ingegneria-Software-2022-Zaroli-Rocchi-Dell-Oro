@@ -35,9 +35,8 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      *
      * @param color the color of the student
      */
-    public void addStudent(PawnColor color) {
+    protected void addStudent(PawnColor color) {
         students.add(color);
-        notify(this);
     }
 
     /**
@@ -45,9 +44,8 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      *
      * @param colors the colors of the students
      */
-    public void addStudent(List<PawnColor> colors) {
+    protected void addStudent(List<PawnColor> colors) {
         this.students.addAll(colors);
-        notify(this);
     }
 
     /**
@@ -55,8 +53,17 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      *
      * @param color the color of the student to remove
      */
-    public void removeStudent(PawnColor color) {
+    protected void removeStudent(PawnColor color) {
         students.remove(color);
-        notify(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

@@ -1,10 +1,6 @@
 package it.polimi.ingsw.observer;
 
-/**
- * generic interface, supports the update method
- */
-public interface Observer<T> {
-
-    public void update(T message);
-
+//TODO I think this doesn't work
+public interface Observer {
+    void update(Object message);
 }

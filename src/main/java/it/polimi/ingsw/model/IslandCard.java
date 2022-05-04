@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,7 +13,7 @@ import java.util.UUID;
 /**
  * Island card.
  */
-public class IslandCard extends Observable<IslandCard> implements Serializable {
+public class IslandCard implements Serializable {
     @Serial
     private static final long serialVersionUID = 8L;
     private final UUID uuid;
@@ -46,9 +45,8 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
      *
      * @param student to add
      */
-    public void movePawnOnIsland(PawnColor student) {
+    protected void movePawnOnIsland(PawnColor student) {
         students.add(student);
-        notify(this);
     }
 
     /**
@@ -56,9 +54,8 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
      *
      * @param outsideStudents the list of students to add
      */
-    public void movePawnOnIsland(List<PawnColor> outsideStudents) {
+    protected void movePawnOnIsland(List<PawnColor> outsideStudents) {
         students.addAll(outsideStudents);
-        notify(this);
     }
 
     /**
@@ -103,9 +100,9 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
     /**
      * Increment size when an islandCard is been connected to another one
      */
-    public void incrementSize(int sizeIslandConnected) {
-        this.size = this.size + sizeIslandConnected;
-        notify(this);
+
+    protected void incrementSize() {
+        this.size++;
     }
 
     /**
@@ -122,8 +119,7 @@ public class IslandCard extends Observable<IslandCard> implements Serializable {
      *
      * @param tower
      */
-    public void setTower(Tower tower) {
+    protected void setTower(Tower tower) {
         this.tower = tower;
-        notify(this);
     }
 }

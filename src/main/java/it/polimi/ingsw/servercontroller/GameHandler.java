@@ -52,8 +52,8 @@ public class GameHandler {
         for (User user : users) {
             if (user.getNickname().equals(nickname)) {
                 user.setEndpoint(endpoint);
-                user.setOnline();
             }
         }
+        gameController.onReconnect();//TODO change to liostener
     }
 }
