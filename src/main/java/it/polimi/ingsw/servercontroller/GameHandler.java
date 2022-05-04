@@ -54,5 +54,6 @@ public class GameHandler {
                 user.setEndpoint(endpoint);
             }
         }
+        gameController.onReconnect();//TODO change to liostener
     }
 }

@@ -24,7 +24,7 @@ public class GameController implements DisconnectionListener {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
-    private final Timer timer = new Timer();
+    private Timer timer = new Timer();
 
     public GameController(Game game, TableController tableController, VirtualView[] virtualViews) {
         this.game = game;
@@ -468,11 +468,12 @@ public class GameController implements DisconnectionListener {
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-            if (game.howManyPlayersOnline() < 2)
+            if (game.howManyPlayersOnline() < 2 && game.isEnoughtPlayerOnline())
                 notEnoughOnline();
         }
     }
 
+    //called only when, previously a disconnection, there are enough player online, and then there are not
     private void notEnoughOnline() {
         game.setEnoughtPlayerOnline(false);
         timer.schedule(new TimerTask() {
@@ -481,5 +482,23 @@ public class GameController implements DisconnectionListener {
                 game.callGameOverFromDisconnection();
             }
         }, 120000); //TODO parameterize this
+    }
+
+    public void onReconnect() {
+        synchronized (game) {
+            //when one player reconnect, this will set every player to their status (online or offline)
+            //it is redundant but it should be ok
+            for (int i = 0; i < virtualViews.length; i++)
+                game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+            if (game.howManyPlayersOnline() >= 2 && !game.isEnoughtPlayerOnline())
+                enoughOnline();
+        }
+    }
+
+    //called only when, previously a reconnection, there weren't enough player online, and then there are
+    private void enoughOnline() {
+        game.setEnoughtPlayerOnline(true);
+        timer.cancel();
+        timer = new Timer();
     }
 }
