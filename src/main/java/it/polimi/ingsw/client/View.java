@@ -28,6 +28,8 @@ public abstract class View implements MessageListener {
     private List<AssistantCard> deck;
     private List<CloudTile> clouds = new ArrayList<>();
     private int tableCoins;
+    private List<LinkedList> islands = new ArrayList<>();
+    private String currentPlayer;
 
     private Endpoint endpoint;
 
@@ -44,6 +46,10 @@ public abstract class View implements MessageListener {
         }
 
         return retVal;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public List<AssistantCard> getDeck() {
@@ -82,17 +88,9 @@ public abstract class View implements MessageListener {
 
     protected abstract void askAssistantCard(ArrayList<AssistantCard> deck);
 
-    protected abstract void updateAssistantCardPlayed(AssistantCard card, String player);
-
     protected abstract void askMotherNatureSteps();
 
     protected abstract void updateCurrentPlayersTurn(String otherPlayer);
-
-    protected abstract void updateCloud(CloudTile cloud);
-
-    protected abstract void updateIslands(IslandCard island);
-
-    protected abstract void updateSchoolBoard(String player, SchoolBoard schoolBoard);
 
     protected abstract void win();
 
@@ -135,6 +133,23 @@ public abstract class View implements MessageListener {
             this.askServerInfo();
         }
     }
+
+    private void handleMessage(CloudMessage message) {
+        //if we send a message at the beginning with both clouds, we can cancel this
+        if (clouds.size() < 2) {
+            getClouds().add(message.getCloud());
+        } else {
+            for (int i = 0; i < 2; i++) {
+                if (getClouds().get(i).getUuid().equals(message.getCloud().getUuid())) {
+                    getClouds().remove(i);
+                    getClouds().add(i, message.getCloud());
+                }
+            }
+        }
+        if (getClouds().size() == 2) print();
+    }
+
+
     //</editor-fold>
 
     @Override
@@ -142,6 +157,8 @@ public abstract class View implements MessageListener {
         //TODO
         if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
         if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
+        //TODO if message instanceof getDeckMessage --> set currentPlayer to the nickname in the message,call method print() and then askAssistantCard()
+
     }
 
     //<editor-fold desc="Presentation logic">
