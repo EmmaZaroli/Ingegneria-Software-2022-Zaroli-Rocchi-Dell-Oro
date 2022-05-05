@@ -199,7 +199,7 @@ public class Cli extends View {
     }
 
     private void printIslands() {
-        islandsPrinter.printIslands();
+        islandsPrinter.printIslands(getIslands());
     }
 
     private void printSchoolBoard(PlayerInfo player) {

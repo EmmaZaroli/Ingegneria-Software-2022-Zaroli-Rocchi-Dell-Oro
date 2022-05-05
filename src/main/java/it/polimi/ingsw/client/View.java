@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
@@ -29,7 +30,7 @@ public abstract class View implements MessageListener {
     private List<AssistantCard> deck;
     private List<CloudTile> clouds = new ArrayList<>();
     private int tableCoins;
-    private List<LinkedList> islands = new ArrayList<>();
+    private List<LinkedIslands> islands = new ArrayList<>();
     private String currentPlayer;
 
     private Endpoint endpoint;
@@ -55,6 +56,10 @@ public abstract class View implements MessageListener {
         }
 
         return retVal;
+    }
+
+    public List<LinkedIslands> getIslands() {
+        return this.islands;
     }
 
     public String getCurrentPlayer() {

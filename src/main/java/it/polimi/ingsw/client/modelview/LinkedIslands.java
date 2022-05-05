@@ -2,12 +2,13 @@ package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.model.IslandCard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LinkedIslands {
 
     private IslandCard island;
-    private List<IslandCard> linkedislands;
+    private List<IslandCard> linkedislands = new ArrayList<>();
     private boolean connected = false;
 
     public IslandCard getMainIsland() {
@@ -22,8 +23,8 @@ public class LinkedIslands {
         return linkedislands;
     }
 
-    public void setLinkedislands(List<IslandCard> linkedislands) {
-        this.linkedislands = linkedislands;
+    public void setLinkedislands(IslandCard linkedisland) {
+        this.linkedislands.add(linkedisland);
     }
 
     public boolean isConnected() {
