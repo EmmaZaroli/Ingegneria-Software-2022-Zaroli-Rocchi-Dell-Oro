@@ -12,9 +12,7 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -34,6 +32,8 @@ public class Server {
     private final List<GameHandler> normal3PlayersRunningGames = new LinkedList<>();
     private final List<GameHandler> expert2PlayersRunningGames = new LinkedList<>();
     private final List<GameHandler> expert3PlayersRunningGames = new LinkedList<>();
+
+    private final Map<String, User> allUsers = new HashMap<>();
 
     public static void main(String[] args) {
         if (args.length < 1 || !args[0].equals("--port") || !isNumeric(args[1])) {
@@ -97,7 +97,8 @@ public class Server {
         //TODO create a controller for every game, start the thread
     }
 
-    public void enqueueUser(User user, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
+    public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
+        User user = getUser(nickname); //TODO this could return null
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 enqueueNormal2Players(user);
@@ -172,15 +173,11 @@ public class Server {
     }
 
     public NicknameStatus checkNicknameStatus(String nickname) {
-        NicknameStatus status = NicknameStatus.FREE;
-
-        for (GameHandler gameHandler : normal2PlayersRunningGames) {
-            status = gameHandler.checkNicknameStatus(nickname);
-            if (status != NicknameStatus.FREE)
-                break;
+        if (!containUser(nickname))
+            return NicknameStatus.FREE;
+        else {
+            return getUser(nickname).isOnline() ? NicknameStatus.FROM_CONNECTED_PLAYER : NicknameStatus.FROM_DISCONNECTED_PLAYER;
         }
-
-        return status;
     }
 
     private Optional<GameHandler> getGameByPlayer(String nickname) {
@@ -204,12 +201,28 @@ public class Server {
     }
 
     //TODO two player may try to connect with the same username
-    public void reconnectPlayer(String nickname, Endpoint endpoint) {
+    public void reconnectUser(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
         if (gameHandler.isPresent()) {
             GameHandler gh = gameHandler.get();
             gh.reconnectPlayer(nickname, endpoint);
+            //TODO send whole game status
         }
-        //TODO send whole game status
+    }
+
+    public void addUser(User user) {
+        allUsers.put(user.getNickname(), user);
+    }
+
+    public User getUser(String nickname) {
+        return allUsers.get(nickname);
+    }
+
+    public boolean containUser(String nickname) {
+        return allUsers.containsKey(nickname);
+    }
+
+    public void removeUser(String nickname) {
+        allUsers.remove(nickname);
     }
 }

@@ -44,43 +44,52 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         String nickname = "";
         NicknameStatus nicknameStatus;
 
-        nickname = ((NicknameProposalMessage) endpoint.synchronizedReceive(NicknameProposalMessage.class)).getNickname();
-        nicknameStatus = server.checkNicknameStatus(nickname);
-        while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER) {
-            endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
+        do {
             nickname = ((NicknameProposalMessage) endpoint.synchronizedReceive(NicknameProposalMessage.class)).getNickname();
-            nicknameStatus = server.checkNicknameStatus(nickname);
+            synchronized (server) {
+                nicknameStatus = server.checkNicknameStatus(nickname);
+                switch (nicknameStatus) {
+                    case FREE -> {
+                        endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
+                        logUser(nickname);
+                    }
+                    case FROM_DISCONNECTED_PLAYER -> {
+                        endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_DISCONNECTED_PLAYER));
+                        reconnectUser(nickname);
+                    }
+                    case FROM_CONNECTED_PLAYER -> {
+                        endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
+                    }
+                }
+            }
+        } while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER);
+
+        if (nicknameStatus == NicknameStatus.FREE) {
+            GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.synchronizedReceive(GametypeRequestMessage.class);
+            GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
+            PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
+            synchronized (server) {
+                try {
+                    enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
+                    endpoint.sendMessage(new GametypeResponseMessage(nickname, MessageType.GAME_TYPE_RESPONSE, true));
+                } catch (InvalidPlayerNumberException e) {
+                    logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
+                }
+            }
         }
 
-        if (nicknameStatus == NicknameStatus.FROM_DISCONNECTED_PLAYER) {
-            endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_DISCONNECTED_PLAYER));
-            reconnectPlayer(nickname);
-        } else {
-            endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
-            connectPlayer(nickname);
-        }
     }
 
-    private void enqueue(User user, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
-        server.enqueueUser(user, selectedGameMode, selectedPlayersNumber);
+    private void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
+        server.enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
     }
 
-    private void reconnectPlayer(String nickname /*or maybe User*/) {
-        server.reconnectPlayer(nickname, endpoint);
+    private void reconnectUser(String nickname /*or maybe User*/) {
+        server.reconnectUser(nickname, endpoint);
     }
 
-    private void connectPlayer(String nickname) {
+    private void logUser(String nickname) {
         User user = new User(nickname, endpoint);
-
-        GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.synchronizedReceive(GametypeRequestMessage.class);
-        GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
-        PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
-
-        try {
-            enqueue(user, selectedGameMode, selectedPlayersNumber);
-            endpoint.sendMessage(new GametypeResponseMessage(nickname, MessageType.GAME_TYPE_RESPONSE, true));
-        } catch (InvalidPlayerNumberException e) {
-            logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
-        }
+        server.addUser(user);
     }
 }
