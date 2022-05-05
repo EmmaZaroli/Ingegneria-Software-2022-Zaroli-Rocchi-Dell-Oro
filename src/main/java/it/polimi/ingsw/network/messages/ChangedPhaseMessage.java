@@ -1,5 +1,8 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageType;
+
 public class ChangedPhaseMessage extends Message {
 
     private String phrase;

@@ -1,8 +1,11 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageType;
+
 public class NicknameProposalMessage extends Message {
 
-    protected NicknameProposalMessage(String nickname, MessageType messageType) {
+    public NicknameProposalMessage(String nickname, MessageType messageType) {
         super(nickname, messageType);
     }
 }

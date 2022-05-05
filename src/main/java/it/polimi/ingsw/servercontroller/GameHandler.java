@@ -1,11 +1,11 @@
 package it.polimi.ingsw.servercontroller;
 
-import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import it.polimi.ingsw.gamecontroller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.GameStartingMessage;
-import it.polimi.ingsw.network.messages.MessageType;
+import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import it.polimi.ingsw.view.VirtualView;
 
 public class GameHandler {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.messages;
 
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageType;
 
 public class AssistantPlayedMessage extends Message {
 

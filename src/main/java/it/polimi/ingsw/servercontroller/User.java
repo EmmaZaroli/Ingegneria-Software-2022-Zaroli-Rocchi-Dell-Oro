@@ -1,8 +1,7 @@
 package it.polimi.ingsw.servercontroller;
 
-import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.messages.Message;
+import it.polimi.ingsw.network.Message;
 
 public class User {
     private final String nickname;

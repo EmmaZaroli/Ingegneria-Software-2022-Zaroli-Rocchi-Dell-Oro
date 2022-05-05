@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.messages;
+package it.polimi.ingsw.network;
 
 public enum MessageType {
     CHANGE_PLAYER,
