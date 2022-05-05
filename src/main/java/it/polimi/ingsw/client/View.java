@@ -7,7 +7,9 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
+import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
@@ -24,19 +26,20 @@ public abstract class View implements MessageListener, UserInterface {
     private boolean isExpertGame;
     private List<PlayerInfo> opponents;
     private PlayerInfo me;
-    private List<AssistantCard> deck;
-    private List<CloudTile> clouds;
+    private ArrayList<AssistantCard> deck;
+    private ArrayList<CloudTile> clouds;
     private int tableCoins;
-    private List<LinkedIslands> islands = new ArrayList<>();
+    private List<LinkedIslands> islands;
     private String currentPlayer;
-    
+
     private Endpoint endpoint;
 
     protected View() {
         this.opponents = new LinkedList<>();
         this.me = new PlayerInfo();
-        this.deck = new LinkedList<>();
-        this.clouds = new LinkedList<>();
+        this.deck = new ArrayList<>();
+        this.clouds = new ArrayList<>();
+        this.islands = new ArrayList<>();
         this.tableCoins = 0;
     }
 
@@ -143,6 +146,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(CoinMessage message) {
+        //TODO coins on the table?
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(message.getCoins());
         } else {

@@ -1,8 +1,13 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.MessageType;
+import it.polimi.ingsw.network.messages.GametypeRequestMessage;
+import it.polimi.ingsw.network.messages.GametypeResponseMessage;
+import it.polimi.ingsw.network.messages.NicknameProposalMessage;
+import it.polimi.ingsw.network.messages.NicknameResponseMessage;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 import java.io.IOException;

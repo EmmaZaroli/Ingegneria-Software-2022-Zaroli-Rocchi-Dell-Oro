@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.messages;
 
 import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageType;
 
 public class CharacterCardMessage extends Message {
 

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 public class NicknameResponseMessage extends Message {
