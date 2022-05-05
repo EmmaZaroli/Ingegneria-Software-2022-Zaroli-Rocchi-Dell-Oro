@@ -6,7 +6,6 @@ import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
-import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.messages.*;
@@ -21,7 +20,7 @@ import java.util.Optional;
 /**
  * View class contains a small representation of the game model
  */
-public abstract class View implements MessageListener {
+public abstract class View implements MessageListener, UserInterface {
     private boolean isExpertGame;
     private List<PlayerInfo> opponents;
     private PlayerInfo me;
@@ -30,7 +29,7 @@ public abstract class View implements MessageListener {
     private int tableCoins;
     private List<LinkedIslands> islands = new ArrayList<>();
     private String currentPlayer;
-
+    
     private Endpoint endpoint;
 
     protected View() {
@@ -81,42 +80,6 @@ public abstract class View implements MessageListener {
     public int getCoins() {
         return this.tableCoins;
     }
-    //</editor-fold>
-
-    //<editor-fold desc="Facade">
-    protected abstract void printWelcomeMessage();
-
-    protected abstract void printEnqueuedMessage();
-
-    protected abstract void askServerInfo();
-
-    protected abstract void askPlayerNickname();
-
-    protected abstract void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected);
-
-    protected abstract void askGameSettings();
-
-    protected abstract void genericMessage(String Message);
-
-    protected abstract void changePhase(GamePhase phase);
-
-    protected abstract void askAssistantCard(ArrayList<AssistantCard> deck);
-
-    protected abstract void askMotherNatureSteps();
-
-    protected abstract void updateCurrentPlayersTurn(String otherPlayer);
-
-    protected abstract void win();
-
-    protected abstract void lose();
-
-    protected abstract void draw();
-
-    protected abstract void errorAndExit(String error);
-
-    protected abstract void error(String error);
-
-    protected abstract void print();
     //</editor-fold>
 
     //<editor-fold desc="Message handlers">

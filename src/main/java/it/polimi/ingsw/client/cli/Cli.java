@@ -36,7 +36,7 @@ public class Cli extends View {
     }
 
     @Override
-    protected void printWelcomeMessage() {
+    public void printWelcomeMessage() {
         out.println("      :::::::::: :::::::::  :::::::::::     :::     ::::    ::: ::::::::::: :::   :::  :::::::: \n" +
                 "     :+:        :+:    :+:     :+:       :+: :+:   :+:+:   :+:     :+:     :+:   :+: :+:    :+: \n" +
                 "    +:+        +:+    +:+     +:+      +:+   +:+  :+:+:+  +:+     +:+      +:+ +:+  +:+         \n" +
@@ -55,12 +55,12 @@ public class Cli extends View {
     }
 
     @Override
-    protected void printEnqueuedMessage() {
+    public void printEnqueuedMessage() {
         //TODO
     }
 
     @Override
-    protected void askServerInfo() {
+    public void askServerInfo() {
         //TODO
     }
 
@@ -75,7 +75,7 @@ public class Cli extends View {
         return input;
     }
 
-    protected void askPlayerNickname() {
+    public void askPlayerNickname() {
         boolean valid = false;
         String nickname;
         do {
@@ -88,7 +88,7 @@ public class Cli extends View {
         listeners.firePropertyChange("nickname", true, nickname);
     }
 
-    protected void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
+    public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
 
         //clearCli();
         if (playerReconnected) {
@@ -104,7 +104,7 @@ public class Cli extends View {
 
     }
 
-    protected void askGameSettings() {
+    public void askGameSettings() {
         int playersNumber;
         String gameMode;
         out.println("Please enter the Game mode: [normal/expert]");
@@ -116,11 +116,11 @@ public class Cli extends View {
         listeners.firePropertyChange("gameSettings", gameMode, playersNumber);
     }
 
-    protected void genericMessage(String message) {
+    public void genericMessage(String message) {
         out.println(message);
     }
 
-    protected void changePhase(GamePhase phase) {
+    public void changePhase(GamePhase phase) {
         out.println("Phase: " + phase);
     }
 
@@ -129,7 +129,7 @@ public class Cli extends View {
      *
      * @param deck
      */
-    protected void askAssistantCard(ArrayList<AssistantCard> deck) {
+    public void askAssistantCard(ArrayList<AssistantCard> deck) {
 
         out.println("chose the assistant card to play: ");
         out.println();
@@ -161,18 +161,18 @@ public class Cli extends View {
         listeners.firePropertyChange("assistantCard", true, deck.get(card));
     }
 
-    protected void askMotherNatureSteps() {
+    public void askMotherNatureSteps() {
         out.println("How many steps do you want to move mother nature? ");
         int steps = Integer.parseInt(readLine());
         //TODO check if number is <0 or >cardplayed.steps
     }
 
-    protected void updateCurrentPlayersTurn(String otherPlayer) {
+    public void updateCurrentPlayersTurn(String otherPlayer) {
         out.println("it's " + otherPlayer + "turn");
     }
 
     @Override
-    protected void print() {
+    public void print() {
         printCloud();
         printIslands();
         for (int i = 0; i < getOpponents().size(); i++) {
@@ -215,31 +215,29 @@ public class Cli extends View {
         out.println("  |_____|    ");
     }
 
-    protected void win() {
+    public void win() {
         out.println("Well done, you won the game!");
     }
 
-    protected void lose() {
+    public void lose() {
         out.println("Game ended, you lost!");
     }
 
     //TODO maybe send who tied
-    protected void draw() {
+    public void draw() {
         out.println("The game ended in a tie! ");
     }
 
     /**
      * this method is called when there's a fatal error on the server and the game needs to be closed
      */
-    protected void errorAndExit(String error) {
+    public void errorAndExit(String error) {
         out.println("\nERROR: " + error);
         out.println("EXIT.");
         System.exit(1);
     }
 
-    protected void error(String error) {
+    public void error(String error) {
         out.println("");
     }
-
-
 }
