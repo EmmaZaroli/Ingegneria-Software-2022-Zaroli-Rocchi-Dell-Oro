@@ -6,8 +6,6 @@ import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CloudTile;
-import it.polimi.ingsw.model.IslandCard;
-import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.MessageListener;
@@ -28,7 +26,7 @@ public abstract class View implements MessageListener {
     private List<PlayerInfo> opponents;
     private PlayerInfo me;
     private List<AssistantCard> deck;
-    private List<CloudTile> clouds = new ArrayList<>();
+    private List<CloudTile> clouds;
     private int tableCoins;
     private List<LinkedIslands> islands = new ArrayList<>();
     private String currentPlayer;
@@ -160,7 +158,7 @@ public abstract class View implements MessageListener {
     private void handleMessage(SchoolBoardMessage message) {
         //TODO dto with wither
         if (message.getNickname().equals(me.getNickname())) {
-            //TODO change my schoolboard
+            this.me = this.me.with(message.getSchoolBoard());
         } else {
             Optional<PlayerInfo> player = this.opponents.stream()
                     .filter(x -> x.getNickname().equals(message.getNickname())).findFirst();
@@ -169,6 +167,25 @@ public abstract class View implements MessageListener {
                 //TODO change schoolboard
             }
         }
+        this.print();
+    }
+
+    private void handleMessage(AssistantPlayedMessage message) {
+        if (message.getNickname().equals(me.getNickname())) {
+            this.me = this.me.with(message.getAssistantCard());
+        } else {
+            //TODO withers in list
+        }
+        this.print();
+    }
+
+    private void handleMessage(CoinMessage message) {
+        if (message.getNickname().equals(me.getNickname())) {
+            this.me = this.me.with(message.getCoins());
+        } else {
+            //TODO withers in list
+        }
+        this.print();
     }
     //</editor-fold>
 
@@ -179,6 +196,8 @@ public abstract class View implements MessageListener {
         if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
         if (message instanceof CloudMessage) handleMessage((CloudMessage) message);
         if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
+        if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);
+        if (message instanceof CoinMessage) handleMessage((CoinMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">
@@ -212,6 +231,11 @@ public abstract class View implements MessageListener {
                 numberOfPlayers == 2 ? PlayersNumber.TWO : PlayersNumber.THREE);
         endpoint.sendMessage(m);
         this.isExpertGame = expertGame;
+    }
+
+    protected final void sendMotherNatureSteps(int steps) {
+        Message m = new MoveMotherNatureMessage(me.getNickname(), steps);
+        endpoint.sendMessage(m);
     }
     //</editor-fold>
 }

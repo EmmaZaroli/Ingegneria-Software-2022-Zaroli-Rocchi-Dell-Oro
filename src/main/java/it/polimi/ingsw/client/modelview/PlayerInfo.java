@@ -27,6 +27,23 @@ public class PlayerInfo {
         return retVal;
     }
 
+    public PlayerInfo with(AssistantCard assistantCard) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.discardPileHead = assistantCard;
+        return retVal;
+    }
+
+    public PlayerInfo with(SchoolBoard board) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.schoolBoard = board;
+        return retVal;
+    }
+
+    public PlayerInfo with(int coins) {
+        this.coins = coins;
+        return this;
+    }
+
     public String getNickname() {
         return nickname;
     }
