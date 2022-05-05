@@ -14,6 +14,11 @@ public class User {
         this.endpoint = endpoint;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return nickname.equals(((User) obj).getNickname());
+    }
+
     public String getNickname() {
         return nickname;
     }

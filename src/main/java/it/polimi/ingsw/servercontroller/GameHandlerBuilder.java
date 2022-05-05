@@ -20,6 +20,8 @@ public class GameHandlerBuilder {
     private PlayersNumber playersNumber = PlayersNumber.THREE;  //if no player number is specified, the default number will be three
     private List<User> users = new LinkedList<>();
 
+    private final List<GameReadyListener> gameStartingListeners = new LinkedList<>();
+
     public GameHandlerBuilder gameMode(GameMode gameMode) {
         this.gameMode = gameMode;
         return this;
@@ -32,6 +34,11 @@ public class GameHandlerBuilder {
 
     public GameHandlerBuilder player(User user) {
         this.users.add(user);
+        return this;
+    }
+
+    public GameHandlerBuilder removePlayer(User user) {
+        this.users.remove(user);
         return this;
     }
 
@@ -58,6 +65,7 @@ public class GameHandlerBuilder {
         Game gameModel = buildGameModel();
         VirtualView[] virtualViews = buildVirtualViews(gameModel);
         GameController gameController = buildGameController(gameModel, virtualViews);
+        notifyGameReady();
         return new GameHandler(users.toArray(new User[0]), gameController, gameModel, virtualViews);
     }
 
@@ -120,5 +128,17 @@ public class GameHandlerBuilder {
             virtualViews[i] = new VirtualView(users.get(i), gameModel);
         }
         return virtualViews;
+    }
+
+    public void addGameStartingListener(GameReadyListener l) {
+        this.gameStartingListeners.add(l);
+    }
+
+    public void removeGameStartingListener(GameReadyListener l) {
+        this.gameStartingListeners.remove(l);
+    }
+
+    private void notifyGameReady() {
+        gameStartingListeners.forEach(GameReadyListener::onGameReady);
     }
 }

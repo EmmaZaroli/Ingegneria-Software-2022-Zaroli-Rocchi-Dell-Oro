@@ -51,9 +51,11 @@ public class GameHandler {
     public void reconnectPlayer(String nickname, Endpoint endpoint) {
         for (User user : users) {
             if (user.getNickname().equals(nickname)) {
+                user.getEndpoint().removeDisconnectionListener(gameController);
+                endpoint.addDisconnectionListener(gameController);
                 user.setEndpoint(endpoint);
             }
         }
-        gameController.onReconnect();//TODO change to liostener
+        gameController.onReconnect();//TODO change to listener
     }
 }

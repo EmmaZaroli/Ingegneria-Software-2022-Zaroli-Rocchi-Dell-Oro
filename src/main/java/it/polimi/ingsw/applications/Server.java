@@ -97,8 +97,36 @@ public class Server {
         //TODO create a controller for every game, start the thread
     }
 
+    public void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
+        if (selectedGameMode == GameMode.NORMAL_MODE) {
+            if (selectedPlayersNumber == PlayersNumber.TWO)
+                normal2PlayersBuilder.addGameStartingListener(l);
+            else
+                normal3PlayersBuilder.addGameStartingListener(l);
+        } else {
+            if (selectedPlayersNumber == PlayersNumber.TWO)
+                expert2PlayersBuilder.addGameStartingListener(l);
+            else
+                expert3PlayersBuilder.addGameStartingListener(l);
+        }
+    }
+
+    public synchronized void removeGameStartingListener(GameReadyListener l) {
+        normal2PlayersBuilder.removeGameStartingListener(l);
+        normal3PlayersBuilder.removeGameStartingListener(l);
+        expert2PlayersBuilder.removeGameStartingListener(l);
+        expert3PlayersBuilder.removeGameStartingListener(l);
+    }
+
+    //User must be already present in allUser list
+    public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber, GameReadyListener l) throws InvalidPlayerNumberException {
+        enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
+        addGameStartingListener(l, selectedGameMode, selectedPlayersNumber);
+    }
+
+    //User must be already present in allUser list
     public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
-        User user = getUser(nickname); //TODO this could return null
+        User user = getUser(nickname).get(); //TODO this could return null
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 enqueueNormal2Players(user);
@@ -176,7 +204,7 @@ public class Server {
         if (!containUser(nickname))
             return NicknameStatus.FREE;
         else {
-            return getUser(nickname).isOnline() ? NicknameStatus.FROM_CONNECTED_PLAYER : NicknameStatus.FROM_DISCONNECTED_PLAYER;
+            return getUser(nickname).get().isOnline() ? NicknameStatus.FROM_CONNECTED_PLAYER : NicknameStatus.FROM_DISCONNECTED_PLAYER;
         }
     }
 
@@ -214,15 +242,26 @@ public class Server {
         allUsers.put(user.getNickname(), user);
     }
 
-    public User getUser(String nickname) {
-        return allUsers.get(nickname);
+    public Optional<User> getUser(String nickname) {
+        return Optional.ofNullable(allUsers.get(nickname));
     }
 
     public boolean containUser(String nickname) {
         return allUsers.containsKey(nickname);
     }
 
-    public void removeUser(String nickname) {
-        allUsers.remove(nickname);
+    //try to remove a user
+    //user must not be in an active game
+    //return true if the removal is succesfull, false if not (user does not exist or is in an active game)
+    public boolean removeUser(String nickname) {
+        Optional<User> user = getUser(nickname);
+        if (user.isEmpty() || !getGameByPlayer(nickname).isEmpty())
+            return false;
+        allUsers.remove(user.get().getNickname());
+        normal2PlayersBuilder.removePlayer(user.get());
+        normal3PlayersBuilder.removePlayer(user.get());
+        expert2PlayersBuilder.removePlayer(user.get());
+        expert3PlayersBuilder.removePlayer(user.get());
+        return true;
     }
 }

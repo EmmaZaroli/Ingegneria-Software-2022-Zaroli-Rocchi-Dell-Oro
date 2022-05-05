@@ -12,13 +12,15 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UserHandler implements Runnable, DisconnectionListener, MessageListener {
+public class UserHandler implements Runnable, DisconnectionListener, MessageListener, GameReadyListener {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Endpoint endpoint;
     private final Server server;
+    private Optional<String> nickname;
 
     public UserHandler(Socket socket, Server server) throws IOException {
         this.endpoint = new Endpoint(socket);
@@ -26,12 +28,16 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         this.endpoint.addMessageListener(this);
         this.endpoint.startReceiving();
         this.server = server;
+        this.nickname = Optional.empty();
     }
 
-    //TODO  remove from listener
     @Override
     public void onDisconnect() {
-        //TODO dispatch to the controller
+        endpoint.removeDisconnectionListener(this);
+        synchronized (server) {
+            nickname.ifPresent(server::removeUser);
+        }
+        finish();
     }
 
     @Override
@@ -77,11 +83,10 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
                 }
             }
         }
-
     }
 
     private void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
-        server.enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
+        server.enqueueUser(nickname, selectedGameMode, selectedPlayersNumber, this);
     }
 
     private void reconnectUser(String nickname /*or maybe User*/) {
@@ -89,7 +94,18 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
     }
 
     private void logUser(String nickname) {
+        this.nickname = Optional.of(nickname);
         User user = new User(nickname, endpoint);
         server.addUser(user);
+    }
+
+    private void finish() {
+        endpoint.removeDisconnectionListener(this);
+        server.removeGameStartingListener(this);
+    }
+
+    @Override
+    public void onGameReady() {
+        finish();
     }
 }
