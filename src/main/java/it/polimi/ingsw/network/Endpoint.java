@@ -90,6 +90,7 @@ public class Endpoint {
     }
 
     public void disconnect() {
+        isOnline = false;
         try {
             this.receiverThread.interrupt();
             this.socket.close();

@@ -12,9 +12,7 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -34,6 +32,8 @@ public class Server {
     private final List<GameHandler> normal3PlayersRunningGames = new LinkedList<>();
     private final List<GameHandler> expert2PlayersRunningGames = new LinkedList<>();
     private final List<GameHandler> expert3PlayersRunningGames = new LinkedList<>();
+
+    private final Map<String, User> allUsers = new HashMap<>();
 
     public static void main(String[] args) {
         if (args.length < 1 || !args[0].equals("--port") || !isNumeric(args[1])) {
@@ -97,7 +97,36 @@ public class Server {
         //TODO create a controller for every game, start the thread
     }
 
-    public void enqueueUser(User user, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
+    public void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
+        if (selectedGameMode == GameMode.NORMAL_MODE) {
+            if (selectedPlayersNumber == PlayersNumber.TWO)
+                normal2PlayersBuilder.addGameStartingListener(l);
+            else
+                normal3PlayersBuilder.addGameStartingListener(l);
+        } else {
+            if (selectedPlayersNumber == PlayersNumber.TWO)
+                expert2PlayersBuilder.addGameStartingListener(l);
+            else
+                expert3PlayersBuilder.addGameStartingListener(l);
+        }
+    }
+
+    public synchronized void removeGameStartingListener(GameReadyListener l) {
+        normal2PlayersBuilder.removeGameStartingListener(l);
+        normal3PlayersBuilder.removeGameStartingListener(l);
+        expert2PlayersBuilder.removeGameStartingListener(l);
+        expert3PlayersBuilder.removeGameStartingListener(l);
+    }
+
+    //User must be already present in allUser list
+    public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber, GameReadyListener l) throws InvalidPlayerNumberException {
+        enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
+        addGameStartingListener(l, selectedGameMode, selectedPlayersNumber);
+    }
+
+    //User must be already present in allUser list
+    public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
+        User user = getUser(nickname).get(); //TODO this could return null
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 enqueueNormal2Players(user);
@@ -172,15 +201,11 @@ public class Server {
     }
 
     public NicknameStatus checkNicknameStatus(String nickname) {
-        NicknameStatus status = NicknameStatus.FREE;
-
-        for (GameHandler gameHandler : normal2PlayersRunningGames) {
-            status = gameHandler.checkNicknameStatus(nickname);
-            if (status != NicknameStatus.FREE)
-                break;
+        if (!containUser(nickname))
+            return NicknameStatus.FREE;
+        else {
+            return getUser(nickname).get().isOnline() ? NicknameStatus.FROM_CONNECTED_PLAYER : NicknameStatus.FROM_DISCONNECTED_PLAYER;
         }
-
-        return status;
     }
 
     private Optional<GameHandler> getGameByPlayer(String nickname) {
@@ -204,12 +229,39 @@ public class Server {
     }
 
     //TODO two player may try to connect with the same username
-    public void reconnectPlayer(String nickname, Endpoint endpoint) {
+    public void reconnectUser(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
         if (gameHandler.isPresent()) {
             GameHandler gh = gameHandler.get();
             gh.reconnectPlayer(nickname, endpoint);
+            //TODO send whole game status
         }
-        //TODO send whole game status
+    }
+
+    public void addUser(User user) {
+        allUsers.put(user.getNickname(), user);
+    }
+
+    public Optional<User> getUser(String nickname) {
+        return Optional.ofNullable(allUsers.get(nickname));
+    }
+
+    public boolean containUser(String nickname) {
+        return allUsers.containsKey(nickname);
+    }
+
+    //try to remove a user
+    //user must not be in an active game
+    //return true if the removal is succesfull, false if not (user does not exist or is in an active game)
+    public boolean removeUser(String nickname) {
+        Optional<User> user = getUser(nickname);
+        if (user.isEmpty() || !getGameByPlayer(nickname).isEmpty())
+            return false;
+        allUsers.remove(user.get().getNickname());
+        normal2PlayersBuilder.removePlayer(user.get());
+        normal3PlayersBuilder.removePlayer(user.get());
+        expert2PlayersBuilder.removePlayer(user.get());
+        expert3PlayersBuilder.removePlayer(user.get());
+        return true;
     }
 }
