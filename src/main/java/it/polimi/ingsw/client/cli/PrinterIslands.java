@@ -20,14 +20,17 @@ public class PrinterIslands {
     public static final String CONNECTED_BOTTOM_DX = "________|";
     public static final String CONNECTED_BOTTOM_MIDDLE = "_________";
     private boolean isnext = false;
+    private boolean upConnected = false;
+    private boolean up0 = false;
+    private boolean up4 = false;
 
     public void printIslands(List<LinkedIslands> islands) {
 
-        //TODO fix if i=5 case
+
         //first fow
         System.out.print(" ");
         for (int i = 0; i < 5; i++) {
-            if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()))
+            if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()) && i != 4)
                 top(true);
             else top(false);
         }
@@ -35,7 +38,7 @@ public class PrinterIslands {
         System.out.println();
 
         for (int i = 0; i < 5; i++) {
-            if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland())) {
+            if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()) && i != 4) {
                 if (isnext) {
                     side(true, true);
                 } else side(true, false);
@@ -49,24 +52,44 @@ public class PrinterIslands {
         isnext = false;
         System.out.println();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
+            upConnected = false;
+            if (i == 0 && islands.get(11).getLinkedislands().contains(islands.get(i).getMainIsland())) {
+                upConnected = true;
+                up0 = true;
+            }
             if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland())) {
-                if (isnext) {
-                    bottom(true, true);
-                } else bottom(true, false);
+                if (isnext) bottom(true, true);
+                else {
+                    if (upConnected) upConnected(true, false);
+                    else bottom(true, false);
+                }
                 isnext = true;
             } else {
-                bottom(false, false);
+                if (upConnected) upConnected(false, false);
+                else bottom(false, false);
                 if (isnext) isnext = false;
             }
         }
+
+        if (islands.get(4).getLinkedislands().contains(islands.get(5).getMainIsland())) {
+            up4 = true;
+            if (isnext) upConnected(true, true);
+            else upConnected(false, true);
+        } else {
+            if (isnext) bottomdx();
+            else bottom(false, false);
+        }
+
         System.out.println();
 
-
         //second row
-        top(false);
+        if (!up0) System.out.print(" ");
+        topWithConnection(up0);
         System.out.print("                                 ");
-        top(false);
+        if (up0) System.out.print("  ");
+        if (!up4) System.out.print(" ");
+        topWithConnection(up4);
         System.out.println();
         side(false, false);
         System.out.print("                                 ");
@@ -90,6 +113,11 @@ public class PrinterIslands {
             bottom(false, false);
         }
         System.out.println();
+    }
+
+    private void topWithConnection(boolean connected) {
+        if (connected) System.out.print(SIDE);
+        else top(false);
     }
 
     private void top(boolean connected) {
@@ -135,6 +163,24 @@ public class PrinterIslands {
             }
 
         }
+    }
+
+    private void bottomdx() {
+        System.out.print(CONNECTED_BOTTOM_DX);
+    }
+
+    private void upConnected(boolean side, boolean dx) {
+        if (side && !dx) {
+            System.out.print(CONNECTED_SIDE_SX);
+            System.out.print("__");
+        } else if (side && dx) {
+            System.out.print(CONNECTED_SIDE_DX);
+
+        } else {
+            System.out.print(SIDE);
+            System.out.print("  ");
+        }
+
     }
 
 }
