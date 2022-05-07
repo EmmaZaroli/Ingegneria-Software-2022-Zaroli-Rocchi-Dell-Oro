@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +28,8 @@ public class Endpoint {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
+    private Timer timer = new Timer();
+
     public Endpoint(Socket socket) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
@@ -33,6 +37,13 @@ public class Endpoint {
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
         this.isOnline = true;
+        this.timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                disconnect();
+                notifyDisconnection();
+            }
+        }, 30 * 1000); //TODO parameterize this
     }
 
     public boolean isOnline() {
