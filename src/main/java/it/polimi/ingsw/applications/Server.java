@@ -165,72 +165,27 @@ public class Server {
         User user = getUser(nickname).get(); //TODO this could return null
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
-                enqueueNormal2Players(user);
+                enqueueUser(user, normal2PlayersBuilder, normal2PlayersRunningGames);
             else
-                enqueueNormal3Players(user);
+                enqueueUser(user, normal3PlayersBuilder, normal3PlayersRunningGames);
         } else {
             if (selectedPlayersNumber == PlayersNumber.TWO)
-                enqueueExpert2Players(user);
+                enqueueUser(user, expert2PlayersBuilder, expert2PlayersRunningGames);
             else
-                enqueueExpert3Players(user);
+                enqueueUser(user, expert3PlayersBuilder, expert3PlayersRunningGames);
         }
     }
 
-    private void enqueueNormal2Players(User user) throws InvalidPlayerNumberException {
-        synchronized (normal2PlayersBuilder) {
-            synchronized (normal2PlayersRunningGames) {
-                normal2PlayersBuilder.player(user);
+    private void enqueueUser(User user, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
+        synchronized (builder) {
+            synchronized (runningGames) {
+                builder.player(user);
 
-                if (normal2PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = normal2PlayersBuilder.build();
-                    normal2PlayersRunningGames.add(gameHandler);
+                if (builder.isGameFull()) {
+                    GameHandler gameHandler = builder.build();
+                    runningGames.add(gameHandler);
                     gameHandler.start();
-                    normal2PlayersBuilder.reset();
-                }
-            }
-        }
-    }
-
-    private void enqueueNormal3Players(User user) throws InvalidPlayerNumberException {
-        synchronized (normal3PlayersBuilder) {
-            synchronized (normal3PlayersRunningGames) {
-                normal3PlayersBuilder.player(user);
-
-                if (normal3PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = normal3PlayersBuilder.build();
-                    normal3PlayersRunningGames.add(gameHandler);
-                    gameHandler.start();
-                    normal3PlayersBuilder.reset();
-                }
-            }
-        }
-    }
-
-    private void enqueueExpert2Players(User user) throws InvalidPlayerNumberException {
-        synchronized (expert2PlayersBuilder) {
-            synchronized (expert2PlayersRunningGames) {
-                expert2PlayersBuilder.player(user);
-
-                if (expert2PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = expert2PlayersBuilder.build();
-                    expert2PlayersRunningGames.add(gameHandler);
-                    gameHandler.start();
-                    expert2PlayersBuilder.reset();
-                }
-            }
-        }
-    }
-
-    private void enqueueExpert3Players(User user) throws InvalidPlayerNumberException {
-        synchronized (expert3PlayersBuilder) {
-            synchronized (expert3PlayersRunningGames) {
-                expert3PlayersBuilder.player(user);
-
-                if (expert3PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = expert3PlayersBuilder.build();
-                    expert3PlayersRunningGames.add(gameHandler);
-                    gameHandler.start();
-                    expert3PlayersBuilder.reset();
+                    builder.reset();
                 }
             }
         }
