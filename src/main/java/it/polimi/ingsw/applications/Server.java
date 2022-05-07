@@ -116,8 +116,7 @@ public class Server {
                         loadGame(game, users, expert3PlayersBuilder, expert3PlayersRunningGames);
                 }
             } catch (InvalidPlayerNumberException e) {
-                //TODO
-                //logger.log(Level.SEVERE, MessagesHelper.ERROR_STARTING_SERVER, e);
+                logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
             }
         }
     }
