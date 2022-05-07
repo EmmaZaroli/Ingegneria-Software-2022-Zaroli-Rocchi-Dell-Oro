@@ -97,7 +97,7 @@ public class Server {
         //TODO create a controller for every game, start the thread
     }
 
-    public void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
+    public synchronized void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 normal2PlayersBuilder.addGameStartingListener(l);
@@ -228,8 +228,7 @@ public class Server {
         return Optional.empty();
     }
 
-    //TODO two player may try to connect with the same username
-    public void reconnectUser(String nickname, Endpoint endpoint) {
+    public synchronized void reconnectUser(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
         if (gameHandler.isPresent()) {
             GameHandler gh = gameHandler.get();
@@ -238,22 +237,28 @@ public class Server {
         }
     }
 
-    public void addUser(User user) {
-        allUsers.put(user.getNickname(), user);
+    public synchronized void addUser(User user) {
+        synchronized (allUsers) {
+            allUsers.put(user.getNickname(), user);
+        }
     }
 
     public Optional<User> getUser(String nickname) {
-        return Optional.ofNullable(allUsers.get(nickname));
+        synchronized (allUsers) {
+            return Optional.ofNullable(allUsers.get(nickname));
+        }
     }
 
     public boolean containUser(String nickname) {
-        return allUsers.containsKey(nickname);
+        synchronized (allUsers) {
+            return allUsers.containsKey(nickname);
+        }
     }
 
     //try to remove a user
     //user must not be in an active game
     //return true if the removal is succesfull, false if not (user does not exist or is in an active game)
-    public boolean removeUser(String nickname) {
+    public synchronized boolean removeUser(String nickname) {
         Optional<User> user = getUser(nickname);
         if (user.isEmpty() || !getGameByPlayer(nickname).isEmpty())
             return false;
