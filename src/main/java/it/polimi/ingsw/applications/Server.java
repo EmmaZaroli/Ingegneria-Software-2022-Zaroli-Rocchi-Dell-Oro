@@ -4,6 +4,8 @@ import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameParameters;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.servercontroller.*;
@@ -94,7 +96,41 @@ public class Server {
     private void loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
         List<Game> games = dd.getAllGames();
-        //TODO create a controller for every game, start the thread
+        List<User> users = new LinkedList<>();
+        for (Game game : games) {
+            for (int i = 0; i < game.getPlayers().length; i++) {
+                game.getPlayer(i).setOnline(false);
+                users.add(new User(game.getPlayer(i).getNickname()));
+            }
+            GameParameters parameters = game.getParameters();
+            try {
+                if (parameters.getGameMode() == GameMode.NORMAL_MODE) {
+                    if (parameters.getPlayersNumber() == PlayersNumber.TWO)
+                        loadGame(game, users, normal2PlayersBuilder, normal2PlayersRunningGames);
+                    else
+                        loadGame(game, users, normal3PlayersBuilder, normal3PlayersRunningGames);
+                } else {
+                    if (parameters.getPlayersNumber() == PlayersNumber.TWO)
+                        loadGame(game, users, expert2PlayersBuilder, expert2PlayersRunningGames);
+                    else
+                        loadGame(game, users, expert3PlayersBuilder, expert3PlayersRunningGames);
+                }
+            } catch (InvalidPlayerNumberException e) {
+                //TODO
+                //logger.log(Level.SEVERE, MessagesHelper.ERROR_STARTING_SERVER, e);
+            }
+        }
+    }
+
+    private void loadGame(Game game, List<User> users, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
+        for (int i = 0; i < users.size(); i++) {
+            builder.player(users.get(i));
+            addUser(users.get(i));
+        }
+        GameHandler gameHandler = builder.build();
+        runningGames.add(gameHandler);
+        gameHandler.start();
+        builder.reset();
     }
 
     public synchronized void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {

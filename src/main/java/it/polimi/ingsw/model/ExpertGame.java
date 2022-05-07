@@ -14,18 +14,6 @@ public class ExpertGame extends Game {
         super(players, table, parameters);
     }
 
-    public ExpertGame(Player[] players) {
-        super(players);
-    }
-
-    @Override
-    protected void init(Player[] players) {
-        this.players = players;
-        this.table = new ExpertTable(this.players.length);
-        this.currentPlayer = 0;
-        this.parameters = new ExpertGameParameters();
-    }
-
     public CharacterCard[] getCharacterCards() {
         return characterCards.clone();
     }

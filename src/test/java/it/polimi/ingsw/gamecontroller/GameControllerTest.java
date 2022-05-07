@@ -1,9 +1,8 @@
 package it.polimi.ingsw.gamecontroller;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.IslandCard;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -26,7 +25,7 @@ class GameControllerTest extends TestCase {
     Player player1 = new Player("player1", Wizzard.BLUE, Tower.BLACK, 2);
     Player player2 = new Player("player2", Wizzard.GREEN, Tower.WHITE, 2);
     Player[] players = {player1, player2};
-    Game game = new Game(players);
+    Game game = new Game(players, new Table(PlayersNumber.TWO.getPlayersNumber()), new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
     TableController tableController = new TableController(game.getTable());
     VirtualView[] virtualViews = new VirtualView[2];
     //TODO initialize virtualViews
