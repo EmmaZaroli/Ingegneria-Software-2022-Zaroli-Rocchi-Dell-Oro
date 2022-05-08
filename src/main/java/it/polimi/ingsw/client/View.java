@@ -158,8 +158,8 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(IslandMessage message) {
         //TODO after we put the deleted island in the message
         //only if the field deletedIsland is not empty, else only update the island and print
-        int i = 0;
-        int j = 0;
+        int i = 0; // main island
+        int j = 0; // island deleted
         for (int k = 0; k < 12; k++) {
             if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
                 i = k;
@@ -168,9 +168,8 @@ public abstract class View implements MessageListener, UserInterface {
                 j = k;
             }
         }
-        if (j > i) islands.get(j - 1).setLinkedislands(islands.get(j).getMainIsland());
-        else islands.get(j).setLinkedislands(islands.get(j + 1).getMainIsland());
-
+        islands.get(j).setMainConnected(false);
+        //TODO
         this.print();
     }
     //</editor-fold>

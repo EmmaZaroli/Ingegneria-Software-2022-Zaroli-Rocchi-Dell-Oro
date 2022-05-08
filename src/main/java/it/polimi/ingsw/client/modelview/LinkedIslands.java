@@ -9,7 +9,16 @@ public class LinkedIslands {
 
     private IslandCard island;
     private List<IslandCard> linkedislands = new ArrayList<>();
-    private boolean connected = false;
+    private boolean mainConnected = true;
+    private boolean connectedWithNext = false;
+
+    public boolean isConnectedWithNext() {
+        return connectedWithNext;
+    }
+
+    public void setConnectedWithNext(boolean connectedWithNext) {
+        this.connectedWithNext = connectedWithNext;
+    }
 
     public IslandCard getMainIsland() {
         return island;
@@ -27,11 +36,15 @@ public class LinkedIslands {
         this.linkedislands.add(linkedisland);
     }
 
-    public boolean isConnected() {
-        return connected;
+    public boolean isMainConnected() {
+        return mainConnected;
     }
 
-    public void setConnected() {
-        this.connected = true;
+    /**
+     * @param isConnected is false if the island was eliminated due to its union with another island,
+     *                    true if the island is not connected or is the main island of a group of islands
+     */
+    public void setMainConnected(boolean isConnected) {
+        this.mainConnected = isConnected;
     }
 }
