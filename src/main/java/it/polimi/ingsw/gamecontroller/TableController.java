@@ -114,6 +114,7 @@ public class TableController {
      * @param move The number of steps to make
      */
     public void moveMotherNature(int move) {
+        table.getIslands().get(table.getIslandWithMotherNature()).setHasMotherNature(false);
         table.setIslandWithMotherNature((table.getIslandWithMotherNature() + move) % table.getIslands().size());
     }
 
@@ -163,6 +164,7 @@ public class TableController {
         IslandCard islandLeft = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
         if (islandLeft.getTower().equals(towerColor)) {
             table.movePawnOnIsland(table.getIslands().get(table.getIslandWithMotherNature()), islandLeft.getStudentsFromIsland());
+            islandLeft.setHasMotherNature(false);
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
             if (table.getIslandWithMotherNature() != 0)
                 table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
@@ -172,6 +174,7 @@ public class TableController {
         IslandCard islandRight = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
         if (islandRight.getTower().equals(towerColor)) {
             table.movePawnOnIsland(table.getIslands().get(table.getIslandWithMotherNature()), islandRight.getStudentsFromIsland());
+            islandRight.setHasMotherNature(false);
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
             if (table.getIslandWithMotherNature() == table.getIslands().size()) {
                 table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
