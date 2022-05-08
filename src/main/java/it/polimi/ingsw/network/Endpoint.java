@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.network.messages.PingMessage;
 import it.polimi.ingsw.servercontroller.MessagesHelper;
 
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +29,9 @@ public class Endpoint {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
+    private Timer disconnectionTimer = new Timer();
+    private Timer pingTimer = new Timer();
+
     public Endpoint(Socket socket) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
@@ -33,6 +39,8 @@ public class Endpoint {
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
         this.isOnline = true;
+        resetDisconnectionTimer();
+        startPinging();
     }
 
     public boolean isOnline() {
@@ -79,13 +87,37 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            for (MessageListener l : messageListeners) {
-                l.onMessageReceived(m);
+            resetDisconnectionTimer();
+            if (m.getType() != MessageType.PING) {
+                for (MessageListener l : messageListeners) {
+                    l.onMessageReceived(m);
+                }
             }
         } catch (Exception e) {
             disconnect();
             notifyDisconnection();
         }
+    }
+
+    private void resetDisconnectionTimer() {
+        this.disconnectionTimer.cancel();
+        this.disconnectionTimer = new Timer();
+        this.disconnectionTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                disconnect();
+                notifyDisconnection();
+            }
+        }, 30 * 1000); //TODO parameterize this
+    }
+
+    private void startPinging() {
+        this.disconnectionTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendMessage(new PingMessage(MessageType.PING));
+            }
+        }, 5 * 1000); //TODO parameterize this
     }
 
     public void disconnect() {
