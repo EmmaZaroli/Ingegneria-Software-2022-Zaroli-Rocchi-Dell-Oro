@@ -4,7 +4,7 @@ import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
 public class PingMessage extends Message {
-    protected PingMessage(String nickname, MessageType messageType) {
-        super(nickname, messageType);
+    public PingMessage(MessageType messageType) {
+        super("", messageType);
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.network.messages.PingMessage;
 import it.polimi.ingsw.servercontroller.MessagesHelper;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class Endpoint {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     private Timer disconnectionTimer = new Timer();
+    private Timer pingTimer = new Timer();
 
     public Endpoint(Socket socket) throws IOException {
         this.messageListeners = new LinkedList<>();
@@ -38,6 +40,7 @@ public class Endpoint {
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
         this.isOnline = true;
         resetDisconnectionTimer();
+        startPinging();
     }
 
     public boolean isOnline() {
@@ -85,8 +88,10 @@ public class Endpoint {
         try {
             Message m = (Message) in.readObject();
             resetDisconnectionTimer();
-            for (MessageListener l : messageListeners) {
-                l.onMessageReceived(m);
+            if (m.getType() != MessageType.PING) {
+                for (MessageListener l : messageListeners) {
+                    l.onMessageReceived(m);
+                }
             }
         } catch (Exception e) {
             disconnect();
@@ -104,6 +109,15 @@ public class Endpoint {
                 notifyDisconnection();
             }
         }, 30 * 1000); //TODO parameterize this
+    }
+
+    private void startPinging() {
+        this.disconnectionTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendMessage(new PingMessage(MessageType.PING));
+            }
+        }, 5 * 1000); //TODO parameterize this
     }
 
     public void disconnect() {
