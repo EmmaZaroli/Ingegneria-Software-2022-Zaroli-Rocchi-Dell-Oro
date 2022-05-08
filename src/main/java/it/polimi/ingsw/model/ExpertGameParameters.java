@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 /**
@@ -12,6 +14,10 @@ public class ExpertGameParameters extends GameParameters {
     private int extraInfluence;
     private PawnColor colorWithNoInfluence;
     private boolean alreadyActivateCharacterCard;
+
+    public ExpertGameParameters(PlayersNumber playersNumber, GameMode gameMode) {
+        super(playersNumber, gameMode);
+    }
 
     /**
      * @return true if the player can take control of the professors even

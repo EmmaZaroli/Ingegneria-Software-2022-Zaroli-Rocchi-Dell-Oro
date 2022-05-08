@@ -1,13 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.enums.PawnColor;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class GameParametersTest extends TestCase {
-    GameParameters gameParameters = new GameParameters();
-    ExpertGameParameters expertGameParameters = new ExpertGameParameters();
+    GameParameters gameParameters = new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE);
+    ExpertGameParameters expertGameParameters = new ExpertGameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE);
 
     @Test
     void initValues() {

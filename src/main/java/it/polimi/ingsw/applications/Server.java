@@ -4,6 +4,8 @@ import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameParameters;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.servercontroller.*;
@@ -94,10 +96,43 @@ public class Server {
     private void loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
         List<Game> games = dd.getAllGames();
-        //TODO create a controller for every game, start the thread
+        List<User> users = new LinkedList<>();
+        for (Game game : games) {
+            for (int i = 0; i < game.getPlayers().length; i++) {
+                game.getPlayer(i).setOnline(false);
+                users.add(new User(game.getPlayer(i).getNickname()));
+            }
+            GameParameters parameters = game.getParameters();
+            try {
+                if (parameters.getGameMode() == GameMode.NORMAL_MODE) {
+                    if (parameters.getPlayersNumber() == PlayersNumber.TWO)
+                        loadGame(game, users, normal2PlayersBuilder, normal2PlayersRunningGames);
+                    else
+                        loadGame(game, users, normal3PlayersBuilder, normal3PlayersRunningGames);
+                } else {
+                    if (parameters.getPlayersNumber() == PlayersNumber.TWO)
+                        loadGame(game, users, expert2PlayersBuilder, expert2PlayersRunningGames);
+                    else
+                        loadGame(game, users, expert3PlayersBuilder, expert3PlayersRunningGames);
+                }
+            } catch (InvalidPlayerNumberException e) {
+                logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
+            }
+        }
     }
 
-    public void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
+    private void loadGame(Game game, List<User> users, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
+        for (int i = 0; i < users.size(); i++) {
+            builder.player(users.get(i));
+            addUser(users.get(i));
+        }
+        GameHandler gameHandler = builder.build();
+        runningGames.add(gameHandler);
+        gameHandler.start();
+        builder.reset();
+    }
+
+    public synchronized void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 normal2PlayersBuilder.addGameStartingListener(l);
@@ -129,72 +164,27 @@ public class Server {
         User user = getUser(nickname).get(); //TODO this could return null
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
-                enqueueNormal2Players(user);
+                enqueueUser(user, normal2PlayersBuilder, normal2PlayersRunningGames);
             else
-                enqueueNormal3Players(user);
+                enqueueUser(user, normal3PlayersBuilder, normal3PlayersRunningGames);
         } else {
             if (selectedPlayersNumber == PlayersNumber.TWO)
-                enqueueExpert2Players(user);
+                enqueueUser(user, expert2PlayersBuilder, expert2PlayersRunningGames);
             else
-                enqueueExpert3Players(user);
+                enqueueUser(user, expert3PlayersBuilder, expert3PlayersRunningGames);
         }
     }
 
-    private void enqueueNormal2Players(User user) throws InvalidPlayerNumberException {
-        synchronized (normal2PlayersBuilder) {
-            synchronized (normal2PlayersRunningGames) {
-                normal2PlayersBuilder.player(user);
+    private void enqueueUser(User user, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
+        synchronized (builder) {
+            synchronized (runningGames) {
+                builder.player(user);
 
-                if (normal2PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = normal2PlayersBuilder.build();
-                    normal2PlayersRunningGames.add(gameHandler);
+                if (builder.isGameFull()) {
+                    GameHandler gameHandler = builder.build();
+                    runningGames.add(gameHandler);
                     gameHandler.start();
-                    normal2PlayersBuilder.reset();
-                }
-            }
-        }
-    }
-
-    private void enqueueNormal3Players(User user) throws InvalidPlayerNumberException {
-        synchronized (normal3PlayersBuilder) {
-            synchronized (normal3PlayersRunningGames) {
-                normal3PlayersBuilder.player(user);
-
-                if (normal3PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = normal3PlayersBuilder.build();
-                    normal3PlayersRunningGames.add(gameHandler);
-                    gameHandler.start();
-                    normal3PlayersBuilder.reset();
-                }
-            }
-        }
-    }
-
-    private void enqueueExpert2Players(User user) throws InvalidPlayerNumberException {
-        synchronized (expert2PlayersBuilder) {
-            synchronized (expert2PlayersRunningGames) {
-                expert2PlayersBuilder.player(user);
-
-                if (expert2PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = expert2PlayersBuilder.build();
-                    expert2PlayersRunningGames.add(gameHandler);
-                    gameHandler.start();
-                    expert2PlayersBuilder.reset();
-                }
-            }
-        }
-    }
-
-    private void enqueueExpert3Players(User user) throws InvalidPlayerNumberException {
-        synchronized (expert3PlayersBuilder) {
-            synchronized (expert3PlayersRunningGames) {
-                expert3PlayersBuilder.player(user);
-
-                if (expert3PlayersBuilder.isGameFull()) {
-                    GameHandler gameHandler = expert3PlayersBuilder.build();
-                    expert3PlayersRunningGames.add(gameHandler);
-                    gameHandler.start();
-                    expert3PlayersBuilder.reset();
+                    builder.reset();
                 }
             }
         }
@@ -228,8 +218,7 @@ public class Server {
         return Optional.empty();
     }
 
-    //TODO two player may try to connect with the same username
-    public void reconnectUser(String nickname, Endpoint endpoint) {
+    public synchronized void reconnectUser(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
         if (gameHandler.isPresent()) {
             GameHandler gh = gameHandler.get();
@@ -238,22 +227,28 @@ public class Server {
         }
     }
 
-    public void addUser(User user) {
-        allUsers.put(user.getNickname(), user);
+    public synchronized void addUser(User user) {
+        synchronized (allUsers) {
+            allUsers.put(user.getNickname(), user);
+        }
     }
 
     public Optional<User> getUser(String nickname) {
-        return Optional.ofNullable(allUsers.get(nickname));
+        synchronized (allUsers) {
+            return Optional.ofNullable(allUsers.get(nickname));
+        }
     }
 
     public boolean containUser(String nickname) {
-        return allUsers.containsKey(nickname);
+        synchronized (allUsers) {
+            return allUsers.containsKey(nickname);
+        }
     }
 
     //try to remove a user
     //user must not be in an active game
     //return true if the removal is succesfull, false if not (user does not exist or is in an active game)
-    public boolean removeUser(String nickname) {
+    public synchronized boolean removeUser(String nickname) {
         Optional<User> user = getUser(nickname);
         if (user.isEmpty() || !getGameByPlayer(nickname).isEmpty())
             return false;

@@ -6,7 +6,11 @@ import it.polimi.ingsw.network.Message;
 public class User {
     private final String nickname;
     private Endpoint endpoint;
-    private boolean online;
+
+    public User(String nickname) {
+        this.nickname = nickname;
+        this.endpoint = null;
+    }
 
     public User(String nickname, Endpoint endpoint) {
         this.nickname = nickname;
@@ -27,6 +31,8 @@ public class User {
     }
 
     public boolean isOnline() {
+        if (endpoint == null)
+            return false;
         return endpoint.isOnline();
     }
 

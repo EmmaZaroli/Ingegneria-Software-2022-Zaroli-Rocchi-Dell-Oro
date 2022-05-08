@@ -17,6 +17,7 @@ import it.polimi.ingsw.view.VirtualView;
 import java.util.*;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
+import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 public class ExpertGameController extends GameController {
     private Effect[] effects;
@@ -28,15 +29,22 @@ public class ExpertGameController extends GameController {
 
     @Override
     protected void init(Player[] players) {
-        this.game = new ExpertGame(players);
-        this.tableController = new ExpertTableController((ExpertTable) (game.getTable()));
+        //TODO what is this for?
+        /*
         LinkedList<PawnColor> students = new LinkedList<>();
         for (Player c : game.getPlayers()) {
             for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
                 students.add(tableController.getBag().drawStudent());
             }
             c.getBoard().addStudentsToEntrance(students);
+        }*/
+
+        fillClouds();
+        for (Player player : game.getPlayers()) {
+            player.getBoard().addStudentsToEntrance(tableController.drawStudents());
         }
+        this.game.setCurrentPlayer(0);
+        this.game.setGamePhase(PLANNING);
     }
 
     public Effect[] getEffects() {
