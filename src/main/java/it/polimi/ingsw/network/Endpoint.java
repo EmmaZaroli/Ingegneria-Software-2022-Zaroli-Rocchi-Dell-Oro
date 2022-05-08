@@ -28,7 +28,7 @@ public class Endpoint {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    private Timer timer = new Timer();
+    private Timer disconnectionTimer = new Timer();
 
     public Endpoint(Socket socket) throws IOException {
         this.messageListeners = new LinkedList<>();
@@ -37,13 +37,7 @@ public class Endpoint {
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
         this.isOnline = true;
-        this.timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                disconnect();
-                notifyDisconnection();
-            }
-        }, 30 * 1000); //TODO parameterize this
+        resetDisconnectionTimer();
     }
 
     public boolean isOnline() {
@@ -90,6 +84,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
+            resetDisconnectionTimer();
             for (MessageListener l : messageListeners) {
                 l.onMessageReceived(m);
             }
@@ -97,6 +92,18 @@ public class Endpoint {
             disconnect();
             notifyDisconnection();
         }
+    }
+
+    private void resetDisconnectionTimer() {
+        this.disconnectionTimer.cancel();
+        this.disconnectionTimer = new Timer();
+        this.disconnectionTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                disconnect();
+                notifyDisconnection();
+            }
+        }, 30 * 1000); //TODO parameterize this
     }
 
     public void disconnect() {
