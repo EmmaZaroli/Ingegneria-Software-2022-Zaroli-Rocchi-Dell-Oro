@@ -81,7 +81,9 @@ public class Endpoint {
     }
 
     public Message synchronizedReceive() throws IOException, ClassNotFoundException {
-        return (Message) in.readObject();
+        Message message = (Message) in.readObject();
+        resetDisconnectionTimer();
+        return message;
     }
 
     //TODO I don't think reflection is the best way to do this
