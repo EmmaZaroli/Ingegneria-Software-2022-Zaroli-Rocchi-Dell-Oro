@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.MessageType;
 public class IslandMessage extends Message {
 
     private final IslandCard island;
+    private IslandCard deletedIslandCard;
 
     public IslandMessage(MessageType messageType, IslandCard island) {
         super("server", messageType);
@@ -15,6 +16,14 @@ public class IslandMessage extends Message {
 
     public IslandCard getIsland() {
         return this.island;
+    }
+
+    public void setDeletedIslandCard(IslandCard island) {
+        this.deletedIslandCard = island;
+    }
+
+    public IslandCard getDeletedIsland() {
+        return this.deletedIslandCard;
     }
 
 }

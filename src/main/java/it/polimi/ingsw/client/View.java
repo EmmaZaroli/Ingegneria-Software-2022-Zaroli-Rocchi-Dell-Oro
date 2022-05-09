@@ -154,6 +154,25 @@ public abstract class View implements MessageListener, UserInterface {
         }
         this.print();
     }
+
+    private void handleMessage(IslandMessage message) {
+        //TODO after we put the deleted island in the message
+        //only if the field deletedIsland is not empty, else only update the island and print
+        int i = 0;
+        int j = 0;
+        for (int k = 0; k < 12; k++) {
+            if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
+                i = k;
+            }
+            if (islands.get(k).getMainIsland().getUuid().equals(message.getDeletedIsland().getUuid())) {
+                j = k;
+            }
+        }
+        if (j > i) islands.get(j - 1).setLinkedislands(islands.get(j).getMainIsland());
+        else islands.get(j).setLinkedislands(islands.get(j + 1).getMainIsland());
+
+        this.print();
+    }
     //</editor-fold>
 
     @Override
@@ -165,6 +184,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
         if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);
         if (message instanceof CoinMessage) handleMessage((CoinMessage) message);
+        if (message instanceof IslandMessage) handleMessage((IslandMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">

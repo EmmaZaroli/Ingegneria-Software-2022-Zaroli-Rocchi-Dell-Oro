@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
-import it.polimi.ingsw.model.IslandCard;
 
 import java.awt.*;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
 public class PrinterIslands {
 
     public static final Color brown = new Color(139, 69, 19);
-    private final String MOTHER_NATURE = "▲";
+    private static final String MOTHER_NATURE = "▲";
     public static final String TOP = "_______";
     public static final String SIDE = "|       |";
     public static final String CONNECTED_SIDE_SX = "|        ";
@@ -19,29 +18,62 @@ public class PrinterIslands {
     public static final String BOTTOM = "|_______|";
     public static final String CONNECTED_BOTTOM_DX = "________|";
     public static final String CONNECTED_BOTTOM_MIDDLE = "_________";
-    private boolean isnext = false;
-    private boolean upConnected = false;
-    private boolean up0 = false;
-    private boolean up4 = false;
+    private boolean isnext;
+    private boolean upConnected;
+    private boolean up0;
+    private boolean up4;
 
     public void printIslands(List<LinkedIslands> islands) {
-
+        isnext = false;
+        upConnected = false;
+        up0 = false;
+        up4 = false;
 
         //first fow
+        firstRow(islands);
+
+        System.out.println();
+        isnext = false;
+
+        //second row
+        if (!up0) System.out.print(" ");
+        topWithConnection(up0);
+        System.out.print("                                 ");
+        if (up0) System.out.print("  ");
+        if (!up4) System.out.print(" ");
+        topWithConnection(up4);
+        System.out.println();
+        side(false, false);
+        System.out.print("                                 ");
+        side(false, false);
+        System.out.println();
+
+        up0 = islands.get(10).getLinkedislands().contains(islands.get(11).getMainIsland());
+        up4 = islands.get(5).getLinkedislands().contains(islands.get(6).getMainIsland());
+        if (up0) {
+            System.out.print(SIDE + "  ");
+        } else bottom(false, false);
+        System.out.print("                                 ");
+        if (up4) System.out.print(SIDE);
+        else bottom(false, false);
+        System.out.println();
+
+        thirdRow(islands);
+
+        System.out.println();
+    }
+
+    private void firstRow(List<LinkedIslands> islands) {
         System.out.print(" ");
         for (int i = 0; i < 5; i++) {
-            if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()) && i != 4)
-                top(true);
-            else top(false);
+            top(islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()) && i != 4);
         }
 
         System.out.println();
 
         for (int i = 0; i < 5; i++) {
             if (islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()) && i != 4) {
-                if (isnext) {
-                    side(true, true);
-                } else side(true, false);
+                side(true, isnext);
                 isnext = true;
             } else {
                 side(false, false);
@@ -74,46 +106,77 @@ public class PrinterIslands {
 
         if (islands.get(4).getLinkedislands().contains(islands.get(5).getMainIsland())) {
             up4 = true;
-            if (isnext) upConnected(true, true);
-            else upConnected(false, true);
+            upConnected(isnext, true);
         } else {
             if (isnext) bottomdx();
             else bottom(false, false);
         }
 
-        System.out.println();
-
-        //second row
-        if (!up0) System.out.print(" ");
-        topWithConnection(up0);
-        System.out.print("                                 ");
-        if (up0) System.out.print("  ");
-        if (!up4) System.out.print(" ");
-        topWithConnection(up4);
-        System.out.println();
-        side(false, false);
-        System.out.print("                                 ");
-        side(false, false);
-        System.out.println();
-        bottom(false, false);
-        System.out.print("                                 ");
-        bottom(false, false);
-        System.out.println();
-
-        //third row
-        for (int i = 0; i < 5; i++) {
-            top(false);
-        }
-        System.out.println();
-        for (int i = 0; i < 5; i++) {
-            side(false, false);
-        }
-        System.out.println();
-        for (int i = 0; i < 5; i++) {
-            bottom(false, false);
-        }
-        System.out.println();
     }
+
+    private void thirdRow(List<LinkedIslands> islands) {
+        upConnected = islands.get(10).getLinkedislands().contains(islands.get(11).getMainIsland());
+        if (islands.get(9).getLinkedislands().contains(islands.get(10).getMainIsland())) {
+            if (upConnected) {
+                upConnected(true, false);
+                System.out.print("_");
+            } else {
+                System.out.print(" ");
+                top(true);
+            }
+        } else {
+            if (upConnected) {
+                upConnected(false, false);
+                System.out.print(" ");
+            } else {
+                System.out.print(" ");
+                top(false);
+            }
+        }
+
+        //third row other tops
+        for (int i = 9; i > 6; i--) {
+            top(islands.get(i - 1).getLinkedislands().contains(islands.get(i).getMainIsland()));
+        }
+        //third row first island
+        upConnected = islands.get(5).getLinkedislands().contains(islands.get(6).getMainIsland());
+        if (islands.get(6).getLinkedislands().contains(islands.get(7).getMainIsland())) {
+            if (upConnected) {
+                System.out.print("       |");
+            } else {
+                top(false);
+            }
+        } else {
+            if (upConnected) {
+                upConnected(false, false);
+            } else {
+                top(false);
+            }
+        }
+
+
+        System.out.println();
+        for (int i = 10; i > 5; i--) {
+            if (islands.get(i - 1).getLinkedislands().contains(islands.get(i).getMainIsland()) && i != 6) {
+                side(true, isnext);
+                isnext = true;
+            } else {
+                side(false, false);
+                if (isnext) isnext = false;
+            }
+        }
+        System.out.println();
+        for (int i = 10; i > 5; i--) {
+            if (islands.get(i - 1).getLinkedislands().contains(islands.get(i).getMainIsland()) && i != 6) {
+                bottom(true, isnext);
+                isnext = true;
+            } else {
+                bottom(false, false);
+                if (isnext) isnext = false;
+            }
+        }
+    }
+
 
     private void topWithConnection(boolean connected) {
         if (connected) System.out.print(SIDE);
@@ -173,7 +236,7 @@ public class PrinterIslands {
         if (side && !dx) {
             System.out.print(CONNECTED_SIDE_SX);
             System.out.print("__");
-        } else if (side && dx) {
+        } else if (side) {
             System.out.print(CONNECTED_SIDE_DX);
 
         } else {
