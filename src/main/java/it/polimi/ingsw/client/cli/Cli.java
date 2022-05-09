@@ -213,6 +213,7 @@ public class Cli extends View {
 
     private void printSchoolBoard(PlayerInfo player) {
         out.println(player.getNickname() + " board:");
+        //TODO player dto
         boardPrinter.printBoard(player.getBoard());
         printAssistantCardPlayed(player.getDiscardPileHead());
     }
