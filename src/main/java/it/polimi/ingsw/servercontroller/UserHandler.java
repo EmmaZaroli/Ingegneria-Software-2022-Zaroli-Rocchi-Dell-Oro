@@ -24,7 +24,7 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
     private Optional<String> nickname;
 
     public UserHandler(Socket socket, Server server) throws IOException {
-        this.endpoint = new Endpoint(socket);
+        this.endpoint = new Endpoint(socket, true);
         this.endpoint.addDisconnectionListener(this);
         this.endpoint.addMessageListener(this);
         this.endpoint.startReceiving();

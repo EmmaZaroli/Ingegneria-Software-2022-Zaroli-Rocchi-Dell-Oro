@@ -3,9 +3,7 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.messages.PingMessage;
 import it.polimi.ingsw.servercontroller.MessagesHelper;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +30,23 @@ public class Endpoint {
     private Timer disconnectionTimer = new Timer();
     private Timer pingTimer = new Timer();
 
-    public Endpoint(Socket socket) throws IOException {
+    public Endpoint(Socket socket, boolean serverSide) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
         this.socket = socket;
-        this.in = new ObjectInputStream(this.socket.getInputStream());
-        this.out = new ObjectOutputStream(this.socket.getOutputStream());
+
+        InputStream input = this.socket.getInputStream();
+        OutputStream output = this.socket.getOutputStream();
+        output.flush();
+
+        if (serverSide) {
+            this.in = new ObjectInputStream(input);
+            this.out = new ObjectOutputStream(output);
+        } else {
+            this.out = new ObjectOutputStream(output);
+            this.in = new ObjectInputStream(input);
+        }
+
         this.isOnline = true;
         resetDisconnectionTimer();
         startPinging();
@@ -67,12 +76,17 @@ public class Endpoint {
         receiverThread.start();
     }
 
+    private void stopReceiving() {
+        this.receiverThread.interrupt();
+    }
+
     public Message synchronizedReceive() throws IOException, ClassNotFoundException {
         return (Message) in.readObject();
     }
 
     //TODO I don't think reflection is the best way to do this
     public Message synchronizedReceive(Class messageClass) {
+        this.stopReceiving();
         Message message = null;//TODO is this ok?
         do {
             try {
@@ -81,6 +95,7 @@ public class Endpoint {
                 e.printStackTrace();
             }
         } while (!(messageClass.isInstance(message)));
+        this.startReceiving();
         return message;
     }
 

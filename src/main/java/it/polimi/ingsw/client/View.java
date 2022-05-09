@@ -195,7 +195,7 @@ public abstract class View implements MessageListener, UserInterface {
     protected final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
-            this.endpoint = new Endpoint(s);
+            this.endpoint = new Endpoint(s, false);
             this.endpoint.addMessageListener(this);
             this.endpoint.startReceiving();
             this.askPlayerNickname();

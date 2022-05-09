@@ -61,7 +61,15 @@ public class Cli extends View {
 
     @Override
     public void askServerInfo() {
-        //TODO
+        String ip;
+        int port;
+
+        out.print("Please, insert the Server's ip address ");
+        ip = readLine();
+        out.print("Select the Server's port number ");
+        port = Integer.parseInt(readLine());
+
+        this.startConnection(ip, port);
     }
 
     /**
@@ -75,11 +83,12 @@ public class Cli extends View {
         return input;
     }
 
+    //TODO move validation logic to shared layer
     public void askPlayerNickname() {
         boolean valid = false;
         String nickname;
         do {
-            out.println("Enter your nickname: ");
+            out.print("Enter your nickname: ");
             nickname = readLine();
             valid = inputParser.checkUsername(nickname);
         } while (!valid);
