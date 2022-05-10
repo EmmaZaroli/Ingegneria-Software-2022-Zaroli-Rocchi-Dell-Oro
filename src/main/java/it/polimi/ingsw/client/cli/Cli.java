@@ -56,7 +56,7 @@ public class Cli extends View {
 
     @Override
     public void printEnqueuedMessage() {
-        //TODO
+        System.out.println("You're been added to the players queue.\nPlease, wait for a game to start");
     }
 
     @Override
@@ -92,9 +92,7 @@ public class Cli extends View {
             nickname = readLine();
             valid = inputParser.checkUsername(nickname);
         } while (!valid);
-        //TODO
-        //setNickname(nickname);
-        listeners.firePropertyChange("nickname", true, nickname);
+        this.sendPlayerNickname(nickname);
     }
 
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
@@ -110,19 +108,18 @@ public class Cli extends View {
             out.println("Sorry, your nickname is already taken, please choose another one");
             askPlayerNickname();
         }
-
     }
 
     public void askGameSettings() {
         int playersNumber;
         String gameMode;
-        out.println("Please enter the Game mode: [normal/expert]");
+        out.print("Please enter the Game mode: [normal/expert] ");
         gameMode = readLine();
         //TODO check if is valid
-        out.println("How many players are you going to play with? [2/3] ");
+        out.print("How many players are you going to play with? [2/3] ");
         playersNumber = Integer.parseInt(readLine());
         //TODO check if the number is 2 or 3
-        listeners.firePropertyChange("gameSettings", gameMode, playersNumber);
+        this.sendGameSettings(playersNumber, gameMode.equals("expert"));
     }
 
     public void genericMessage(String message) {

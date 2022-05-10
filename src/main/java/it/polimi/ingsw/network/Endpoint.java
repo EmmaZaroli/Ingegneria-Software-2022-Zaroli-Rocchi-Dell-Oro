@@ -39,6 +39,7 @@ public class Endpoint {
         OutputStream output = this.socket.getOutputStream();
         output.flush();
 
+        //TODO check if needed
         if (serverSide) {
             this.in = new ObjectInputStream(input);
             this.out = new ObjectOutputStream(output);
@@ -48,8 +49,8 @@ public class Endpoint {
         }
 
         this.isOnline = true;
-        resetDisconnectionTimer();
-        startPinging();
+        //resetDisconnectionTimer();
+        //startPinging();
     }
 
     public boolean isOnline() {
@@ -88,7 +89,6 @@ public class Endpoint {
 
     //TODO I don't think reflection is the best way to do this
     public Message synchronizedReceive(Class messageClass) {
-        this.stopReceiving();
         Message message = null;//TODO is this ok?
         do {
             try {
@@ -97,7 +97,6 @@ public class Endpoint {
                 e.printStackTrace();
             }
         } while (!(messageClass.isInstance(message)));
-        this.startReceiving();
         return message;
     }
 
