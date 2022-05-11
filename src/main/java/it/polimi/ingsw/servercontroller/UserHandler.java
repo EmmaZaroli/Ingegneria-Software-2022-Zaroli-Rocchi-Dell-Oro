@@ -27,7 +27,6 @@ public class UserHandler implements Runnable, DisconnectionListener, MessageList
         this.endpoint = new Endpoint(socket, true);
         this.endpoint.addDisconnectionListener(this);
         this.endpoint.addMessageListener(this);
-        this.endpoint.startReceiving();
         this.server = server;
         this.nickname = Optional.empty();
     }
