@@ -85,6 +85,7 @@ public class Endpoint {
         Message message = (Message) in.readObject();
         resetDisconnectionTimer();
         return message;
+
     }
 
     //TODO I don't think reflection is the best way to do this
@@ -103,7 +104,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            resetDisconnectionTimer();
+            //resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
                 for (MessageListener l : messageListeners) {
                     l.onMessageReceived(m);
