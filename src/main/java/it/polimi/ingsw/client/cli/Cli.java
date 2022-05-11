@@ -56,7 +56,7 @@ public class Cli extends View {
 
     @Override
     public void printEnqueuedMessage() {
-        System.out.println("You're been added to the players queue.\nPlease, wait for a game to start");
+        System.out.println("You've been added to the players queue.\nPlease, wait for a game to start");
     }
 
     @Override
@@ -96,10 +96,9 @@ public class Cli extends View {
     }
 
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
-
         //clearCli();
         if (playerReconnected) {
-            out.println("You're being reconnected to your previous game");
+            out.println("You've being reconnected to your previous game");
         }
         if (nicknameAccepted && !playerReconnected) {
             out.println("Welcome, " + getMe().getNickname() + ", get ready to play!");
@@ -171,6 +170,10 @@ public class Cli extends View {
         out.println("How many steps do you want to move mother nature? ");
         int steps = Integer.parseInt(readLine());
         //TODO check if number is <0 or >cardplayed.steps
+    }
+
+    public void printGameStarting() {
+        out.println("The game is starting");
     }
 
     public void updateCurrentPlayersTurn(String otherPlayer) {

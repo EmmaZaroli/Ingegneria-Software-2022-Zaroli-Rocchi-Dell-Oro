@@ -39,4 +39,6 @@ public interface UserInterface {
     void error(String error);
 
     void print();
+
+    void printGameStarting();
 }

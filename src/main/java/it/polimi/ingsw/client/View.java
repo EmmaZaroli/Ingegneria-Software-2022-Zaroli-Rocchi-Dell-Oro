@@ -172,6 +172,11 @@ public abstract class View implements MessageListener, UserInterface {
         //TODO
         this.print();
     }
+
+    private void handleMessage(GameStartingMessage message) {
+        this.printGameStarting();
+        print();
+    }
     //</editor-fold>
 
     @Override
@@ -184,6 +189,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);
         if (message instanceof CoinMessage) handleMessage((CoinMessage) message);
         if (message instanceof IslandMessage) handleMessage((IslandMessage) message);
+        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">
