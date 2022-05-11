@@ -175,6 +175,7 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(GameStartingMessage message) {
         this.printGameStarting();
+        //TODO init local state
         print();
     }
     //</editor-fold>

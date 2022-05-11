@@ -23,7 +23,7 @@ public class GameHandler {
 
     public void start() {
         for (User user : users) {
-            user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING));
+            user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
         }
     }
 
