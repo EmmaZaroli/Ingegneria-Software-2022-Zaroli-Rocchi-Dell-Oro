@@ -128,12 +128,12 @@ public class Endpoint {
     }
 
     private void startPinging() {
-        this.disconnectionTimer.schedule(new TimerTask() {
+        this.pingTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 sendMessage(new PingMessage(MessageType.PING));
             }
-        }, 5 * 1000); //TODO parameterize this
+        }, 5 * 1000, 5*1000); //TODO parameterize this
     }
 
     public void disconnect() {
