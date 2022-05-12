@@ -6,6 +6,8 @@ import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
@@ -111,7 +113,6 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(CloudMessage message) {
-        //TODO dto with wither
         Optional<CloudTileDto> cloud = this.clouds.stream()
                 .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
         //TODO
@@ -154,18 +155,36 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(IslandMessage message) {
         //TODO after we put the deleted island in the message
         //only if the field deletedIsland is not empty, else only update the island and print
-        int i = 0; // main island
-        int j = 0; // island deleted
+        int islandMain = 0; // main island
+        int islandCancelled = 0; // island deleted
         for (int k = 0; k < 12; k++) {
             if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
-                i = k;
+                islandMain = k;
             }
             if (islands.get(k).getMainIsland().getUuid().equals(message.getDeletedIsland().getUuid())) {
-                j = k;
+                islandCancelled = k;
             }
         }
-        islands.get(j).setMainConnected(false);
-        //TODO
+
+        if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)))) {
+            islands.get(Math.floorMod(islandCancelled - 1, 12)).setLinkedislands(islands.get(islandCancelled).getMainIsland());
+        } else {
+            islands.get(islandCancelled).setLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
+        }
+        islands.get(islandCancelled).setMainConnected(false);
+        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getLinkedislands());
+        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getMainIsland());
+
+        //update island part
+        
+        //TODO need a function to add only the new students on the islands
+        //islands.get(islandMain).getMainIsland().movePawnOnIsland();
+
+        Tower newTower = message.getIsland().getTower();
+        islands.get(islandMain).getMainIsland().setTower(newTower);
+        for (IslandCard island : islands.get(islandMain).getLinkedislands()) {
+            island.setTower(newTower);
+        }
         this.print();
     }
 
@@ -202,6 +221,7 @@ public abstract class View implements MessageListener, UserInterface {
     protected final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
+
             this.endpoint = new Endpoint(s, false);
             this.endpoint.addMessageListener(this);
             this.endpoint.startReceiving();
