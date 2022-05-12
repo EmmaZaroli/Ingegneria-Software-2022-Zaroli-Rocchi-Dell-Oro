@@ -2,10 +2,10 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
@@ -26,8 +26,7 @@ public abstract class View implements MessageListener, UserInterface {
     private boolean isExpertGame;
     private List<PlayerInfo> opponents;
     private PlayerInfo me;
-    private ArrayList<AssistantCard> deck;
-    private ArrayList<CloudTile> clouds;
+    private ArrayList<CloudTileDto> clouds;
     private int tableCoins;
     private List<LinkedIslands> islands;
     private String currentPlayer;
@@ -37,7 +36,6 @@ public abstract class View implements MessageListener, UserInterface {
     protected View() {
         this.opponents = new LinkedList<>();
         this.me = new PlayerInfo();
-        this.deck = new ArrayList<>();
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
         this.tableCoins = 0;
@@ -67,12 +65,10 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     public List<AssistantCard> getDeck() {
-        //TODO dtos if we have time
-        return this.deck;
+        return this.me.getDeck();
     }
 
-    public List<CloudTile> getClouds() {
-        //TODO dtos if we have time
+    public List<CloudTileDto> getClouds() {
         return this.clouds;
     }
 
@@ -114,13 +110,9 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    /*private void handleMessage(GameStartingMessage message){
-        this.printGameStartingMessage();
-    }*/
-
     private void handleMessage(CloudMessage message) {
         //TODO dto with wither
-        Optional<CloudTile> cloud = this.clouds.stream()
+        Optional<CloudTileDto> cloud = this.clouds.stream()
                 .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
         //TODO
     }
@@ -179,7 +171,10 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(GameStartingMessage message) {
         this.printGameStarting();
-        //TODO init local state
+        this.opponents = message.getGame().getOpponents().stream().map(x -> new PlayerInfo(x)).toList();
+        this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
+        this.clouds = new ArrayList<>(message.getGame().getClouds());
+        this.tableCoins = message.getGame().getTableCoins();
         print();
     }
     //</editor-fold>
