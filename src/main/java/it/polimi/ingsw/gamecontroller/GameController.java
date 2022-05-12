@@ -39,7 +39,6 @@ public class GameController implements DisconnectionListener {
     }
 
     protected void init(Player[] players) {
-
         fillClouds();
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
@@ -109,7 +108,7 @@ public class GameController implements DisconnectionListener {
         }
     }
 
-    private void fillClouds() {
+    protected void fillClouds() {
         try {
             this.tableController.fillClouds();
         } catch (FullCloudException e) {

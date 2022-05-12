@@ -44,6 +44,7 @@ public class GameHandlerBuilder {
 
     public GameHandlerBuilder reset() {
         this.users.clear();
+        this.gameStartingListeners.clear();
         return this;
     }
 
@@ -84,7 +85,7 @@ public class GameHandlerBuilder {
 
         Table table = new Table(playersNumber.getPlayersNumber());
 
-        GameParameters parameters = new GameParameters();
+        GameParameters parameters = new GameParameters(playersNumber, gameMode);
 
         return new Game(players, table, parameters);
     }
@@ -97,7 +98,7 @@ public class GameHandlerBuilder {
 
         ExpertTable table = new ExpertTable(playersNumber.getPlayersNumber());
 
-        ExpertGameParameters parameters = new ExpertGameParameters();
+        ExpertGameParameters parameters = new ExpertGameParameters(playersNumber, gameMode);
 
         return new ExpertGame(players, table, parameters);
     }
@@ -107,8 +108,11 @@ public class GameHandlerBuilder {
             case NORMAL_MODE -> buildNormalGameController(gameModel, virtualViews);
             case EXPERT_MODE -> buildExpertGameController(gameModel, virtualViews);
         };
-        for (VirtualView virtualView : virtualViews)
-            virtualView.getClientHandler().addDisconnectionListener(gameController);
+        for (VirtualView virtualView : virtualViews) {
+            if (virtualView.getClientHandler() != null)
+                virtualView.getClientHandler().addDisconnectionListener(gameController);
+        }
+        
         return gameController;
     }
 

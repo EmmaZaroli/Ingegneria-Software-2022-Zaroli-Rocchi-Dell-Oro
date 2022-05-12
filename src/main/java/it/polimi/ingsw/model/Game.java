@@ -37,17 +37,6 @@ public class Game extends Observable implements Serializable {
         this.parameters = parameters;
     }
 
-    public Game(Player[] players) {
-        this.init(players);
-    }
-
-    protected void init(Player[] players) {
-        this.players = players;
-        this.table = new Table(this.players.length);
-        this.currentPlayer = 0;
-        this.parameters = new GameParameters();
-    }
-
     public SchoolBoard getCurrentPlayerSchoolBoard() {
         return this.players[this.currentPlayer].getBoard();
     }

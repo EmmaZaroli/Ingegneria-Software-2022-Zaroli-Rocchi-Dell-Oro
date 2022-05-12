@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -10,10 +13,18 @@ public class GameParameters implements Serializable {
     @Serial
     private static final long serialVersionUID = 7L;
 
+    private final PlayersNumber playersNumber;
+    private final GameMode gameMode;
+
     private int initialTowersCount;
     private int initialStudentsCount;
     private int studentsToDraw;
     private int studentsToMove;
+
+    public GameParameters(PlayersNumber playersNumber, GameMode gameMode) {
+        this.playersNumber = playersNumber;
+        this.gameMode = gameMode;
+    }
 
     /**
      * @return the initial towers number on the school board
@@ -41,6 +52,14 @@ public class GameParameters implements Serializable {
      */
     public int getStudentsToMove() {
         return studentsToMove;
+    }
+
+    public PlayersNumber getPlayersNumber() {
+        return playersNumber;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
     }
 
     /**
