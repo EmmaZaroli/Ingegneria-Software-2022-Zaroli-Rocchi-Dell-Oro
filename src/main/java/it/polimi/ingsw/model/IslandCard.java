@@ -20,6 +20,21 @@ public class IslandCard implements Serializable {
     private final ArrayList<PawnColor> students;
     private Tower tower;
     private int size;
+    private boolean hasMotherNature;
+
+    /**
+     * @return true if the island has mother nature, false otherwise
+     */
+    public boolean isHasMotherNature() {
+        return hasMotherNature;
+    }
+
+    /**
+     * @param hasMotherNature
+     */
+    public void setHasMotherNature(boolean hasMotherNature) {
+        this.hasMotherNature = hasMotherNature;
+    }
 
     /**
      * Instantiates a new Island card.
@@ -45,7 +60,7 @@ public class IslandCard implements Serializable {
      *
      * @param student to add
      */
-    protected void movePawnOnIsland(PawnColor student) {
+    public void movePawnOnIsland(PawnColor student) {
         students.add(student);
     }
 
@@ -119,7 +134,8 @@ public class IslandCard implements Serializable {
      *
      * @param tower
      */
-    protected void setTower(Tower tower) {
+    public void setTower(Tower tower) {
         this.tower = tower;
     }
+    
 }

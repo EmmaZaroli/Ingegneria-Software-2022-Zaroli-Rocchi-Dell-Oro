@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.cli;
 
-import it.polimi.ingsw.model.SchoolBoard;
+import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 
@@ -27,7 +27,7 @@ public class PrinterSchoolBoard {
     public static final String TOWER_GREY = ANSI_WHITE + "\uD83D\uDEE2" + ANSI_RESET;
 
 
-    public void printBoard(SchoolBoard board) {
+    public void printBoard(SchoolBoardDto board) {
         PrintStream out = System.out;
 
         //print board
@@ -72,7 +72,7 @@ public class PrinterSchoolBoard {
         return assignedColor + student + ANSI_RESET;
     }
 
-    private void studentsTable(int rows, SchoolBoard board) {
+    private void studentsTable(int rows, SchoolBoardDto board) {
         int i = 0;
         String colorRow;
         PawnColor color;
@@ -102,7 +102,7 @@ public class PrinterSchoolBoard {
                 color = PawnColor.NONE;
                 break;
         }
-        int occupiedCells = board.getStudentsInDiningRoom(color);
+        int occupiedCells = board.getDiningRoom().getStudentsInDiningRoom(color);
         for (i = 0; i < occupiedCells; i++) {
             System.out.print(" " + colorRow + FULL_CIRCLE + ANSI_RESET);
         }

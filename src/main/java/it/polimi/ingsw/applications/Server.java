@@ -5,7 +5,6 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameParameters;
-import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.servercontroller.*;
@@ -29,6 +28,8 @@ public class Server {
     private final GameHandlerBuilder normal3PlayersBuilder = new GameHandlerBuilder();
     private final GameHandlerBuilder expert2PlayersBuilder = new GameHandlerBuilder();
     private final GameHandlerBuilder expert3PlayersBuilder = new GameHandlerBuilder();
+
+    private final List<UserHandler> userHandlers = new LinkedList<>();
 
     private final List<GameHandler> normal2PlayersRunningGames = new LinkedList<>();
     private final List<GameHandler> normal3PlayersRunningGames = new LinkedList<>();
@@ -84,7 +85,11 @@ public class Server {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                executor.submit(new UserHandler(socket, this));
+                //executor.submit(new UserHandler(socket, this));
+                UserHandler userHandler = new UserHandler(socket, this);
+                userHandlers.add(userHandler);
+                userHandler.start();
+
             } catch (IOException e) {
                 break; //In case the serverSocket gets closed
             }
@@ -132,7 +137,7 @@ public class Server {
         builder.reset();
     }
 
-    public synchronized void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
+    public synchronized void addGameReadyListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 normal2PlayersBuilder.addGameStartingListener(l);
@@ -155,8 +160,8 @@ public class Server {
 
     //User must be already present in allUser list
     public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber, GameReadyListener l) throws InvalidPlayerNumberException {
+        addGameReadyListener(l, selectedGameMode, selectedPlayersNumber);
         enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
-        addGameStartingListener(l, selectedGameMode, selectedPlayersNumber);
     }
 
     //User must be already present in allUser list
@@ -258,5 +263,9 @@ public class Server {
         expert2PlayersBuilder.removePlayer(user.get());
         expert3PlayersBuilder.removePlayer(user.get());
         return true;
+    }
+
+    public void removeUserHandler(UserHandler userHandler){
+        userHandlers.remove(userHandler);
     }
 }

@@ -3,9 +3,7 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.messages.PingMessage;
 import it.polimi.ingsw.servercontroller.MessagesHelper;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,15 +30,27 @@ public class Endpoint {
     private Timer disconnectionTimer = new Timer();
     private Timer pingTimer = new Timer();
 
-    public Endpoint(Socket socket) throws IOException {
+    public Endpoint(Socket socket, boolean serverSide) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
         this.socket = socket;
-        this.in = new ObjectInputStream(this.socket.getInputStream());
-        this.out = new ObjectOutputStream(this.socket.getOutputStream());
+
+        InputStream input = this.socket.getInputStream();
+        OutputStream output = this.socket.getOutputStream();
+        output.flush();
+
+        //TODO check if needed
+        if (serverSide) {
+            this.in = new ObjectInputStream(input);
+            this.out = new ObjectOutputStream(output);
+        } else {
+            this.out = new ObjectOutputStream(output);
+            this.in = new ObjectInputStream(input);
+        }
+
         this.isOnline = true;
-        resetDisconnectionTimer();
-        startPinging();
+        //resetDisconnectionTimer();
+        //startPinging();
     }
 
     public boolean isOnline() {
@@ -67,8 +77,15 @@ public class Endpoint {
         receiverThread.start();
     }
 
+    private void stopReceiving() {
+        this.receiverThread.interrupt();
+    }
+
     public Message synchronizedReceive() throws IOException, ClassNotFoundException {
-        return (Message) in.readObject();
+        Message message = (Message) in.readObject();
+        resetDisconnectionTimer();
+        return message;
+
     }
 
     //TODO I don't think reflection is the best way to do this
@@ -87,7 +104,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            resetDisconnectionTimer();
+            //resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
                 for (MessageListener l : messageListeners) {
                     l.onMessageReceived(m);
@@ -112,12 +129,12 @@ public class Endpoint {
     }
 
     private void startPinging() {
-        this.disconnectionTimer.schedule(new TimerTask() {
+        this.pingTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 sendMessage(new PingMessage(MessageType.PING));
             }
-        }, 5 * 1000); //TODO parameterize this
+        }, 5 * 1000, 5*1000); //TODO parameterize this
     }
 
     public void disconnect() {

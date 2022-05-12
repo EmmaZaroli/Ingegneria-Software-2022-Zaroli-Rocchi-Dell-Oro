@@ -33,6 +33,7 @@ public class Table extends Observable implements Serializable {
         RandomHelper random = RandomHelper.getInstance();
         int initialPosition = random.getInt(12);
         islandWithMotherNature = initialPosition;
+        islandCards.get(initialPosition).setHasMotherNature(true);
         List<PawnColor> initialized = new ArrayList<>(10);
         initialized.addAll(PawnColor.getValidValues());
         initialized.addAll(PawnColor.getValidValues());
@@ -129,5 +130,6 @@ public class Table extends Observable implements Serializable {
 
     public void setIslandWithMotherNature(int index) {
         this.islandWithMotherNature = index;
+        this.islandCards.get(islandWithMotherNature).setHasMotherNature(true);
     }
 }

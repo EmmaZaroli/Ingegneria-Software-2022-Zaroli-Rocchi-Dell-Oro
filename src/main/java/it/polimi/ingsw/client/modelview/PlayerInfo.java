@@ -1,11 +1,11 @@
 package it.polimi.ingsw.client.modelview;
 
+import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.SchoolBoard;
 
 public class PlayerInfo {
     private String nickname;
-    private SchoolBoard schoolBoard;
+    private SchoolBoardDto schoolBoard;
     private AssistantCard discardPileHead;
     private int coins;
 
@@ -14,7 +14,7 @@ public class PlayerInfo {
         this.coins = 0;
     }
 
-    private PlayerInfo(String nickname, SchoolBoard schoolBoard, AssistantCard discardPileHead, int coins) {
+    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins) {
         this.nickname = nickname;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;
@@ -33,7 +33,7 @@ public class PlayerInfo {
         return retVal;
     }
 
-    public PlayerInfo with(SchoolBoard board) {
+    public PlayerInfo with(SchoolBoardDto board) {
         PlayerInfo retVal = this.deepClone();
         retVal.schoolBoard = board;
         return retVal;
@@ -48,7 +48,7 @@ public class PlayerInfo {
         return nickname;
     }
 
-    public SchoolBoard getBoard() {
+    public SchoolBoardDto getBoard() {
         return schoolBoard;
     }
 

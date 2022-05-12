@@ -56,12 +56,25 @@ public class Cli extends View {
 
     @Override
     public void printEnqueuedMessage() {
-        //TODO
+        System.out.println("You've been added to the players queue.\nPlease, wait for a game to start");
+    }
+
+    @Override
+    public void printGameStartingMessage() {
+        System.out.println("Game starting!");
     }
 
     @Override
     public void askServerInfo() {
-        //TODO
+        String ip;
+        int port;
+
+        out.print("Please, insert the Server's ip address ");
+        ip = readLine();
+        out.print("Select the Server's port number ");
+        port = Integer.parseInt(readLine());
+
+        this.startConnection(ip, port);
     }
 
     /**
@@ -75,45 +88,41 @@ public class Cli extends View {
         return input;
     }
 
+    //TODO move validation logic to shared layer
     public void askPlayerNickname() {
         boolean valid = false;
         String nickname;
         do {
-            out.println("Enter your nickname: ");
+            out.print("Enter your nickname: ");
             nickname = readLine();
             valid = inputParser.checkUsername(nickname);
         } while (!valid);
-        //TODO
-        //setNickname(nickname);
-        listeners.firePropertyChange("nickname", true, nickname);
+        this.sendPlayerNickname(nickname);
     }
 
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
-
         //clearCli();
         if (playerReconnected) {
-            out.println("You're being reconnected to your previous game");
+            out.println("You've being reconnected to your previous game");
         }
         if (nicknameAccepted && !playerReconnected) {
             out.println("Welcome, " + getMe().getNickname() + ", get ready to play!");
         }
         if (!nicknameAccepted && !playerReconnected) {
             out.println("Sorry, your nickname is already taken, please choose another one");
-            askPlayerNickname();
         }
-
     }
 
     public void askGameSettings() {
         int playersNumber;
         String gameMode;
-        out.println("Please enter the Game mode: [normal/expert]");
+        out.print("Please enter the Game mode: [normal/expert] ");
         gameMode = readLine();
         //TODO check if is valid
-        out.println("How many players are you going to play with? [2/3] ");
+        out.print("How many players are you going to play with? [2/3] ");
         playersNumber = Integer.parseInt(readLine());
         //TODO check if the number is 2 or 3
-        listeners.firePropertyChange("gameSettings", gameMode, playersNumber);
+        this.sendGameSettings(playersNumber, gameMode.equals("expert"));
     }
 
     public void genericMessage(String message) {
@@ -167,6 +176,10 @@ public class Cli extends View {
         //TODO check if number is <0 or >cardplayed.steps
     }
 
+    public void printGameStarting() {
+        out.println("The game is starting");
+    }
+
     public void updateCurrentPlayersTurn(String otherPlayer) {
         out.println("it's " + otherPlayer + "turn");
     }
@@ -204,6 +217,7 @@ public class Cli extends View {
 
     private void printSchoolBoard(PlayerInfo player) {
         out.println(player.getNickname() + " board:");
+        //TODO player dto
         boardPrinter.printBoard(player.getBoard());
         printAssistantCardPlayed(player.getDiscardPileHead());
     }

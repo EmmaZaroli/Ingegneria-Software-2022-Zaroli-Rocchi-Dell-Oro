@@ -114,6 +114,10 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
+    /*private void handleMessage(GameStartingMessage message){
+        this.printGameStartingMessage();
+    }*/
+
     private void handleMessage(CloudMessage message) {
         //TODO dto with wither
         Optional<CloudTile> cloud = this.clouds.stream()
@@ -158,8 +162,8 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(IslandMessage message) {
         //TODO after we put the deleted island in the message
         //only if the field deletedIsland is not empty, else only update the island and print
-        int i = 0;
-        int j = 0;
+        int i = 0; // main island
+        int j = 0; // island deleted
         for (int k = 0; k < 12; k++) {
             if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
                 i = k;
@@ -168,10 +172,15 @@ public abstract class View implements MessageListener, UserInterface {
                 j = k;
             }
         }
-        if (j > i) islands.get(j - 1).setLinkedislands(islands.get(j).getMainIsland());
-        else islands.get(j).setLinkedislands(islands.get(j + 1).getMainIsland());
-
+        islands.get(j).setMainConnected(false);
+        //TODO
         this.print();
+    }
+
+    private void handleMessage(GameStartingMessage message) {
+        this.printGameStarting();
+        //TODO init local state
+        print();
     }
     //</editor-fold>
 
@@ -180,11 +189,13 @@ public abstract class View implements MessageListener, UserInterface {
         //TODO
         if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
         if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
+        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
         if (message instanceof CloudMessage) handleMessage((CloudMessage) message);
         if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
         if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);
         if (message instanceof CoinMessage) handleMessage((CoinMessage) message);
         if (message instanceof IslandMessage) handleMessage((IslandMessage) message);
+        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">
@@ -196,7 +207,7 @@ public abstract class View implements MessageListener, UserInterface {
     protected final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
-            this.endpoint = new Endpoint(s);
+            this.endpoint = new Endpoint(s, false);
             this.endpoint.addMessageListener(this);
             this.endpoint.startReceiving();
             this.askPlayerNickname();

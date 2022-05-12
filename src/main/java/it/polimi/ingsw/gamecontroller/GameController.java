@@ -472,14 +472,14 @@ public class GameController implements DisconnectionListener {
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-            if (game.howManyPlayersOnline() < 2 && game.isEnoughtPlayerOnline())
+            if (game.howManyPlayersOnline() < 2 && game.isEnoughPlayerOnline())
                 notEnoughOnline();
         }
     }
 
     //called only when, previously a disconnection, there are enough player online, and then there are not
     private void notEnoughOnline() {
-        game.setEnoughtPlayerOnline(false);
+        game.setEnoughPlayerOnline(false);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -495,14 +495,14 @@ public class GameController implements DisconnectionListener {
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-            if (game.howManyPlayersOnline() >= 2 && !game.isEnoughtPlayerOnline())
+            if (game.howManyPlayersOnline() >= 2 && !game.isEnoughPlayerOnline())
                 enoughOnline();
         }
     }
 
     //called only when, previously a reconnection, there weren't enough player online, and then there are
     private void enoughOnline() {
-        game.setEnoughtPlayerOnline(true);
+        game.setEnoughPlayerOnline(true);
         timer.cancel();
         timer = new Timer();
     }

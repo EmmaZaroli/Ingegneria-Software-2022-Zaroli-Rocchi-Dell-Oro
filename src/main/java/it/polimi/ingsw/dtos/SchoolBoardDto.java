@@ -46,4 +46,12 @@ public class SchoolBoardDto implements Serializable {
     public int getTowers() {
         return towers;
     }
+
+    public boolean isThereProfessor(PawnColor color) {
+        return professorTable.contains(color);
+    }
+
+    public int getTowersCount() {
+        return this.towers;
+    }
 }

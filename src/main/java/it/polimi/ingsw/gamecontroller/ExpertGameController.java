@@ -63,7 +63,7 @@ public class ExpertGameController extends GameController {
         for (int i = 0; i < 3; i++) {
             numberCard = RandomHelper.getInstance().getInt(characters.size());
             cards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));
-            effects[i] = EffectFactory.getEffect(characters.get(numberCard));
+            newEffects[i] = EffectFactory.getEffect(characters.get(numberCard));
             characters.remove(characters.get(numberCard));
         }
         getGame().addCharacterCards(cards);
