@@ -114,6 +114,10 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
+    private void handleMessage(GameStartingMessage message){
+        this.printGameStartingMessage();
+    }
+
     private void handleMessage(CloudMessage message) {
         //TODO dto with wither
         Optional<CloudTile> cloud = this.clouds.stream()
@@ -185,6 +189,7 @@ public abstract class View implements MessageListener, UserInterface {
         //TODO
         if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
         if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
+        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
         if (message instanceof CloudMessage) handleMessage((CloudMessage) message);
         if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
         if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);

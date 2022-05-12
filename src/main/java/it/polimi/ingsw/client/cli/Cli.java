@@ -60,6 +60,11 @@ public class Cli extends View {
     }
 
     @Override
+    public void printGameStartingMessage() {
+        System.out.println("Game starting!");
+    }
+
+    @Override
     public void askServerInfo() {
         String ip;
         int port;
@@ -105,7 +110,6 @@ public class Cli extends View {
         }
         if (!nicknameAccepted && !playerReconnected) {
             out.println("Sorry, your nickname is already taken, please choose another one");
-            askPlayerNickname();
         }
     }
 

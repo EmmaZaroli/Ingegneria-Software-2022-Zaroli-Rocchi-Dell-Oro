@@ -10,6 +10,8 @@ public interface UserInterface {
 
     void printEnqueuedMessage();
 
+    void printGameStartingMessage();
+
     void askServerInfo();
 
     void askPlayerNickname();
