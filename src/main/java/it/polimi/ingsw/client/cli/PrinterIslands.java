@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PrinterIslands {
 
-    //TODO extend top second/third row and all the bottom
+    //TODO extend top third row and all the bottom
 
     public static final Color brown = new Color(139, 69, 19);
     private static final String MOTHER_NATURE = "M";
@@ -57,11 +57,17 @@ public class PrinterIslands {
 
         //second row
         if (!up0) System.out.print(" ");
-        topWithConnection(up0);
+        int intermediate = (islands.get(11).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        size[11] = intermediate > 0 ? intermediate : 0;
+        if (islands.get(11).isMainConnected()) topWithConnection(up0, size[11]);
+        else topWithConnection(up0);
         System.out.print("                                 ");
         if (up0) System.out.print("  ");
+        intermediate = (islands.get(5).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        size[5] = intermediate > 0 ? intermediate : 0;
         if (!up4) System.out.print(" ");
-        topWithConnection(up4);
+        if (islands.get(5).isMainConnected()) topWithConnection(up4, size[5]);
+        else topWithConnection(up4);
         System.out.println();
 
         if (islands.get(11).isMainConnected()) side(false, false, islands.get(11).getMainIsland(), 11, 5);
@@ -165,6 +171,8 @@ public class PrinterIslands {
     }
 
     private void thirdRow(List<LinkedIslands> islands) {
+        int intermediate = (islands.get(10).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        size[10] = intermediate > 0 ? intermediate : 0;
         upConnected = islands.get(10).getLinkedislands().contains(islands.get(11).getMainIsland());
         if (islands.get(9).getLinkedislands().contains(islands.get(10).getMainIsland())) {
             if (upConnected) {
@@ -186,9 +194,13 @@ public class PrinterIslands {
 
         //third row other tops
         for (int i = 9; i > 6; i--) {
+            intermediate = (islands.get(i).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+            size[i] = intermediate > 0 ? intermediate : 0;
             top(islands.get(i - 1).getLinkedislands().contains(islands.get(i).getMainIsland()));
         }
         //third row last island
+        intermediate = (islands.get(5).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        size[5] = intermediate > 0 ? intermediate : 0;
         upConnected = islands.get(5).getLinkedislands().contains(islands.get(6).getMainIsland());
         if (islands.get(6).getLinkedislands().contains(islands.get(7).getMainIsland())) {
             if (upConnected) {
@@ -222,11 +234,11 @@ public class PrinterIslands {
 
         for (int i = 10; i > 5; i--) {
             if (islands.get(i - 1).getLinkedislands().contains(islands.get(i).getMainIsland()) && i != 6) {
-                if (islands.get(i).isMainConnected()) side(true, isnext, islands.get(i).getMainIsland(), i, 5);
+                if (islands.get(i).isMainConnected()) side(true, isnext, islands.get(i).getMainIsland(), i, 7);
                 else side(true, isnext);
                 isnext = true;
             } else {
-                if (islands.get(i).isMainConnected()) side(false, false, islands.get(i).getMainIsland(), i, 5);
+                if (islands.get(i).isMainConnected()) side(false, false, islands.get(i).getMainIsland(), i, 7);
                 else side(false, false);
                 if (isnext) isnext = false;
             }
@@ -252,6 +264,17 @@ public class PrinterIslands {
         else top(false);
     }
 
+    //for print
+    private void topWithConnection(boolean connected, int extension) {
+        if (connected) {
+            System.out.print("|       ");
+            for (int i = 0; i < extension; i++) {
+                System.out.print(" ");
+            }
+            System.out.print("|");
+        } else top(false, extension);
+    }
+
     private void top(boolean connected) {
 
         if (connected) {
@@ -263,6 +286,7 @@ public class PrinterIslands {
         }
     }
 
+    //for print
     private void top(boolean connected, int extension) {
 
         if (connected) {
@@ -332,7 +356,7 @@ public class PrinterIslands {
             }
         } else {
             int i;
-            for (i = studentsAlreadyPrinted[indexIsland]; i < maxSize + size[i] && i < island.getStudentsFromIsland().size(); i++) {
+            for (i = studentsAlreadyPrinted[indexIsland]; i < studentsAlreadyPrinted[indexIsland] + maxSize + size[indexIsland] && i < island.getStudentsFromIsland().size(); i++) {
                 System.out.print(assignColor(island.getStudentsFromIsland().get(i)));
             }
             for (i = i - studentsAlreadyPrinted[indexIsland]; i < maxSize + size[indexIsland]; i++) {
