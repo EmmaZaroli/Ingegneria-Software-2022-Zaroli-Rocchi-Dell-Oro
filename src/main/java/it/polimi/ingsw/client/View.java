@@ -114,9 +114,9 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    private void handleMessage(GameStartingMessage message){
+    /*private void handleMessage(GameStartingMessage message){
         this.printGameStartingMessage();
-    }
+    }*/
 
     private void handleMessage(CloudMessage message) {
         //TODO dto with wither
