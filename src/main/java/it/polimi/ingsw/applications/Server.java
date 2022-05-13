@@ -68,7 +68,7 @@ public class Server {
         this.expert3PlayersBuilder.gameMode(GameMode.EXPERT_MODE);
         this.expert3PlayersBuilder.playersNumber(PlayersNumber.THREE);
 
-        //this.loadSavedGames();
+        this.loadSavedGames();
     }
 
     public void startServer() throws IOException {
@@ -101,8 +101,8 @@ public class Server {
     private void loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
         List<Game> games = dd.getAllGames();
-        List<User> users = new LinkedList<>();
         for (Game game : games) {
+            List<User> users = new LinkedList<>();
             for (int i = 0; i < game.getPlayers().length; i++) {
                 game.getPlayer(i).setOnline(false);
                 users.add(new User(game.getPlayer(i).getNickname()));

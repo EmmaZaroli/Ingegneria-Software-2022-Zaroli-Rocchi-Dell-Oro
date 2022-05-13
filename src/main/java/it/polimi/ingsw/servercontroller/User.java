@@ -41,7 +41,8 @@ public class User {
     }
 
     public void sendMessage(Message message) {
-        endpoint.sendMessage(message);
+        if(endpoint != null)
+            endpoint.sendMessage(message);
     }
 
 }
