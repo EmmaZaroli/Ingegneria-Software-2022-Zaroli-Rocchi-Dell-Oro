@@ -6,6 +6,8 @@ import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
@@ -32,6 +34,7 @@ public abstract class View implements MessageListener, UserInterface {
     private int tableCoins;
     private List<LinkedIslands> islands;
     private String currentPlayer;
+    private List<CharacterCard> characterCards;
 
     private Endpoint endpoint;
 
@@ -81,6 +84,10 @@ public abstract class View implements MessageListener, UserInterface {
     public int getCoins() {
         return this.tableCoins;
     }
+
+    public List<CharacterCard> getCharacterCards() {
+        return this.characterCards;
+    }
     //</editor-fold>
 
     //<editor-fold desc="Message handlers">
@@ -113,6 +120,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(CloudMessage message) {
+
         Optional<CloudTileDto> cloud = this.clouds.stream()
                 .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
         //TODO
@@ -176,7 +184,7 @@ public abstract class View implements MessageListener, UserInterface {
         islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getMainIsland());
 
         //update island part
-        
+
         //TODO need a function to add only the new students on the islands
         //islands.get(islandMain).getMainIsland().movePawnOnIsland();
 
