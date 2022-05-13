@@ -68,7 +68,7 @@ public class Server {
         this.expert3PlayersBuilder.gameMode(GameMode.EXPERT_MODE);
         this.expert3PlayersBuilder.playersNumber(PlayersNumber.THREE);
 
-        this.loadSavedGames();
+        //this.loadSavedGames();
     }
 
     public void startServer() throws IOException {
