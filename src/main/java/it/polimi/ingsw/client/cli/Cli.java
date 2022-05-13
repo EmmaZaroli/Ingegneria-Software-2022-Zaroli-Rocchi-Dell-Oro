@@ -4,11 +4,13 @@ import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Cli extends View {
@@ -190,15 +192,7 @@ public class Cli extends View {
         printCloud();
         printIslands();
         if (isExpertGame()) printCharacterCards();
-        for (int i = 0; i < getOpponents().size(); i++) {
-            if (getOpponents().get(i).getNickname().equals(getCurrentPlayer())) {
-                printSchoolBoard(getMe());
-                if (i + 1 < getOpponents().size()) {
-                    printSchoolBoard(getOpponents().get(i + 1));
-                }
-            }
-            printSchoolBoard(getOpponents().get(i));
-        }
+        printSchoolBoard();
     }
 
     public void printCoins(PlayerInfo player) {
@@ -219,14 +213,26 @@ public class Cli extends View {
         islandsPrinter.printIslands(getIslands());
     }
 
-    private void printSchoolBoard(PlayerInfo player) {
-        out.println(player.getNickname() + "'s" + " board:");
-        if (!isExpertGame()) printCoins(player);
-        if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
-        //TODO player dto
-        boardPrinter.printBoard(player.getBoard());
+    public void printSchoolBoard() {
+        out.println(getMe().getNickname() + "'s" + " board:");
+        space(48);
+        out.println(getOpponents().get(0).getNickname() + "'s" + " board:");
+        space(48);
+        if (getOpponents().size() == 2) {
+            out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
+            space(48);
+        }
+        //if (!isExpertGame()) printCoins(player);
+        //if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
+        List<SchoolBoard> boards = new ArrayList<>();
+        boards.add(getMe().getBoard());
+        boards.add(getOpponents().get(0).getBoard());
+        if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
+        NewPrinter printer = new NewPrinter();
+        printer.printBoard(boards);
     }
 
+    
     private void printAssistantCardPlayed(AssistantCard card) {
         out.println("   _____     ");
         out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
@@ -258,5 +264,9 @@ public class Cli extends View {
 
     public void error(String error) {
         out.println("");
+    }
+
+    private void space(int space) {
+        for (int i = 0; i < space; i++) out.print(" ");
     }
 }
