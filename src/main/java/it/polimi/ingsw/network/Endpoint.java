@@ -135,7 +135,7 @@ public class Endpoint {
     }
 
     public void disconnect() {
-        System.out.println("DISCONNESSIONE");
+        //System.out.println("DISCONNESSIONE");
         isOnline = false;
         try {
             this.receiverThread.stopThread();
