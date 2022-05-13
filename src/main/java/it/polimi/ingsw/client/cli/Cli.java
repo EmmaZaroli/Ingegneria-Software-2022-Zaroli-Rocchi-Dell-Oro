@@ -17,7 +17,7 @@ public class Cli extends View {
     private final InputParser inputParser;
     private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String COIN = "🪙";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -27,6 +27,7 @@ public class Cli extends View {
     private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
     private final PrinterClouds cloudPrinter = new PrinterClouds();
     private final PrinterIslands islandsPrinter = new PrinterIslands();
+    private final PrinterCharacterCards PrinterCharacterCard = new PrinterCharacterCards();
 
     public Cli() {
         out = System.out;
@@ -175,6 +176,7 @@ public class Cli extends View {
     public void print() {
         printCloud();
         printIslands();
+        if (isExpertGame()) printCharacterCards();
         for (int i = 0; i < getOpponents().size(); i++) {
             if (getOpponents().get(i).getNickname().equals(getCurrentPlayer())) {
                 printSchoolBoard(getMe());
@@ -186,12 +188,14 @@ public class Cli extends View {
         }
     }
 
-    private void printCoins() {
-        //TODO
+    public void printCoins(PlayerInfo player) {
+        for (int i = 0; i < player.getCoins(); i++) {
+            out.print(ANSI_YELLOW + COIN + ANSI_RESET);
+        }
     }
 
     private void printCharacterCards() {
-        //TODO
+        PrinterCharacterCard.print(getCharacterCards());
     }
 
     private void printCloud() {
@@ -203,9 +207,10 @@ public class Cli extends View {
     }
 
     private void printSchoolBoard(PlayerInfo player) {
-        out.println(player.getNickname() + " board:");
+        out.println(player.getNickname() + "'s" + " board:");
+        if (!isExpertGame()) printCoins(player);
+        if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
         boardPrinter.printBoard(player.getBoard());
-        printAssistantCardPlayed(player.getDiscardPileHead());
     }
 
     private void printAssistantCardPlayed(AssistantCard card) {
