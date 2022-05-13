@@ -50,7 +50,7 @@ public class Endpoint {
 
         this.isOnline = true;
         resetDisconnectionTimer();
-        //startPinging();
+        startPinging();
     }
 
     public boolean isOnline() {
@@ -122,7 +122,7 @@ public class Endpoint {
                 disconnect();
                 notifyDisconnection();
             }
-        }, 5 * 1000); //TODO parameterize this
+        }, 30 * 1000); //TODO parameterize this
     }
 
     private void startPinging() {
