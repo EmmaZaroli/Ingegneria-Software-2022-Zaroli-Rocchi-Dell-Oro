@@ -222,17 +222,17 @@ public class Cli extends View {
             out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
             space(48);
         }
+        //TODO
         //if (!isExpertGame()) printCoins(player);
         //if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
         List<SchoolBoard> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
         boards.add(getOpponents().get(0).getBoard());
         if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
-        NewPrinter printer = new NewPrinter();
-        printer.printBoard(boards);
+        boardPrinter.printBoard(boards);
     }
 
-    
+
     private void printAssistantCardPlayed(AssistantCard card) {
         out.println("   _____     ");
         out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
