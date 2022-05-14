@@ -1,20 +1,30 @@
 package it.polimi.ingsw.client.modelview;
 
+import it.polimi.ingsw.dtos.PlayerDto;
+import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.SchoolBoard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerInfo {
     private String nickname;
-    private SchoolBoard schoolBoard;
+    private SchoolBoardDto schoolBoard;
     private AssistantCard discardPileHead;
     private int coins;
+    private ArrayList<AssistantCard> deck;
 
     public PlayerInfo() {
         this.nickname = "";
         this.coins = 0;
     }
 
-    private PlayerInfo(String nickname, SchoolBoard schoolBoard, AssistantCard discardPileHead, int coins) {
+    public PlayerInfo(PlayerDto origin) {
+        this.nickname = origin.getNickname();
+        this.coins = origin.getCoins();
+    }
+
+    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins) {
         this.nickname = nickname;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;
@@ -33,7 +43,7 @@ public class PlayerInfo {
         return retVal;
     }
 
-    public PlayerInfo with(SchoolBoard board) {
+    public PlayerInfo with(SchoolBoardDto board) {
         PlayerInfo retVal = this.deepClone();
         retVal.schoolBoard = board;
         return retVal;
@@ -48,7 +58,7 @@ public class PlayerInfo {
         return nickname;
     }
 
-    public SchoolBoard getBoard() {
+    public SchoolBoardDto getBoard() {
         return schoolBoard;
     }
 
@@ -58,6 +68,10 @@ public class PlayerInfo {
 
     public int getCoins() {
         return coins;
+    }
+
+    public List<AssistantCard> getDeck() {
+        return this.deck;
     }
 
     public PlayerInfo deepClone() {

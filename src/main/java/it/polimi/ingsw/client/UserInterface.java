@@ -10,6 +10,8 @@ public interface UserInterface {
 
     void printEnqueuedMessage();
 
+    void printGameStartingMessage();
+
     void askServerInfo();
 
     void askPlayerNickname();
@@ -39,4 +41,6 @@ public interface UserInterface {
     void error(String error);
 
     void print();
+
+    void printGameStarting();
 }

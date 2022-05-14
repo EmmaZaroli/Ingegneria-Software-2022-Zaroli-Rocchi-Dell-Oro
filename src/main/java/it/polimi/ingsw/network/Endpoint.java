@@ -3,9 +3,7 @@ package it.polimi.ingsw.network;
 import it.polimi.ingsw.network.messages.PingMessage;
 import it.polimi.ingsw.servercontroller.MessagesHelper;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +18,7 @@ public class Endpoint {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    private Thread receiverThread;
+    private ReciverThread receiverThread;
 
     private final List<MessageListener> messageListeners;
     private final List<DisconnectionListener> disconnectionListeners;
@@ -32,12 +30,24 @@ public class Endpoint {
     private Timer disconnectionTimer = new Timer();
     private Timer pingTimer = new Timer();
 
-    public Endpoint(Socket socket) throws IOException {
+    public Endpoint(Socket socket, boolean serverSide) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
         this.socket = socket;
-        this.in = new ObjectInputStream(this.socket.getInputStream());
-        this.out = new ObjectOutputStream(this.socket.getOutputStream());
+
+        InputStream input = this.socket.getInputStream();
+        OutputStream output = this.socket.getOutputStream();
+        output.flush();
+
+        //TODO check if needed
+        if (serverSide) {
+            this.in = new ObjectInputStream(input);
+            this.out = new ObjectOutputStream(output);
+        } else {
+            this.out = new ObjectOutputStream(output);
+            this.in = new ObjectInputStream(input);
+        }
+
         this.isOnline = true;
         resetDisconnectionTimer();
         startPinging();
@@ -58,17 +68,21 @@ public class Endpoint {
     }
 
     public void startReceiving() {
-        this.receiverThread = new Thread(() -> {
-            while (true) {
-                handleIncomingMessage();
-            }
-        });
+        this.receiverThread = new ReciverThread();
 
-        receiverThread.start();
+        receiverThread.startThread();
     }
 
+    private void stopReceiving() {
+        this.receiverThread.stopThread();
+    }
+
+    /*
     public Message synchronizedReceive() throws IOException, ClassNotFoundException {
-        return (Message) in.readObject();
+        Message message = (Message) in.readObject();
+        resetDisconnectionTimer();
+        return message;
+
     }
 
     //TODO I don't think reflection is the best way to do this
@@ -82,7 +96,7 @@ public class Endpoint {
             }
         } while (!(messageClass.isInstance(message)));
         return message;
-    }
+    }*/
 
     private void handleIncomingMessage() {
         try {
@@ -112,18 +126,19 @@ public class Endpoint {
     }
 
     private void startPinging() {
-        this.disconnectionTimer.schedule(new TimerTask() {
+        this.pingTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 sendMessage(new PingMessage(MessageType.PING));
             }
-        }, 5 * 1000); //TODO parameterize this
+        }, 5 * 1000, 5*1000); //TODO parameterize this
     }
 
     public void disconnect() {
+        //System.out.println("DISCONNESSIONE");
         isOnline = false;
         try {
-            this.receiverThread.interrupt();
+            this.receiverThread.stopThread();
             this.socket.close();
         } catch (IOException e) {
             logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
@@ -150,5 +165,27 @@ public class Endpoint {
 
     public void removeDisconnectionListener(DisconnectionListener l) {
         this.disconnectionListeners.remove(l);
+    }
+
+    private class ReciverThread{
+        private Thread thread;
+        private boolean stopFlag;
+
+        public ReciverThread(){
+            this.thread = new Thread(() -> {
+                while (!stopFlag) {
+                    handleIncomingMessage();
+                }
+            });
+        }
+
+        public void startThread(){
+            this.thread.start();
+        }
+
+        public void stopThread(){
+            this.stopFlag = true;
+            this.thread.interrupt();
+        }
     }
 }
