@@ -27,7 +27,7 @@ public class PrinterSchoolBoard {
     public static final String TOWER_GREY = ANSI_WHITE + "\uD83D\uDEE2" + ANSI_RESET;
 
 
-    public void printBoard(List<SchoolBoard> boards) {
+    public void printBoard(List<SchoolBoardDto> boards) {
         PrintStream out = System.out;
 
         //print board

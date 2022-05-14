@@ -3,8 +3,8 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.SchoolBoard;
 import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.beans.PropertyChangeSupport;
@@ -225,7 +225,7 @@ public class Cli extends View {
         //TODO
         //if (!isExpertGame()) printCoins(player);
         //if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
-        List<SchoolBoard> boards = new ArrayList<>();
+        List<SchoolBoardDto> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
         boards.add(getOpponents().get(0).getBoard());
         if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
