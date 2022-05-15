@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.ExpertTable;
@@ -19,8 +20,8 @@ import java.util.*;
 
 class ExpertTableControllerTest extends TestCase {
 
-    ExpertTable table2Player = new ExpertTable(2);
-    ExpertTable table3Player = new ExpertTable(3);
+    ExpertTable table2Player = new ExpertTable(PlayersNumber.TWO);
+    ExpertTable table3Player = new ExpertTable(PlayersNumber.THREE);
     ExpertTableController tableController2Player = new ExpertTableController(table2Player);
     ExpertTableController tableController3Player = new ExpertTableController(table3Player);
 

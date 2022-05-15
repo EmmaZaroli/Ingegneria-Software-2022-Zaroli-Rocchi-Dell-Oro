@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.IslandCard;
@@ -18,8 +19,8 @@ import java.util.*;
 
 class TableControllerTest extends TestCase {
 
-    Table table2Player = new Table(2);
-    Table table3Player = new Table(3);
+    Table table2Player = new Table(PlayersNumber.TWO);
+    Table table3Player = new Table(PlayersNumber.THREE);
     TableController tableController2Player = new TableController(table2Player);
     TableController tableController3Player = new TableController(table3Player);
 

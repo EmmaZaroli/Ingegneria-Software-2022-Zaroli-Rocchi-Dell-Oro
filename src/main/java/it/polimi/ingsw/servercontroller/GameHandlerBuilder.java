@@ -83,7 +83,7 @@ public class GameHandlerBuilder {
             players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
         }
 
-        Table table = new Table(playersNumber.getPlayersNumber());
+        Table table = new Table(playersNumber);
 
         GameParameters parameters = new GameParameters(playersNumber, gameMode);
 
@@ -96,7 +96,7 @@ public class GameHandlerBuilder {
             players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
         }
 
-        ExpertTable table = new ExpertTable(playersNumber.getPlayersNumber());
+        ExpertTable table = new ExpertTable(playersNumber);
 
         ExpertGameParameters parameters = new ExpertGameParameters(playersNumber, gameMode);
 

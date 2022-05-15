@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.Bag;
@@ -32,7 +33,7 @@ public class TableController {
      */
     public List<PawnColor> drawStudents() {
         List<PawnColor> studentsDrawn = new ArrayList<>();
-        if (table.getPlayersNumber() == 2) {
+        if (table.getPlayersNumber() == PlayersNumber.TWO) {
             for (int i = 0; i < 7; i++) {
                 studentsDrawn.add(table.getBag().drawStudent());
             }
@@ -69,7 +70,7 @@ public class TableController {
             if (!table.takeStudentsFromCloud(cloudTile).isEmpty()) throw new FullCloudException();
         }
         for (CloudTile cloud : table.getCloudTiles()) {
-            if (table.getPlayersNumber() == 2) {
+            if (table.getPlayersNumber() == PlayersNumber.TWO) {
                 for (int i = 0; i < 3; i++) {
                     studentsDrawn.add(table.getBag().drawStudent());
                 }
