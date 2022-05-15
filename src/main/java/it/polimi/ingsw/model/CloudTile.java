@@ -60,4 +60,12 @@ public class CloudTile extends Observable implements Serializable {
     public List<PawnColor> getStudentsFromCloud() {
         return (List<PawnColor>) students.clone();
     }
+
+    public int getStudentsNumber(PawnColor color){
+        return (int) students.stream().filter(x -> x.equals(color)).count();
+    }
+
+    public int getStudentsNumber(){
+        return students.size();
+    }
 }
