@@ -2,6 +2,7 @@ package it.polimi.ingsw.gamecontroller;
 
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
+import it.polimi.ingsw.gamecontroller.exceptions.NoCoinsAvailableException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.ExpertTable;
 import it.polimi.ingsw.model.IslandCard;
@@ -291,5 +292,49 @@ class ExpertTableControllerTest extends TestCase {
             Assertions.assertEquals(10, table3Player.getIslands().size());
         }
 
+    }
+
+    @Test
+    void useCoins() {
+        Assertions.assertEquals(18, table2Player.getCoins());
+        boolean thrown = false;
+        try {
+            for(int i = 0; i < 18; i++)
+                tableController2Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertFalse(thrown);
+        Assertions.assertEquals(0, table2Player.getCoins());
+        try {
+            tableController2Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertTrue(thrown);
+        Assertions.assertEquals(0, table2Player.getCoins());
+        tableController2Player.depositCoins(10);
+        Assertions.assertEquals(10, table2Player.getCoins());
+
+
+        Assertions.assertEquals(17, table3Player.getCoins());
+        thrown = false;
+        try {
+            for(int i = 0; i < 17; i++)
+                tableController3Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertFalse(thrown);
+        Assertions.assertEquals(0, table3Player.getCoins());
+        try {
+            tableController3Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertTrue(thrown);
+        Assertions.assertEquals(0, table3Player.getCoins());
+        tableController3Player.depositCoins(10);
+        Assertions.assertEquals(10, table3Player.getCoins());
     }
 }
