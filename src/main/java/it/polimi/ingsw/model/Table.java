@@ -129,6 +129,7 @@ public class Table extends Observable implements Serializable {
     }
 
     public void setIslandWithMotherNature(int index) {
+        this.islandCards.get(islandWithMotherNature).setHasMotherNature(false);
         this.islandWithMotherNature = index;
         this.islandCards.get(islandWithMotherNature).setHasMotherNature(true);
     }
