@@ -9,7 +9,7 @@ public class ExpertTableController extends TableController {
     }
 
     public void takeCoin() throws NoCoinsAvailableException {
-        if (((ExpertTable) table).getCoins() < 0) {
+        if (((ExpertTable) table).getCoins() == 0) {
             throw new NoCoinsAvailableException();
         }
         ((ExpertTable) table).takeCoin();
