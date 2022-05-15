@@ -137,5 +137,13 @@ public class IslandCard implements Serializable {
     public void setTower(Tower tower) {
         this.tower = tower;
     }
+
+    public int getStudentsNumber(PawnColor color){
+        return (int) students.stream().filter(x -> x.equals(color)).count();
+    }
+
+    public int getStudentsNumber(){
+        return students.size();
+    }
     
 }
