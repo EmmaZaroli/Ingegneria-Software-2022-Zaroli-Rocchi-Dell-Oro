@@ -166,17 +166,20 @@ public class Server {
 
     //User must be already present in allUser list
     public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
-        User user = getUser(nickname).get(); //TODO this could return null
-        if (selectedGameMode == GameMode.NORMAL_MODE) {
-            if (selectedPlayersNumber == PlayersNumber.TWO)
-                enqueueUser(user, normal2PlayersBuilder, normal2PlayersRunningGames);
-            else
-                enqueueUser(user, normal3PlayersBuilder, normal3PlayersRunningGames);
-        } else {
-            if (selectedPlayersNumber == PlayersNumber.TWO)
-                enqueueUser(user, expert2PlayersBuilder, expert2PlayersRunningGames);
-            else
-                enqueueUser(user, expert3PlayersBuilder, expert3PlayersRunningGames);
+        Optional<User> optionalUser = getUser(nickname);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (selectedGameMode == GameMode.NORMAL_MODE) {
+                if (selectedPlayersNumber == PlayersNumber.TWO)
+                    enqueueUser(user, normal2PlayersBuilder, normal2PlayersRunningGames);
+                else
+                    enqueueUser(user, normal3PlayersBuilder, normal3PlayersRunningGames);
+            } else {
+                if (selectedPlayersNumber == PlayersNumber.TWO)
+                    enqueueUser(user, expert2PlayersBuilder, expert2PlayersRunningGames);
+                else
+                    enqueueUser(user, expert3PlayersBuilder, expert3PlayersRunningGames);
+            }
         }
     }
 
@@ -196,10 +199,13 @@ public class Server {
     }
 
     public NicknameStatus checkNicknameStatus(String nickname) {
-        if (!containUser(nickname))
+        Optional<User> optionalUser = getUser(nickname);
+        if (optionalUser.isEmpty())
             return NicknameStatus.FREE;
         else {
-            return getUser(nickname).get().isOnline() ? NicknameStatus.FROM_CONNECTED_PLAYER : NicknameStatus.FROM_DISCONNECTED_PLAYER;
+            return optionalUser.get().isOnline()
+                    ? NicknameStatus.FROM_CONNECTED_PLAYER
+                    : NicknameStatus.FROM_DISCONNECTED_PLAYER;
         }
     }
 
@@ -265,7 +271,7 @@ public class Server {
         return true;
     }
 
-    public void removeUserHandler(UserHandler userHandler){
+    public void removeUserHandler(UserHandler userHandler) {
         userHandlers.remove(userHandler);
     }
 }

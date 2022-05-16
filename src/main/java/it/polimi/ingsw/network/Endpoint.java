@@ -122,7 +122,7 @@ public class Endpoint {
                 disconnect();
                 notifyDisconnection();
             }
-        }, 30 * 1000); //TODO parameterize this
+        }, 30000); //TODO parameterize this
     }
 
     private void startPinging() {
@@ -131,7 +131,7 @@ public class Endpoint {
             public void run() {
                 sendMessage(new PingMessage(MessageType.PING));
             }
-        }, 5 * 1000, 5*1000); //TODO parameterize this
+        }, 5000, 5000); //TODO parameterize this
     }
 
     public void disconnect() {
@@ -167,11 +167,11 @@ public class Endpoint {
         this.disconnectionListeners.remove(l);
     }
 
-    private class ReciverThread{
+    private class ReciverThread {
         private Thread thread;
         private boolean stopFlag;
 
-        public ReciverThread(){
+        public ReciverThread() {
             this.thread = new Thread(() -> {
                 while (!stopFlag) {
                     handleIncomingMessage();
@@ -179,11 +179,11 @@ public class Endpoint {
             });
         }
 
-        public void startThread(){
+        public void startThread() {
             this.thread.start();
         }
 
-        public void stopThread(){
+        public void stopThread() {
             this.stopFlag = true;
             this.thread.interrupt();
         }
