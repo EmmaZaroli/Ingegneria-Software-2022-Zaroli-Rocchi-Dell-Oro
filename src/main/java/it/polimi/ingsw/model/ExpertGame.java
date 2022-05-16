@@ -28,7 +28,7 @@ public class ExpertGame extends Game {
         return (ExpertTable) super.getTable();
     }
 
-    public void addCharacterCards(CharacterCard[] cards) {
+    public void setCharacterCards(CharacterCard[] cards) {
         this.characterCards = cards;
     }
 
