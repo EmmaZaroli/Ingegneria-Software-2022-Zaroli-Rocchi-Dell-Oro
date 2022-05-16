@@ -51,6 +51,11 @@ public class ExpertGameController extends GameController {
         return effects.clone();
     }
 
+    //TODO only for test
+    public void setEffects(Effect[] effects) {
+        this.effects = effects;
+    }
+
     public void addEffects(Effect[] effects) {
         this.effects = effects;
     }
@@ -66,7 +71,7 @@ public class ExpertGameController extends GameController {
             newEffects[i] = EffectFactory.getEffect(characters.get(numberCard));
             characters.remove(characters.get(numberCard));
         }
-        getGame().addCharacterCards(cards);
+        getGame().setCharacterCards(cards);
         addEffects(newEffects);
     }
 
