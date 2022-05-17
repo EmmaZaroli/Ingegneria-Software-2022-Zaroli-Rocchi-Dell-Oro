@@ -26,7 +26,7 @@ class GameControllerTest extends TestCase {
     Player player2 = new Player("player2", Wizzard.GREEN, Tower.WHITE, 2);
     Player[] players = {player1, player2};
     Game game = new Game(players, new Table(PlayersNumber.TWO), new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
-    TableController tableController = new TableController(game.getTable());
+    TableController tableController = new TableController(game.getTable(), game.getParameters());
     VirtualView[] virtualViews = new VirtualView[2];
     //TODO initialize virtualViews
     GameController gameController = new GameController(game, tableController, virtualViews);

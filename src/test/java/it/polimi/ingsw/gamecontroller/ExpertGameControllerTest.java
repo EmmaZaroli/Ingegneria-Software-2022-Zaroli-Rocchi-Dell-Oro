@@ -29,7 +29,7 @@ class ExpertGameControllerTest extends TestCase {
     ExpertPlayer player2 = new ExpertPlayer("player2", Wizzard.GREEN, Tower.WHITE, 2);
     ExpertPlayer[] players = {player1, player2};
     ExpertGame game = new ExpertGame(players, new ExpertTable(PlayersNumber.TWO), new ExpertGameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
-    ExpertTableController tableController = new ExpertTableController(game.getTable());
+    ExpertTableController tableController = new ExpertTableController(game.getTable(), game.getParameters());
     VirtualView[] virtualViews = new VirtualView[2];
     //TODO initialize virtualViews
     ExpertGameController gameController = new ExpertGameController(game, tableController, virtualViews);
