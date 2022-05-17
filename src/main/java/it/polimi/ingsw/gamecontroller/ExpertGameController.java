@@ -141,7 +141,7 @@ public class ExpertGameController extends GameController {
                 case CHARACTER_ELEVEN -> effect11(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0]);
             }
         else {
-            activateStandardEffect(characterIndex);
+            activateStandardEffect(characterIndex, parameters);
         }
         int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();
         getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);
@@ -154,8 +154,11 @@ public class ExpertGameController extends GameController {
                 .setupEffect((ExpertGame) game, tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
-    private void activateStandardEffect(int effectIndex) {
-        ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());
+    private void activateStandardEffect(int effectIndex, Object[] parameters) {
+        if(getGame().getCharacterCards()[effectIndex].getCharacter() == Character.CHARACTER_NINE)
+            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters(), (PawnColor)parameters[0]);
+        else
+            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());
     }
 
     private void activateReverseEffect(int effectIndex) {

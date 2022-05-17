@@ -66,4 +66,12 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
+
+    public int getStudentsNumber(PawnColor color){
+        return (int) students.stream().filter(x -> x.equals(color)).count();
+    }
+
+    public int getStudentsNumber(){
+        return students.size();
+    }
 }

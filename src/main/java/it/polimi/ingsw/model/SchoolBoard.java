@@ -194,4 +194,12 @@ public class SchoolBoard extends Observable implements Serializable {
     public List<PawnColor> getEntrance() {
         return this.entrance;
     }
+
+    public int getStudentsInEntrance(PawnColor color){
+        return (int) entrance.stream().filter(x -> x.equals(color)).count();
+    }
+
+    public int getStudentsInEntrance(){
+        return entrance.size();
+    }
 }
