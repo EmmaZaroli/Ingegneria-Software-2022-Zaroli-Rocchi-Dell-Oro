@@ -1,11 +1,9 @@
 package it.polimi.ingsw.gamecontroller;
 
-import it.polimi.ingsw.gamecontroller.exceptions.IllegalActionException;
-import it.polimi.ingsw.gamecontroller.exceptions.IllegalCharacterException;
-import it.polimi.ingsw.gamecontroller.exceptions.NoCoinsAvailableException;
-import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
+import it.polimi.ingsw.gamecontroller.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
@@ -227,7 +225,7 @@ public class ExpertGameController extends GameController {
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color)){
-            if(getGame().getParameters().isTakeProfessorEvenIfSameStudents()){
+            if(getGameParameters().isTakeProfessorEvenIfSameStudents()){
                 if(game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
                         >= player.getBoard().getStudentsInDiningRoom(color)) {
                     player.getBoard().removeProfessor(color);
@@ -242,5 +240,20 @@ public class ExpertGameController extends GameController {
                 }
             }
         }
+    }
+
+    @Override
+    public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
+        if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
+            throw new IllegalActionException();
+        }
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
+            throw new NotAllowedMotherNatureMovementException();
+        }
+        this.tableController.moveMotherNature(steps);
+
+        this.checkInfluence();
+
+        this.playerHasEndedAction();
     }
 }
