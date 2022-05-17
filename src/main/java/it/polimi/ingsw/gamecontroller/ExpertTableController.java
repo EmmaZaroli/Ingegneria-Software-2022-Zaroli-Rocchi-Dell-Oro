@@ -26,11 +26,11 @@ public class ExpertTableController extends TableController {
     @Override
     public int countInfluenceOnIsland(Set<PawnColor> playerProfessors, Tower towerColor) {
         if(getParameters().isTowersCountInInfluence() || table.getIslands().get(table.getIslandWithMotherNature()).getTower() != towerColor){
-            return table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);
+            return getParameters().getExtraInfluence() + table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);
         }
         else
         {
-            return table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor) - table.getIslands().get(table.getIslandWithMotherNature()).getSize();
+            return getParameters().getExtraInfluence() + table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor) - table.getIslands().get(table.getIslandWithMotherNature()).getSize();
         }
 
     }
