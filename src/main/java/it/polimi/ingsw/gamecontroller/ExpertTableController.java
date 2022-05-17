@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class ExpertTableController extends TableController {
@@ -25,12 +26,16 @@ public class ExpertTableController extends TableController {
 
     @Override
     public int countInfluenceOnIsland(Set<PawnColor> playerProfessors, Tower towerColor) {
+        Set<PawnColor> effectivePlayerProfessors = new HashSet<>();
+        effectivePlayerProfessors.addAll(playerProfessors);
+        effectivePlayerProfessors.remove(getParameters().getColorWithNoInfluence());
+
         if(getParameters().isTowersCountInInfluence() || table.getIslands().get(table.getIslandWithMotherNature()).getTower() != towerColor){
-            return getParameters().getExtraInfluence() + table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);
+            return getParameters().getExtraInfluence() + table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(effectivePlayerProfessors, towerColor);
         }
         else
         {
-            return getParameters().getExtraInfluence() + table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor) - table.getIslands().get(table.getIslandWithMotherNature()).getSize();
+            return getParameters().getExtraInfluence() + table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(effectivePlayerProfessors, towerColor) - table.getIslands().get(table.getIslandWithMotherNature()).getSize();
         }
 
     }
