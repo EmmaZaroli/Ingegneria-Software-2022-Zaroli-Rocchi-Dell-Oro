@@ -133,15 +133,15 @@ public class ExpertGameController extends GameController {
     }
 
     public void activateCharacterAbility(int characterIndex, Object[] parameters) {
+        //TODO check all parameters are ok
         if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
-            activateSetupEffect(characterIndex);
-        else {
-            activateStandardEffect(characterIndex);
             switch (getGame().getCharacterCards()[characterIndex].getCharacter()){
                 case CHARACTER_ONE -> effect1(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0], (UUID) parameters[1]);
                 case CHARACTER_SEVEN -> effect7(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (List<PawnColor>)parameters[0], (List<PawnColor>)parameters[1]);
                 case CHARACTER_ELEVEN -> effect11(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0]);
             }
+        else {
+            activateStandardEffect(characterIndex);
         }
         int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();
         getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);
