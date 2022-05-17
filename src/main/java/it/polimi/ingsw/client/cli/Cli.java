@@ -233,7 +233,7 @@ public class Cli extends View {
             out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
             space(48);
         }
-        if (!isExpertGame()) printCoins();
+        if (isExpertGame()) printCoins();
         List<SchoolBoardDto> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
         boards.add(getOpponents().get(0).getBoard());
