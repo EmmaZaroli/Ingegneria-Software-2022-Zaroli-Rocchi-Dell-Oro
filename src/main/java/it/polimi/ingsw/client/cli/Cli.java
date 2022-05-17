@@ -6,11 +6,13 @@ import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Cli extends View {
@@ -31,7 +33,6 @@ public class Cli extends View {
         out = System.out;
         in = new Scanner(System.in);
         inputParser = new InputParser();
-        //listeners.addPropertyChangeListener("action", network);
     }
 
     @Override
@@ -139,7 +140,9 @@ public class Cli extends View {
      */
     public void askAssistantCard(ArrayList<AssistantCard> deck) {
 
-        out.println("chose the assistant card to play: ");
+        out.print("chose the assistant card to play");
+        if (isExpertGame()) out.print(" or choose character card to activate");
+        out.print(": ");
         out.println();
         for (int i = 0; i < deck.size(); i++) {
             out.print("     " + i + ".      ");
@@ -164,15 +167,35 @@ public class Cli extends View {
         int card;
         card = Integer.parseInt(readLine());
         //TODO check if the number is valid
-        //TODO
         //setCardThrown(deck.get(card));
-        listeners.firePropertyChange("assistantCard", true, deck.get(card));
+        this.sendAssistantCard(deck.get(card));
     }
 
     public void askMotherNatureSteps() {
-        out.println("How many steps do you want to move mother nature? ");
+        out.print("Mother Nature steps");
+        if (isExpertGame()) out.print(" or choose character card to activate");
+        out.print(": ");
         int steps = Integer.parseInt(readLine());
         //TODO check if number is <0 or >cardplayed.steps
+        this.sendMotherNatureSteps(steps);
+    }
+
+    public void askCloud() {
+        out.print("Choose Cloud");
+        if (isExpertGame()) out.print(" or choose character card to activate");
+        out.print(": ");
+        int indexCloud = Integer.parseInt(readLine());
+        this.sendCloudChoice(getClouds().get(indexCloud));
+    }
+
+    public void askStudents() {
+        Map<PawnColor, Integer> response;
+        for (int i = 0; i < 3; i++) {
+            out.print("Choose student to move");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            out.print("Choose location (island's index/schoolboard)");
+        }
     }
 
     public void printGameStarting() {

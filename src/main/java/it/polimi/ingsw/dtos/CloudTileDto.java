@@ -22,7 +22,7 @@ public class CloudTileDto implements Serializable {
         return this.uuid;
     }
 
-    public List<PawnColor> gerStudents() {
+    public List<PawnColor> getStudents() {
         return this.students;
     }
 }
