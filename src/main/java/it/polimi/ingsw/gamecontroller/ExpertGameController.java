@@ -222,4 +222,25 @@ public class ExpertGameController extends GameController {
     public ExpertGame getGame() {
         return (ExpertGame) this.game;
     }
+
+    @Override
+    public void tryStealProfessor(PawnColor color, Player player) {
+        if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
+                player.getBoard().isThereProfessor(color)){
+            if(getGame().getParameters().isTakeProfessorEvenIfSameStudents()){
+                if(game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
+                        >= player.getBoard().getStudentsInDiningRoom(color)) {
+                    player.getBoard().removeProfessor(color);
+                    game.getCurrentPlayerSchoolBoard().addProfessor(color);
+                }
+            }
+            else{
+                if(game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
+                        > player.getBoard().getStudentsInDiningRoom(color)) {
+                    player.getBoard().removeProfessor(color);
+                    game.getCurrentPlayerSchoolBoard().addProfessor(color);
+                }
+            }
+        }
+    }
 }
