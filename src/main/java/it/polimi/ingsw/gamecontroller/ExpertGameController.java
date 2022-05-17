@@ -128,7 +128,7 @@ public class ExpertGameController extends GameController {
     public boolean canActivateCharacterAbility(int characterIndex) {
         if (getGameParameters().hasAlreadyActivateCharacterCard())
             return false;
-        return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() >
+        return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() >=
                 getGame().getCharacterCards()[characterIndex].getCurrentPrice();
     }
 

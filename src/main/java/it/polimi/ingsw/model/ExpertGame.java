@@ -28,6 +28,11 @@ public class ExpertGame extends Game {
         return (ExpertTable) super.getTable();
     }
 
+    @Override
+    public ExpertGameParameters getParameters() {
+        return (ExpertGameParameters) super.getParameters();
+    }
+
     public void setCharacterCards(CharacterCard[] cards) {
         this.characterCards = cards;
     }
