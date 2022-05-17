@@ -25,6 +25,7 @@ public class ExpertGameController extends GameController {
     public ExpertGameController(ExpertGame game, ExpertTableController tableController, VirtualView[] virtualViews) {
         super(game, tableController, virtualViews);
         drawCharactersCards();
+        activateSetupEffect();
     }
 
     @Override
@@ -85,7 +86,7 @@ public class ExpertGameController extends GameController {
             }
             int index = pair.second();
             if (canActivateCharacterAbility(index)) {
-                activateCharacterAbility(index);
+                activateCharacterAbility(index, ((CharacterCardMessage)message).getParameters());
             } else {
                 //TODO reply with error
             }
@@ -131,11 +132,17 @@ public class ExpertGameController extends GameController {
                 getGame().getCharacterCards()[characterIndex].getCurrentPrice();
     }
 
-    public void activateCharacterAbility(int characterIndex) {
+    public void activateCharacterAbility(int characterIndex, Object[] parameters) {
         if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
             activateSetupEffect(characterIndex);
-        else
+        else {
             activateStandardEffect(characterIndex);
+            switch (getGame().getCharacterCards()[characterIndex].getCharacter()){
+                case CHARACTER_ONE -> effect1(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0], (UUID) parameters[1]);
+                case CHARACTER_SEVEN -> effect7(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (List<PawnColor>)parameters[0], (List<PawnColor>)parameters[1]);
+                case CHARACTER_ELEVEN -> effect11(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0]);
+            }
+        }
         int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();
         getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);
         ((ExpertTableController) tableController).depositCoins(cardPrice);
@@ -181,6 +188,13 @@ public class ExpertGameController extends GameController {
         game.removeStudent(character, color);
         game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);
         game.addStudent(character, tableController.drawStudents(1).get(0));
+    }
+
+    public void activateSetupEffect(){
+        for (int i = 0; i < effects.length; i++) {
+            if (effects[i] instanceof SetupEffect effect)
+                effect.setupEffect(getGame(), tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[i]);
+        }
     }
 
     //activate reverseEffect for all card, should not generate problems

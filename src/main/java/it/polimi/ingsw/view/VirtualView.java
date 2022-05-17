@@ -51,8 +51,8 @@ public class VirtualView extends Observable implements ModelObserver {
      * @param message The changed CharacterCard
      */
     @Override
-    public void update(CharacterCard message) {
-        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.CHARACTER_CARD, message));
+    public void update(CharacterCard message, Object[] parameters) {
+        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.CHARACTER_CARD, message, parameters));
     }
 
     @Override
