@@ -83,7 +83,7 @@ public class ExpertGameController extends GameController {
                 game.throwException(new IllegalCharacterException());
             }
             int index = pair.second();
-            if (canActivateCharacterAbility(index)) {
+            if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message)) {
                 activateCharacterAbility(index, ((CharacterCardMessage)message).getParameters());
             } else {
                 //TODO reply with error
@@ -92,6 +92,69 @@ public class ExpertGameController extends GameController {
             super.update(message);
         }
     }
+
+    private boolean areParametersOk(CharacterCardMessage message){
+        return switch (message.getCharacterCard().getCharacter()){
+            case CHARACTER_ONE -> areParametersOkCharacter1(message.getCharacterCard(), message.getParameters());
+            case CHARACTER_SEVEN -> areParametersOkCharacter7(message.getCharacterCard(), message.getParameters());
+            case CHARACTER_NINE -> areParametersOkCharacter9(message.getParameters());
+            case CHARACTER_ELEVEN -> areParametersOkCharacter11(message.getCharacterCard(), message.getParameters());
+            default -> true;
+        };
+    }
+
+    private boolean areParametersOkCharacter1(CharacterCard card, Object[] parameters){
+        if(parameters.length != 2)
+            return false;
+        if(!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
+            return false;
+        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+            return false;
+        if(!(cardWithSetUpAction.getStudents().contains(parameters[0])))
+            return false;
+        for(IslandCard island : getGame().getTable().getIslands()){
+            if(island.getUuid().equals(parameters[1]))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean areParametersOkCharacter7(CharacterCard card, Object[] parameters){
+        if(parameters.length != 2)
+            return false;
+        if(!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
+            return false;
+        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+            return false;
+        List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
+        List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
+        Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction) cardWithSetUpAction).getStudentsCardinality();
+        Map<PawnColor, Integer> cardinalityEntrance = getGame().getPlayers()[getGame().getCurrentPlayer()].getBoard().getStudentsInEntranceCardinality();
+        for(PawnColor color : PawnColor.values()){
+            if(!(colorsFromCard.stream().filter(x -> x==color).count() <= cardinalityCard.get(color)))
+                return false;
+        }
+        for(PawnColor color : PawnColor.values()){
+            if(!(colorsFromEntrance.stream().filter(x -> x==color).count() <= cardinalityEntrance.get(color)))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean areParametersOkCharacter9(Object[] parameters){
+        return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
+    }
+
+    private boolean areParametersOkCharacter11(CharacterCard card, Object[] parameters){
+        if(parameters.length != 1)
+            return false;
+        if(!(parameters[0] instanceof PawnColor))
+            return false;
+        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+            return false;
+        return cardWithSetUpAction.getStudents().contains(parameters[0]);
+    }
+
 
     @Override
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
