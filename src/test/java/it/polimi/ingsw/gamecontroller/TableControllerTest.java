@@ -1,8 +1,10 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
+import it.polimi.ingsw.model.GameParameters;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.Table;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -21,8 +23,8 @@ class TableControllerTest extends TestCase {
 
     Table table2Player = new Table(PlayersNumber.TWO);
     Table table3Player = new Table(PlayersNumber.THREE);
-    TableController tableController2Player = new TableController(table2Player);
-    TableController tableController3Player = new TableController(table3Player);
+    TableController tableController2Player = new TableController(table2Player, new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
+    TableController tableController3Player = new TableController(table3Player, new GameParameters(PlayersNumber.THREE, GameMode.NORMAL_MODE));
 
     @Test
     void init() {

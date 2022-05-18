@@ -217,7 +217,7 @@ public class GameController implements DisconnectionListener {
         this.playerHasEndedAction();
     }
 
-    private void checkInfluence() {
+    protected void checkInfluence() {
         int maxInfluence = 0;
         int currentInfluence;
         Player maxInfluencePlayer = game.getPlayers()[game.getCurrentPlayer()]; //default condition, it shouldn't matter

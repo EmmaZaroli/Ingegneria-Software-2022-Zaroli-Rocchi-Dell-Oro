@@ -1,9 +1,11 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.gamecontroller.exceptions.NoCoinsAvailableException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
+import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.ExpertTable;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.Table;
@@ -23,8 +25,8 @@ class ExpertTableControllerTest extends TestCase {
 
     ExpertTable table2Player = new ExpertTable(PlayersNumber.TWO);
     ExpertTable table3Player = new ExpertTable(PlayersNumber.THREE);
-    ExpertTableController tableController2Player = new ExpertTableController(table2Player);
-    ExpertTableController tableController3Player = new ExpertTableController(table3Player);
+    ExpertTableController tableController2Player = new ExpertTableController(table2Player, new ExpertGameParameters(PlayersNumber.TWO, GameMode.EXPERT_MODE));
+    ExpertTableController tableController3Player = new ExpertTableController(table3Player, new ExpertGameParameters(PlayersNumber.THREE, GameMode.EXPERT_MODE));
 
     @Test
     void init() {

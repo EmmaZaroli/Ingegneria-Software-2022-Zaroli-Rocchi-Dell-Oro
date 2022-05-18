@@ -3,10 +3,7 @@ package it.polimi.ingsw.gamecontroller;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.CloudTile;
-import it.polimi.ingsw.model.IslandCard;
-import it.polimi.ingsw.model.Table;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.utils.Pair;
@@ -18,14 +15,16 @@ import java.util.*;
  */
 public class TableController {
     protected Table table;
+    private GameParameters parameters;
 
     /**
      * Creates a new controller for the given table
      *
      * @param table The table to associate to the controller
      */
-    public TableController(Table table) {
+    public TableController(Table table, GameParameters parameters) {
         this.table = table;
+        this.parameters = parameters;
     }
 
     /**
@@ -217,5 +216,13 @@ public class TableController {
      */
     public Bag getBag() {
         return this.table.getBag();
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public GameParameters getParameters() {
+        return parameters;
     }
 }

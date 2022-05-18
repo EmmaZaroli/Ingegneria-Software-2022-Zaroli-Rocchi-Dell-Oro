@@ -3,8 +3,10 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Character card with set up action.
@@ -73,5 +75,13 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
 
     public int getStudentsNumber(){
         return students.size();
+    }
+
+    public Map<PawnColor, Integer> getStudentsCardinality(){
+        Map<PawnColor, Integer> res = new HashMap<>();
+        for(PawnColor color: PawnColor.values()){
+            res.put(color, getStudentsNumber(color));
+        }
+        return res;
     }
 }

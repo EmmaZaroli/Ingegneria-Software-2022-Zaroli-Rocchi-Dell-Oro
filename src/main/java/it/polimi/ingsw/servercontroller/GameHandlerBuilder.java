@@ -117,12 +117,12 @@ public class GameHandlerBuilder {
     }
 
     private GameController buildNormalGameController(Game gameModel, VirtualView[] virtualViews) {
-        TableController tableController = new TableController(gameModel.getTable());
+        TableController tableController = new TableController(gameModel.getTable(), gameModel.getParameters());
         return new GameController(gameModel, tableController, virtualViews);
     }
 
     private ExpertGameController buildExpertGameController(Game gameModel, VirtualView[] virtualViews) {
-        ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable());
+        ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable(), (ExpertGameParameters) gameModel.getParameters());
         return new ExpertGameController((ExpertGame) gameModel, tableController, virtualViews);
     }
 
