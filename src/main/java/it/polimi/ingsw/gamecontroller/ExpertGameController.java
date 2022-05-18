@@ -131,11 +131,11 @@ public class ExpertGameController extends GameController {
         Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction) cardWithSetUpAction).getStudentsCardinality();
         Map<PawnColor, Integer> cardinalityEntrance = getGame().getPlayers()[getGame().getCurrentPlayer()].getBoard().getStudentsInEntranceCardinality();
         for(PawnColor color : PawnColor.values()){
-            if(!(colorsFromCard.stream().filter(x -> x==color).count() <= cardinalityCard.get(color)))
+            if(colorsFromCard.stream().filter(x -> x==color).count() > cardinalityCard.get(color))
                 return false;
         }
         for(PawnColor color : PawnColor.values()){
-            if(!(colorsFromEntrance.stream().filter(x -> x==color).count() <= cardinalityEntrance.get(color)))
+            if(colorsFromEntrance.stream().filter(x -> x==color).count() > cardinalityEntrance.get(color))
                 return false;
         }
         return true;
