@@ -194,7 +194,6 @@ public class ExpertGameController extends GameController {
     }
 
     public void activateCharacterAbility(int characterIndex, Object[] parameters) {
-        //TODO check all parameters are ok
         if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
             switch (getGame().getCharacterCards()[characterIndex].getCharacter()){
                 case CHARACTER_ONE -> effect1(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0], (UUID) parameters[1]);

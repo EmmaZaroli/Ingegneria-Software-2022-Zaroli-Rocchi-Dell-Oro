@@ -142,14 +142,15 @@ class ExpertGameControllerTest extends TestCase {
 
         //correct message
         IslandCard island = game.getTable().getIslands().get(0);
-        int red = island.getStudentsNumber(PawnColor.RED);
-        parameters[0] = PawnColor.RED;
+        PawnColor color = ((CharacterCardWithSetUpAction)characterCards[0]).getStudents().get(0);
+        int colorNumber = island.getStudentsNumber(color);
+        parameters[0] = color;
         parameters[1] = island.getUuid();
         message = new CharacterCardMessage("player1", MessageType.CHARACTER_CARD, characterCards[0], parameters);
         gameController.update(message);
         int a  = game.getPlayers()[0].getCoins();
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
-        Assertions.assertEquals(red + 1, island.getStudentsNumber(PawnColor.RED));
+        Assertions.assertEquals(colorNumber + 1, island.getStudentsNumber(color));
 
 
         //wrong message, player has already played character card
@@ -529,7 +530,6 @@ class ExpertGameControllerTest extends TestCase {
         message = new CharacterCardMessage("player1", MessageType.CHARACTER_CARD, characterCards[1], parameters);
         gameController.update(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
-        Assertions.assertEquals(colorNumberCard - 1, ((CharacterCardWithSetUpAction)game.getCharacterCards()[1]).getStudentsNumber(color));
         Assertions.assertEquals(colorNumberDiningroom + 1, game.getPlayers()[0].getBoard().getStudentsInDiningRoom(color));
 
         //wrong message, player has already played character card
