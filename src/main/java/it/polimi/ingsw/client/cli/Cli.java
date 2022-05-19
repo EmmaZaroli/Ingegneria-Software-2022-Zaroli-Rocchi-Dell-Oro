@@ -10,10 +10,7 @@ import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Cli extends View {
     private final PrintStream out;
@@ -189,13 +186,43 @@ public class Cli extends View {
     }
 
     public void askStudents() {
-        Map<PawnColor, Integer> response;
-        for (int i = 0; i < 3; i++) {
+        int moves = getOpponents().size() + 2;
+        CliParsen parsen2 = new CliParsen();
+        Map<PawnColor, Integer> response = new HashMap<>(moves);
+        int validObject = 0;
+        boolean validDestination = false;
+        int destination = 0;
+        while (validObject < moves) {
             out.print("Choose student to move");
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
-            out.print("Choose location (island's index/schoolboard)");
+            String input = readLine();
+            PawnColor student = parsen2.checkIfStudent(input);
+            if (student != PawnColor.NONE) {
+                validDestination = false;
+                while (!validDestination) {
+                    out.print("Choose location (island's index/schoolboard) : ");
+                    destination = parsen2.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
+                    if (destination != 13) {
+                        validObject++;
+                        validDestination = true;
+                    } else {
+                        this.error("Error, the destination selected is invalid, please retry");
+                    }
+                }
+                response.put(student, destination);
+            }
+            // the input was not a color, checking if it's a character card
+            else if (isExpertGame()) {
+                //TODO
+                if (isACard(input)) ;
+            } else out.print("error, ");
         }
+    }
+
+    private boolean isACard(String input) {
+        //TODO check if input is a card
+        return false;
     }
 
     public void printGameStarting() {
@@ -298,7 +325,7 @@ public class Cli extends View {
     }
 
     public void error(String error) {
-        out.println("");
+        out.println(error);
     }
 
     private void space(int space) {

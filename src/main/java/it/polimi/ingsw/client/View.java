@@ -33,7 +33,7 @@ public abstract class View implements MessageListener, UserInterface {
     private List<LinkedIslands> islands;
     private String currentPlayer;
     private List<CharacterCard> characterCards;
-
+    protected int numberOfIslandOnTable;
     private Endpoint endpoint;
 
     protected View() {
