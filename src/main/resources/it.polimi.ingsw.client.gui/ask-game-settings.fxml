@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<StackPane prefHeight="590.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.client.gui.AskSettings">
+    <ImageView>
+        <Image
+                url="/it.polimi.ingsw.client.gui/opening.jpg"
+                backgroundLoading="true"/>
+    </ImageView>
+    <VBox alignment="CENTER">
+        <HBox alignment="CENTER">
+            <GridPane
+                    hgap="10"
+                    vgap="5"
+                    style="-fx-padding: 20 20 20 20; -fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 10;">
+                <Label
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                        GridPane.columnSpan="2"
+                        GridPane.halignment="CENTER"
+                        style="-fx-font-weight: bold;">
+                    Select the number of players
+                </Label>
+                <RadioButton
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                        fx:id="twoPlayers"
+                        text="2">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="playersNumber"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="1"
+                        fx:id="threePlayers"
+                        text="3">
+                    <toggleGroup>
+                        <fx:reference source="playersNumber"/>
+                    </toggleGroup>
+                </RadioButton>
+                <Label
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="2"
+                        GridPane.columnSpan="2"
+                        GridPane.halignment="CENTER"
+                        style="-fx-font-weight: bold;">
+                    Select the number of players
+                </Label>
+                <RadioButton
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="3"
+                        fx:id="standardMode"
+                        text="Standard">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="gameMode"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="3"
+                        fx:id="expert"
+                        text="Expert">
+                    <toggleGroup>
+                        <fx:reference source="gameMode"/>
+                    </toggleGroup>
+                </RadioButton>
+                <Button
+                        GridPane.rowIndex="4"
+                        GridPane.columnIndex="0"
+                        GridPane.columnSpan="2"
+                        GridPane.halignment="CENTER">
+                    Confirm
+                </Button>
+            </GridPane>
+        </HBox>
+    </VBox>
+</StackPane>

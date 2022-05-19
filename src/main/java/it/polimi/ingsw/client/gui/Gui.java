@@ -15,7 +15,7 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/start-connection.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/ask-game-settings.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 400);
 
         stage.setTitle("Eriantys");
