@@ -19,17 +19,13 @@ public class Cli extends View {
     private final InputParser inputParser;
     private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String COIN = "??";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String COIN = "¢";
     public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_WHITE = "\u001B[37m";
     private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
     private final PrinterClouds cloudPrinter = new PrinterClouds();
     private final PrinterIslands islandsPrinter = new PrinterIslands();
     private final PrinterCharacterCards PrinterCharacterCard = new PrinterCharacterCards();
+    private final PrinterAssistantCards printerAssistantCards = new PrinterAssistantCards();
 
     public Cli() {
         out = System.out;
@@ -189,17 +185,30 @@ public class Cli extends View {
 
     @Override
     public void print() {
-
         printCloud();
         printIslands();
         if (isExpertGame()) printCharacterCards();
         printSchoolBoard();
     }
 
-    public void printCoins(PlayerInfo player) {
-        for (int i = 0; i < player.getCoins(); i++) {
+    public void printCoins() {
+        //me
+        for (int i = 0; i < getMe().getCoins(); i++) {
             out.print(ANSI_YELLOW + COIN + ANSI_RESET);
         }
+        space(51 - getMe().getCoins());
+        //opponent n°1
+        for (int i = 0; i < getOpponents().get(0).getCoins(); i++) {
+            out.print(ANSI_YELLOW + COIN + ANSI_RESET);
+        }
+        space(51 - getOpponents().get(0).getCoins());
+        //opponent n°2
+        if (getOpponents().size() == 2) {
+            for (int i = 0; i < getOpponents().get(1).getCoins(); i++) {
+                out.print(ANSI_YELLOW + COIN + ANSI_RESET);
+            }
+        }
+        out.println();
     }
 
     private void printCharacterCards() {
@@ -223,22 +232,23 @@ public class Cli extends View {
             out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
             space(48);
         }
-        //TODO
-        //if (!isExpertGame()) printCoins(player);
-        //if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
+        if (!isExpertGame()) printCoins();
         List<SchoolBoardDto> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
         boards.add(getOpponents().get(0).getBoard());
         if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
         boardPrinter.printBoard(boards);
+        printAssistantCardPlayed();
     }
 
 
-    private void printAssistantCardPlayed(AssistantCard card) {
-        out.println("   _____     ");
-        out.println("  |" + card.value() + "   " + card.motherNatureMovement() + "|    ");
-        out.println("  |     |    ");
-        out.println("  |_____|    ");
+    private void printAssistantCardPlayed() {
+        List assistantcards = new ArrayList();
+        if (getMe().getDiscardPileHead() != null) assistantcards.add(getMe().getDiscardPileHead());
+        for (PlayerInfo opponents : getOpponents()) {
+            if (opponents.getDiscardPileHead() != null) assistantcards.add(opponents.getDiscardPileHead());
+        }
+        printerAssistantCards.print(assistantcards);
     }
 
     public void win() {
@@ -269,5 +279,9 @@ public class Cli extends View {
 
     private void space(int space) {
         for (int i = 0; i < space; i++) out.print(" ");
+    }
+
+    private void clearCli() {
+        for (int i = 0; i < 20; i++) out.println();
     }
 }

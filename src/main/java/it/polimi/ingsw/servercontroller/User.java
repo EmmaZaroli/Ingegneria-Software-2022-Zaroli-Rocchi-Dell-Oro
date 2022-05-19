@@ -19,7 +19,16 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        return nickname.equals(((User) obj).getNickname());
+        if (obj instanceof User user) {
+            return nickname.equals(user.getNickname());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     public String getNickname() {
@@ -41,7 +50,7 @@ public class User {
     }
 
     public void sendMessage(Message message) {
-        if(endpoint != null)
+        if (endpoint != null)
             endpoint.sendMessage(message);
     }
 
