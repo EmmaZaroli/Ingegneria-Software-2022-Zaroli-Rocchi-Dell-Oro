@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+
 public class ExpertTable extends Table {
     private int coins;
 
-    public ExpertTable(int playersCount) {
-        super(playersCount);
-        coins = playersCount == 2 ? 18 : 17;
+    public ExpertTable(PlayersNumber playersNumber) {
+        super(playersNumber);
+        coins = playersNumber == PlayersNumber.TWO ? 18 : 17;
     }
 
     public void takeCoin() {

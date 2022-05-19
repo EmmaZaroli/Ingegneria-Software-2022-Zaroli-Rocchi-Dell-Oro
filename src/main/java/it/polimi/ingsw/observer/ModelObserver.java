@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.enums.GamePhase;
  */
 //TODO something is missing
 public interface ModelObserver extends Observer {
-    void update(CharacterCard message);
+    void update(CharacterCard message, Object[] parameters);
 
     void update(IslandCard message);
 

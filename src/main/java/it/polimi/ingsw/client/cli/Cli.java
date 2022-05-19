@@ -185,7 +185,6 @@ public class Cli extends View {
 
     @Override
     public void print() {
-        clearCli();
         printCloud();
         printIslands();
         if (isExpertGame()) printCharacterCards();

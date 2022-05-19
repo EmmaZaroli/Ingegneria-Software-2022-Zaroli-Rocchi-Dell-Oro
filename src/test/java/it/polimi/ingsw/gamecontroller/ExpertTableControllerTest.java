@@ -3,8 +3,10 @@ package it.polimi.ingsw.gamecontroller;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
+import it.polimi.ingsw.gamecontroller.exceptions.NoCoinsAvailableException;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
-import it.polimi.ingsw.model.GameParameters;
+import it.polimi.ingsw.model.ExpertGameParameters;
+import it.polimi.ingsw.model.ExpertTable;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.Table;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -19,12 +21,12 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 
-class TableControllerTest extends TestCase {
+class ExpertTableControllerTest extends TestCase {
 
-    Table table2Player = new Table(PlayersNumber.TWO);
-    Table table3Player = new Table(PlayersNumber.THREE);
-    TableController tableController2Player = new TableController(table2Player, new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
-    TableController tableController3Player = new TableController(table3Player, new GameParameters(PlayersNumber.THREE, GameMode.NORMAL_MODE));
+    ExpertTable table2Player = new ExpertTable(PlayersNumber.TWO);
+    ExpertTable table3Player = new ExpertTable(PlayersNumber.THREE);
+    ExpertTableController tableController2Player = new ExpertTableController(table2Player, new ExpertGameParameters(PlayersNumber.TWO, GameMode.EXPERT_MODE));
+    ExpertTableController tableController3Player = new ExpertTableController(table3Player, new ExpertGameParameters(PlayersNumber.THREE, GameMode.EXPERT_MODE));
 
     @Test
     void init() {
@@ -292,5 +294,49 @@ class TableControllerTest extends TestCase {
             Assertions.assertEquals(10, table3Player.getIslands().size());
         }
 
+    }
+
+    @Test
+    void useCoins() {
+        Assertions.assertEquals(18, table2Player.getCoins());
+        boolean thrown = false;
+        try {
+            for(int i = 0; i < 18; i++)
+                tableController2Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertFalse(thrown);
+        Assertions.assertEquals(0, table2Player.getCoins());
+        try {
+            tableController2Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertTrue(thrown);
+        Assertions.assertEquals(0, table2Player.getCoins());
+        tableController2Player.depositCoins(10);
+        Assertions.assertEquals(10, table2Player.getCoins());
+
+
+        Assertions.assertEquals(17, table3Player.getCoins());
+        thrown = false;
+        try {
+            for(int i = 0; i < 17; i++)
+                tableController3Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertFalse(thrown);
+        Assertions.assertEquals(0, table3Player.getCoins());
+        try {
+            tableController3Player.takeCoin();
+        } catch (NoCoinsAvailableException e) {
+            thrown = true;
+        }
+        Assertions.assertTrue(thrown);
+        Assertions.assertEquals(0, table3Player.getCoins());
+        tableController3Player.depositCoins(10);
+        Assertions.assertEquals(10, table3Player.getCoins());
     }
 }
