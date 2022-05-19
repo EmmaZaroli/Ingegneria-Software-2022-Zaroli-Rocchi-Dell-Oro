@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class Table extends Observable implements Serializable {
-    //TODO change int playersNumber with PlayersNumber
     @Serial
     private static final long serialVersionUID = 2L;
 
@@ -21,10 +21,10 @@ public class Table extends Observable implements Serializable {
     private final ArrayList<IslandCard> islandCards;
     private final Bag bag;
     private final ArrayList<CloudTile> cloudTiles;
-    private final int playersNumber;
+    private final PlayersNumber playersNumber;
     private int islandWithMotherNature;
 
-    public Table(int playersNumber) {
+    public Table(PlayersNumber playersNumber) {
         this.playersNumber = playersNumber;
         islandCards = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
@@ -49,7 +49,7 @@ public class Table extends Observable implements Serializable {
         cloudTiles = new ArrayList<>();
         this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
         this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
-        if (playersNumber == 3) {
+        if (playersNumber == PlayersNumber.THREE) {
             this.cloudTiles.add(new CloudTile(java.util.UUID.randomUUID()));
         }
         professors = new ArrayList<>();
@@ -124,7 +124,7 @@ public class Table extends Observable implements Serializable {
         return this.professors;
     }
 
-    public int getPlayersNumber() {
+    public PlayersNumber getPlayersNumber() {
         return this.playersNumber;
     }
 

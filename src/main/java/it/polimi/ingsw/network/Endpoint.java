@@ -18,7 +18,7 @@ public class Endpoint {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    private Thread receiverThread;
+    private ReciverThread receiverThread;
 
     private final List<MessageListener> messageListeners;
     private final List<DisconnectionListener> disconnectionListeners;
@@ -49,8 +49,8 @@ public class Endpoint {
         }
 
         this.isOnline = true;
-        //resetDisconnectionTimer();
-        //startPinging();
+        resetDisconnectionTimer();
+        startPinging();
     }
 
     public boolean isOnline() {
@@ -68,19 +68,16 @@ public class Endpoint {
     }
 
     public void startReceiving() {
-        this.receiverThread = new Thread(() -> {
-            while (true) {
-                handleIncomingMessage();
-            }
-        });
+        this.receiverThread = new ReciverThread();
 
-        receiverThread.start();
+        receiverThread.startThread();
     }
 
     private void stopReceiving() {
-        this.receiverThread.interrupt();
+        this.receiverThread.stopThread();
     }
 
+    /*
     public Message synchronizedReceive() throws IOException, ClassNotFoundException {
         Message message = (Message) in.readObject();
         resetDisconnectionTimer();
@@ -99,12 +96,12 @@ public class Endpoint {
             }
         } while (!(messageClass.isInstance(message)));
         return message;
-    }
+    }*/
 
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            //resetDisconnectionTimer();
+            resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
                 for (MessageListener l : messageListeners) {
                     l.onMessageReceived(m);
@@ -138,9 +135,10 @@ public class Endpoint {
     }
 
     public void disconnect() {
+        //System.out.println("DISCONNESSIONE");
         isOnline = false;
         try {
-            this.receiverThread.interrupt();
+            this.receiverThread.stopThread();
             this.socket.close();
         } catch (IOException e) {
             logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
@@ -167,5 +165,27 @@ public class Endpoint {
 
     public void removeDisconnectionListener(DisconnectionListener l) {
         this.disconnectionListeners.remove(l);
+    }
+
+    private class ReciverThread{
+        private Thread thread;
+        private boolean stopFlag;
+
+        public ReciverThread(){
+            this.thread = new Thread(() -> {
+                while (!stopFlag) {
+                    handleIncomingMessage();
+                }
+            });
+        }
+
+        public void startThread(){
+            this.thread.start();
+        }
+
+        public void stopThread(){
+            this.stopFlag = true;
+            this.thread.interrupt();
+        }
     }
 }

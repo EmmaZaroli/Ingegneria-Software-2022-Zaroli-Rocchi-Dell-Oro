@@ -6,10 +6,7 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * School board.
@@ -193,5 +190,21 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public List<PawnColor> getEntrance() {
         return this.entrance;
+    }
+
+    public int getStudentsInEntrance(PawnColor color){
+        return (int) entrance.stream().filter(x -> x.equals(color)).count();
+    }
+
+    public int getStudentsInEntrance(){
+        return entrance.size();
+    }
+
+    public Map<PawnColor, Integer> getStudentsInEntranceCardinality(){
+        Map<PawnColor, Integer> res = new HashMap<>();
+        for(PawnColor color: PawnColor.values()){
+            res.put(color, getStudentsInEntrance(color));
+        }
+        return res;
     }
 }

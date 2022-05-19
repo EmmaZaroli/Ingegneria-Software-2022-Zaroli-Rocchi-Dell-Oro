@@ -1,17 +1,27 @@
 package it.polimi.ingsw.client.modelview;
 
+import it.polimi.ingsw.dtos.PlayerDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerInfo {
     private String nickname;
     private SchoolBoardDto schoolBoard;
     private AssistantCard discardPileHead;
     private int coins;
+    private ArrayList<AssistantCard> deck;
 
     public PlayerInfo() {
         this.nickname = "";
         this.coins = 0;
+    }
+
+    public PlayerInfo(PlayerDto origin) {
+        this.nickname = origin.getNickname();
+        this.coins = origin.getCoins();
     }
 
     private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins) {
@@ -58,6 +68,10 @@ public class PlayerInfo {
 
     public int getCoins() {
         return coins;
+    }
+
+    public List<AssistantCard> getDeck() {
+        return this.deck;
     }
 
     public PlayerInfo deepClone() {

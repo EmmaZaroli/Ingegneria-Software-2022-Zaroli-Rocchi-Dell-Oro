@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 
 import java.io.PrintStream;
+import java.util.List;
 
 public class PrinterSchoolBoard {
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -15,7 +16,6 @@ public class PrinterSchoolBoard {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
-    public static final String ANSI_GREY = "\u001B[37m";
     public static final String FULL_CIRCLE = "●";
     public static final String EMPTY_CIRCLE = ANSI_WHITE + FULL_CIRCLE + ANSI_RESET;
     public static final String CIRCLE = "○";
@@ -27,35 +27,58 @@ public class PrinterSchoolBoard {
     public static final String TOWER_GREY = ANSI_WHITE + "\uD83D\uDEE2" + ANSI_RESET;
 
 
-    public void printBoard(SchoolBoardDto board) {
+    public void printBoard(List<SchoolBoardDto> boards) {
         PrintStream out = System.out;
 
         //print board
-        int actualEntranceSize = board.getEntrance().size();
-        int countTowers = 0;
-        out.println(" _______________________________________");
+        int[] actualEntranceSize = {0, 0, 0};
+        int[] countTowers = {0, 0, 0};
+        for (int i = 0; i < boards.size(); i++) {
+            actualEntranceSize[i] = boards.get(i).getEntrance().size();
+            countTowers[i] = 0;
+        }
+
+        for (int i = 0; i < boards.size(); i++) {
+            out.print(" _______________________________________");
+            out.print("            "); //12 spaces
+        }
+        out.println();
 
         //first line
-        String student = 0 >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
-        if (student.equals(FULL_CIRCLE)) student = assignColor(board.getEntrance().get(0), student);
-        out.print("|   " + student + " ");
-        studentsTable(0, board);
-        System.out.println("        |");
-        int rows = 1;
-        for (int i = 1; i < 9; i++) {
-            String student1 = i >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
-            if (student1.equals(FULL_CIRCLE)) student1 = assignColor(board.getEntrance().get(i), student1);
-            i++;
-            String student2 = i >= actualEntranceSize ? EMPTY_CIRCLE : FULL_CIRCLE;
-            if (student2.equals(FULL_CIRCLE)) student2 = assignColor(board.getEntrance().get(i), student2);
-            out.print("| " + student1 + " " + student2 + " ");
-            studentsTable(rows, board);
-            countTowers = Towers(board.getTowersCount(), board.getTowerColor(), countTowers);
-            System.out.println(" |");
-            rows++;
+        for (int i = 0; i < boards.size(); i++) {
+            String student = 0 >= actualEntranceSize[i] ? EMPTY_CIRCLE : FULL_CIRCLE;
+            if (student.equals(FULL_CIRCLE)) student = assignColor(boards.get(i).getEntrance().get(0), student);
+            out.print("|   " + student + " ");
+            studentsTable(0, boards.get(i));
+            System.out.print("        |");
+            out.print("          "); //10 spaces
         }
-        out.println("|________________________________________|");
+        out.println();
 
+        //other rows
+        int rows = 1;
+        for (int i = 1; i < 5; i++) {
+            for (int j = 0; j < boards.size(); j++) {
+                String student1 = i >= actualEntranceSize[j] ? EMPTY_CIRCLE : FULL_CIRCLE;
+                if (student1.equals(FULL_CIRCLE)) student1 = assignColor(boards.get(j).getEntrance().get(i), student1);
+                String student2 = i + 1 >= actualEntranceSize[j] ? EMPTY_CIRCLE : FULL_CIRCLE;
+                if (student2.equals(FULL_CIRCLE)) student2 = assignColor(boards.get(j).getEntrance().get(i), student2);
+                out.print("| " + student1 + " " + student2 + " ");
+                studentsTable(rows, boards.get(j));
+                countTowers[j] = Towers(boards.get(j).getTowersCount(), boards.get(j).getTowerColor(), countTowers[j]);
+                System.out.print(" |");
+                out.print("          "); //10 spaces
+            }
+            rows++;
+            out.println();
+        }
+        out.print("|________________________________________|");
+        out.print("          ");
+        out.print("|________________________________________|");
+        if (boards.size() == 3) {
+            out.print("         ");
+            out.print("|________________________________________|");
+        }
     }
 
 
@@ -112,6 +135,8 @@ public class PrinterSchoolBoard {
             } else
                 System.out.print(" " + colorRow + CIRCLE + ANSI_RESET);
         }
+
+        for (i = 0; i < occupiedCells / 3; i++) System.out.print(" "); //space corrector
         if (board.isThereProfessor(color)) {
             System.out.print("  " + colorRow + PROFESSOR_FULL + ANSI_RESET);
         } else

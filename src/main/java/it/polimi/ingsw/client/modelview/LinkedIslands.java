@@ -36,6 +36,10 @@ public class LinkedIslands {
         this.linkedislands.add(linkedisland);
     }
 
+    public void setLinkedislands(List<IslandCard> linkedisland) {
+        this.linkedislands.addAll(linkedisland);
+    }
+
     public boolean isMainConnected() {
         return mainConnected;
     }

@@ -3,12 +3,14 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Cli extends View {
@@ -17,7 +19,7 @@ public class Cli extends View {
     private final InputParser inputParser;
     private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String COIN = "??";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -27,6 +29,7 @@ public class Cli extends View {
     private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
     private final PrinterClouds cloudPrinter = new PrinterClouds();
     private final PrinterIslands islandsPrinter = new PrinterIslands();
+    private final PrinterCharacterCards PrinterCharacterCard = new PrinterCharacterCards();
 
     public Cli() {
         out = System.out;
@@ -186,25 +189,21 @@ public class Cli extends View {
 
     @Override
     public void print() {
+
         printCloud();
         printIslands();
-        for (int i = 0; i < getOpponents().size(); i++) {
-            if (getOpponents().get(i).getNickname().equals(getCurrentPlayer())) {
-                printSchoolBoard(getMe());
-                if (i + 1 < getOpponents().size()) {
-                    printSchoolBoard(getOpponents().get(i + 1));
-                }
-            }
-            printSchoolBoard(getOpponents().get(i));
+        if (isExpertGame()) printCharacterCards();
+        printSchoolBoard();
+    }
+
+    public void printCoins(PlayerInfo player) {
+        for (int i = 0; i < player.getCoins(); i++) {
+            out.print(ANSI_YELLOW + COIN + ANSI_RESET);
         }
     }
 
-    private void printCoins() {
-        //TODO
-    }
-
     private void printCharacterCards() {
-        //TODO
+        PrinterCharacterCard.print(getCharacterCards());
     }
 
     private void printCloud() {
@@ -215,12 +214,25 @@ public class Cli extends View {
         islandsPrinter.printIslands(getIslands());
     }
 
-    private void printSchoolBoard(PlayerInfo player) {
-        out.println(player.getNickname() + " board:");
-        //TODO player dto
-        boardPrinter.printBoard(player.getBoard());
-        printAssistantCardPlayed(player.getDiscardPileHead());
+    public void printSchoolBoard() {
+        out.println(getMe().getNickname() + "'s" + " board:");
+        space(48);
+        out.println(getOpponents().get(0).getNickname() + "'s" + " board:");
+        space(48);
+        if (getOpponents().size() == 2) {
+            out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
+            space(48);
+        }
+        //TODO
+        //if (!isExpertGame()) printCoins(player);
+        //if (player.getDiscardPileHead() != null) printAssistantCardPlayed(player.getDiscardPileHead());
+        List<SchoolBoardDto> boards = new ArrayList<>();
+        boards.add(getMe().getBoard());
+        boards.add(getOpponents().get(0).getBoard());
+        if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
+        boardPrinter.printBoard(boards);
     }
+
 
     private void printAssistantCardPlayed(AssistantCard card) {
         out.println("   _____     ");
@@ -253,5 +265,9 @@ public class Cli extends View {
 
     public void error(String error) {
         out.println("");
+    }
+
+    private void space(int space) {
+        for (int i = 0; i < space; i++) out.print(" ");
     }
 }

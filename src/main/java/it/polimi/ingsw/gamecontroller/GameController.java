@@ -200,6 +200,7 @@ public class GameController implements DisconnectionListener {
 
     public void moveStudentOnIsland(PawnColor pawn, UUID uuid) throws WrongUUIDException {
         this.tableController.movePawnOnIsland(pawn, uuid);
+        this.game.getCurrentPlayerSchoolBoard().removeStudentFromEntrance(pawn);
         this.movedPawn();
     }
 
@@ -217,7 +218,7 @@ public class GameController implements DisconnectionListener {
         this.playerHasEndedAction();
     }
 
-    private void checkInfluence() {
+    protected void checkInfluence() {
         int maxInfluence = 0;
         int currentInfluence;
         Player maxInfluencePlayer = game.getPlayers()[game.getCurrentPlayer()]; //default condition, it shouldn't matter
@@ -348,7 +349,7 @@ public class GameController implements DisconnectionListener {
         switch (game.getGamePhase()) {
             case PLANNING:
                 return (game.getCurrentPlayer() + 1) % game.getPlayersCount();
-            case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD:
+            case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD, ACTION_END:
                 Player nextPlayer = Arrays.stream(game.getPlayers())
                         .sorted(Comparator.comparingInt(p -> p.getDiscardPileHead().value()))
                         .toList().get(game.getPlayedCount());
@@ -369,7 +370,7 @@ public class GameController implements DisconnectionListener {
         this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
-            if (this.isTurnComplete()) {
+            if (!this.isTurnComplete()) {
                 changePlayer();
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {

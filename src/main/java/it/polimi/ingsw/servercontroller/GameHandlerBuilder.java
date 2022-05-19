@@ -83,7 +83,7 @@ public class GameHandlerBuilder {
             players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
         }
 
-        Table table = new Table(playersNumber.getPlayersNumber());
+        Table table = new Table(playersNumber);
 
         GameParameters parameters = new GameParameters(playersNumber, gameMode);
 
@@ -96,7 +96,7 @@ public class GameHandlerBuilder {
             players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
         }
 
-        ExpertTable table = new ExpertTable(playersNumber.getPlayersNumber());
+        ExpertTable table = new ExpertTable(playersNumber);
 
         ExpertGameParameters parameters = new ExpertGameParameters(playersNumber, gameMode);
 
@@ -117,12 +117,12 @@ public class GameHandlerBuilder {
     }
 
     private GameController buildNormalGameController(Game gameModel, VirtualView[] virtualViews) {
-        TableController tableController = new TableController(gameModel.getTable());
+        TableController tableController = new TableController(gameModel.getTable(), gameModel.getParameters());
         return new GameController(gameModel, tableController, virtualViews);
     }
 
     private ExpertGameController buildExpertGameController(Game gameModel, VirtualView[] virtualViews) {
-        ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable());
+        ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable(), (ExpertGameParameters) gameModel.getParameters());
         return new ExpertGameController((ExpertGame) gameModel, tableController, virtualViews);
     }
 

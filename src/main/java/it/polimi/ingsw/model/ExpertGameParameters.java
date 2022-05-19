@@ -10,9 +10,9 @@ import it.polimi.ingsw.model.enums.PawnColor;
 public class ExpertGameParameters extends GameParameters {
     private boolean takeProfessorEvenIfSameStudents;
     private int motherNatureExtraMovements;
-    private boolean towersCountInInfluence;
+    private boolean towersCountInInfluence = true;
     private int extraInfluence;
-    private PawnColor colorWithNoInfluence;
+    private PawnColor colorWithNoInfluence = PawnColor.NONE;
     private boolean alreadyActivateCharacterCard;
 
     public ExpertGameParameters(PlayersNumber playersNumber, GameMode gameMode) {

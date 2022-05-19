@@ -2,10 +2,14 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CloudTile;
+import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
@@ -26,18 +30,17 @@ public abstract class View implements MessageListener, UserInterface {
     private boolean isExpertGame;
     private List<PlayerInfo> opponents;
     private PlayerInfo me;
-    private ArrayList<AssistantCard> deck;
-    private ArrayList<CloudTile> clouds;
+    private ArrayList<CloudTileDto> clouds;
     private int tableCoins;
     private List<LinkedIslands> islands;
     private String currentPlayer;
+    private List<CharacterCard> characterCards;
 
     private Endpoint endpoint;
 
     protected View() {
         this.opponents = new LinkedList<>();
         this.me = new PlayerInfo();
-        this.deck = new ArrayList<>();
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
         this.tableCoins = 0;
@@ -67,12 +70,10 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     public List<AssistantCard> getDeck() {
-        //TODO dtos if we have time
-        return this.deck;
+        return this.me.getDeck();
     }
 
-    public List<CloudTile> getClouds() {
-        //TODO dtos if we have time
+    public List<CloudTileDto> getClouds() {
         return this.clouds;
     }
 
@@ -82,6 +83,10 @@ public abstract class View implements MessageListener, UserInterface {
 
     public int getCoins() {
         return this.tableCoins;
+    }
+
+    public List<CharacterCard> getCharacterCards() {
+        return this.characterCards;
     }
     //</editor-fold>
 
@@ -114,13 +119,9 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    /*private void handleMessage(GameStartingMessage message){
-        this.printGameStartingMessage();
-    }*/
-
     private void handleMessage(CloudMessage message) {
-        //TODO dto with wither
-        Optional<CloudTile> cloud = this.clouds.stream()
+
+        Optional<CloudTileDto> cloud = this.clouds.stream()
                 .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
         //TODO
     }
@@ -162,24 +163,45 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(IslandMessage message) {
         //TODO after we put the deleted island in the message
         //only if the field deletedIsland is not empty, else only update the island and print
-        int i = 0; // main island
-        int j = 0; // island deleted
+        int islandMain = 0; // main island
+        int islandCancelled = 0; // island deleted
         for (int k = 0; k < 12; k++) {
             if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
-                i = k;
+                islandMain = k;
             }
             if (islands.get(k).getMainIsland().getUuid().equals(message.getDeletedIsland().getUuid())) {
-                j = k;
+                islandCancelled = k;
             }
         }
-        islands.get(j).setMainConnected(false);
-        //TODO
+
+        if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)))) {
+            islands.get(Math.floorMod(islandCancelled - 1, 12)).setLinkedislands(islands.get(islandCancelled).getMainIsland());
+        } else {
+            islands.get(islandCancelled).setLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
+        }
+        islands.get(islandCancelled).setMainConnected(false);
+        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getLinkedislands());
+        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getMainIsland());
+
+        //update island part
+
+        //TODO need a function to add only the new students on the islands
+        //islands.get(islandMain).getMainIsland().movePawnOnIsland();
+
+        Tower newTower = message.getIsland().getTower();
+        islands.get(islandMain).getMainIsland().setTower(newTower);
+        for (IslandCard island : islands.get(islandMain).getLinkedislands()) {
+            island.setTower(newTower);
+        }
         this.print();
     }
 
     private void handleMessage(GameStartingMessage message) {
         this.printGameStarting();
-        //TODO init local state
+        this.opponents = message.getGame().getOpponents().stream().map(x -> new PlayerInfo(x)).toList();
+        this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
+        this.clouds = new ArrayList<>(message.getGame().getClouds());
+        this.tableCoins = message.getGame().getTableCoins();
         print();
     }
     //</editor-fold>
@@ -207,6 +229,7 @@ public abstract class View implements MessageListener, UserInterface {
     protected final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
+
             this.endpoint = new Endpoint(s, false);
             this.endpoint.addMessageListener(this);
             this.endpoint.startReceiving();
