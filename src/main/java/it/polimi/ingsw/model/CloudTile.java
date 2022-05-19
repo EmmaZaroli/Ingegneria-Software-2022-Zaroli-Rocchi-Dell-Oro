@@ -5,9 +5,7 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * class Cloud tile.
@@ -67,5 +65,13 @@ public class CloudTile extends Observable implements Serializable {
 
     public int getStudentsNumber(){
         return students.size();
+    }
+
+    public Map<PawnColor, Integer> getStudentsCardinality(){
+        Map<PawnColor, Integer> res = new HashMap<>();
+        for(PawnColor color: PawnColor.values()){
+            res.put(color, getStudentsNumber(color));
+        }
+        return res;
     }
 }
