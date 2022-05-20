@@ -19,6 +19,7 @@ public class IslandCardDto implements Serializable {
     private final Tower tower;
     private final int size;
     private final boolean hasMotherNature;
+    private final List<Integer> indices;
 
     public IslandCardDto(IslandCard origin) {
         this.uuid = origin.getUuid();
@@ -26,6 +27,7 @@ public class IslandCardDto implements Serializable {
         this.tower = origin.getTower();
         this.size = origin.getSize();
         this.hasMotherNature = origin.isHasMotherNature();
+        this.indices = origin.getIndices();
     }
 
     public UUID getUuid() {
@@ -46,5 +48,9 @@ public class IslandCardDto implements Serializable {
 
     public boolean isHasMotherNature() {
         return hasMotherNature;
+    }
+
+    public List<Integer> getIndices() {
+        return indices;
     }
 }

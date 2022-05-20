@@ -108,21 +108,6 @@ public class TableTest{
     }
 
     @Test
-    void incrementingSize(){
-        IslandCard island = table2Players.getIslands().get(0);
-        Assertions.assertEquals(1, island.getSize());
-        table2Players.incrementSize(island);
-        table2Players.incrementSize(island);
-        Assertions.assertEquals(3, island.getSize());
-
-        island = table3Players.getIslands().get(2);
-        Assertions.assertEquals(1, island.getSize());
-        table3Players.incrementSize(island);
-        table3Players.incrementSize(island);
-        Assertions.assertEquals(3, island.getSize());
-    }
-
-    @Test
     void settingTower(){
         IslandCard island = table2Players.getIslands().get(0);
         Assertions.assertEquals(island.getTower(), Tower.NONE);
