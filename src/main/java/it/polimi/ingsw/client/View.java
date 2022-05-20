@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
@@ -18,10 +19,7 @@ import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * View class contains a small representation of the game model
@@ -35,7 +33,7 @@ public abstract class View implements MessageListener, UserInterface {
     private List<LinkedIslands> islands;
     private String currentPlayer;
     private List<CharacterCard> characterCards;
-
+    protected int numberOfIslandOnTable;
     private Endpoint endpoint;
 
     protected View() {
@@ -174,7 +172,7 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
 
-        if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)))) {
+        if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)).getMainIsland())) {
             islands.get(Math.floorMod(islandCancelled - 1, 12)).setLinkedislands(islands.get(islandCancelled).getMainIsland());
         } else {
             islands.get(islandCancelled).setLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
@@ -257,6 +255,22 @@ public abstract class View implements MessageListener, UserInterface {
     protected final void sendMotherNatureSteps(int steps) {
         Message m = new MoveMotherNatureMessage(me.getNickname(), steps);
         endpoint.sendMessage(m);
+    }
+
+    protected final void sendAssistantCard(AssistantCard assistantCard) {
+
+    }
+
+    protected final void sendStudents(Map<PawnColor, Integer> move) {
+
+    }
+
+    protected final void sendCloudChoice(CloudTileDto cloud) {
+
+    }
+
+    protected final void sendCharacterCard(CharacterCard card) {
+
     }
     //</editor-fold>
 }
