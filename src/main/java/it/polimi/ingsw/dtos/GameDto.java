@@ -16,6 +16,7 @@ public class GameDto implements Serializable {
     private List<SchoolBoardDto> opponentsBoard = new ArrayList<>();
     private PlayerDto me;
     private List<CloudTileDto> clouds;
+    private List<IslandCardDto> islands;
     private int tableCoins;
     private SchoolBoardDto schoolBoard;
 
@@ -31,6 +32,7 @@ public class GameDto implements Serializable {
             }
             this.me = new PlayerDto(currentPlayer);
             this.clouds = origin.getTable().getCloudTiles().stream().map(x -> new CloudTileDto(x)).toList();
+            this.islands = origin.getTable().getIslands().stream().map(x -> new IslandCardDto(x)).toList();
             if (origin instanceof ExpertGame expertGame) {
                 this.tableCoins = expertGame.getTable().getCoins();
             }
@@ -44,6 +46,10 @@ public class GameDto implements Serializable {
 
     public List<CloudTileDto> getClouds() {
         return clouds;
+    }
+
+    public List<IslandCardDto> getIslands() {
+        return islands;
     }
 
     public int getTableCoins() {
