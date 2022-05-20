@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <StackPane prefHeight="590.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="it.polimi.ingsw.client.gui.StartConnection">
+           fx:controller="it.polimi.ingsw.client.gui.sceneControllers.StartConnection">
     <ImageView>
         <Image
                 url="/it.polimi.ingsw.client.gui/opening.jpg"
@@ -43,7 +43,8 @@
                         GridPane.rowIndex="3"
                         GridPane.columnIndex="0"
                         GridPane.columnSpan="2"
-                        GridPane.halignment="CENTER">
+                        GridPane.halignment="CENTER"
+                        onAction="#tryConnect">
                     Connect
                 </Button>
             </GridPane>

@@ -9,7 +9,6 @@ import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -292,7 +291,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.askServerInfo();
     }
 
-    protected final void startConnection(String ipAddress, int port) {
+    public final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
 

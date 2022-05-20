@@ -3,7 +3,6 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
-import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
