@@ -34,7 +34,8 @@
                         GridPane.rowIndex="3"
                         GridPane.columnIndex="0"
                         GridPane.columnSpan="2"
-                        GridPane.halignment="CENTER">
+                        GridPane.halignment="CENTER"
+                        onAction="#sendNickname">
                     Confirm
                 </Button>
             </GridPane>

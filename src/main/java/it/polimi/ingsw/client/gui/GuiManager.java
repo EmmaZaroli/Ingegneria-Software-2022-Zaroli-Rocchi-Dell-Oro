@@ -61,12 +61,17 @@ public class GuiManager extends View {
 
     @Override
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
-
+        //TODO show message
     }
 
     @Override
     public void askGameSettings() {
-
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/ask-game-settings.fxml"));
+        try {
+            stage.getScene().setRoot(fxmlLoader.load());
+        } catch (IOException e) {
+            //TODO
+        }
     }
 
     @Override
