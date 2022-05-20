@@ -121,7 +121,7 @@ class GameControllerTest extends TestCase {
     }
 
     @Test
-    void actionMoveMotherNature(){
+    void actionMoveMotherNature() {
         actionMoveStudent();
 
         //Wrong messages (wrong action)
@@ -152,7 +152,7 @@ class GameControllerTest extends TestCase {
     }
 
     @Test
-    void actionChooseCloud(){
+    void actionChooseCloud() {
         actionMoveMotherNature();
 
         //Wrong messages (wrong action)
@@ -179,7 +179,7 @@ class GameControllerTest extends TestCase {
     }
 
     @Test
-    void actionPlayer2Turn(){
+    void actionPlayer2Turn() {
         actionChooseCloud();
 
         //player2 move students

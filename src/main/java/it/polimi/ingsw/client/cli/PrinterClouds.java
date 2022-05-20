@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.cli;
 
-import it.polimi.ingsw.model.CloudTile;
+import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.List;
@@ -16,29 +16,31 @@ public class PrinterClouds {
     public static final String ANSI_WHITE = "\u001B[37m";
 
     //TODO instead of 2 put parameter based on the number of player
-    public void printClouds(List clouds) {
+    public void printClouds(List<CloudTileDto> clouds) {
         int i;
+        space(50);
         for (i = 0; i < 2; i++) {
-
             System.out.print("   _____   ");
-            System.out.print("       ");
+            space(7);
         }
         System.out.println();
+        space(50);
         for (i = 0; i < 2; i++) {
-            if (((CloudTile) clouds.get(i)).getStudentsFromCloud().isEmpty())
+            if ((clouds.get(i)).getStudents().isEmpty())
                 System.out.print("  (     )  ");
             else {
-                PawnColor student1 = ((CloudTile) clouds.get(i)).getStudentsFromCloud().get(0);
-                PawnColor student2 = ((CloudTile) clouds.get(i)).getStudentsFromCloud().get(1);
-                PawnColor student3 = ((CloudTile) clouds.get(i)).getStudentsFromCloud().get(2);
+                PawnColor student1 = (clouds.get(i)).getStudents().get(0);
+                PawnColor student2 = (clouds.get(i)).getStudents().get(1);
+                PawnColor student3 = (clouds.get(i)).getStudents().get(2);
                 System.out.print("  ( " + assignColor(student1, FULL_CIRCLE) + assignColor(student2, FULL_CIRCLE) + assignColor(student3, FULL_CIRCLE) + " )  ");
             }
-            System.out.print("       ");
+            space(7);
         }
         System.out.println();
+        space(50);
         for (i = 0; i < 2; i++) {
             System.out.print("(____)____)");
-            System.out.print("       ");
+            space(7);
         }
         System.out.println();
     }
@@ -55,5 +57,9 @@ public class PrinterClouds {
             default -> assignedColor = ANSI_WHITE;
         }
         return assignedColor + student + ANSI_RESET;
+    }
+
+    private void space(int move) {
+        for (int i = 0; i < move; i++) System.out.print(" ");
     }
 }
