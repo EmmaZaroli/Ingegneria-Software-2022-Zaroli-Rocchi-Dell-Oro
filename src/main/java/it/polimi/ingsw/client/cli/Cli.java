@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -70,9 +71,9 @@ public class Cli extends View {
         String ip;
         int port;
 
-        out.print("Please, insert the Server's ip address ");
+        out.print("Please, insert the Server's ip address: ");
         ip = readLine();
-        out.print("Select the Server's port number ");
+        out.print("Select the Server's port number: ");
         port = Integer.parseInt(readLine());
 
         this.startConnection(ip, port);
@@ -104,13 +105,13 @@ public class Cli extends View {
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
         //clearCli();
         if (playerReconnected) {
-            out.println("You've being reconnected to your previous game");
+            out.println("You've been reconnected to your previous game");
         }
         if (nicknameAccepted && !playerReconnected) {
             out.println("Welcome, " + getMe().getNickname() + ", get ready to play!");
         }
         if (!nicknameAccepted && !playerReconnected) {
-            out.println("Sorry, your nickname is already taken, please choose another one");
+            out.println("Sorry, your nickname is already taken, please choose another one ");
         }
     }
 
