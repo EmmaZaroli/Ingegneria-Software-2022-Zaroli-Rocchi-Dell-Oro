@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class IslandCardDto implements Serializable {
-    private static final long serialVersionUID = 102L;
+    private static final long serialVersionUID = 106L;
     private final UUID uuid;
     private final ArrayList<PawnColor> students;
     private final Tower tower;
