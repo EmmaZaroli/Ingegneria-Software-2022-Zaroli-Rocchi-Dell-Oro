@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import it.polimi.ingsw.client.gui.sceneControllers.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="it.polimi.ingsw.client.gui.sceneControllers.Table"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <ImageView
+            opacity="0.90">
+        <Image
+                url="/it.polimi.ingsw.client.gui/assets/background.jpg"
+                backgroundLoading="true"
+        />
+    </ImageView>
+
+    <VBox
+            alignment="CENTER"
+            style="-fx-padding: 20 20 20 20;">
+        <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+            <Pane
+                    HBox.hgrow="ALWAYS"
+                    style="-fx-padding: 20 20 20 20; -fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 10;">
+                <VBox>
+                    <HBox>
+                        <VBox style="-fx-padding: 10 10 10 10;">
+                            <HBox
+                                    style="-fx-background-color: rgba(255,255,255,0.65); -fx-background-radius: 10; -fx-padding: 10 10 10 10;">
+                                <SchoolBoard style="-fx-padding: 10 10 10 0;"/>
+                                <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
+                                    <Card/>
+                                </VBox>
+                                <SchoolBoard style="-fx-padding: 10 0 10 10;"/>
+                                <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
+                                    <Card/>
+                                </VBox>
+                            </HBox>
+                            <GridPane>
+                                <Card GridPane.rowIndex="0" GridPane.vgrow="ALWAYS"/>
+                                <Card GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"/>
+                                <Card GridPane.rowIndex="2" GridPane.vgrow="ALWAYS"/>
+                            </GridPane>
+                        </VBox>
+                    </HBox>
+                    <HBox>
+                        <SchoolBoard/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                        <Card/>
+                    </HBox>
+                </VBox>
+            </Pane>
+        </HBox>
+    </VBox>
+</StackPane>

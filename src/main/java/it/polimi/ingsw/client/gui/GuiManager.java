@@ -26,7 +26,10 @@ public class GuiManager extends View {
 
     @Override
     public void printWelcomeMessage() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/start-connection.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/table.fxml"));
+
+        //TODO dev only
+        //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/start-connection.fxml"));
         try {
             Scene scene = new Scene(fxmlLoader.load(), 400, 400);
             stage.setScene(scene);
@@ -51,7 +54,7 @@ public class GuiManager extends View {
 
     @Override
     public void askPlayerNickname() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/ask-nickname.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/ask-nickname.fxml"));
         try {
             stage.getScene().setRoot(fxmlLoader.load());
         } catch (IOException e) {
@@ -66,7 +69,7 @@ public class GuiManager extends View {
 
     @Override
     public void askGameSettings() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/ask-game-settings.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml"));
         try {
             stage.getScene().setRoot(fxmlLoader.load());
         } catch (IOException e) {
