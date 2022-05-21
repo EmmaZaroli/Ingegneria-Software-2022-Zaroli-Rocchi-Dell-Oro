@@ -231,7 +231,7 @@ public class Cli extends View {
     }
 
     public void printGameStarting() {
-        out.println("The game is starting");
+        out.println("The game is starting!");
     }
 
     public void updateCurrentPlayersTurn(String otherPlayer) {
@@ -241,7 +241,7 @@ public class Cli extends View {
     @Override
     public void print() {
         printCloud();
-        printIslands();
+        //printIslands();
         if (isExpertGame()) printCharacterCards();
         printSchoolBoard();
     }
@@ -279,14 +279,15 @@ public class Cli extends View {
     }
 
     public void printSchoolBoard() {
-        out.println(getMe().getNickname() + "'s" + " board:");
+        out.print(getMe().getNickname() + "'s" + " board:");
         space(48);
-        out.println(getOpponents().get(0).getNickname() + "'s" + " board:");
+        out.print(getOpponents().get(0).getNickname() + "'s" + " board:");
         space(48);
         if (getOpponents().size() == 2) {
             out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
             space(48);
         }
+        out.println();
         if (isExpertGame()) printCoins();
         List<SchoolBoardDto> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
