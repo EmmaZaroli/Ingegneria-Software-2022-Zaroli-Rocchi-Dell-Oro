@@ -86,7 +86,7 @@ public class VirtualView extends Observable implements ModelObserver {
 
     @Override
     public void update(AssistantCard message) {
-        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), MessageType.ASSISTANT_CARD, message));
+        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), message));
     }
 
     @Override

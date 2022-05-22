@@ -14,6 +14,11 @@ public class CloudMessage extends Message {
         this.cloud = new CloudTileDto(cloud);
     }
 
+    public CloudMessage(String nickname, MessageType messageType, CloudTileDto cloud) {
+        super(nickname, messageType);
+        this.cloud = cloud;
+    }
+
     public CloudTileDto getCloud() {
         return this.cloud;
     }

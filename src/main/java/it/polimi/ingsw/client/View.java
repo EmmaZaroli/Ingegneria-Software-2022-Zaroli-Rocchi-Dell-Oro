@@ -20,9 +20,11 @@ import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
+import java.util.List;
 
 /**
  * View class contains a small representation of the game model
@@ -305,40 +307,71 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    protected final void sendPlayerNickname(String nickname) {
-        Message m = new NicknameProposalMessage(nickname, MessageType.NICKNAME_PROPOSAL);
-        endpoint.sendMessage(m);
+    protected final boolean sendPlayerNickname(String nickname) {
+        Message message = new NicknameProposalMessage(nickname);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendGameSettings(int numberOfPlayers, boolean expertGame) {
-        Message m = new GametypeRequestMessage(
+    protected final boolean sendGameSettings(PlayersNumber playersNumber, GameMode gameMode) {
+        Message message = new GametypeRequestMessage(
                 me.getNickname(),
-                MessageType.GAME_TYPE_REQUEST,
-                expertGame ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE,
-                numberOfPlayers == 2 ? PlayersNumber.TWO : PlayersNumber.THREE);
-        endpoint.sendMessage(m);
-        this.isExpertGame = expertGame;
+                gameMode, playersNumber);
+        endpoint.sendMessage(message);
+        this.isExpertGame = (gameMode == GameMode.EXPERT_MODE);
+        return true;
     }
 
-    protected final void sendMotherNatureSteps(int steps) {
-        Message m = new MoveMotherNatureMessage(me.getNickname(), steps);
-        endpoint.sendMessage(m);
+    protected final boolean sendMotherNatureSteps(int steps) {
+        if(steps < 0)
+            return false;
+        Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendAssistantCard(AssistantCard assistantCard) {
-
+    protected final boolean sendAssistantCard(int cardIndex) {
+        if(cardIndex < 0 || cardIndex >= me.getDeck().size())
+            return false;
+        AssistantCard assistantCard = me.getDeck().get(cardIndex);
+        Message message = new AssistantPlayedMessage(me.getNickname(), assistantCard);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendStudents(Map<PawnColor, Integer> move) {
-
+    protected final boolean sendStudentMoveOnBoard(PawnColor student) {
+        if(!me.getBoard().getEntrance().contains(student))
+            return false;
+        Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendCloudChoice(CloudTileDto cloud) {
-
+    protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
+        if(!me.getBoard().getEntrance().contains(student) || islandIndex < 0 || islandIndex >= getIslands().size())
+            return false;
+        MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        message.setIslandCard(getIslands().get(islandIndex).getMainIsland());
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendCharacterCard(CharacterCard card) {
+    protected final boolean sendCloudChoice(int cloudIndex) {
+        if(cloudIndex < 0 || cloudIndex >= getClouds().size())
+            return false;
+        CloudTileDto cloudTile = getClouds().get(cloudIndex);
+        Message message = new CloudMessage(me.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, cloudTile);
+        endpoint.sendMessage(message);
+        return true;
+    }
 
+    protected final boolean sendCharacterCard(int characterIndex, Object[] parameters) {
+        if(characterIndex < 0 || characterIndex >= characterCards.size())
+            return false;
+        //TODO check parameters
+        Message message = new CharacterCardMessage(me.getNickname(), MessageType.ACTION_USE_CHARACTER, getCharacterCards().get(characterIndex), parameters);
+        endpoint.sendMessage(message);
+        return true;
     }
     //</editor-fold>
 }

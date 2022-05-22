@@ -5,6 +5,8 @@ import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -128,7 +130,8 @@ public class Cli extends View {
         out.print("How many players are you going to play with? [2/3] ");
         playersNumber = Integer.parseInt(readLine());
         //TODO check if the number is 2 or 3
-        this.sendGameSettings(playersNumber, gameMode.equals("expert"));
+        this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,
+                gameMode.equals("expert") ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);
     }
 
     public void genericMessage(String message) {
@@ -174,7 +177,7 @@ public class Cli extends View {
         card = Integer.parseInt(readLine());
         //TODO check if the number is valid
         //setCardThrown(deck.get(card));
-        this.sendAssistantCard(deck.get(card));
+        this.sendAssistantCard(card);
     }
 
     public void askMotherNatureSteps() {
@@ -191,7 +194,7 @@ public class Cli extends View {
         if (isExpertGame()) out.print(" or choose character card to activate");
         out.print(": ");
         int indexCloud = Integer.parseInt(readLine());
-        this.sendCloudChoice(getClouds().get(indexCloud));
+        this.sendCloudChoice(indexCloud);
     }
 
     public void askStudents() {

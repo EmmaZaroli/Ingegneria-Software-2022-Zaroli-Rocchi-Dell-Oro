@@ -76,7 +76,7 @@ public class ExpertGameController extends GameController {
 
     @Override
     public void update(Message message) {
-        if (message.getType().equals(MessageType.CHARACTER_CARD)) {
+        if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
             CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
             Pair<Boolean, Integer> pair = isCardOnTable(card);
             if (!(boolean) pair.first()) {

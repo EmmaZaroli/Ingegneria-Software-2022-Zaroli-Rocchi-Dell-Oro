@@ -5,7 +5,7 @@ import it.polimi.ingsw.network.MessageType;
 
 public class NicknameProposalMessage extends Message {
 
-    public NicknameProposalMessage(String nickname, MessageType messageType) {
-        super(nickname, messageType);
+    public NicknameProposalMessage(String nickname) {
+        super(nickname, MessageType.NICKNAME_PROPOSAL);
     }
 }
