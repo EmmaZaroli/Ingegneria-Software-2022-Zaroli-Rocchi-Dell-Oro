@@ -43,11 +43,11 @@ class ExpertGameControllerTest extends TestCase {
 
         AssistantCard cardPlayed1 = player1.getAssistant(0);
         //Wrong Messages
-        AssistantPlayedMessage WrongPlayer = new AssistantPlayedMessage("player2", cardPlayed1);
+        AssistantPlayedMessage WrongPlayer = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
         gameController.update(WrongPlayer);
         Assertions.assertEquals(10, player2.getAssistantDeck().size());
         //Correct Message
-        AssistantPlayedMessage message1 = new AssistantPlayedMessage("player1", cardPlayed1);
+        AssistantPlayedMessage message1 = new AssistantPlayedMessage("player1", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
         gameController.update(message1);
         Assertions.assertEquals(9, player1.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.PLANNING, game.getGamePhase());
@@ -55,12 +55,12 @@ class ExpertGameControllerTest extends TestCase {
 
         //2.
 
-        AssistantPlayedMessage SameCard = new AssistantPlayedMessage("player2", cardPlayed1);
+        AssistantPlayedMessage SameCard = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
         gameController.update(SameCard);
         Assertions.assertEquals(10, player2.getAssistantDeck().size());
         //Correct Message
         AssistantCard cardPlayed2 = player2.getAssistant(1);
-        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", cardPlayed2);
+        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed2);
         gameController.update(message2);
         Assertions.assertEquals(9, player2.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());

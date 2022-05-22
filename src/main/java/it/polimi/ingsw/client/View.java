@@ -334,7 +334,7 @@ public abstract class View implements MessageListener, UserInterface {
         if(cardIndex < 0 || cardIndex >= me.getDeck().size())
             return false;
         AssistantCard assistantCard = me.getDeck().get(cardIndex);
-        Message message = new AssistantPlayedMessage(me.getNickname(), assistantCard);
+        Message message = new AssistantPlayedMessage(me.getNickname(), MessageType.ACTION_PLAY_ASSISTANT, assistantCard);
         endpoint.sendMessage(message);
         return true;
     }
