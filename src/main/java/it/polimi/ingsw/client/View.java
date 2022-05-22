@@ -197,13 +197,11 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(GameStartingMessage message) {
         this.printGameStarting();
-        this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(0)).with(message.getGame().getOpponentsBoard().get(0)));
-        if (message.getGame().getOpponents().size() == 2)
-            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(1)).with(message.getGame().getOpponentsBoard().get(1)));
+        for (int i = 0; i < message.getGame().getOpponents().size(); i++)
+            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
         this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
         this.clouds = new ArrayList<>(message.getGame().getClouds());
         this.tableCoins = message.getGame().getTableCoins();
-        System.out.println(getOpponents().size());
         print();
     }
     //</editor-fold>

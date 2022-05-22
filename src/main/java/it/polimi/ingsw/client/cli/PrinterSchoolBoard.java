@@ -154,12 +154,17 @@ public class PrinterSchoolBoard {
             case GREY -> towerColor = TOWER_GREY;
             default -> towerColor = ANSI_RED;
         }
+        int spaceCount = 0;
         for (int i = 0; i < 2; i++) {
             if (countTowers < towerOnBoard) {
                 countTowers++;
                 System.out.print("  " + towerColor);
-            } else System.out.print("    ");
+            } else {
+                System.out.print("   ");
+                spaceCount++;
+            }
         }
+        if (spaceCount == 2) System.out.print(" ");
         return countTowers;
     }
 

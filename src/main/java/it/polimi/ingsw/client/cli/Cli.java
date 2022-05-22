@@ -17,7 +17,6 @@ public class Cli extends View {
     private final PrintStream out;
     private final Scanner in;
     private final InputParser inputParser;
-    private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String COIN = "¢";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -242,7 +241,7 @@ public class Cli extends View {
     public void print() {
         printCloud();
         //printIslands();
-        if (isExpertGame()) printCharacterCards();
+        //if (isExpertGame()) printCharacterCards();
         printSchoolBoard();
     }
 
@@ -280,31 +279,28 @@ public class Cli extends View {
 
     public void printSchoolBoard() {
         out.print(getMe().getNickname() + "'s" + " board:");
-        space(48);
-        out.print(getOpponents().get(0).getNickname() + "'s" + " board:");
-        space(48);
-        if (getOpponents().size() == 2) {
-            out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
-            space(48);
+        space(39);
+        for (PlayerInfo opponent : getOpponents()) {
+            out.print(opponent.getNickname() + "'s" + " board:");
+            space(39);
         }
         out.println();
         if (isExpertGame()) printCoins();
         List<SchoolBoardDto> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
-        boards.add(getOpponents().get(0).getBoard());
-        if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
+        for (PlayerInfo opponent : getOpponents()) boards.add(opponent.getBoard());
         boardPrinter.printBoard(boards);
         printAssistantCardPlayed();
     }
 
 
     private void printAssistantCardPlayed() {
-        List assistantcards = new ArrayList();
-        if (getMe().getDiscardPileHead() != null) assistantcards.add(getMe().getDiscardPileHead());
+        List assistantCards = new ArrayList();
+        if (getMe().getDiscardPileHead() != null) assistantCards.add(getMe().getDiscardPileHead());
         for (PlayerInfo opponents : getOpponents()) {
-            if (opponents.getDiscardPileHead() != null) assistantcards.add(opponents.getDiscardPileHead());
+            if (opponents.getDiscardPileHead() != null) assistantCards.add(opponents.getDiscardPileHead());
         }
-        printerAssistantCards.print(assistantcards);
+        printerAssistantCards.print(assistantCards);
     }
 
     public void win() {
