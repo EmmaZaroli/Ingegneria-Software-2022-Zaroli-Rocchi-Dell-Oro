@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class GuiManager extends View {
     private Stage stage;
@@ -88,7 +88,7 @@ public class GuiManager extends View {
     }
 
     @Override
-    public void askAssistantCard(ArrayList<AssistantCard> deck) {
+    public void askAssistantCard(List<AssistantCard> deck) {
 
     }
 
