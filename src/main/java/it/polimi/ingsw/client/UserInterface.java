@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface UserInterface {
     void printWelcomeMessage();
@@ -24,7 +25,7 @@ public interface UserInterface {
 
     void changePhase(GamePhase phase);
 
-    void askAssistantCard(ArrayList<AssistantCard> deck);
+    void askAssistantCard(List<AssistantCard> deck);
 
     void askMotherNatureSteps();
 

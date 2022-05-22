@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
@@ -203,6 +204,10 @@ public abstract class View implements MessageListener, UserInterface {
         this.clouds = new ArrayList<>(message.getGame().getClouds());
         this.tableCoins = message.getGame().getTableCoins();
         print();
+        this.changePhase(GamePhase.PLANNING);
+        updateCurrentPlayersTurn(message.getFirstPlayer());
+        if (message.getFirstPlayer().equals(getMe().getNickname()))
+            this.askAssistantCard(message.getDeckfirstPlayer());
     }
     //</editor-fold>
 

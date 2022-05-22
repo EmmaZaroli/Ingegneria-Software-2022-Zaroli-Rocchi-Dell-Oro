@@ -139,11 +139,8 @@ public class Cli extends View {
      *
      * @param deck
      */
-    public void askAssistantCard(ArrayList<AssistantCard> deck) {
+    public void askAssistantCard(List<AssistantCard> deck) {
 
-        out.print("chose the assistant card to play");
-        if (isExpertGame()) out.print(" or choose character card to activate");
-        out.print(": ");
         out.println();
         for (int i = 0; i < deck.size(); i++) {
             out.print("     " + i + ".      ");
@@ -165,6 +162,9 @@ public class Cli extends View {
             out.print("  |_____|    ");
         }
         out.println();
+        out.print("chose the assistant card to play");
+        if (isExpertGame()) out.print(" or choose character card to activate");
+        out.print(": ");
         int card;
         card = Integer.parseInt(readLine());
         //TODO check if the number is valid
@@ -234,11 +234,12 @@ public class Cli extends View {
     }
 
     public void updateCurrentPlayersTurn(String otherPlayer) {
-        out.println("it's " + otherPlayer + "turn");
+        out.println("It's " + otherPlayer.toUpperCase() + "'s turn");
     }
 
     @Override
     public void print() {
+        clearCli();
         printCloud();
         //printIslands();
         //if (isExpertGame()) printCharacterCards();
@@ -301,6 +302,7 @@ public class Cli extends View {
             if (opponents.getDiscardPileHead() != null) assistantCards.add(opponents.getDiscardPileHead());
         }
         printerAssistantCards.print(assistantCards);
+        out.println();
     }
 
     public void win() {
