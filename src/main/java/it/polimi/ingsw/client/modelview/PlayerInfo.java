@@ -50,8 +50,9 @@ public class PlayerInfo {
     }
 
     public PlayerInfo with(int coins) {
-        this.coins = coins;
-        return this;
+        PlayerInfo retVal = this.deepClone();
+        retVal.coins = coins;
+        return retVal;
     }
 
     public String getNickname() {

@@ -4,6 +4,7 @@ import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
+import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
@@ -189,8 +190,8 @@ public abstract class View implements MessageListener, UserInterface {
         //islands.get(islandMain).getMainIsland().movePawnOnIsland();
 
         Tower newTower = message.getIsland().getTower();
-        islands.get(islandMain).getMainIsland().setTower(newTower);
-        for (IslandCard island : islands.get(islandMain).getLinkedislands()) {
+        islands.get(islandMain).setMainIsland(islands.get(islandMain).getMainIsland().withTower(newTower));
+        for (IslandCardDto island : islands.get(islandMain).getLinkedislands()) {
             island.setTower(newTower);
         }
         this.print();
@@ -202,6 +203,7 @@ public abstract class View implements MessageListener, UserInterface {
             this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
         this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
         this.clouds = new ArrayList<>(message.getGame().getClouds());
+        this.islands = getLinkedIslands(message.getGame().getIslands());
         this.tableCoins = message.getGame().getTableCoins();
         print();
         this.changePhase(GamePhase.PLANNING);
@@ -210,6 +212,65 @@ public abstract class View implements MessageListener, UserInterface {
             this.askAssistantCard(message.getDeckfirstPlayer());
     }
     //</editor-fold>
+
+    private List<LinkedIslands> getLinkedIslands(List<IslandCardDto> list){
+        List<LinkedIslands> res = new LinkedList<>();
+        for(IslandCardDto island : list){
+            res.addAll(getLinkedIslands(island));
+        }
+        return res;
+    }
+
+    private List<LinkedIslands> getLinkedIslands(IslandCardDto island){
+        List<LinkedIslands> res = new LinkedList<>();
+        int studentsPerIsland = Math.max(1, island.getStudents().size() / island.getSize());
+        int studentsIndex = 0;
+        for(int i = 0; i < island.getSize(); i++){
+            LinkedIslands linkedIsland = new LinkedIslands();
+            IslandCardDto islandDto = new IslandCardDto();
+            //TODO set uuid
+            islandDto = islandDto.withIndeces(island.getIndices().get(i));
+            if(i == 0)
+                islandDto = islandDto.withMotherNature(island.isHasMotherNature());
+            else
+                islandDto = islandDto.withMotherNature(false);
+            islandDto = islandDto.withTower(island.getTower());
+            if(studentsIndex + studentsPerIsland > island.getStudents().size()){
+                islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
+                studentsIndex = island.getStudents().size();
+            }
+            else{
+                if(i == island.getSize() - 1){
+                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
+                }
+                else{
+                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, studentsIndex + studentsPerIsland));
+                    studentsIndex += studentsPerIsland;
+                }
+            }
+
+            linkedIsland.setMainIsland(island);
+            if(i == 0)
+                linkedIsland.setMainConnected(true);
+            else
+                linkedIsland.setMainConnected(false);
+
+            if(i == island.getSize() - 1)
+                linkedIsland.setConnectedWithNext(false);
+            else
+                linkedIsland.setConnectedWithNext(true);
+            res.add(linkedIsland);
+        }
+
+        for (int i = 0; i < res.size(); i++){
+            LinkedIslands linkedIsland = res.get(i);
+            for(int j = 0; j < res.size(); j++){
+                if(j != i)
+                    linkedIsland.setLinkedislands(res.get(j).getMainIsland());
+            }
+        }
+        return res;
+    }
 
     @Override
     public void onMessageReceived(Message message) {

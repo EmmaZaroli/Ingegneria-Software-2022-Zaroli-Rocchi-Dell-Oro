@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.modelview;
 
+import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.model.IslandCard;
 
 import java.util.ArrayList;
@@ -7,8 +8,8 @@ import java.util.List;
 
 public class LinkedIslands {
 
-    private IslandCard island;
-    private List<IslandCard> linkedislands = new ArrayList<>();
+    private IslandCardDto island;
+    private List<IslandCardDto> linkedislands = new ArrayList<>();
     private boolean mainConnected = true;
     private boolean connectedWithNext = false;
 
@@ -20,23 +21,23 @@ public class LinkedIslands {
         this.connectedWithNext = connectedWithNext;
     }
 
-    public IslandCard getMainIsland() {
+    public IslandCardDto getMainIsland() {
         return island;
     }
 
-    public void setMainIsland(IslandCard island) {
+    public void setMainIsland(IslandCardDto island) {
         this.island = island;
     }
 
-    public List<IslandCard> getLinkedislands() {
+    public List<IslandCardDto> getLinkedislands() {
         return linkedislands;
     }
 
-    public void setLinkedislands(IslandCard linkedisland) {
+    public void setLinkedislands(IslandCardDto linkedisland) {
         this.linkedislands.add(linkedisland);
     }
 
-    public void setLinkedislands(List<IslandCard> linkedisland) {
+    public void setLinkedislands(List<IslandCardDto> linkedisland) {
         this.linkedislands.addAll(linkedisland);
     }
 
