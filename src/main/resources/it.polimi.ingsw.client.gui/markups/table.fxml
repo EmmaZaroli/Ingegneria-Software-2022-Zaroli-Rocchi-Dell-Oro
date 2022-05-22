@@ -1,65 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import it.polimi.ingsw.client.gui.sceneControllers.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="it.polimi.ingsw.client.gui.sceneControllers.Table"
            prefHeight="400.0" prefWidth="600.0">
 
-    <ImageView
-            opacity="0.90">
-        <Image
-                url="/it.polimi.ingsw.client.gui/assets/background.jpg"
-                backgroundLoading="true"
-        />
+    <ImageView opacity="0.90">
+        <Image url="/it.polimi.ingsw.client.gui/assets/background.jpg" backgroundLoading="true"/>
     </ImageView>
 
-    <VBox
-            alignment="CENTER"
-            style="-fx-padding: 20 20 20 20;">
-        <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-            <Pane
-                    HBox.hgrow="ALWAYS"
-                    style="-fx-padding: 20 20 20 20; -fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 10;">
-                <VBox>
-                    <HBox>
-                        <VBox style="-fx-padding: 10 10 10 10;">
-                            <HBox
-                                    style="-fx-background-color: rgba(255,255,255,0.65); -fx-background-radius: 10; -fx-padding: 10 10 10 10;">
-                                <SchoolBoard style="-fx-padding: 10 10 10 0;"/>
-                                <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
-                                    <Card/>
-                                </VBox>
-                                <SchoolBoard style="-fx-padding: 10 0 10 10;"/>
-                                <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
-                                    <Card/>
+    <VBox alignment="CENTER" style="-fx-padding: 20 20 20 20;">
+        <HBox alignment="CENTER" VBox.vgrow="ALWAYS"
+              style="-fx-padding: 20 20 20 20; -fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 10;">
+            <VBox HBox.hgrow="ALWAYS">
+                <HBox>
+                    <!-- Left panel -->
+                    <VBox>
+                        <!-- Opponents -->
+                        <!-- TODO opponents coins -->
+                        <HBox style="-fx-background-color: rgba(255,255,255,0.75); -fx-background-radius: 10; -fx-padding: 10 10 0 10;">
+                            <SchoolBoard style="-fx-padding: 10 10 0 0;"/>
+                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER" style="-fx-padding: 0 10 0 0;">
+                                <Card/>
+                            </VBox>
+                            <SchoolBoard style="-fx-padding: 10 0 0 10;"/>
+                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
+                                <Card/>
+                            </VBox>
+                        </HBox>
+                        <!-- Islands -->
+                        <!-- Bottom pane -->
+                        <HBox VBox.vgrow="ALWAYS">
+
+                        </HBox>
+                    </VBox>
+                    <!-- Right panel -->
+                    <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 0 0 0 20;">
+                        <!-- Character cards -->
+                        <GridPane hgap="35" alignment="CENTER">
+                            <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"/>
+                            <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS"/>
+                        </GridPane>
+                        <Pane prefHeight="15"/>
+                        <HBox>
+                            <Pane prefWidth="99"/>
+                            <CharacterCard HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                        <!-- Deck and coins -->
+                        <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;">
+                            <ImageView>
+                                <Image
+                                        url="/it.polimi.ingsw.client.gui/assets/deck.png"
+                                        backgroundLoading="true"
+                                />
+                            </ImageView>
+                            <Pane prefWidth="15"/>
+                            <HBox style="-fx-padding: 50 0 0 0;">
+                                <ImageView>
+                                    <!--TODO tooltip -->
+                                    <Image url="/it.polimi.ingsw.client.gui/assets/coin.png" backgroundLoading="true"/>
+                                </ImageView>
+                                <VBox>
+                                    <Label style="-fx-padding: 10 0 0 0; -fx-font-size: 16; -fx-text-fill: red;"
+                                           text="Your coins:"/>
+                                    <Label style="-fx-padding: 0 0 10 30; -fx-font-size: 24; -fx-text-fill: red;"
+                                           text="3"/>
                                 </VBox>
                             </HBox>
-                            <GridPane>
-                                <Card GridPane.rowIndex="0" GridPane.vgrow="ALWAYS"/>
-                                <Card GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"/>
-                                <Card GridPane.rowIndex="2" GridPane.vgrow="ALWAYS"/>
-                            </GridPane>
-                        </VBox>
-                    </HBox>
-                    <HBox>
-                        <SchoolBoard/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                        <Card/>
-                    </HBox>
-                </VBox>
-            </Pane>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
         </HBox>
     </VBox>
 </StackPane>
