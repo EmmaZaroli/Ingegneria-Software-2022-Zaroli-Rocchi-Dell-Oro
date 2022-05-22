@@ -35,6 +35,11 @@ public class IslandCardDto implements Serializable {
     }
 
     public IslandCardDto(){
+        this.uuid = UUID.randomUUID();
+        this.students = new ArrayList<>();
+        this.tower = Tower.NONE;
+        this.hasMotherNature = false;
+        this.indices = new ArrayList<>();
     }
 
     public UUID getUuid() {
