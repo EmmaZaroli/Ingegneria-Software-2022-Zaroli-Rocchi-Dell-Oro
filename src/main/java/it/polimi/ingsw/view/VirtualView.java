@@ -52,12 +52,12 @@ public class VirtualView extends Observable implements ModelObserver {
      */
     @Override
     public void update(CharacterCard message, Object[] parameters) {
-        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.CHARACTER_CARD, message, parameters));
+        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.UPDATE_CHARACTER_CARD, message, parameters));
     }
 
     @Override
     public void update(IslandCard message) {
-        user.sendMessage(new IslandMessage(MessageType.ISLAND, message));
+        user.sendMessage(new IslandMessage(MessageType.UPDATE_ISLAND, message));
     }
 
     @Override
@@ -81,17 +81,17 @@ public class VirtualView extends Observable implements ModelObserver {
 
     @Override
     public void update(CloudTile message) {
-        user.sendMessage(new CloudMessage("server", MessageType.CLOUD, message));
+        user.sendMessage(new CloudMessage("server", MessageType.UPDATE_CLOUD, message));
     }
 
     @Override
     public void update(AssistantCard message) {
-        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), message));
+        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), MessageType.UPDATE_ASSISTANT_CARD, message));
     }
 
     @Override
     public void update(SchoolBoard message) {
-        user.sendMessage(new SchoolBoardMessage(getCurrentPlayer(), MessageType.BOARD, message));
+        user.sendMessage(new SchoolBoardMessage(getCurrentPlayer(), MessageType.UPDATE_BOARD, message));
     }
 
     @Override

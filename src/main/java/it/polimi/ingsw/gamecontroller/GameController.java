@@ -97,7 +97,7 @@ public class GameController implements DisconnectionListener {
     }
 
     private void planning(Message message) {
-        if (message.getType().equals(MessageType.ASSISTANT_CARD)) {
+        if (message.getType().equals(MessageType.ACTION_PLAY_ASSISTANT)) {
             try {
                 this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard().value());
             } catch (IllegalActionException | IllegalAssistantException e) {

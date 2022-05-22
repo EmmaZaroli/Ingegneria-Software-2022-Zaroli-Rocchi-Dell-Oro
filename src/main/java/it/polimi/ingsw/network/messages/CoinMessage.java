@@ -8,7 +8,7 @@ public class CoinMessage extends Message {
     private final int coins;
 
     public CoinMessage(String nickname, int coins) {
-        super(nickname, MessageType.COINS);
+        super(nickname, MessageType.UPDATE_COINS);
         this.coins = coins;
     }
 

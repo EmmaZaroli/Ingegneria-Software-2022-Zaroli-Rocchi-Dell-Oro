@@ -8,8 +8,8 @@ public class AssistantPlayedMessage extends Message {
 
     private final AssistantCard assistantCard;
 
-    public AssistantPlayedMessage(String nickname, AssistantCard played) {
-        super(nickname, MessageType.ASSISTANT_CARD);
+    public AssistantPlayedMessage(String nickname, MessageType messageType, AssistantCard played) {
+        super(nickname, messageType);
         this.assistantCard = played;
     }
 
