@@ -246,8 +246,8 @@ public class Cli extends View {
     public void print() {
         clearCli();
         printCloud();
-        //printIslands();
-        //if (isExpertGame()) printCharacterCards();
+        printIslands();
+        if (isExpertGame()) printCharacterCards();
         printSchoolBoard();
     }
 
