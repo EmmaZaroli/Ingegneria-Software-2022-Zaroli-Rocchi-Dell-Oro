@@ -4,19 +4,21 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.ModelObserver;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.servercontroller.User;
 
-public class VirtualView extends Observable implements ModelObserver {
+public class VirtualView extends Observable implements ModelObserver, MessageListener {
     private final User user;
     private final Game game;
 
     public VirtualView(User user, Game game) {
         this.user = user;
         this.game = game;
+        user.getEndpoint().addMessageListener(this);
     }
 
     public Endpoint getClientHandler() {
@@ -36,7 +38,7 @@ public class VirtualView extends Observable implements ModelObserver {
      *
      * @param message a message coming from the client
      */
-    public void notifyGame(Message message) {
+    public void onMessageReceived(Message message) {
         //TODO before sending the message to the controller, it should add the nickname of the player ?
         notify(message);
     }
@@ -72,6 +74,7 @@ public class VirtualView extends Observable implements ModelObserver {
                     user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
             case ACTION_CHOOSE_CLOUD ->
                     user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+
         }
     }
 
@@ -129,4 +132,6 @@ public class VirtualView extends Observable implements ModelObserver {
         }
 
     }
+
+
 }
