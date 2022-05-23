@@ -43,7 +43,7 @@ public class GameController implements DisconnectionListener {
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
         }
-        this.game.setCurrentPlayer(0);
+        this.game.changePlayer(0);
         this.game.setGamePhase(PLANNING);
     }
 

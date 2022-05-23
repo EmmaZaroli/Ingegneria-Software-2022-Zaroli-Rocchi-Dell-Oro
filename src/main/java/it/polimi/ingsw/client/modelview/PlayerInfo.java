@@ -13,22 +13,30 @@ public class PlayerInfo {
     private AssistantCard discardPileHead;
     private int coins;
     private ArrayList<AssistantCard> deck;
+    private boolean isOnline;
 
     public PlayerInfo() {
         this.nickname = "";
         this.coins = 0;
+        this.isOnline = true;
     }
 
     public PlayerInfo(PlayerDto origin) {
         this.nickname = origin.getNickname();
+        this.isOnline = origin.isOnline();
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins) {
+    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, boolean isOnline) {
         this.nickname = nickname;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;
         this.coins = coins;
+        this.isOnline = isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 
     public PlayerInfo with(String nickname) {
@@ -75,8 +83,12 @@ public class PlayerInfo {
         return this.deck;
     }
 
+    public boolean isOnline() {
+        return isOnline;
+    }
+
     public PlayerInfo deepClone() {
         //TODO dtos if we have time
-        return new PlayerInfo(this.nickname, this.schoolBoard, this.discardPileHead, this.coins);
+        return new PlayerInfo(this.nickname, this.schoolBoard, this.discardPileHead, this.coins, this.isOnline);
     }
 }

@@ -12,9 +12,11 @@ public class PlayerDto implements Serializable {
 
     private final String nickname;
     private final int coins;
+    private final boolean isOnline;
 
     public PlayerDto(Player origin) {
         this.nickname = origin.getNickname();
+        this.isOnline = origin.isOnline();
         this.coins = origin instanceof ExpertPlayer ? ((ExpertPlayer) origin).getCoins() : 0;
     }
 
@@ -24,5 +26,9 @@ public class PlayerDto implements Serializable {
 
     public int getCoins() {
         return coins;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
     }
 }

@@ -3,12 +3,10 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
-import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -18,7 +16,6 @@ import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
@@ -37,6 +34,8 @@ public abstract class View implements MessageListener, UserInterface {
     private String currentPlayer;
     private List<CharacterCard> characterCards;
     protected int numberOfIslandOnTable;
+    private GamePhase currentPhase;
+    private boolean areEnoughPlayers;
     private Endpoint endpoint;
 
     protected View() {
@@ -45,6 +44,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
         this.tableCoins = 0;
+        this.areEnoughPlayers = true;
     }
 
     //<editor-fold desc="Getters">
@@ -89,7 +89,50 @@ public abstract class View implements MessageListener, UserInterface {
     public List<CharacterCard> getCharacterCards() {
         return this.characterCards;
     }
+
+    public boolean areEnoughPlayers() {
+        return areEnoughPlayers;
+    }
+
+    public Optional<Integer> getCloudIndex(UUID cloudUuid){
+        for (int cloudIndex = 0; cloudIndex < clouds.size(); cloudIndex++){
+            if(clouds.get(cloudIndex).getUuid().equals(cloudUuid))
+                return Optional.of(cloudIndex);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<PlayerInfo> getOpponent(String nickname){
+        return opponents.stream().filter(o -> o.getNickname().equals(nickname)).findFirst();
+    }
+
+    public Optional<Integer> getOpponentIndex(String nickname){
+        for (int opponentIndex = 0; opponentIndex < opponents.size(); opponentIndex++){
+            if(opponents.get(opponentIndex).getNickname().equals(nickname))
+                return Optional.of(opponentIndex);
+        }
+        return Optional.empty();
+    }
+
     //</editor-fold>
+
+    @Override
+    public void onMessageReceived(Message message) {
+        if (message instanceof NicknameResponseMessage nicknameResponseMessage) handleMessage(nicknameResponseMessage);
+        if (message instanceof GametypeResponseMessage gametypeResponseMessage) handleMessage(gametypeResponseMessage);
+        if (message instanceof GameStartingMessage gameStartingMessage) handleMessage(gameStartingMessage);
+        if (message instanceof ChangedPhaseMessage changedPhaseMessage) handleMessage(changedPhaseMessage);
+        if (message instanceof ChangedPlayerMessage changedPlayerMessage) handleMessage(changedPlayerMessage);
+        if (message instanceof AssistantPlayedMessage assistantPlayedMessage) handleMessage(assistantPlayedMessage);
+        if (message instanceof CloudMessage cloudMessage) handleMessage(cloudMessage);
+        if (message instanceof SchoolBoardMessage schoolBoardMessage) handleMessage(schoolBoardMessage);
+        if (message instanceof IslandMessage islandMessage) handleMessage(islandMessage);
+        if (message instanceof CoinMessage coinMessage) handleMessage(coinMessage);
+        if (message instanceof CharacterCardMessage characterCardMessage) handleMessage(characterCardMessage);
+        if (message instanceof GameOverMessage gameOverMessage) handleMessage(gameOverMessage);
+        if (message instanceof ConnectionMessage connectionMessage) handleMessage(connectionMessage);
+        if (message instanceof ErrorMessage errorMessage) handleMessage(errorMessage);
+    }
 
     //<editor-fold desc="Message handlers">
     private void handleMessage(NicknameResponseMessage message) {
@@ -120,26 +163,31 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    private void handleMessage(CloudMessage message) {
-
-        Optional<CloudTileDto> cloud = this.clouds.stream()
-                .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
-        //TODO
+    private void handleMessage(GameStartingMessage message) {
+        this.printGameStarting();
+        for (int i = 0; i < message.getGame().getOpponents().size(); i++)
+            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
+        this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
+        this.clouds = new ArrayList<>(message.getGame().getClouds());
+        this.islands = getLinkedIslands(message.getGame().getIslands());
+        this.tableCoins = message.getGame().getTableCoins();
+        print();
+        //TODO GameStartingMessage may be sent to a reconnected player
+        this.changePhase(GamePhase.PLANNING);
+        updateCurrentPlayersTurn(message.getFirstPlayer());
+        if (message.getFirstPlayer().equals(getMe().getNickname()))
+            this.askAssistantCard(message.getDeckfirstPlayer());
     }
 
-    private void handleMessage(SchoolBoardMessage message) {
-        //TODO dto with wither
-        if (message.getNickname().equals(me.getNickname())) {
-            this.me = this.me.with(message.getSchoolBoard());
-        } else {
-            Optional<PlayerInfo> player = this.opponents.stream()
-                    .filter(x -> x.getNickname().equals(message.getNickname())).findFirst();
+    private void handleMessage(ChangedPhaseMessage message){
+        currentPhase = message.getNewPhase();
+        changePhase(currentPhase);
+    }
 
-            if (player.isPresent()) {
-                //TODO change schoolboard
-            }
-        }
-        this.print();
+    private void handleMessage(ChangedPlayerMessage message){
+        currentPlayer = message.getNickname();
+        print();
+        //TODO add changePlayer() in UserInterface ?
     }
 
     private void handleMessage(AssistantPlayedMessage message) {
@@ -151,12 +199,25 @@ public abstract class View implements MessageListener, UserInterface {
         this.print();
     }
 
-    private void handleMessage(CoinMessage message) {
-        //TODO coins on the table?
+    private void handleMessage(CloudMessage message) {
+        Optional<Integer> cloudIndex = getCloudIndex(message.getCloud().getUuid());
+        if(cloudIndex.isPresent()){
+            clouds.remove((int)cloudIndex.get());
+            clouds.add(cloudIndex.get(), message.getCloud());
+            print();
+        }
+    }
+
+    private void handleMessage(SchoolBoardMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
-            this.me = this.me.with(message.getCoins());
+            this.me = this.me.with(message.getSchoolBoard());
         } else {
-            //TODO withers in list
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if (opponentIndex.isPresent()) {
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove((int)opponentIndex.get());
+                opponents.add(opponentIndex.get(), opponent.with(message.getSchoolBoard()));
+            }
         }
         this.print();
     }
@@ -197,19 +258,59 @@ public abstract class View implements MessageListener, UserInterface {
         this.print();
     }
 
-    private void handleMessage(GameStartingMessage message) {
-        this.printGameStarting();
-        for (int i = 0; i < message.getGame().getOpponents().size(); i++)
-            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
-        this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
-        this.clouds = new ArrayList<>(message.getGame().getClouds());
-        this.islands = getLinkedIslands(message.getGame().getIslands());
-        this.tableCoins = message.getGame().getTableCoins();
-        print();
-        this.changePhase(GamePhase.PLANNING);
-        updateCurrentPlayersTurn(message.getFirstPlayer());
-        if (message.getFirstPlayer().equals(getMe().getNickname()))
-            this.askAssistantCard(message.getDeckfirstPlayer());
+    private void handleMessage(CoinMessage message) {
+        //TODO coins on the table?
+        if (message.getNickname().equals(me.getNickname())) {
+            this.me = this.me.with(message.getCoins());
+        } else {
+            //TODO withers in list
+        }
+        this.print();
+    }
+
+    private void handleMessage(CharacterCardMessage message) {
+        //TODO
+    }
+
+    private void handleMessage(GameOverMessage message) {
+        if(message.getWinners().contains(me.getNickname())){
+            if(message.getWinners().size() == 1)
+                win();
+            else
+                draw(message.getWinners().stream().filter(w -> !w.equals(me.getNickname())).findFirst().get());
+        }
+        else
+            lose(message.getWinners());
+    }
+
+    private void handleMessage(ConnectionMessage message) {
+        switch (message.getType()){
+            case IS_ONLINE -> playerOnline(message.getNickname(), true);
+            case IS_OFFLINE -> playerOnline(message.getNickname(), false);
+            case NOT_ENOUGH_PLAYERS -> enoughPlayers(false);
+            case ENOUGH_PLAYERS -> enoughPlayers(true);
+            case GAME_OVER_FROM_DISCONNECTION -> gameOverFromDisconnection();
+        }
+    }
+
+    private void playerOnline(String nickname, boolean isOnline){
+        Optional<PlayerInfo> playerInfo = getOpponent(nickname);
+        if(playerInfo.isPresent()){
+            playerInfo.get().setOnline(isOnline);
+            print();
+        }
+    }
+
+    private void enoughPlayers(boolean areEnoughPlayers){
+        this.areEnoughPlayers = areEnoughPlayers;
+        if(areEnoughPlayers)
+            print();
+        else
+            notEnoughPlayer();
+    }
+
+    private void handleMessage(ErrorMessage message) {
+        //TODO
     }
     //</editor-fold>
 
@@ -270,20 +371,6 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
         return res;
-    }
-
-    @Override
-    public void onMessageReceived(Message message) {
-        //TODO
-        if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
-        if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
-        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
-        if (message instanceof CloudMessage) handleMessage((CloudMessage) message);
-        if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
-        if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);
-        if (message instanceof CoinMessage) handleMessage((CoinMessage) message);
-        if (message instanceof IslandMessage) handleMessage((IslandMessage) message);
-        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
     }
 
     //<editor-fold desc="Presentation logic">
