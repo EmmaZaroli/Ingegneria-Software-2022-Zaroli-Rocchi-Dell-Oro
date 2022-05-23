@@ -81,17 +81,17 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
             NicknameStatus nicknameStatus = server.checkNicknameStatus(nickname);
             switch (nicknameStatus) {
                 case FREE -> {
-                    endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
+                    endpoint.sendMessage(new NicknameResponseMessage(nickname, NicknameStatus.FREE));
                     logUser(nickname);
                     setLoginPhase(LoginPhase.WAITING_FOR_GAMETYPE);
                 }
                 case FROM_DISCONNECTED_PLAYER -> {
-                    endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_DISCONNECTED_PLAYER));
+                    endpoint.sendMessage(new NicknameResponseMessage(nickname, NicknameStatus.FROM_DISCONNECTED_PLAYER));
                     reconnectUser(nickname);
                     setLoginPhase(LoginPhase.END);
                 }
                 case FROM_CONNECTED_PLAYER -> {
-                    endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
+                    endpoint.sendMessage(new NicknameResponseMessage(nickname, NicknameStatus.FROM_CONNECTED_PLAYER));
                     setLoginPhase(LoginPhase.WAITING_FOR_NICKNAME);
                 }
             }
@@ -103,7 +103,7 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         PlayersNumber selectedPlayersNumber = message.getPlayersNumber();
         synchronized (server) {
             try {
-                endpoint.sendMessage(new GametypeResponseMessage(nickname.get(), MessageType.GAME_TYPE_RESPONSE, true));
+                endpoint.sendMessage(new GametypeResponseMessage(nickname.get(), true));
                 enqueueUser(nickname.get(), selectedGameMode, selectedPlayersNumber);
             } catch (InvalidPlayerNumberException e) {
                 logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);

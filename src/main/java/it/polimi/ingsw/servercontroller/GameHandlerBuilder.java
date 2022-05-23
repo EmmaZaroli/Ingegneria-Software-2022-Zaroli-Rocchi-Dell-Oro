@@ -80,7 +80,7 @@ public class GameHandlerBuilder {
     private Game buildNormalGameModel() {
         Player[] players = new Player[playersNumber.getPlayersNumber()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
+            players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());
         }
 
         Table table = new Table(playersNumber);
@@ -93,7 +93,7 @@ public class GameHandlerBuilder {
     private Game buildExpertGameModel() {
         ExpertPlayer[] players = new ExpertPlayer[playersNumber.getPlayersNumber()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.values()[i], playersNumber.getPlayersNumber());
+            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());
         }
 
         ExpertTable table = new ExpertTable(playersNumber);
@@ -112,7 +112,7 @@ public class GameHandlerBuilder {
             if (virtualView.getClientHandler() != null)
                 virtualView.getClientHandler().addDisconnectionListener(gameController);
         }
-        
+
         return gameController;
     }
 

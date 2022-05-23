@@ -163,23 +163,21 @@ public class TableController {
         //right
         IslandCard islandLeft = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
         if (islandLeft.getTower().equals(towerColor)) {
-            table.movePawnOnIsland(table.getIslands().get(table.getIslandWithMotherNature()), islandLeft.getStudentsFromIsland());
+            table.getIslands().get(table.getIslandWithMotherNature()).unifyWith(islandLeft);
             islandLeft.setHasMotherNature(false);
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
             if (table.getIslandWithMotherNature() != 0)
                 table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
-            table.incrementSize(table.getIslands().get(table.getIslandWithMotherNature()));
         }
         //left
         IslandCard islandRight = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
         if (islandRight.getTower().equals(towerColor)) {
-            table.movePawnOnIsland(table.getIslands().get(table.getIslandWithMotherNature()), islandRight.getStudentsFromIsland());
+            table.getIslands().get(table.getIslandWithMotherNature()).unifyWith(islandRight);
             islandRight.setHasMotherNature(false);
             table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
             if (table.getIslandWithMotherNature() == table.getIslands().size()) {
                 table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
             }
-            table.incrementSize(table.getIslands().get(table.getIslandWithMotherNature()));
         }
 
     }

@@ -3,12 +3,15 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
+import it.polimi.ingsw.dtos.SchoolBoardDto;
+import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
@@ -17,16 +20,18 @@ import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
+import java.util.List;
 
 /**
  * View class contains a small representation of the game model
  */
 public abstract class View implements MessageListener, UserInterface {
     private boolean isExpertGame;
-    private List<PlayerInfo> opponents;
+    private List<PlayerInfo> opponents = new ArrayList<>();
     private PlayerInfo me;
     private ArrayList<CloudTileDto> clouds;
     private int tableCoins;
@@ -187,8 +192,8 @@ public abstract class View implements MessageListener, UserInterface {
         //islands.get(islandMain).getMainIsland().movePawnOnIsland();
 
         Tower newTower = message.getIsland().getTower();
-        islands.get(islandMain).getMainIsland().setTower(newTower);
-        for (IslandCard island : islands.get(islandMain).getLinkedislands()) {
+        islands.get(islandMain).setMainIsland(islands.get(islandMain).getMainIsland().withTower(newTower));
+        for (IslandCardDto island : islands.get(islandMain).getLinkedislands()) {
             island.setTower(newTower);
         }
         this.print();
@@ -196,13 +201,78 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(GameStartingMessage message) {
         this.printGameStarting();
-        this.opponents = message.getGame().getOpponents().stream().map(x -> new PlayerInfo(x)).toList();
+        for (int i = 0; i < message.getGame().getOpponents().size(); i++)
+            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
         this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
         this.clouds = new ArrayList<>(message.getGame().getClouds());
+        this.islands = getLinkedIslands(message.getGame().getIslands());
         this.tableCoins = message.getGame().getTableCoins();
         print();
+        this.changePhase(GamePhase.PLANNING);
+        updateCurrentPlayersTurn(message.getFirstPlayer());
+        if (message.getFirstPlayer().equals(getMe().getNickname()))
+            this.askAssistantCard(message.getDeckfirstPlayer());
     }
     //</editor-fold>
+
+    private List<LinkedIslands> getLinkedIslands(List<IslandCardDto> list){
+        List<LinkedIslands> res = new LinkedList<>();
+        for(IslandCardDto island : list){
+            res.addAll(getLinkedIslands(island));
+        }
+        return res;
+    }
+
+    private List<LinkedIslands> getLinkedIslands(IslandCardDto island){
+        List<LinkedIslands> res = new LinkedList<>();
+        int studentsPerIsland = Math.max(1, island.getStudents().size() / island.getSize());
+        int studentsIndex = 0;
+        for(int i = 0; i < island.getSize(); i++){
+            LinkedIslands linkedIsland = new LinkedIslands();
+            IslandCardDto islandDto = new IslandCardDto();
+            //TODO set uuid
+            islandDto = islandDto.withIndeces(island.getIndices().get(i));
+            if(i == 0)
+                islandDto = islandDto.withMotherNature(island.isHasMotherNature());
+            else
+                islandDto = islandDto.withMotherNature(false);
+            islandDto = islandDto.withTower(island.getTower());
+            if(studentsIndex + studentsPerIsland > island.getStudents().size()){
+                islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
+                studentsIndex = island.getStudents().size();
+            }
+            else{
+                if(i == island.getSize() - 1){
+                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
+                }
+                else{
+                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, studentsIndex + studentsPerIsland));
+                    studentsIndex += studentsPerIsland;
+                }
+            }
+
+            linkedIsland.setMainIsland(island);
+            if(i == 0)
+                linkedIsland.setMainConnected(true);
+            else
+                linkedIsland.setMainConnected(false);
+
+            if(i == island.getSize() - 1)
+                linkedIsland.setConnectedWithNext(false);
+            else
+                linkedIsland.setConnectedWithNext(true);
+            res.add(linkedIsland);
+        }
+
+        for (int i = 0; i < res.size(); i++){
+            LinkedIslands linkedIsland = res.get(i);
+            for(int j = 0; j < res.size(); j++){
+                if(j != i)
+                    linkedIsland.setLinkedislands(res.get(j).getMainIsland());
+            }
+        }
+        return res;
+    }
 
     @Override
     public void onMessageReceived(Message message) {
@@ -237,40 +307,71 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    protected final void sendPlayerNickname(String nickname) {
-        Message m = new NicknameProposalMessage(nickname, MessageType.NICKNAME_PROPOSAL);
-        endpoint.sendMessage(m);
+    protected final boolean sendPlayerNickname(String nickname) {
+        Message message = new NicknameProposalMessage(nickname);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendGameSettings(int numberOfPlayers, boolean expertGame) {
-        Message m = new GametypeRequestMessage(
+    protected final boolean sendGameSettings(PlayersNumber playersNumber, GameMode gameMode) {
+        Message message = new GametypeRequestMessage(
                 me.getNickname(),
-                MessageType.GAME_TYPE_REQUEST,
-                expertGame ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE,
-                numberOfPlayers == 2 ? PlayersNumber.TWO : PlayersNumber.THREE);
-        endpoint.sendMessage(m);
-        this.isExpertGame = expertGame;
+                gameMode, playersNumber);
+        endpoint.sendMessage(message);
+        this.isExpertGame = (gameMode == GameMode.EXPERT_MODE);
+        return true;
     }
 
-    protected final void sendMotherNatureSteps(int steps) {
-        Message m = new MoveMotherNatureMessage(me.getNickname(), steps);
-        endpoint.sendMessage(m);
+    protected final boolean sendMotherNatureSteps(int steps) {
+        if(steps < 0)
+            return false;
+        Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendAssistantCard(AssistantCard assistantCard) {
-
+    protected final boolean sendAssistantCard(int cardIndex) {
+        if(cardIndex < 0 || cardIndex >= me.getDeck().size())
+            return false;
+        AssistantCard assistantCard = me.getDeck().get(cardIndex);
+        Message message = new AssistantPlayedMessage(me.getNickname(), MessageType.ACTION_PLAY_ASSISTANT, assistantCard);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendStudents(Map<PawnColor, Integer> move) {
-
+    protected final boolean sendStudentMoveOnBoard(PawnColor student) {
+        if(!me.getBoard().getEntrance().contains(student))
+            return false;
+        Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendCloudChoice(CloudTileDto cloud) {
-
+    protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
+        if(!me.getBoard().getEntrance().contains(student) || islandIndex < 0 || islandIndex >= getIslands().size())
+            return false;
+        MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        message.setIslandCard(getIslands().get(islandIndex).getMainIsland());
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendCharacterCard(CharacterCard card) {
+    protected final boolean sendCloudChoice(int cloudIndex) {
+        if(cloudIndex < 0 || cloudIndex >= getClouds().size())
+            return false;
+        CloudTileDto cloudTile = getClouds().get(cloudIndex);
+        Message message = new CloudMessage(me.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, cloudTile);
+        endpoint.sendMessage(message);
+        return true;
+    }
 
+    protected final boolean sendCharacterCard(int characterIndex, Object[] parameters) {
+        if(characterIndex < 0 || characterIndex >= characterCards.size())
+            return false;
+        //TODO check parameters
+        Message message = new CharacterCardMessage(me.getNickname(), MessageType.ACTION_USE_CHARACTER, getCharacterCards().get(characterIndex), parameters);
+        endpoint.sendMessage(message);
+        return true;
     }
     //</editor-fold>
 }

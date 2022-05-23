@@ -19,8 +19,8 @@ public class IslandCard implements Serializable {
     private final UUID uuid;
     private final ArrayList<PawnColor> students;
     private Tower tower;
-    private int size;
     private boolean hasMotherNature;
+    private final List<Integer> indices;
 
     /**
      * @return true if the island has mother nature, false otherwise
@@ -41,11 +41,12 @@ public class IslandCard implements Serializable {
      *
      * @param uuid
      */
-    public IslandCard(UUID uuid) {
+    public IslandCard(UUID uuid, int index) {
         this.uuid = uuid;
         this.students = new ArrayList<>();
         tower = Tower.NONE;
-        size = 1;
+        indices = new ArrayList<>();
+        indices.add(index);
     }
 
     /**
@@ -98,7 +99,7 @@ public class IslandCard implements Serializable {
             }
         }
         if (towerColor.equals(tower)) {
-            influence += size;
+            influence += getSize();
         }
         return influence;
     }
@@ -109,15 +110,7 @@ public class IslandCard implements Serializable {
      * @return the size
      */
     public int getSize() {
-        return size;
-    }
-
-    /**
-     * Increment size when an islandCard is been connected to another one
-     */
-
-    protected void incrementSize() {
-        this.size++;
+        return indices.size();
     }
 
     /**
@@ -145,5 +138,21 @@ public class IslandCard implements Serializable {
     public int getStudentsNumber(){
         return students.size();
     }
-    
+
+    public List<Integer> getIndices() {
+        return indices;
+    }
+
+    public void addIndex(int index){
+        this.indices.add(index);
+    }
+
+    public void addIndex(List<Integer> indices){
+        this.indices.addAll(indices);
+    }
+
+    public void unifyWith(IslandCard islandCard){
+        this.movePawnOnIsland(islandCard.getStudentsFromIsland());
+        this.addIndex(islandCard.getIndices());
+    }
 }

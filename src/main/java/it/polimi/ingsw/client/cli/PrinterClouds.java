@@ -19,13 +19,13 @@ public class PrinterClouds {
     public void printClouds(List<CloudTileDto> clouds) {
         int i;
         space(50);
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < clouds.size(); i++) {
             System.out.print("   _____   ");
             space(7);
         }
         System.out.println();
         space(50);
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < clouds.size(); i++) {
             if ((clouds.get(i)).getStudents().isEmpty())
                 System.out.print("  (     )  ");
             else {
@@ -38,7 +38,7 @@ public class PrinterClouds {
         }
         System.out.println();
         space(50);
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < clouds.size(); i++) {
             System.out.print("(____)____)");
             space(7);
         }

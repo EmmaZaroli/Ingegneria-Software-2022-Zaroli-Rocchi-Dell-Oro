@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
+import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -54,13 +55,13 @@ public class PrinterIslands {
 
         //second row
         if (!up0) System.out.print(" ");
-        int intermediate = (islands.get(11).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        int intermediate = (islands.get(11).getMainIsland().getStudents().size() - 11) / 2;
         size[11] = Math.max(intermediate, 0);
         if (islands.get(11).isMainConnected()) topWithConnection(up0, size[11]);
         else topWithConnection(up0);
         System.out.print("                                 ");
         if (up0) System.out.print("  ");
-        intermediate = (islands.get(5).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        intermediate = (islands.get(5).getMainIsland().getStudents().size() - 11) / 2;
         size[5] = Math.max(intermediate, 0);
         if (!up4) System.out.print(" ");
         if (islands.get(5).isMainConnected()) topWithConnection(up4, size[5]);
@@ -117,7 +118,7 @@ public class PrinterIslands {
         //top
         System.out.print(" ");
         for (int i = 0; i < 5; i++) {
-            int intermediate = (islands.get(i).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+            int intermediate = (islands.get(i).getMainIsland().getStudents().size() - 11) / 2;
             size[i] = Math.max(intermediate, 0);
             if (islands.get(i).isMainConnected())
                 top(islands.get(i).getLinkedislands().contains(islands.get(i + 1).getMainIsland()) && i != 4, size[i]);
@@ -189,7 +190,7 @@ public class PrinterIslands {
     }
 
     private void thirdRow(List<LinkedIslands> islands) {
-        int intermediate = (islands.get(10).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        int intermediate = (islands.get(10).getMainIsland().getStudents().size() - 11) / 2;
         size[10] = Math.max(intermediate, 0);
         upConnected = islands.get(10).getLinkedislands().contains(islands.get(11).getMainIsland());
         if (islands.get(9).getLinkedislands().contains(islands.get(10).getMainIsland())) {
@@ -236,12 +237,12 @@ public class PrinterIslands {
     private void thirdRowOtherTops(List<LinkedIslands> islands) {
         int intermediate;
         for (int i = 9; i > 6; i--) {
-            intermediate = (islands.get(i).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+            intermediate = (islands.get(i).getMainIsland().getStudents().size() - 11) / 2;
             size[i] = Math.max(intermediate, 0);
             top(islands.get(i - 1).getLinkedislands().contains(islands.get(i).getMainIsland()));
         }
         //third row last island
-        intermediate = (islands.get(5).getMainIsland().getStudentsFromIsland().size() - 11) / 2;
+        intermediate = (islands.get(5).getMainIsland().getStudents().size() - 11) / 2;
         size[5] = Math.max(intermediate, 0);
         upConnected = islands.get(5).getLinkedislands().contains(islands.get(6).getMainIsland());
         if (islands.get(6).getLinkedislands().contains(islands.get(7).getMainIsland())) {
@@ -351,7 +352,7 @@ public class PrinterIslands {
         System.out.print("  ");
     }
 
-    private void side(boolean connected, boolean middle, IslandCard island, int indexIsland, int maxSize) {
+    private void side(boolean connected, boolean middle, IslandCardDto island, int indexIsland, int maxSize) {
         if (!connected && !isnext) {
             System.out.print("|");
             printIslandContent(island, indexIsland, maxSize);
@@ -376,14 +377,14 @@ public class PrinterIslands {
         System.out.print("  ");
     }
 
-    private void printIslandContent(IslandCard island, int indexIsland, int maxSize) {
+    private void printIslandContent(IslandCardDto island, int indexIsland, int maxSize) {
         if (maxSize == 5) {
             if (island.isHasMotherNature()) System.out.print(MOTHER_NATURE);
             else System.out.print(" ");
             System.out.print(towersColor(island.getTower()));
             int i;
-            for (i = 0; i < maxSize + size[indexIsland] && i < island.getStudentsFromIsland().size(); i++) {
-                System.out.print(assignColor(island.getStudentsFromIsland().get(i)));
+            for (i = 0; i < maxSize + size[indexIsland] && i < island.getStudents().size(); i++) {
+                System.out.print(assignColor(island.getStudents().get(i)));
                 studentsAlreadyPrinted[indexIsland]++;
             }
             for (; i < maxSize + size[indexIsland]; i++) {
@@ -391,8 +392,8 @@ public class PrinterIslands {
             }
         } else {
             int i;
-            for (i = studentsAlreadyPrinted[indexIsland]; i < studentsAlreadyPrinted[indexIsland] + maxSize + size[indexIsland] && i < island.getStudentsFromIsland().size(); i++) {
-                System.out.print(assignColor(island.getStudentsFromIsland().get(i)));
+            for (i = studentsAlreadyPrinted[indexIsland]; i < studentsAlreadyPrinted[indexIsland] + maxSize + size[indexIsland] && i < island.getStudents().size(); i++) {
+                System.out.print(assignColor(island.getStudents().get(i)));
             }
             for (i = i - studentsAlreadyPrinted[indexIsland]; i < maxSize + size[indexIsland]; i++) {
                 System.out.print(" ");

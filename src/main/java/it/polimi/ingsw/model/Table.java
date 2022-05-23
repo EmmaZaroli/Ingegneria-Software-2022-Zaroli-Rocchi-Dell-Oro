@@ -28,7 +28,7 @@ public class Table extends Observable implements Serializable {
         this.playersNumber = playersNumber;
         islandCards = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
-            this.islandCards.add(new IslandCard(java.util.UUID.randomUUID()));
+            this.islandCards.add(new IslandCard(java.util.UUID.randomUUID(), i));
         }
         RandomHelper random = RandomHelper.getInstance();
         int initialPosition = random.getInt(12);
@@ -81,15 +81,6 @@ public class Table extends Observable implements Serializable {
             }
         }
         throw new WrongUUIDException();
-    }
-
-    public void incrementSize(IslandCard island) {
-        islandCards.stream()
-                .filter(x -> x.equals(island))
-                .forEach(x -> {
-                    x.incrementSize();
-                    notify(x);
-                });
     }
 
     public void setTower(IslandCard island, Tower tower) {

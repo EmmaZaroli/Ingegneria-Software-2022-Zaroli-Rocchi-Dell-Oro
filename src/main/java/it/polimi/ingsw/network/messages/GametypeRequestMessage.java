@@ -9,8 +9,8 @@ public class GametypeRequestMessage extends Message {
     private final GameMode gameMode;
     private final PlayersNumber playersNumber;
 
-    public GametypeRequestMessage(String nickname, MessageType messageType, GameMode gameMode, PlayersNumber playersNumber) {
-        super(nickname, messageType);
+    public GametypeRequestMessage(String nickname, GameMode gameMode, PlayersNumber playersNumber) {
+        super(nickname, MessageType.GAME_TYPE_REQUEST);
         this.gameMode = gameMode;
         this.playersNumber = playersNumber;
     }

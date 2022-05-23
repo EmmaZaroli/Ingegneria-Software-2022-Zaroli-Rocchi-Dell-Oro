@@ -5,6 +5,8 @@ import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -17,7 +19,6 @@ public class Cli extends View {
     private final PrintStream out;
     private final Scanner in;
     private final InputParser inputParser;
-    private final PropertyChangeSupport listeners = new PropertyChangeSupport(this);
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String COIN = "¢";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -71,10 +72,15 @@ public class Cli extends View {
         String ip;
         int port;
 
+        /*
         out.print("Please, insert the Server's ip address: ");
         ip = readLine();
         out.print("Select the Server's port number: ");
         port = Integer.parseInt(readLine());
+
+         */
+        ip = "127.0.0.1";
+        port = 24000;
 
         this.startConnection(ip, port);
     }
@@ -124,7 +130,8 @@ public class Cli extends View {
         out.print("How many players are you going to play with? [2/3] ");
         playersNumber = Integer.parseInt(readLine());
         //TODO check if the number is 2 or 3
-        this.sendGameSettings(playersNumber, gameMode.equals("expert"));
+        this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,
+                gameMode.equals("expert") ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);
     }
 
     public void genericMessage(String message) {
@@ -140,11 +147,8 @@ public class Cli extends View {
      *
      * @param deck
      */
-    public void askAssistantCard(ArrayList<AssistantCard> deck) {
+    public void askAssistantCard(List<AssistantCard> deck) {
 
-        out.print("chose the assistant card to play");
-        if (isExpertGame()) out.print(" or choose character card to activate");
-        out.print(": ");
         out.println();
         for (int i = 0; i < deck.size(); i++) {
             out.print("     " + i + ".      ");
@@ -166,11 +170,14 @@ public class Cli extends View {
             out.print("  |_____|    ");
         }
         out.println();
+        out.print("chose the assistant card to play");
+        if (isExpertGame()) out.print(" or choose character card to activate");
+        out.print(": ");
         int card;
         card = Integer.parseInt(readLine());
         //TODO check if the number is valid
         //setCardThrown(deck.get(card));
-        this.sendAssistantCard(deck.get(card));
+        this.sendAssistantCard(card);
     }
 
     public void askMotherNatureSteps() {
@@ -187,7 +194,7 @@ public class Cli extends View {
         if (isExpertGame()) out.print(" or choose character card to activate");
         out.print(": ");
         int indexCloud = Integer.parseInt(readLine());
-        this.sendCloudChoice(getClouds().get(indexCloud));
+        this.sendCloudChoice(indexCloud);
     }
 
     public void askStudents() {
@@ -231,15 +238,16 @@ public class Cli extends View {
     }
 
     public void printGameStarting() {
-        out.println("The game is starting");
+        out.println("The game is starting!");
     }
 
     public void updateCurrentPlayersTurn(String otherPlayer) {
-        out.println("it's " + otherPlayer + "turn");
+        out.println("It's " + otherPlayer.toUpperCase() + "'s turn");
     }
 
     @Override
     public void print() {
+        clearCli();
         printCloud();
         printIslands();
         if (isExpertGame()) printCharacterCards();
@@ -279,31 +287,30 @@ public class Cli extends View {
     }
 
     public void printSchoolBoard() {
-        out.println(getMe().getNickname() + "'s" + " board:");
-        space(48);
-        out.println(getOpponents().get(0).getNickname() + "'s" + " board:");
-        space(48);
-        if (getOpponents().size() == 2) {
-            out.println(getOpponents().get(1).getNickname() + "'s" + " board:");
-            space(48);
+        out.print(getMe().getNickname() + "'s" + " board:");
+        space(39);
+        for (PlayerInfo opponent : getOpponents()) {
+            out.print(opponent.getNickname() + "'s" + " board:");
+            space(39);
         }
+        out.println();
         if (isExpertGame()) printCoins();
         List<SchoolBoardDto> boards = new ArrayList<>();
         boards.add(getMe().getBoard());
-        boards.add(getOpponents().get(0).getBoard());
-        if (getOpponents().size() == 2) boards.add(getOpponents().get(1).getBoard());
+        for (PlayerInfo opponent : getOpponents()) boards.add(opponent.getBoard());
         boardPrinter.printBoard(boards);
         printAssistantCardPlayed();
     }
 
 
     private void printAssistantCardPlayed() {
-        List assistantcards = new ArrayList();
-        if (getMe().getDiscardPileHead() != null) assistantcards.add(getMe().getDiscardPileHead());
+        List assistantCards = new ArrayList();
+        if (getMe().getDiscardPileHead() != null) assistantCards.add(getMe().getDiscardPileHead());
         for (PlayerInfo opponents : getOpponents()) {
-            if (opponents.getDiscardPileHead() != null) assistantcards.add(opponents.getDiscardPileHead());
+            if (opponents.getDiscardPileHead() != null) assistantCards.add(opponents.getDiscardPileHead());
         }
-        printerAssistantCards.print(assistantcards);
+        printerAssistantCards.print(assistantCards);
+        out.println();
     }
 
     public void win() {

@@ -56,20 +56,22 @@ public class PrinterSchoolBoard {
         out.println();
 
         //other rows
-        int rows = 1;
-        for (int i = 1; i < 5; i++) {
+        int studentPosition = 1;
+        for (int rows = 1; rows < 5; rows++) {
             for (int j = 0; j < boards.size(); j++) {
-                String student1 = i >= actualEntranceSize[j] ? EMPTY_CIRCLE : FULL_CIRCLE;
-                if (student1.equals(FULL_CIRCLE)) student1 = assignColor(boards.get(j).getEntrance().get(i), student1);
-                String student2 = i + 1 >= actualEntranceSize[j] ? EMPTY_CIRCLE : FULL_CIRCLE;
-                if (student2.equals(FULL_CIRCLE)) student2 = assignColor(boards.get(j).getEntrance().get(i), student2);
+                String student1 = studentPosition >= actualEntranceSize[j] ? EMPTY_CIRCLE : FULL_CIRCLE;
+                if (student1.equals(FULL_CIRCLE))
+                    student1 = assignColor(boards.get(j).getEntrance().get(studentPosition), student1);
+                String student2 = studentPosition + 1 >= actualEntranceSize[j] ? EMPTY_CIRCLE : FULL_CIRCLE;
+                if (student2.equals(FULL_CIRCLE))
+                    student2 = assignColor(boards.get(j).getEntrance().get(studentPosition + 1), student2);
                 out.print("| " + student1 + " " + student2 + " ");
                 studentsTable(rows, boards.get(j));
                 countTowers[j] = Towers(boards.get(j).getTowersCount(), boards.get(j).getTowerColor(), countTowers[j]);
                 System.out.print(" |");
                 out.print("          "); //10 spaces
             }
-            rows++;
+            studentPosition = studentPosition + 2;
             out.println();
         }
         out.print("|________________________________________|");
@@ -150,14 +152,19 @@ public class PrinterSchoolBoard {
             case BLACK -> towerColor = TOWER_BLACK;
             case WHITE -> towerColor = TOWER_WHITE;
             case GREY -> towerColor = TOWER_GREY;
-            default -> towerColor = ANSI_WHITE;
+            default -> towerColor = ANSI_RED;
         }
+        int spaceCount = 0;
         for (int i = 0; i < 2; i++) {
             if (countTowers < towerOnBoard) {
                 countTowers++;
                 System.out.print("  " + towerColor);
-            } else System.out.print("    ");
+            } else {
+                System.out.print("   ");
+                spaceCount++;
+            }
         }
+        if (spaceCount == 2) System.out.print(" ");
         return countTowers;
     }
 
