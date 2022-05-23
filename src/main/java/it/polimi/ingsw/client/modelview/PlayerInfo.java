@@ -53,6 +53,12 @@ public class PlayerInfo {
         return retVal;
     }
 
+    public PlayerInfo with(ArrayList<AssistantCard> deck) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.deck = deck;
+        return retVal;
+    }
+
     public PlayerInfo with(SchoolBoardDto board) {
         PlayerInfo retVal = this.deepClone();
         retVal.schoolBoard = board;

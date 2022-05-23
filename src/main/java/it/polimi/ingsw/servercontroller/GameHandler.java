@@ -54,6 +54,7 @@ public class GameHandler {
                 user.getEndpoint().removeDisconnectionListener(gameController);
                 endpoint.addDisconnectionListener(gameController);
                 user.setEndpoint(endpoint);
+                user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
             }
         }
         gameController.onReconnect();//TODO change to listener

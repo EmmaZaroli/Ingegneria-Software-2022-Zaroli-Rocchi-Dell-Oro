@@ -145,7 +145,6 @@ public abstract class View implements MessageListener, UserInterface {
             case FROM_DISCONNECTED_PLAYER -> {
                 me = me.with(message.getNickname());
                 this.showNicknameResult(true, true);
-                //TODO restore model view
             }
             case FROM_CONNECTED_PLAYER -> {
                 this.showNicknameResult(false, false);
@@ -193,8 +192,16 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(AssistantPlayedMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(message.getAssistantCard());
+            this.me = this.me.with(me.getDeck().remove(message.getAssistantCard()));
         } else {
-            //TODO withers in list
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if(opponentIndex.isPresent()){
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove(opponentIndex.get());
+                opponent = opponent.with(message.getAssistantCard());
+                opponent = opponent.with(opponent.getDeck().remove(message.getAssistantCard()));
+                opponents.add(opponentIndex.get(), opponent);
+            }
         }
         this.print();
     }
@@ -331,7 +338,7 @@ public abstract class View implements MessageListener, UserInterface {
         for(int i = 0; i < island.getSize(); i++){
             LinkedIslands linkedIsland = new LinkedIslands();
             IslandCardDto islandDto = new IslandCardDto();
-            //TODO set uuid
+            //TODO set uuid if necessary
             islandDto = islandDto.withIndeces(island.getIndices().get(i));
             if(i == 0)
                 islandDto = islandDto.withMotherNature(island.isHasMotherNature());
