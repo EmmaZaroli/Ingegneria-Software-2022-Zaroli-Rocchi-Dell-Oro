@@ -21,6 +21,7 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
         //case loadSavedGames method has the endpoint null
         if (user.getEndpoint() != null)
             user.getEndpoint().addMessageListener(this);
+
     }
 
     public Endpoint getClientHandler() {
@@ -41,6 +42,7 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
      * @param message a message coming from the client
      */
     public void onMessageReceived(Message message) {
+
         notify(message);
     }
 
