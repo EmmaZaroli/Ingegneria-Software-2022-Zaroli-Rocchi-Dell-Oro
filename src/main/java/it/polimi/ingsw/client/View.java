@@ -7,10 +7,8 @@ import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.CloudTile;
-import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -365,13 +363,83 @@ public abstract class View implements MessageListener, UserInterface {
         return true;
     }
 
+    /*  parameters:
+    *   CHARACTER_ONE:      {PawnColor colorFromCard, island UUID}
+    *   CHARACTER_SEVEN:    {List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance}
+    *   CHARACTER_NINE:     {PawnColor}
+    *   CHARACTER_ELEVEN:   {PawnColor colorFromCard}
+    *   NB parameters.lenght must be exactly the size required for the specific character
+    * */
     protected final boolean sendCharacterCard(int characterIndex, Object[] parameters) {
         if(characterIndex < 0 || characterIndex >= characterCards.size())
             return false;
-        //TODO check parameters
+        if(!areCharacterParametersOk(getCharacterCards().get(characterIndex), parameters))
+            return false;
         Message message = new CharacterCardMessage(me.getNickname(), MessageType.ACTION_USE_CHARACTER, getCharacterCards().get(characterIndex), parameters);
         endpoint.sendMessage(message);
         return true;
+    }
+
+    private boolean areCharacterParametersOk(CharacterCard characterCard, Object[] parameters){
+        return switch (characterCard.getCharacter()){
+            case CHARACTER_ONE -> areParametersOkCharacter1(characterCard, parameters);
+            case CHARACTER_SEVEN -> areParametersOkCharacter7(characterCard, parameters);
+            case CHARACTER_NINE -> areParametersOkCharacter9(parameters);
+            case CHARACTER_ELEVEN -> areParametersOkCharacter11(characterCard, parameters);
+            default -> true;
+        };
+    }
+
+    private boolean areParametersOkCharacter1(CharacterCard card, Object[] parameters){
+        if(parameters.length != 2)
+            return false;
+        if(!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
+            return false;
+        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+            return false;
+        if(!(cardWithSetUpAction.getStudents().contains(parameters[0])))
+            return false;
+        for(LinkedIslands island : getIslands()){
+            if(island.getMainIsland().getUuid().equals(parameters[1]))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean areParametersOkCharacter7(CharacterCard card, Object[] parameters){
+        if(parameters.length != 2)
+            return false;
+        if(!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
+            return false;
+        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+            return false;
+        List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
+        List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
+        Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction) cardWithSetUpAction).getStudentsCardinality();
+        Map<PawnColor, Integer> cardinalityEntrance = me.getBoard().getStudentsInEntranceCardinality();
+        for(PawnColor color : PawnColor.values()){
+            if(colorsFromCard.stream().filter(x -> x==color).count() > cardinalityCard.get(color))
+                return false;
+        }
+        for(PawnColor color : PawnColor.values()){
+            if(colorsFromEntrance.stream().filter(x -> x==color).count() > cardinalityEntrance.get(color))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean areParametersOkCharacter9(Object[] parameters){
+        return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
+    }
+
+    private boolean areParametersOkCharacter11(CharacterCard card, Object[] parameters){
+        if(parameters.length != 1)
+            return false;
+        if(!(parameters[0] instanceof PawnColor))
+            return false;
+        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+            return false;
+        return cardWithSetUpAction.getStudents().contains(parameters[0]);
     }
     //</editor-fold>
 }
