@@ -170,14 +170,17 @@ public class Cli extends View {
             out.print("  |_____|    ");
         }
         out.println();
-        out.print("chose the assistant card to play");
-        if (isExpertGame()) out.print(" or choose character card to activate");
-        out.print(": ");
         int card;
-        card = Integer.parseInt(readLine());
-        //TODO check if the number is valid
-        //setCardThrown(deck.get(card));
-        this.sendAssistantCard(card);
+        boolean valid = false;
+        while (!valid) {
+            out.print("chose the assistant card to play");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            card = Integer.parseInt(readLine());
+            if (this.sendAssistantCard(card)) {
+                valid = true;
+            } else error("Error, the card you selected is not valid!");
+        }
     }
 
     public void askMotherNatureSteps() {
