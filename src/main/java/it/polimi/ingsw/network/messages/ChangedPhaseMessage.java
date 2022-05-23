@@ -1,19 +1,19 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
 public class ChangedPhaseMessage extends Message {
 
-    private String phrase;
+    private GamePhase newPhase;
 
-    public ChangedPhaseMessage(String nickname, MessageType messageType, String string) {
-        super(nickname, messageType);
-        this.phrase = string;
+    public ChangedPhaseMessage(String nickname, GamePhase newPhase) {
+        super(nickname, MessageType.UPDATE_GAME_PHASE);
+        this.newPhase = newPhase;
     }
 
-    public String getPhrase() {
-        return phrase;
+    public GamePhase getNewPhase() {
+        return newPhase;
     }
-
 }

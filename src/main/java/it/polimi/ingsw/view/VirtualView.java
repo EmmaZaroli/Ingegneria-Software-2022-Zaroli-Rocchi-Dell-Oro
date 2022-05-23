@@ -64,19 +64,20 @@ public class VirtualView extends Observable implements ModelObserver {
     public void update(GamePhase message) {
         switch (game.getGamePhase()) {
             case PLANNING ->
+                    //TODO why this?
                     user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
             case ACTION_MOVE_STUDENTS ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), MessageType.ACTION_MOVE_STUDENTS, "move" + game.getParameters().getStudentsToMove() + "students"));
+                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
             case ACTION_MOVE_MOTHER_NATURE ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), MessageType.ACTION_MOVE_MOTHER_NATURE, ""));
+                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
             case ACTION_CHOOSE_CLOUD ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), MessageType.ACTION_CHOOSE_CLOUD, ""));
+                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
         }
     }
 
     @Override
     public void update(Player message) {
-        user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), MessageType.CHANGE_PLAYER, ""));
+        user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
     }
 
     @Override
@@ -103,17 +104,17 @@ public class VirtualView extends Observable implements ModelObserver {
      * Receives a notification from the model
      * create a message and sends it to the Socket
      */
+    //TODO this should be eliminated, right?
     @Override
     public void update(Object message) {
-        //TODO do we need to send every message to every player?
 
         if (message.getClass().equals(String.class)) {
             //game over, sent to every player
             if (game.isGameOver()) {
                 if (((String) message).equals("draw")) {
-                    user.sendMessage(new WinMessage(MessageType.DRAW, false));
+                    //user.sendMessage(new GameOverMessage(MessageType.DRAW, false));
                 } else {
-                    user.sendMessage(new WinMessage(MessageType.GAME_OVER, ((String) message).equals(this.user.getNickname())));
+                    //user.sendMessage(new GameOverMessage(MessageType.GAME_OVER, ((String) message).equals(this.user.getNickname())));
                 }
             }
             //error sent only to the current player

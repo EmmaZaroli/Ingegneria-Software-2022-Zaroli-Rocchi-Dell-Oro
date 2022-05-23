@@ -6,6 +6,8 @@ import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameParameters;
 import it.polimi.ingsw.network.Endpoint;
+import it.polimi.ingsw.network.MessageType;
+import it.polimi.ingsw.network.messages.GameStartingMessage;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.servercontroller.*;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
@@ -234,7 +236,6 @@ public class Server {
         if (gameHandler.isPresent()) {
             GameHandler gh = gameHandler.get();
             gh.reconnectPlayer(nickname, endpoint);
-            //TODO send whole game status
         }
     }
 

@@ -7,7 +7,9 @@ import it.polimi.ingsw.model.enums.Tower;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 //TODO substitute in code
 public class SchoolBoardDto implements Serializable {
@@ -53,5 +55,21 @@ public class SchoolBoardDto implements Serializable {
 
     public int getTowersCount() {
         return this.towers;
+    }
+
+    public int getStudentsInEntrance(PawnColor color){
+        return (int) entrance.stream().filter(x -> x.equals(color)).count();
+    }
+
+    public int getStudentsInEntrance(){
+        return entrance.size();
+    }
+
+    public Map<PawnColor, Integer> getStudentsInEntranceCardinality(){
+        Map<PawnColor, Integer> res = new HashMap<>();
+        for(PawnColor color: PawnColor.values()){
+            res.put(color, getStudentsInEntrance(color));
+        }
+        return res;
     }
 }

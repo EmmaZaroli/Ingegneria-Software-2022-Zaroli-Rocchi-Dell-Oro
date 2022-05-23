@@ -317,12 +317,12 @@ public class Cli extends View {
         out.println("Well done, you won the game!");
     }
 
-    public void lose() {
+    public void lose(List<String> winners) {
         out.println("Game ended, you lost!");
     }
 
     //TODO maybe send who tied
-    public void draw() {
+    public void draw(String otherWinner) {
         out.println("The game ended in a tie! ");
     }
 
@@ -345,5 +345,14 @@ public class Cli extends View {
 
     private void clearCli() {
         for (int i = 0; i < 20; i++) out.println();
+    }
+
+    @Override
+    public void gameOverFromDisconnection() {
+
+    }
+
+    public void notEnoughPlayer(){
+
     }
 }
