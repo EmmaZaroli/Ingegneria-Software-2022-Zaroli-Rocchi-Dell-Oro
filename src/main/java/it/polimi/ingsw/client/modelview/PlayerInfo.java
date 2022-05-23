@@ -35,8 +35,10 @@ public class PlayerInfo {
         this.isOnline = isOnline;
     }
 
-    public void setOnline(boolean online) {
-        isOnline = online;
+    public PlayerInfo with(boolean online) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.isOnline = isOnline;
+        return retVal;
     }
 
     public PlayerInfo with(String nickname) {

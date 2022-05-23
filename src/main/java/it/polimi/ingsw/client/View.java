@@ -294,9 +294,11 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void playerOnline(String nickname, boolean isOnline){
-        Optional<PlayerInfo> playerInfo = getOpponent(nickname);
-        if(playerInfo.isPresent()){
-            playerInfo.get().setOnline(isOnline);
+        Optional<Integer> playerIndex = getOpponentIndex(nickname);
+        if(playerIndex.isPresent()){
+            PlayerInfo opponent = opponents.get(playerIndex.get());
+            opponents.remove(playerIndex.get());
+            opponents.add(playerIndex.get(), opponent.with(isOnline));
             print();
         }
     }
