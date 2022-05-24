@@ -233,7 +233,6 @@ public class TableTest{
                 Assertions.assertTrue(list.get(i).isHasMotherNature());
         }
         int newIndex = (index + 3) % list.size();
-        table2Players.getIslands().get(table2Players.getIslandWithMotherNature()).setHasMotherNature(false);
         table2Players.setIslandWithMotherNature(newIndex);
         Assertions.assertEquals(newIndex, table2Players.getIslandWithMotherNature());
         for(int i = 0; i < list.size(); i++){
@@ -252,7 +251,6 @@ public class TableTest{
                 Assertions.assertTrue(list.get(i).isHasMotherNature());
         }
         newIndex = (index + 3) % list.size();
-        table3Players.getIslands().get(table3Players.getIslandWithMotherNature()).setHasMotherNature(false);
         table3Players.setIslandWithMotherNature(newIndex);
         Assertions.assertEquals(newIndex, table3Players.getIslandWithMotherNature());
         for(int i = 0; i < list.size(); i++){

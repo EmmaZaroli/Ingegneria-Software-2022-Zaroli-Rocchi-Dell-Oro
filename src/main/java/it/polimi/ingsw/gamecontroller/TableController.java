@@ -114,8 +114,7 @@ public class TableController {
      * @param move The number of steps to make
      */
     public void moveMotherNature(int move) {
-        table.getIslands().get(table.getIslandWithMotherNature()).setHasMotherNature(false);
-        table.setIslandWithMotherNature((table.getIslandWithMotherNature() + move) % table.getIslands().size());
+        table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() + move, table.getIslands().size()));
     }
 
     /**
@@ -161,23 +160,20 @@ public class TableController {
      */
     private void tryUnifyIslands(Tower towerColor) {
         //right
-        IslandCard islandLeft = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
+        IslandCard islandLeft = table.getIsland(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
         if (islandLeft.getTower().equals(towerColor)) {
-            table.getIslands().get(table.getIslandWithMotherNature()).unifyWith(islandLeft);
-            islandLeft.setHasMotherNature(false);
-            table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
-            if (table.getIslandWithMotherNature() != 0)
-                table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
+            table.unifyIslands(table.getIslandWithMotherNature(), Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
+            //islandLeft.setHasMotherNature(false);
+            //if (table.getIslandWithMotherNature() != 0)
+            //    table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
         }
         //left
-        IslandCard islandRight = table.getIslands().get(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
+        IslandCard islandRight = table.getIsland(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
         if (islandRight.getTower().equals(towerColor)) {
-            table.getIslands().get(table.getIslandWithMotherNature()).unifyWith(islandRight);
-            islandRight.setHasMotherNature(false);
-            table.getIslands().remove(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
-            if (table.getIslandWithMotherNature() == table.getIslands().size()) {
-                table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
-            }
+            table.unifyIslands(table.getIslandWithMotherNature(), Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));
+            //islandRight.setHasMotherNature(false);
+            //if (table.getIslandWithMotherNature() == table.getIslands().size())
+            //    table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
         }
 
     }
