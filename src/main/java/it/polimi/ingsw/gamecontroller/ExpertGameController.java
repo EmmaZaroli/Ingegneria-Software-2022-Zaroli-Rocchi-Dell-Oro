@@ -76,7 +76,8 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    public void update(Message message) {
+    public void update(Object m) {
+        Message message = (Message) m;
         if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
             CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
             Pair<Boolean, Integer> pair = isCardOnTable(card);
@@ -85,7 +86,7 @@ public class ExpertGameController extends GameController {
             }
             int index = pair.second();
             if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message)) {
-                activateCharacterAbility(index, ((CharacterCardMessage)message).getParameters());
+                activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
             } else {
                 //TODO reply with error
             }
@@ -94,8 +95,8 @@ public class ExpertGameController extends GameController {
         }
     }
 
-    private boolean areParametersOk(CharacterCardMessage message){
-        return switch (message.getCharacterCard().getCharacter()){
+    private boolean areParametersOk(CharacterCardMessage message) {
+        return switch (message.getCharacterCard().getCharacter()) {
             case CHARACTER_ONE -> areParametersOkCharacter1(message.getCharacterCard(), message.getParameters());
             case CHARACTER_SEVEN -> areParametersOkCharacter7(message.getCharacterCard(), message.getParameters());
             case CHARACTER_NINE -> areParametersOkCharacter9(message.getParameters());
@@ -106,15 +107,17 @@ public class ExpertGameController extends GameController {
 
     private boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
+
             return false;
-        if(!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
+        if (!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
             return false;
         if(!(card.isWithSetUpAction()))
             return false;
         if(!(((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0])))
+
             return false;
-        for(IslandCard island : getGame().getTable().getIslands()){
-            if(island.getUuid().equals(parameters[1]))
+        for (IslandCard island : getGame().getTable().getIslands()) {
+            if (island.getUuid().equals(parameters[1]))
                 return true;
         }
         return false;
@@ -122,36 +125,40 @@ public class ExpertGameController extends GameController {
 
     private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
+
             return false;
-        if(!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
+        if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
             return false;
         if(!(card.isWithSetUpAction()))
+
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
         List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
         Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudentsCardinality();
         Map<PawnColor, Integer> cardinalityEntrance = getGame().getPlayers()[getGame().getCurrentPlayer()].getBoard().getStudentsInEntranceCardinality();
-        for(PawnColor color : PawnColor.values()){
-            if(colorsFromCard.stream().filter(x -> x==color).count() > cardinalityCard.get(color))
+        for (PawnColor color : PawnColor.values()) {
+            if (colorsFromCard.stream().filter(x -> x == color).count() > cardinalityCard.get(color))
                 return false;
         }
-        for(PawnColor color : PawnColor.values()){
-            if(colorsFromEntrance.stream().filter(x -> x==color).count() > cardinalityEntrance.get(color))
+        for (PawnColor color : PawnColor.values()) {
+            if (colorsFromEntrance.stream().filter(x -> x == color).count() > cardinalityEntrance.get(color))
                 return false;
         }
         return true;
     }
 
-    private boolean areParametersOkCharacter9(Object[] parameters){
+    private boolean areParametersOkCharacter9(Object[] parameters) {
         return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
     }
 
     private boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 1)
+
             return false;
-        if(!(parameters[0] instanceof PawnColor))
+        if (!(parameters[0] instanceof PawnColor))
             return false;
         if(!(card.isWithSetUpAction()))
+
             return false;
         return ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0]);
     }
@@ -205,9 +212,9 @@ public class ExpertGameController extends GameController {
 
     public void activateCharacterAbility(int characterIndex, Object[] parameters) {
         if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)
-            switch (getGame().getCharacterCards()[characterIndex].getCharacter()){
+            switch (getGame().getCharacterCards()[characterIndex].getCharacter()) {
                 case CHARACTER_ONE -> effect1(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0], (UUID) parameters[1]);
-                case CHARACTER_SEVEN -> effect7(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (List<PawnColor>)parameters[0], (List<PawnColor>)parameters[1]);
+                case CHARACTER_SEVEN -> effect7(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (List<PawnColor>) parameters[0], (List<PawnColor>) parameters[1]);
                 case CHARACTER_ELEVEN -> effect11(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0]);
             }
         else {
@@ -225,8 +232,8 @@ public class ExpertGameController extends GameController {
     }
 
     private void activateStandardEffect(int effectIndex, Object[] parameters) {
-        if(getGame().getCharacterCards()[effectIndex].getCharacter() == Character.CHARACTER_NINE)
-            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters(), (PawnColor)parameters[0]);
+        if (getGame().getCharacterCards()[effectIndex].getCharacter() == Character.CHARACTER_NINE)
+            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters(), (PawnColor) parameters[0]);
         else
             ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());
     }
@@ -263,7 +270,7 @@ public class ExpertGameController extends GameController {
         game.addStudent(character, tableController.drawStudents(1).get(0));
     }
 
-    public void activateSetupEffect(){
+    public void activateSetupEffect() {
         for (int i = 0; i < effects.length; i++) {
             if (effects[i] instanceof SetupEffect effect)
                 effect.setupEffect(getGame(), tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[i]);
@@ -296,16 +303,15 @@ public class ExpertGameController extends GameController {
     @Override
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
-                player.getBoard().isThereProfessor(color)){
-            if(getGameParameters().isTakeProfessorEvenIfSameStudents()){
-                if(game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
+                player.getBoard().isThereProfessor(color)) {
+            if (getGameParameters().isTakeProfessorEvenIfSameStudents()) {
+                if (game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
                         >= player.getBoard().getStudentsInDiningRoom(color)) {
                     player.getBoard().removeProfessor(color);
                     game.getCurrentPlayerSchoolBoard().addProfessor(color);
                 }
-            }
-            else{
-                if(game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
+            } else {
+                if (game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)
                         > player.getBoard().getStudentsInDiningRoom(color)) {
                     player.getBoard().removeProfessor(color);
                     game.getCurrentPlayerSchoolBoard().addProfessor(color);
