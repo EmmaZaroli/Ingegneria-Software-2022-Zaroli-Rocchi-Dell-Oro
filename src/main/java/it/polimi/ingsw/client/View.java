@@ -161,6 +161,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(GetDeckMessage message) {
+
         if (message.getNickname().equals(getMe().getNickname())) {
             me = me.with(message.getDeck());
             this.askAssistantCard(message.getDeck());
@@ -195,6 +196,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (game.getCurrentPlayer().equals(getMe().getNickname()))
             //TODO may not be planning phase
             this.askAssistantCard(game.getCurrentPlayerDeck());
+
 
     }
 
@@ -463,6 +465,7 @@ public abstract class View implements MessageListener, UserInterface {
     private boolean areCharacterParametersOk(CharacterCardDto characterCard, Object[] parameters){
         return switch (characterCard.getCharacter()){
 
+
             case CHARACTER_ONE -> areParametersOkCharacter1(characterCard, parameters);
             case CHARACTER_SEVEN -> areParametersOkCharacter7(characterCard, parameters);
             case CHARACTER_NINE -> areParametersOkCharacter9(parameters);
@@ -480,7 +483,9 @@ public abstract class View implements MessageListener, UserInterface {
         if(!(card.isWithSetUpAction()))
             return false;
         if(!(card.getStudents().contains(parameters[0])))
+
             return false;
+
         for(LinkedIslands island : getIslands()){
             if(island.getIsland().getUuid().equals(parameters[1]))
 
@@ -496,6 +501,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
             return false;
         if(!(card.isWithSetUpAction()))
+
 
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
@@ -524,6 +530,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (!(parameters[0] instanceof PawnColor))
             return false;
         if(!(card.isWithSetUpAction()))
+
 
             return false;
         return card.getStudents().contains(parameters[0]);

@@ -100,6 +100,7 @@ public class GameController implements DisconnectionListener, Observer {
     }
 
     private void planning(Message message) {
+        System.out.println("planning");
         if (message.getType().equals(MessageType.ACTION_PLAY_ASSISTANT)) {
             try {
                 this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard().value());
@@ -121,6 +122,7 @@ public class GameController implements DisconnectionListener, Observer {
     }
 
     private void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
+        System.out.println("play assistant");
         if (this.game.getGamePhase() != PLANNING) {
             throw new IllegalActionException();
         }
@@ -148,6 +150,7 @@ public class GameController implements DisconnectionListener, Observer {
     }
 
     private void playerHasEndedPlanning() {
+        System.out.println("ended planning");
         this.game.setPlayedCount(game.getPlayedCount() + 1);
 
         if (!this.isTurnComplete()) {
