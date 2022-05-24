@@ -115,6 +115,7 @@ public class ExpertGameController extends GameController {
             return false;
         if(!(((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0])))
 
+
             return false;
         for (IslandCard island : getGame().getTable().getIslands()) {
             if (island.getUuid().equals(parameters[1]))
@@ -130,6 +131,7 @@ public class ExpertGameController extends GameController {
         if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
             return false;
         if(!(card.isWithSetUpAction()))
+
 
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
@@ -158,6 +160,7 @@ public class ExpertGameController extends GameController {
         if (!(parameters[0] instanceof PawnColor))
             return false;
         if(!(card.isWithSetUpAction()))
+
 
             return false;
         return ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0]);
