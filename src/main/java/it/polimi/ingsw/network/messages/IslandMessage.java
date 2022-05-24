@@ -1,29 +1,21 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
 public class IslandMessage extends Message {
 
-    private final IslandCard island;
-    private IslandCard deletedIslandCard;
+    private final IslandCardDto island;
 
     public IslandMessage(MessageType messageType, IslandCard island) {
         super("server", messageType);
-        this.island = island;
+        this.island = new IslandCardDto(island);
     }
 
-    public IslandCard getIsland() {
+    public IslandCardDto getIsland() {
         return this.island;
-    }
-
-    public void setDeletedIslandCard(IslandCard island) {
-        this.deletedIslandCard = island;
-    }
-
-    public IslandCard getDeletedIsland() {
-        return this.deletedIslandCard;
     }
 
 }

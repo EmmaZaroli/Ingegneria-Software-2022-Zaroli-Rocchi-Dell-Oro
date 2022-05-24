@@ -36,6 +36,7 @@ public abstract class View implements MessageListener, UserInterface {
     protected int numberOfIslandOnTable;
     private GamePhase currentPhase;
     private boolean areEnoughPlayers;
+    private String error;
     private Endpoint endpoint;
 
     protected View() {
@@ -230,6 +231,26 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(IslandMessage message) {
+        IslandCardDto islandCardDto = message.getIsland();
+        if(islandCardDto.getSize() == islands.get((int)islandCardDto.getIndices().get(0)).getLinkedislands().size() + 1){
+            islands.remove((int)islandCardDto.getIndices().get(0));
+            LinkedIslands linkedIsland = islands.get((int)islandCardDto.getIndices().get(0));
+            linkedIsland.setMainIsland(linkedIsland.getMainIsland().withStudents(islandCardDto.getStudents()));
+            linkedIsland.setMainIsland(linkedIsland.getMainIsland().withTower(islandCardDto.getTower()));
+            for(LinkedIslands li : linkedIsland.getLinkedislands()){
+                li.setMainIsland(li.getMainIsland().withTower(islandCardDto.getTower()));
+            }
+            linkedIsland.setMainIsland(linkedIsland.getMainIsland().withMotherNature(islandCardDto.isHasMotherNature()));
+            linkedIsland.setMainConnected(true);
+            linkedIsland.setConnectedWithNext(false);
+        }
+        else{
+            //TODO
+        }
+        this.print();
+
+
+        /*
         //TODO after we put the deleted island in the message
         //only if the field deletedIsland is not empty, else only update the island and print
         int islandMain = 0; // main island
@@ -243,14 +264,15 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
 
+
         if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)).getMainIsland())) {
-            islands.get(Math.floorMod(islandCancelled - 1, 12)).setLinkedislands(islands.get(islandCancelled).getMainIsland());
+            islands.get(Math.floorMod(islandCancelled - 1, 12)).addLinkedislands(islands.get(islandCancelled).getMainIsland());
         } else {
-            islands.get(islandCancelled).setLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
+            islands.get(islandCancelled).addLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
         }
         islands.get(islandCancelled).setMainConnected(false);
         islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getLinkedislands());
-        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getMainIsland());
+        islands.get(islandMain).addLinkedislands(islands.get(islandCancelled).getMainIsland());
 
         //update island part
 
@@ -259,10 +281,10 @@ public abstract class View implements MessageListener, UserInterface {
 
         Tower newTower = message.getIsland().getTower();
         islands.get(islandMain).setMainIsland(islands.get(islandMain).getMainIsland().withTower(newTower));
-        for (IslandCardDto island : islands.get(islandMain).getLinkedislands()) {
+        for (LinkedIslands island : islands.get(islandMain).getLinkedislands()) {
             island.setTower(newTower);
         }
-        this.print();
+        this.print();*/
     }
 
     private void handleMessage(CoinMessage message) {
@@ -270,7 +292,12 @@ public abstract class View implements MessageListener, UserInterface {
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(message.getCoins());
         } else {
-            //TODO withers in list
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if (opponentIndex.isPresent()) {
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove((int)opponentIndex.get());
+                opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
+            }
         }
         this.print();
     }
@@ -319,7 +346,8 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(ErrorMessage message) {
-        //TODO
+        error = message.getError();
+        error(message.getError());
     }
     //</editor-fold>
 
@@ -376,7 +404,7 @@ public abstract class View implements MessageListener, UserInterface {
             LinkedIslands linkedIsland = res.get(i);
             for(int j = 0; j < res.size(); j++){
                 if(j != i)
-                    linkedIsland.setLinkedislands(res.get(j).getMainIsland());
+                    linkedIsland.addLinkedislands(res.get(j));
             }
         }
         return res;
