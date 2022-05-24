@@ -18,7 +18,9 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     public VirtualView(User user, Game game) {
         this.user = user;
         this.game = game;
-        user.getEndpoint().addMessageListener(this);
+        //case loadSavedGames method has the endpoint null
+        if (user.getEndpoint() != null)
+            user.getEndpoint().addMessageListener(this);
     }
 
     public Endpoint getClientHandler() {
@@ -39,7 +41,6 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
      * @param message a message coming from the client
      */
     public void onMessageReceived(Message message) {
-        //TODO before sending the message to the controller, it should add the nickname of the player ?
         notify(message);
     }
 
@@ -80,7 +81,10 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
 
     @Override
     public void update(Player message) {
-        user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
+        System.out.println("message");
+        if (game.getGamePhase().equals(GamePhase.PLANNING))
+            user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
+        else user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
     }
 
     @Override

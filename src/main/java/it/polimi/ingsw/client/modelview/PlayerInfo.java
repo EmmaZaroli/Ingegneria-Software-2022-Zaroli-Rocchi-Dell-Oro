@@ -12,7 +12,7 @@ public class PlayerInfo {
     private SchoolBoardDto schoolBoard;
     private AssistantCard discardPileHead;
     private int coins;
-    private ArrayList<AssistantCard> deck;
+    private List<AssistantCard> deck = new ArrayList<>();
     private boolean isOnline;
 
     public PlayerInfo() {
@@ -53,7 +53,7 @@ public class PlayerInfo {
         return retVal;
     }
 
-    public PlayerInfo with(ArrayList<AssistantCard> deck) {
+    public PlayerInfo with(List<AssistantCard> deck) {
         PlayerInfo retVal = this.deepClone();
         retVal.deck = deck;
         return retVal;

@@ -355,7 +355,7 @@ public class Cli extends View {
 
     }
 
-    public void notEnoughPlayer(){
+    public void notEnoughPlayer() {
 
     }
 }
