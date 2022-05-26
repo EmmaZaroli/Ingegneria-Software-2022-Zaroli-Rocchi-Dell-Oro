@@ -22,7 +22,6 @@ public class Table extends Observable implements Serializable {
     private final Bag bag;
     private final ArrayList<CloudTile> cloudTiles;
     private final PlayersNumber playersNumber;
-    private int islandWithMotherNature;
 
     public Table(PlayersNumber playersNumber) {
         this.playersNumber = playersNumber;
@@ -32,13 +31,12 @@ public class Table extends Observable implements Serializable {
         }
         RandomHelper random = RandomHelper.getInstance();
         int initialPosition = random.getInt(12);
-        islandWithMotherNature = initialPosition;
         islandCards.get(initialPosition).setHasMotherNature(true);
         List<PawnColor> initialized = new ArrayList<>(10);
         initialized.addAll(PawnColor.getValidValues());
         initialized.addAll(PawnColor.getValidValues());
         for (int i = 0; i < 12; i++) {
-            if ((Math.abs(i - initialPosition) != 6) && (islandWithMotherNature != i)) {
+            if ((Math.abs(i - initialPosition) != 6) && (getIslandWithMotherNature() != i)) {
                 int pawnColor = random.getInt(initialized.size());
                 islandCards.get(i).movePawnOnIsland(initialized.get(pawnColor));
                 notify(islandCards.get(i));
@@ -62,6 +60,14 @@ public class Table extends Observable implements Serializable {
 
     public List<IslandCard> getIslands() {
         return this.islandCards;
+    }
+
+    public IslandCard getIsland(int index){
+        return this.islandCards.get(index);
+    }
+
+    public void removeIsland(int index){
+        this.islandCards.remove(index);
     }
 
     public void movePawnOnIsland(IslandCard island, List<PawnColor> students) {
@@ -100,7 +106,12 @@ public class Table extends Observable implements Serializable {
     }
 
     public int getIslandWithMotherNature() {
-        return this.islandWithMotherNature;
+        int i;
+        for(i = 0; i < islandCards.size(); i++){
+            if(getIsland(i).isHasMotherNature())
+                return i;
+        }
+        return -1;
     }
 
     public List<CloudTile> getCloudTiles() {
@@ -120,7 +131,17 @@ public class Table extends Observable implements Serializable {
     }
 
     public void setIslandWithMotherNature(int index) {
-        this.islandWithMotherNature = index;
-        this.islandCards.get(islandWithMotherNature).setHasMotherNature(true);
+        int oldPosition = getIslandWithMotherNature();
+        this.getIsland(getIslandWithMotherNature()).setHasMotherNature(false);
+        notify(getIsland(oldPosition));
+        this.getIsland(index).setHasMotherNature(true);
+        notify(getIslandWithMotherNature());
+    }
+
+    public void unifyIslands(int originalIndex, int otherIndex){
+        IslandCard islandCard = getIsland(originalIndex);
+        islandCard.unifyWith(getIsland(otherIndex));
+        removeIsland(otherIndex);
+        notify(islandCard);
     }
 }

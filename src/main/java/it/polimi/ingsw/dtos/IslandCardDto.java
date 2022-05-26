@@ -83,6 +83,12 @@ public class IslandCardDto implements Serializable {
         return retVal;
     }
 
+    public IslandCardDto withoutStudents() {
+        IslandCardDto retVal = this.deepClone();
+        retVal.students = new ArrayList<>();
+        return retVal;
+    }
+
     public IslandCardDto withTower(Tower tower) {
         IslandCardDto retVal = this.deepClone();
         retVal.tower = tower;
@@ -106,9 +112,5 @@ public class IslandCardDto implements Serializable {
         retVal.indices = new LinkedList<>();
         retVal.indices.add(index);
         return retVal;
-    }
-
-    public void setTower(Tower tower) {
-        this.tower = tower;
     }
 }

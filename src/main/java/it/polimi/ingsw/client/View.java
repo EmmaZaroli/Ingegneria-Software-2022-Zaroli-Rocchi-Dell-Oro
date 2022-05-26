@@ -9,13 +9,13 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
@@ -36,6 +36,7 @@ public abstract class View implements MessageListener, UserInterface {
     protected int numberOfIslandOnTable;
     private GamePhase currentPhase;
     private boolean areEnoughPlayers;
+    private String error;
     private Endpoint endpoint;
 
     protected View() {
@@ -43,6 +44,8 @@ public abstract class View implements MessageListener, UserInterface {
         this.me = new PlayerInfo();
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
+        for(int i = 0; i < 12; i++)
+            this.islands.add(new LinkedIslands(new IslandCardDto()));
         this.tableCoins = 0;
         this.areEnoughPlayers = true;
     }
@@ -168,7 +171,8 @@ public abstract class View implements MessageListener, UserInterface {
             this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
         this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
         this.clouds = new ArrayList<>(message.getGame().getClouds());
-        this.islands = getLinkedIslands(message.getGame().getIslands());
+        for(IslandCardDto islandCardDto: message.getGame().getIslands())
+            updateIsland(islandCardDto);
         this.tableCoins = message.getGame().getTableCoins();
         print();
         //TODO GameStartingMessage may be sent to a reconnected player
@@ -230,39 +234,42 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(IslandMessage message) {
-        //TODO after we put the deleted island in the message
-        //only if the field deletedIsland is not empty, else only update the island and print
-        int islandMain = 0; // main island
-        int islandCancelled = 0; // island deleted
-        for (int k = 0; k < 12; k++) {
-            if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
-                islandMain = k;
-            }
-            if (islands.get(k).getMainIsland().getUuid().equals(message.getDeletedIsland().getUuid())) {
-                islandCancelled = k;
-            }
-        }
+        updateIsland(message.getIsland());
 
-        if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)).getMainIsland())) {
-            islands.get(Math.floorMod(islandCancelled - 1, 12)).setLinkedislands(islands.get(islandCancelled).getMainIsland());
-        } else {
-            islands.get(islandCancelled).setLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
-        }
-        islands.get(islandCancelled).setMainConnected(false);
-        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getLinkedislands());
-        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getMainIsland());
-
-        //update island part
-
-        //TODO need a function to add only the new students on the islands
-        //islands.get(islandMain).getMainIsland().movePawnOnIsland();
-
-        Tower newTower = message.getIsland().getTower();
-        islands.get(islandMain).setMainIsland(islands.get(islandMain).getMainIsland().withTower(newTower));
-        for (IslandCardDto island : islands.get(islandMain).getLinkedislands()) {
-            island.setTower(newTower);
-        }
         this.print();
+    }
+
+    private void updateIsland(IslandCardDto newIsland){
+        int firstIsland = newIsland.getIndices().get(0);
+        LinkedIslands linkedIsland = islands.get(firstIsland);
+        linkedIsland.setIsland(linkedIsland.getIsland().withUuid(newIsland.getUuid()));
+        linkedIsland.setIsland(linkedIsland.getIsland().withStudents(newIsland.getStudents()));
+        linkedIsland.setIsland(linkedIsland.getIsland().withTower(newIsland.getTower()));
+        linkedIsland.setIsland(linkedIsland.getIsland().withMotherNature(newIsland.isHasMotherNature()));
+        linkedIsland.setIsMainIsland(true);
+
+        for(Integer index : newIsland.getIndices()){
+            if(index != firstIsland){
+                linkedIsland = islands.get(index);
+                linkedIsland.setIsland(linkedIsland.getIsland().withoutStudents());
+                linkedIsland.setIsland(linkedIsland.getIsland().withTower(newIsland.getTower()));
+                linkedIsland.setIsland(linkedIsland.getIsland().withMotherNature(false));
+                linkedIsland.setIsMainIsland(false);
+                linkedIsland.setConnectedWithNext(true);
+                if(index == getLastIndex(newIsland.getIndices(), islands.size())){
+                    linkedIsland.setConnectedWithNext(false);
+                }
+            }
+        }
+    }
+
+    private int getLastIndex(List<Integer> list, int dim){
+        if(list.size() == dim)
+            return -1;
+        int res = Math.floorMod(list.get(0), dim);
+        while(list.contains(Math.floorMod(res + 1, dim)))
+            res = Math.floorMod(res + 1, dim);
+        return res;
     }
 
     private void handleMessage(CoinMessage message) {
@@ -270,7 +277,12 @@ public abstract class View implements MessageListener, UserInterface {
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(message.getCoins());
         } else {
-            //TODO withers in list
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if (opponentIndex.isPresent()) {
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove((int)opponentIndex.get());
+                opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
+            }
         }
         this.print();
     }
@@ -319,68 +331,10 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(ErrorMessage message) {
-        //TODO
+        error = message.getError();
+        error(message.getError());
     }
     //</editor-fold>
-
-    private List<LinkedIslands> getLinkedIslands(List<IslandCardDto> list){
-        List<LinkedIslands> res = new LinkedList<>();
-        for(IslandCardDto island : list){
-            res.addAll(getLinkedIslands(island));
-        }
-        return res;
-    }
-
-    private List<LinkedIslands> getLinkedIslands(IslandCardDto island){
-        List<LinkedIslands> res = new LinkedList<>();
-        int studentsPerIsland = Math.max(1, island.getStudents().size() / island.getSize());
-        int studentsIndex = 0;
-        for(int i = 0; i < island.getSize(); i++){
-            LinkedIslands linkedIsland = new LinkedIslands();
-            IslandCardDto islandDto = new IslandCardDto();
-            //TODO set uuid if necessary
-            islandDto = islandDto.withIndeces(island.getIndices().get(i));
-            if(i == 0)
-                islandDto = islandDto.withMotherNature(island.isHasMotherNature());
-            else
-                islandDto = islandDto.withMotherNature(false);
-            islandDto = islandDto.withTower(island.getTower());
-            if(studentsIndex + studentsPerIsland > island.getStudents().size()){
-                islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
-                studentsIndex = island.getStudents().size();
-            }
-            else{
-                if(i == island.getSize() - 1){
-                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
-                }
-                else{
-                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, studentsIndex + studentsPerIsland));
-                    studentsIndex += studentsPerIsland;
-                }
-            }
-
-            linkedIsland.setMainIsland(island);
-            if(i == 0)
-                linkedIsland.setMainConnected(true);
-            else
-                linkedIsland.setMainConnected(false);
-
-            if(i == island.getSize() - 1)
-                linkedIsland.setConnectedWithNext(false);
-            else
-                linkedIsland.setConnectedWithNext(true);
-            res.add(linkedIsland);
-        }
-
-        for (int i = 0; i < res.size(); i++){
-            LinkedIslands linkedIsland = res.get(i);
-            for(int j = 0; j < res.size(); j++){
-                if(j != i)
-                    linkedIsland.setLinkedislands(res.get(j).getMainIsland());
-            }
-        }
-        return res;
-    }
 
     //<editor-fold desc="Presentation logic">
     public void start() {
@@ -445,7 +399,7 @@ public abstract class View implements MessageListener, UserInterface {
         if(!me.getBoard().getEntrance().contains(student) || islandIndex < 0 || islandIndex >= getIslands().size())
             return false;
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        message.setIslandCard(getIslands().get(islandIndex).getMainIsland());
+        message.setIslandCard(getIslands().get(islandIndex).getIsland());
         endpoint.sendMessage(message);
         return true;
     }
@@ -496,7 +450,7 @@ public abstract class View implements MessageListener, UserInterface {
         if(!(cardWithSetUpAction.getStudents().contains(parameters[0])))
             return false;
         for(LinkedIslands island : getIslands()){
-            if(island.getMainIsland().getUuid().equals(parameters[1]))
+            if(island.getIsland().getUuid().equals(parameters[1]))
                 return true;
         }
         return false;
