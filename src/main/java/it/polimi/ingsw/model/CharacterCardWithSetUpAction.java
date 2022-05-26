@@ -46,7 +46,7 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      *
      * @param colors the colors of the students
      */
-    protected void addStudent(List<PawnColor> colors) {
+    public void addStudent(List<PawnColor> colors) {
         this.students.addAll(colors);
     }
 
@@ -57,6 +57,10 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
      */
     protected void removeStudent(PawnColor color) {
         students.remove(color);
+    }
+
+    public void removeAllStudents(){
+        students.clear();
     }
 
     @Override

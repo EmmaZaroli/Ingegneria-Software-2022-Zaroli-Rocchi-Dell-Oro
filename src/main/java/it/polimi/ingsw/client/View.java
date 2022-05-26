@@ -288,7 +288,16 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(CharacterCardMessage message) {
-        //TODO
+        if(message.getCharacterCard() instanceof CharacterCardWithSetUpAction){
+            CharacterCardWithSetUpAction newCharacterCard = (CharacterCardWithSetUpAction) message.getCharacterCard();
+            for(CharacterCard characterCard : characterCards){
+                if(characterCard.getCharacter() == newCharacterCard.getCharacter()){
+                    CharacterCardWithSetUpAction characterCardWithSetUpAction = (CharacterCardWithSetUpAction) characterCard;
+                    characterCardWithSetUpAction.removeAllStudents();
+                    characterCardWithSetUpAction.addStudent(newCharacterCard.getStudents());
+                }
+            }
+        }
     }
 
     private void handleMessage(GameOverMessage message) {
