@@ -125,7 +125,7 @@ public class VirtualView extends Observable implements ModelObserver {
 
         //player's coins varied
         if (message.getClass().equals(Integer.class) && getCurrentPlayer().equals(this.user.getNickname())) {
-            user.sendMessage(new CoinMessage(getCurrentPlayer(), (int) message));
+            user.sendMessage(new CoinMessage(getCurrentPlayer(), (int) message, false));
         }
 
     }

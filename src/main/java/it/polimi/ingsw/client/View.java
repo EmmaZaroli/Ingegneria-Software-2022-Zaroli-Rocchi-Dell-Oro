@@ -181,6 +181,7 @@ public abstract class View implements MessageListener, UserInterface {
         updateCurrentPlayersTurn(game.getCurrentPlayer());
         if (game.getCurrentPlayer().equals(getMe().getNickname()))
             this.askAssistantCard(game.getCurrentPlayerDeck());
+        //TODO set coins
     }
 
     private void handleMessage(ChangedPhaseMessage message){
@@ -274,17 +275,22 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(CoinMessage message) {
-        //TODO coins on the table?
-        if (message.getNickname().equals(me.getNickname())) {
-            this.me = this.me.with(message.getCoins());
-        } else {
-            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
-            if (opponentIndex.isPresent()) {
-                PlayerInfo opponent = opponents.get(opponentIndex.get());
-                opponents.remove((int)opponentIndex.get());
-                opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
+        if(!message.isOnTable()){
+            if (message.getNickname().equals(me.getNickname())) {
+                this.me = this.me.with(message.getCoins());
+            } else {
+                Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+                if (opponentIndex.isPresent()) {
+                    PlayerInfo opponent = opponents.get(opponentIndex.get());
+                    opponents.remove((int)opponentIndex.get());
+                    opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
+                }
             }
         }
+        else{
+            this.tableCoins = message.getCoins();
+        }
+
         this.print();
     }
 
