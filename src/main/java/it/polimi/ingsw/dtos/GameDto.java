@@ -1,8 +1,10 @@
 package it.polimi.ingsw.dtos;
 
+import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.ExpertGame;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,6 +21,9 @@ public class GameDto implements Serializable {
     private List<IslandCardDto> islands;
     private int tableCoins;
     private SchoolBoardDto schoolBoard;
+    private GamePhase gamePhase;
+    private String currentPlayer;
+    private List<AssistantCard> currentPlayerDeck;
 
     public GameDto(Game origin, String nickname) {
         Optional<Player> currentPlayerOptional = Arrays.stream(origin.getPlayers()).filter(x -> x.getNickname().equals(nickname)).findFirst();
@@ -37,6 +42,9 @@ public class GameDto implements Serializable {
                 this.tableCoins = expertGame.getTable().getCoins();
             }
             this.schoolBoard = new SchoolBoardDto(currentPlayer.getBoard());
+            this.gamePhase = origin.getGamePhase();
+            this.currentPlayer = origin.getPlayer(origin.getCurrentPlayer()).getNickname();
+            this.currentPlayerDeck = origin.getPlayer(origin.getCurrentPlayer()).getAssistantDeck();
         }
     }
 
@@ -66,5 +74,17 @@ public class GameDto implements Serializable {
 
     public SchoolBoardDto getSchoolBoard() {
         return this.schoolBoard;
+    }
+
+    public GamePhase getGamePhase() {
+        return gamePhase;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public List<AssistantCard> getCurrentPlayerDeck() {
+        return currentPlayerDeck;
     }
 }

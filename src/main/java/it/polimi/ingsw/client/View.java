@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
+import it.polimi.ingsw.dtos.GameDto;
 import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
@@ -166,20 +167,20 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(GameStartingMessage message) {
+        GameDto game = message.getGame();
         this.printGameStarting();
-        for (int i = 0; i < message.getGame().getOpponents().size(); i++)
-            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
-        this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
-        this.clouds = new ArrayList<>(message.getGame().getClouds());
-        for(IslandCardDto islandCardDto: message.getGame().getIslands())
+        for (int i = 0; i < game.getOpponents().size(); i++)
+            this.opponents.add(new PlayerInfo(game.getOpponents().get(i)).with(game.getOpponentsBoard().get(i)));
+        this.me = new PlayerInfo(game.getMe()).with(game.getSchoolBoard());
+        this.clouds = new ArrayList<>(game.getClouds());
+        for(IslandCardDto islandCardDto: game.getIslands())
             updateIsland(islandCardDto);
-        this.tableCoins = message.getGame().getTableCoins();
+        this.tableCoins = game.getTableCoins();
         print();
-        //TODO GameStartingMessage may be sent to a reconnected player
         this.changePhase(GamePhase.PLANNING);
-        updateCurrentPlayersTurn(message.getFirstPlayer());
-        if (message.getFirstPlayer().equals(getMe().getNickname()))
-            this.askAssistantCard(message.getDeckfirstPlayer());
+        updateCurrentPlayersTurn(game.getCurrentPlayer());
+        if (game.getCurrentPlayer().equals(getMe().getNickname()))
+            this.askAssistantCard(game.getCurrentPlayerDeck());
     }
 
     private void handleMessage(ChangedPhaseMessage message){

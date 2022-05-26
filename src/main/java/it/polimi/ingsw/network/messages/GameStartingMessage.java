@@ -11,25 +11,13 @@ import java.util.List;
 public class GameStartingMessage extends Message {
 
     private GameDto game;
-    private String firstPlayer;
-    private List<AssistantCard> deckfirstPlayer;
 
     public GameStartingMessage(String nickname, MessageType messageType, Game game) {
         super(nickname, messageType);
         this.game = new GameDto(game, nickname);
-        firstPlayer = game.getPlayers()[game.getCurrentPlayer()].getNickname();
-        deckfirstPlayer = game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck();
     }
 
     public GameDto getGame() {
         return game;
-    }
-
-    public String getFirstPlayer() {
-        return firstPlayer;
-    }
-
-    public List<AssistantCard> getDeckfirstPlayer() {
-        return deckfirstPlayer;
     }
 }
