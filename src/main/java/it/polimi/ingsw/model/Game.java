@@ -144,12 +144,10 @@ public class Game extends Observable implements Serializable {
     }
 
     public void changePlayer(int playerIndex) {
-        System.out.println("changed player in game");
         setCurrentPlayer(playerIndex);
         setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
 
-        notify(this.players[currentPlayer]);
-
+        notifyModelObserver(this.players[currentPlayer]);
     }
 
     public void setError(Exception e) {
