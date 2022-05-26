@@ -49,7 +49,7 @@ public class Endpoint {
         }
 
         this.isOnline = true;
-        resetDisconnectionTimer();
+        //resetDisconnectionTimer();
         startPinging();
     }
 
@@ -101,7 +101,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            resetDisconnectionTimer();
+            //resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
                 for (MessageListener l : messageListeners) {
                     l.onMessageReceived(m);
