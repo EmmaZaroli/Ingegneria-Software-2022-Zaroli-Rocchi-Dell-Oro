@@ -4,11 +4,12 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetDeckMessage extends Message {
 
-    private List<AssistantCard> deck;
+    private List<AssistantCard> deck = new ArrayList<>();
 
     public GetDeckMessage(String nickname, MessageType messageType, List<AssistantCard> assistants) {
         super(nickname, messageType);
