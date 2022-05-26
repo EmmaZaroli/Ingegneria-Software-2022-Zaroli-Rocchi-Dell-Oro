@@ -161,7 +161,6 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(GetDeckMessage message) {
-        System.out.println("message received from view");
         if (message.getNickname().equals(getMe().getNickname())) {
             me = me.with(message.getDeck());
             this.askAssistantCard(message.getDeck());
@@ -206,8 +205,7 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(ChangedPlayerMessage message) {
         currentPlayer = message.getNickname();
-        print();
-        //TODO add changePlayer() in UserInterface ?
+        updateCurrentPlayersTurn(message.getNickname());
     }
 
     //TODO we shouldn't need this method, the deck gets already overwrite in the deckMessage
