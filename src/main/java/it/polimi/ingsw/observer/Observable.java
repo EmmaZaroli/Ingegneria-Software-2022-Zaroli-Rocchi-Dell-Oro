@@ -16,7 +16,10 @@ public class Observable {
      */
     public void addObserver(Observer modelObserver) {
         observers.add(modelObserver);
-        System.out.println(modelObserver);
+    }
+
+    public void addObserver(ModelObserver modelObserver) {
+        observers.add(modelObserver);
     }
 
     public void addObserver(ModelObserver modelObserver) {
