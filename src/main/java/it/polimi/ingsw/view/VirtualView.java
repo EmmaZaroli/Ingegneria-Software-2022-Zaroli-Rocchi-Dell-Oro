@@ -71,21 +71,18 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
             case PLANNING ->
                     //TODO why this?
                     user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
-            case ACTION_MOVE_STUDENTS ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
-            case ACTION_MOVE_MOTHER_NATURE ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
-            case ACTION_CHOOSE_CLOUD ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_MOVE_STUDENTS -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_MOVE_MOTHER_NATURE -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_CHOOSE_CLOUD -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
         }
     }
 
     @Override
     public void update(Player message) {
 
-        if (game.getGamePhase().equals(GamePhase.PLANNING)) {
+        user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
+        if (game.getGamePhase().equals(GamePhase.PLANNING))
             user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
-        } else user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
     }
 
     @Override

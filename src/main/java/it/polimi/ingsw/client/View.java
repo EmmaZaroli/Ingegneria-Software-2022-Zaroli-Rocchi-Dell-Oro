@@ -46,7 +46,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.me = new PlayerInfo();
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
-        for(int i = 0; i < 12; i++)
+        for (int i = 0; i < 12; i++)
             this.islands.add(new LinkedIslands(new IslandCardDto()));
         this.tableCoins = 0;
         this.characterCards = new ArrayList<>();
@@ -185,6 +185,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.me = new PlayerInfo(game.getMe());
         this.clouds = new ArrayList<>(game.getClouds());
         for(IslandCardDto islandCardDto: game.getIslands())
+
             updateIsland(islandCardDto);
         this.tableCoins = game.getTableCoins();
         this.characterCards = game.getCharacterCards();
@@ -257,7 +258,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.print();
     }
 
-    private void updateIsland(IslandCardDto newIsland){
+    private void updateIsland(IslandCardDto newIsland) {
         int firstIsland = newIsland.getIndices().get(0);
         LinkedIslands linkedIsland = islands.get(firstIsland);
         linkedIsland.setIsland(linkedIsland.getIsland().withUuid(newIsland.getUuid()));
@@ -266,26 +267,26 @@ public abstract class View implements MessageListener, UserInterface {
         linkedIsland.setIsland(linkedIsland.getIsland().withMotherNature(newIsland.isHasMotherNature()));
         linkedIsland.setIsMainIsland(true);
 
-        for(Integer index : newIsland.getIndices()){
-            if(index != firstIsland){
+        for (Integer index : newIsland.getIndices()) {
+            if (index != firstIsland) {
                 linkedIsland = islands.get(index);
                 linkedIsland.setIsland(linkedIsland.getIsland().withoutStudents());
                 linkedIsland.setIsland(linkedIsland.getIsland().withTower(newIsland.getTower()));
                 linkedIsland.setIsland(linkedIsland.getIsland().withMotherNature(false));
                 linkedIsland.setIsMainIsland(false);
                 linkedIsland.setConnectedWithNext(true);
-                if(index == getLastIndex(newIsland.getIndices(), islands.size())){
+                if (index == getLastIndex(newIsland.getIndices(), islands.size())) {
                     linkedIsland.setConnectedWithNext(false);
                 }
             }
         }
     }
 
-    private int getLastIndex(List<Integer> list, int dim){
-        if(list.size() == dim)
+    private int getLastIndex(List<Integer> list, int dim) {
+        if (list.size() == dim)
             return -1;
         int res = Math.floorMod(list.get(0), dim);
-        while(list.contains(Math.floorMod(res + 1, dim)))
+        while (list.contains(Math.floorMod(res + 1, dim)))
             res = Math.floorMod(res + 1, dim);
         return res;
     }
@@ -301,6 +302,7 @@ public abstract class View implements MessageListener, UserInterface {
                     opponents.remove((int)opponentIndex.get());
                     opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
                 }
+
             }
         }
         else{
@@ -486,9 +488,9 @@ public abstract class View implements MessageListener, UserInterface {
 
             return false;
 
-        for(LinkedIslands island : getIslands()){
-            if(island.getIsland().getUuid().equals(parameters[1]))
 
+        for (LinkedIslands island : getIslands()) {
+            if (island.getIsland().getUuid().equals(parameters[1]))
                 return true;
         }
         return false;
