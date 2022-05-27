@@ -1,6 +1,8 @@
 package it.polimi.ingsw.observer;
 
+import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,18 @@ public class Observable {
     }
 
     public void notifyModelObserver(Player message) {
+        for (Observer observer : observers) {
+            ((ModelObserver) observer).update(message);
+        }
+    }
+
+    public void notifyModelObserver(GamePhase message) {
+        for (Observer observer : observers) {
+            ((ModelObserver) observer).update(message);
+        }
+    }
+
+    public void notifyModelObserver(AssistantCard message) {
         for (Observer observer : observers) {
             ((ModelObserver) observer).update(message);
         }
