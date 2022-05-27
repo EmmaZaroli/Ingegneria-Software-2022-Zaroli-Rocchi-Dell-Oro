@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.dtos.GameDto;
 import it.polimi.ingsw.dtos.IslandCardDto;
@@ -33,7 +34,7 @@ public abstract class View implements MessageListener, UserInterface {
     private int tableCoins;
     private List<LinkedIslands> islands;
     private String currentPlayer;
-    private List<CharacterCard> characterCards;
+    private List<CharacterCardDto> characterCards;
     protected int numberOfIslandOnTable;
     private GamePhase currentPhase;
     private boolean areEnoughPlayers;
@@ -48,6 +49,7 @@ public abstract class View implements MessageListener, UserInterface {
         for(int i = 0; i < 12; i++)
             this.islands.add(new LinkedIslands(new IslandCardDto()));
         this.tableCoins = 0;
+        this.characterCards = new ArrayList<>();
         this.areEnoughPlayers = true;
     }
 
@@ -90,7 +92,7 @@ public abstract class View implements MessageListener, UserInterface {
         return this.tableCoins;
     }
 
-    public List<CharacterCard> getCharacterCards() {
+    public List<CharacterCardDto> getCharacterCards() {
         return this.characterCards;
     }
 
@@ -176,12 +178,12 @@ public abstract class View implements MessageListener, UserInterface {
         for(IslandCardDto islandCardDto: game.getIslands())
             updateIsland(islandCardDto);
         this.tableCoins = game.getTableCoins();
+        this.characterCards = game.getCharacterCards();
         print();
         this.changePhase(GamePhase.PLANNING);
         updateCurrentPlayersTurn(game.getCurrentPlayer());
         if (game.getCurrentPlayer().equals(getMe().getNickname()))
             this.askAssistantCard(game.getCurrentPlayerDeck());
-        //TODO set coins
     }
 
     private void handleMessage(ChangedPhaseMessage message){
@@ -295,14 +297,14 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(CharacterCardMessage message) {
-        if(message.getCharacterCard() instanceof CharacterCardWithSetUpAction){
-            CharacterCardWithSetUpAction newCharacterCard = (CharacterCardWithSetUpAction) message.getCharacterCard();
-            for(CharacterCard characterCard : characterCards){
-                if(characterCard.getCharacter() == newCharacterCard.getCharacter()){
-                    CharacterCardWithSetUpAction characterCardWithSetUpAction = (CharacterCardWithSetUpAction) characterCard;
-                    characterCardWithSetUpAction.removeAllStudents();
-                    characterCardWithSetUpAction.addStudent(newCharacterCard.getStudents());
-                }
+        CharacterCardDto newCharacterCard = message.getCharacterCard();
+        for(int i = 0; i < characterCards.size(); i++){
+            if(characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()){
+                CharacterCardDto characterCard = characterCards.get(i);
+                characterCard = characterCard.with(newCharacterCard.getPrice());
+                characterCard = characterCard.with(newCharacterCard.getStudents());
+                characterCards.remove(i);
+                characterCards.add(i, characterCard);
             }
         }
     }
@@ -446,7 +448,7 @@ public abstract class View implements MessageListener, UserInterface {
         return true;
     }
 
-    private boolean areCharacterParametersOk(CharacterCard characterCard, Object[] parameters){
+    private boolean areCharacterParametersOk(CharacterCardDto characterCard, Object[] parameters){
         return switch (characterCard.getCharacter()){
             case CHARACTER_ONE -> areParametersOkCharacter1(characterCard, parameters);
             case CHARACTER_SEVEN -> areParametersOkCharacter7(characterCard, parameters);
@@ -456,14 +458,14 @@ public abstract class View implements MessageListener, UserInterface {
         };
     }
 
-    private boolean areParametersOkCharacter1(CharacterCard card, Object[] parameters){
+    private boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
             return false;
         if(!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
             return false;
-        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+        if(!(card.isWithSetUpAction()))
             return false;
-        if(!(cardWithSetUpAction.getStudents().contains(parameters[0])))
+        if(!(card.getStudents().contains(parameters[0])))
             return false;
         for(LinkedIslands island : getIslands()){
             if(island.getIsland().getUuid().equals(parameters[1]))
@@ -472,16 +474,16 @@ public abstract class View implements MessageListener, UserInterface {
         return false;
     }
 
-    private boolean areParametersOkCharacter7(CharacterCard card, Object[] parameters){
+    private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
             return false;
         if(!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
             return false;
-        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+        if(!(card.isWithSetUpAction()))
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
         List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
-        Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction) cardWithSetUpAction).getStudentsCardinality();
+        Map<PawnColor, Integer> cardinalityCard = card.getStudentsCardinality();
         Map<PawnColor, Integer> cardinalityEntrance = me.getBoard().getStudentsInEntranceCardinality();
         for(PawnColor color : PawnColor.values()){
             if(colorsFromCard.stream().filter(x -> x==color).count() > cardinalityCard.get(color))
@@ -498,14 +500,14 @@ public abstract class View implements MessageListener, UserInterface {
         return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
     }
 
-    private boolean areParametersOkCharacter11(CharacterCard card, Object[] parameters){
+    private boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 1)
             return false;
         if(!(parameters[0] instanceof PawnColor))
             return false;
-        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+        if(!(card.isWithSetUpAction()))
             return false;
-        return cardWithSetUpAction.getStudents().contains(parameters[0]);
+        return card.getStudents().contains(parameters[0]);
     }
     //</editor-fold>
 }
