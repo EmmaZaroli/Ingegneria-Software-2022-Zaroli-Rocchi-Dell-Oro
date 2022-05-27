@@ -180,9 +180,10 @@ public abstract class View implements MessageListener, UserInterface {
         this.tableCoins = game.getTableCoins();
         this.characterCards = game.getCharacterCards();
         print();
-        this.changePhase(GamePhase.PLANNING);
+        this.changePhase(game.getGamePhase());
         updateCurrentPlayersTurn(game.getCurrentPlayer());
         if (game.getCurrentPlayer().equals(getMe().getNickname()))
+            //TODO may not be planning phase
             this.askAssistantCard(game.getCurrentPlayerDeck());
     }
 
