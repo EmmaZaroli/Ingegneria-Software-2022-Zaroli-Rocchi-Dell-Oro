@@ -120,6 +120,10 @@ public abstract class View implements MessageListener, UserInterface {
         return Optional.empty();
     }
 
+    public GamePhase getCurrentPhase() {
+        return this.currentPhase;
+    }
+
     //</editor-fold>
 
     @Override
@@ -161,7 +165,6 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(GetDeckMessage message) {
-
         if (message.getNickname().equals(getMe().getNickname())) {
             me = me.with(message.getDeck());
             this.askAssistantCard(message.getDeck());
@@ -191,6 +194,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.characterCards = game.getCharacterCards();
         print();
         this.changePhase(game.getGamePhase());
+
         updateCurrentPlayersTurn(game.getCurrentPlayer());
         if (game.getCurrentPlayer().equals(getMe().getNickname()))
             //TODO may not be planning phase
@@ -201,15 +205,31 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(ChangedPhaseMessage message) {
         currentPhase = message.getNewPhase();
-        changePhase(currentPhase);
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
+        print();
         currentPlayer = message.getNickname();
         updateCurrentPlayersTurn(message.getNickname());
+        if (currentPlayer.equals(getMe().getNickname())) askAction();
     }
 
-    //TODO we shouldn't need this method, the deck gets already overwrite in the deckMessage
+    private void handleMessage(ErrorMessage message) {
+        if (message.getNickname().equals(getMe().getNickname())) {
+            error = message.getError();
+            error(message.getError());
+            askAction();
+        }
+    }
+
+    private void askAction() {
+        if (currentPhase.equals(GamePhase.ACTION_MOVE_STUDENTS)) askStudents();
+        if (currentPhase.equals(GamePhase.ACTION_MOVE_MOTHER_NATURE)) askMotherNatureSteps();
+        if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) askCloud();
+
+    }
+
+
     private void handleMessage(AssistantPlayedMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(message.getAssistantCard());
@@ -224,7 +244,6 @@ public abstract class View implements MessageListener, UserInterface {
                 opponents.add(opponentIndex.get(), opponent);
             }
         }
-        this.print();
     }
 
     private void handleMessage(CloudMessage message) {
@@ -361,10 +380,7 @@ public abstract class View implements MessageListener, UserInterface {
             notEnoughPlayer();
     }
 
-    private void handleMessage(ErrorMessage message) {
-        error = message.getError();
-        error(message.getError());
-    }
+
     //</editor-fold>
 
     //<editor-fold desc="Presentation logic">
@@ -418,6 +434,7 @@ public abstract class View implements MessageListener, UserInterface {
         endpoint.sendMessage(message);
         return true;
     }
+
 
     protected final boolean sendStudentMoveOnBoard(PawnColor student) {
         if (!me.getBoard().getEntrance().contains(student))

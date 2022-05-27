@@ -50,7 +50,7 @@ public class Endpoint {
 
         this.isOnline = true;
         //resetDisconnectionTimer();
-        startPinging();
+        //startPinging();
     }
 
     public boolean isOnline() {
@@ -135,7 +135,7 @@ public class Endpoint {
     }
 
     public void disconnect() {
-        //System.out.println("DISCONNESSIONE");
+        /*
         isOnline = false;
         try {
             this.receiverThread.stopThread();
@@ -143,6 +143,8 @@ public class Endpoint {
         } catch (IOException e) {
             logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
         }
+
+         */
     }
 
     public void notifyDisconnection() {

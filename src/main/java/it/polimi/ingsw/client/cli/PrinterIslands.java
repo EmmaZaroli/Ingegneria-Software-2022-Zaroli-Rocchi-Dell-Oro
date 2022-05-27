@@ -70,16 +70,17 @@ public class PrinterIslands {
         if (islands.get(5).isMainIsland()) topWithConnection(up4, size[5]);
         else topWithConnection(up4);
         System.out.println();
+        centre();
 
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 5);
         else side(false, false, islands.get(11).getIsland().getTower());
-
         System.out.print("                                 ");
         if (islands.get(5).isMainIsland()) side(false, false, islands.get(5).getIsland(), 5, 5);
         else side(false, false, islands.get(5).getIsland().getTower());
         System.out.println();
+        centre();
+        
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 7);
-
         else side(false, false, Tower.NONE);
         System.out.print("                                 ");
         if (islands.get(5).isMainIsland()) side(false, false, islands.get(5).getIsland(), 5, 7);

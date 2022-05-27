@@ -46,7 +46,12 @@ public class GameController implements DisconnectionListener, Observer {
         }
         this.game.changePlayer(0);
         this.game.setGamePhase(PLANNING);
-        for (VirtualView virtualView : virtualViews) game.addObserver(virtualView);
+
+        //setting observers
+        for (VirtualView virtualView : virtualViews) {
+            game.addObserver(virtualView);
+            for (Player player : players) player.addObserver(virtualView);
+        }
     }
 
     private void checkMessage(Message message) throws WrongPlayerException {
@@ -149,7 +154,6 @@ public class GameController implements DisconnectionListener, Observer {
 
     private void playerHasEndedPlanning() {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
-
         if (!this.isTurnComplete()) {
             changePlayer();
         } else {
