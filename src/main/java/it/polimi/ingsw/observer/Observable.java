@@ -24,9 +24,6 @@ public class Observable {
         observers.add(modelObserver);
     }
 
-    public void addObserver(ModelObserver modelObserver) {
-        observers.add(modelObserver);
-    }
 
     /**
      * Removes an observer.
