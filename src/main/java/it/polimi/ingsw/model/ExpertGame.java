@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ExpertGame extends Game {
 
@@ -16,6 +18,10 @@ public class ExpertGame extends Game {
 
     public CharacterCard[] getCharacterCards() {
         return characterCards.clone();
+    }
+
+    public Optional<CharacterCard> getCharacterCard(Character character){
+        return Arrays.stream(characterCards).filter(c -> c.getCharacter().equals(character)).findFirst();
     }
 
     @Override

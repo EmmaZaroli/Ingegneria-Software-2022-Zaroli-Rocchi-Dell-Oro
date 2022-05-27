@@ -13,7 +13,7 @@ public class GameDto implements Serializable {
 
     private boolean isExpert;
     private int tableCoins = 0;
-    private List<CharacterCard> characterCards = new ArrayList<>();
+    private List<CharacterCardDto> characterCards = new ArrayList<>();
     private List<PlayerDto> opponents = new ArrayList<>();
     private List<SchoolBoardDto> opponentsBoard = new ArrayList<>();
     private PlayerDto me;
@@ -28,7 +28,7 @@ public class GameDto implements Serializable {
         this.isExpert = origin instanceof ExpertGame;
         if(isExpert){
             this.tableCoins = ((ExpertGame)origin).getTable().getCoins();
-            this.characterCards = new ArrayList<>(Arrays.asList(((ExpertGame)origin).getCharacterCards()));
+            this.characterCards = Arrays.stream(((ExpertGame) origin).getCharacterCards()).map(x -> new CharacterCardDto(x)).toList();
         }
         Optional<Player> currentPlayerOptional = Arrays.stream(origin.getPlayers()).filter(x -> x.getNickname().equals(nickname)).findFirst();
         if (currentPlayerOptional.isPresent()) {
@@ -96,7 +96,7 @@ public class GameDto implements Serializable {
         return tableCoins;
     }
 
-    public List<CharacterCard> getCharacterCards() {
+    public List<CharacterCardDto> getCharacterCards() {
         return characterCards;
     }
 }

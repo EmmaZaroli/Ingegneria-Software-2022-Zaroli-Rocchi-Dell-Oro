@@ -1,5 +1,6 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.gamecontroller.exceptions.*;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
@@ -77,7 +78,7 @@ public class ExpertGameController extends GameController {
     @Override
     public void update(Message message) {
         if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
-            CharacterCard card = ((CharacterCardMessage) message).getCharacterCard();
+            CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
             Pair<Boolean, Integer> pair = isCardOnTable(card);
             if (!(boolean) pair.first()) {
                 game.throwException(new IllegalCharacterException());
@@ -103,14 +104,14 @@ public class ExpertGameController extends GameController {
         };
     }
 
-    private boolean areParametersOkCharacter1(CharacterCard card, Object[] parameters){
+    private boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
             return false;
         if(!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
             return false;
-        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+        if(!(card.isWithSetUpAction()))
             return false;
-        if(!(cardWithSetUpAction.getStudents().contains(parameters[0])))
+        if(!(((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0])))
             return false;
         for(IslandCard island : getGame().getTable().getIslands()){
             if(island.getUuid().equals(parameters[1]))
@@ -119,16 +120,16 @@ public class ExpertGameController extends GameController {
         return false;
     }
 
-    private boolean areParametersOkCharacter7(CharacterCard card, Object[] parameters){
+    private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
             return false;
         if(!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
             return false;
-        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+        if(!(card.isWithSetUpAction()))
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
         List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
-        Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction) cardWithSetUpAction).getStudentsCardinality();
+        Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudentsCardinality();
         Map<PawnColor, Integer> cardinalityEntrance = getGame().getPlayers()[getGame().getCurrentPlayer()].getBoard().getStudentsInEntranceCardinality();
         for(PawnColor color : PawnColor.values()){
             if(colorsFromCard.stream().filter(x -> x==color).count() > cardinalityCard.get(color))
@@ -145,14 +146,14 @@ public class ExpertGameController extends GameController {
         return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
     }
 
-    private boolean areParametersOkCharacter11(CharacterCard card, Object[] parameters){
+    private boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 1)
             return false;
         if(!(parameters[0] instanceof PawnColor))
             return false;
-        if(!(card instanceof CharacterCardWithSetUpAction cardWithSetUpAction))
+        if(!(card.isWithSetUpAction()))
             return false;
-        return cardWithSetUpAction.getStudents().contains(parameters[0]);
+        return ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0]);
     }
 
 
@@ -178,6 +179,15 @@ public class ExpertGameController extends GameController {
      * @return Pair (true,cardIndex) if the card is on the table, (false,null) otherwise
      */
     private Pair<Boolean, Integer> isCardOnTable(CharacterCard card) {
+        for (int i = 0; i < getGame().getCharacterCards().length; i++) {
+            if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
+                return new Pair<>(true, i);
+            }
+        }
+        return new Pair<>(false, null);
+    }
+
+    private Pair<Boolean, Integer> isCardOnTable(CharacterCardDto card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
                 return new Pair<>(true, i);
