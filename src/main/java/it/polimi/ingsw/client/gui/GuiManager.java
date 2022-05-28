@@ -79,21 +79,31 @@ public class GuiManager extends View {
 
     @Override
     public void genericMessage(String Message) {
-
+        //TODO
     }
 
     @Override
     public void changePhase(GamePhase phase) {
-
+        //TODO
     }
 
     @Override
     public void askAssistantCard(List<AssistantCard> deck) {
-
+        //TODO
     }
 
     @Override
     public void askMotherNatureSteps() {
+        //TODO
+    }
+
+    @Override
+    public void askStudents() {
+        //TODO
+    }
+
+    @Override
+    public void askCloud() {
 
     }
 
@@ -108,12 +118,12 @@ public class GuiManager extends View {
     }
 
     @Override
-    public void lose() {
+    public void lose(List<String> winners) {
 
     }
 
     @Override
-    public void draw() {
+    public void draw(String otherWinner) {
 
     }
 
@@ -134,6 +144,16 @@ public class GuiManager extends View {
 
     @Override
     public void printGameStarting() {
+
+    }
+
+    @Override
+    public void notEnoughPlayer() {
+
+    }
+
+    @Override
+    public void gameOverFromDisconnection() {
 
     }
 }

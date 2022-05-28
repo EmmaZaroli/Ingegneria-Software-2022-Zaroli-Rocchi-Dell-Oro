@@ -412,7 +412,7 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    protected final boolean sendPlayerNickname(String nickname) {
+    public final boolean sendPlayerNickname(String nickname) {
         Message message = new NicknameProposalMessage(nickname);
         endpoint.sendMessage(message);
         return true;
