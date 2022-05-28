@@ -184,12 +184,16 @@ public class Cli extends View {
     }
 
     public void askMotherNatureSteps() {
-        out.print("Mother Nature steps");
-        if (isExpertGame()) out.print(" or choose character card to activate");
-        out.print(": ");
-        int steps = Integer.parseInt(readLine());
-        //TODO check if number is <0 or >cardplayed.steps
-        this.sendMotherNatureSteps(steps);
+        boolean valid = false;
+        while(!valid) {
+            out.print("Mother Nature steps");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            int steps = Integer.parseInt(readLine());
+            //TODO check if number is <0 or >cardplayed.steps
+            if(this.sendMotherNatureSteps(steps)) valid = true;
+            else error("invalid number of steps");
+        }
     }
 
     public void askCloud() {
@@ -215,7 +219,7 @@ public class Cli extends View {
                 validDestination = false;
                 while (!validDestination) {
                     out.print("Choose location (island's index/schoolboard) : ");
-                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
+                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
                     if (destination != 13) {
                         validObject=true;
                         validDestination = true;
@@ -234,6 +238,7 @@ public class Cli extends View {
         }
     }
 
+    //TODO to cancel
     /*
     public void askStudents() {
         int moves = getOpponents().size() + 2;
