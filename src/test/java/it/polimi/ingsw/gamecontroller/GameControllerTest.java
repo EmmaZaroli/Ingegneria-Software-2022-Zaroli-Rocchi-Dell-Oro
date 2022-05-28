@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.CloudMessage;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.servercontroller.User;
 import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +29,8 @@ class GameControllerTest extends TestCase {
     Player[] players = {player1, player2};
     Game game = new Game(players, new Table(PlayersNumber.TWO), new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
     TableController tableController = new TableController(game.getTable(), game.getParameters());
-    VirtualView[] virtualViews = new VirtualView[2];
+    VirtualView[] virtualViews = {new VirtualView(new User("player1"), game), new VirtualView(new User("player2"), game)};
+
     //TODO initialize virtualViews
     GameController gameController = new GameController(game, tableController, virtualViews);
 
@@ -201,7 +203,7 @@ class GameControllerTest extends TestCase {
         int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
         MoveMotherNatureMessage message2 = new MoveMotherNatureMessage("player2", 1);
         gameController.update(message2);
-        Assertions.assertEquals((originalMnPosition + 1) % 12, tableController.getTable().getIslandWithMotherNature());
+        Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
 
         //player2 choose cloud
         //wrong message (cloud empty)
