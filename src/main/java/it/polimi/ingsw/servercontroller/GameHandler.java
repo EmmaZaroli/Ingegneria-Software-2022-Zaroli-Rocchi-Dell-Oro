@@ -51,7 +51,8 @@ public class GameHandler {
     public void reconnectPlayer(String nickname, Endpoint endpoint) {
         for (User user : users) {
             if (user.getNickname().equals(nickname)) {
-                user.getEndpoint().removeDisconnectionListener(gameController);
+                if(user.getEndpoint().isPresent())
+                    user.getEndpoint().get().removeDisconnectionListener(gameController);
                 endpoint.addDisconnectionListener(gameController);
                 user.setEndpoint(endpoint);
                 user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));

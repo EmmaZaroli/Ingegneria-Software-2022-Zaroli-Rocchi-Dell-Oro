@@ -3,18 +3,20 @@ package it.polimi.ingsw.servercontroller;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 
+import java.util.Optional;
+
 public class User {
     private final String nickname;
-    private Endpoint endpoint;
+    private Optional<Endpoint> endpoint;
 
     public User(String nickname) {
         this.nickname = nickname;
-        this.endpoint = null;
+        this.endpoint = Optional.empty();
     }
 
     public User(String nickname, Endpoint endpoint) {
         this.nickname = nickname;
-        this.endpoint = endpoint;
+        this.endpoint = Optional.ofNullable(endpoint);
     }
 
     @Override
@@ -35,23 +37,22 @@ public class User {
         return nickname;
     }
 
-    public Endpoint getEndpoint() {
+    public Optional<Endpoint> getEndpoint() {
         return endpoint;
     }
 
     public boolean isOnline() {
-        if (endpoint == null)
+        if (endpoint.isEmpty())
             return false;
-        return endpoint.isOnline();
+        return endpoint.get().isOnline();
     }
 
     public void setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
+        this.endpoint = Optional.ofNullable(endpoint);
     }
 
     public void sendMessage(Message message) {
-        if (endpoint != null)
-            endpoint.sendMessage(message);
+        endpoint.ifPresent(value -> value.sendMessage(message));
     }
 
 }

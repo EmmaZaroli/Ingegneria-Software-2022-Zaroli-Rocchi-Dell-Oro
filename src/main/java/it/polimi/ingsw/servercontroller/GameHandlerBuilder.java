@@ -109,8 +109,8 @@ public class GameHandlerBuilder {
             case EXPERT_MODE -> buildExpertGameController(gameModel, virtualViews);
         };
         for (VirtualView virtualView : virtualViews) {
-            if (virtualView.getClientHandler() != null) {
-                virtualView.getClientHandler().addDisconnectionListener(gameController);
+            if (virtualView.getClientHandler().isPresent()) {
+                virtualView.getClientHandler().get().addDisconnectionListener(gameController);
                 virtualView.addObserver(gameController);
             }
         }
