@@ -201,6 +201,41 @@ public class Cli extends View {
         this.sendCloudChoice(indexCloud);
     }
 
+    public void askStudents(){
+        CliParsen parsenStudents = new CliParsen();
+        boolean validObject = false;
+        boolean validDestination;
+        int destination = 0;
+        while (!validObject) {
+            out.print("Choose student to move");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            String input = readLine();
+            PawnColor student = parsenStudents.checkIfStudent(input);
+            if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
+                validDestination = false;
+                while (!validDestination) {
+                    out.print("Choose location (island's index/schoolboard) : ");
+                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
+                    if (destination != 13) {
+                        validObject=true;
+                        validDestination = true;
+                    } else {
+                        this.error("the destination selected is invalid, please retry");
+                    }
+                }
+                if(destination == 12) sendStudentMoveOnBoard(student);
+                else sendStudentMoveOnIsland(student,destination);
+            }
+            // the input was not a color, checking if it's a character card
+            else if (isExpertGame()) {
+                //TODO
+                if (isACard(input)) ;
+            } else error("invalid student selected");
+        }
+    }
+
+    /*
     public void askStudents() {
         int moves = getOpponents().size() + 2;
         CliParsen parsenStudents = new CliParsen();
@@ -236,6 +271,8 @@ public class Cli extends View {
         }
 
     }
+
+     */
 
     private boolean isACard(String input) {
         //TODO check if input is a card

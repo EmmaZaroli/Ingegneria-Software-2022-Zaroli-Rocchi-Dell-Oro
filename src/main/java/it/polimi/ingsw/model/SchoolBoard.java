@@ -42,6 +42,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void addProfessor(PawnColor color) {
         professorTable.add(color);
+        notifyModelObserver(this);
     }
 
     /**
@@ -51,7 +52,11 @@ public class SchoolBoard extends Observable implements Serializable {
      * @return true if the player is supposed to take one coin from the table, false otherwise
      */
     public boolean addStudentToDiningRoom(PawnColor color) {
-        return diningRoom.addStudent(color);
+       if(diningRoom.addStudent(color)) {
+           notifyModelObserver(this);
+           return true;
+       }
+       return false;
     }
 
     /**
@@ -61,6 +66,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void addStudentsToEntrance(List<PawnColor> color) {
         entrance.addAll(color);
+        notifyModelObserver(this);
     }
 
     /**
@@ -157,6 +163,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void removeProfessor(PawnColor color) {
         professorTable.remove(color);
+        notifyModelObserver(this);
     }
 
     /**
@@ -166,6 +173,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void removeStudentFromEntrance(PawnColor color) {
         entrance.remove(color);
+        notifyModelObserver(this);
     }
 
     /**
@@ -173,6 +181,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void removeTower() {
         towers--;
+        notify(this);
     }
 
     /**

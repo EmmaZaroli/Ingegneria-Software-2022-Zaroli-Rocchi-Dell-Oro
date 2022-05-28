@@ -181,25 +181,26 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(GameStartingMessage message) {
-        GameDto game = message.getGame();
-        this.printGameStarting();
-        for (int i = 0; i < game.getOpponents().size(); i++)
-            this.opponents.add(new PlayerInfo(game.getOpponents().get(i)).with(game.getOpponentsBoard().get(i)));
-        this.me = new PlayerInfo(game.getMe()).with(game.getSchoolBoard());
-        this.clouds = new ArrayList<>(game.getClouds());
-        for(IslandCardDto islandCardDto: game.getIslands())
+            GameDto game = message.getGame();
+            this.printGameStarting();
+            for (int i = 0; i < game.getOpponents().size(); i++)
+                this.opponents.add(new PlayerInfo(game.getOpponents().get(i)).with(game.getOpponentsBoard().get(i)));
+            this.me = new PlayerInfo(game.getMe()).with(game.getSchoolBoard());
+            this.clouds = new ArrayList<>(game.getClouds());
+            for (IslandCardDto islandCardDto : game.getIslands())
 
-            updateIsland(islandCardDto);
-        this.tableCoins = game.getTableCoins();
-        this.characterCards = game.getCharacterCards();
-        print();
-        this.changePhase(game.getGamePhase());
+                updateIsland(islandCardDto);
+            this.tableCoins = game.getTableCoins();
+            this.characterCards = game.getCharacterCards();
+            print();
+            this.changePhase(game.getGamePhase());
 
-        updateCurrentPlayersTurn(game.getCurrentPlayer());
-        if (game.getCurrentPlayer().equals(getMe().getNickname()))
-            //TODO may not be planning phase
-            this.askAssistantCard(game.getCurrentPlayerDeck());
-
+            updateCurrentPlayersTurn(game.getCurrentPlayer());
+            if (game.getCurrentPlayer().equals(getMe().getNickname())) {
+                //TODO may not be planning phase
+                me = me.with(message.getDeckFirstPlayer());
+                this.askAssistantCard(game.getCurrentPlayerDeck());
+            }
 
     }
 
@@ -267,6 +268,8 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
         this.print();
+        if(message.getNickname().equals(me.getNickname()))
+            askAction();
     }
 
     private void handleMessage(IslandMessage message) {
@@ -437,16 +440,12 @@ public abstract class View implements MessageListener, UserInterface {
 
 
     protected final boolean sendStudentMoveOnBoard(PawnColor student) {
-        if (!me.getBoard().getEntrance().contains(student))
-            return false;
         Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         endpoint.sendMessage(message);
         return true;
     }
 
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
-        if (!me.getBoard().getEntrance().contains(student) || islandIndex < 0 || islandIndex >= getIslands().size())
-            return false;
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         message.setIslandCard(getIslands().get(islandIndex).getIsland());
         endpoint.sendMessage(message);

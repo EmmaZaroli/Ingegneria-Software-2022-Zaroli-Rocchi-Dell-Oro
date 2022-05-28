@@ -166,4 +166,6 @@ public class Game extends Observable implements Serializable {
     public int howManyPlayersOnline() {
         return (int) Arrays.stream(players).filter(Player::isOnline).count();
     }
+
+
 }
