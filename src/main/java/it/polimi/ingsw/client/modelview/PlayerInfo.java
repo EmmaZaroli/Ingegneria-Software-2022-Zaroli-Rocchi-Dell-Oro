@@ -23,14 +23,18 @@ public class PlayerInfo {
 
     public PlayerInfo(PlayerDto origin) {
         this.nickname = origin.getNickname();
+        this.schoolBoard = origin.getSchoolBoard();
+        this.discardPileHead = origin.getDiscardPileHead();
+        this.deck = origin.getDeck();
         this.isOnline = origin.isOnline();
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, boolean isOnline) {
+    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, ArrayList<AssistantCard> deck, boolean isOnline) {
         this.nickname = nickname;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;
+        this.deck = deck;
         this.coins = coins;
         this.isOnline = isOnline;
     }
@@ -97,6 +101,6 @@ public class PlayerInfo {
 
     public PlayerInfo deepClone() {
         //TODO dtos if we have time
-        return new PlayerInfo(this.nickname, this.schoolBoard, this.discardPileHead, this.coins, this.isOnline);
+        return new PlayerInfo(this.nickname, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline);
     }
 }

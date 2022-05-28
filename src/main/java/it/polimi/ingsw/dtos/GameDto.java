@@ -15,14 +15,11 @@ public class GameDto implements Serializable {
     private int tableCoins = 0;
     private List<CharacterCardDto> characterCards = new ArrayList<>();
     private List<PlayerDto> opponents = new ArrayList<>();
-    private List<SchoolBoardDto> opponentsBoard = new ArrayList<>();
     private PlayerDto me;
     private List<CloudTileDto> clouds;
     private List<IslandCardDto> islands;
-    private SchoolBoardDto schoolBoard;
     private GamePhase gamePhase;
     private String currentPlayer;
-    private List<AssistantCard> currentPlayerDeck;
 
     public GameDto(Game origin, String nickname) {
         this.isExpert = origin instanceof ExpertGame;
@@ -36,7 +33,6 @@ public class GameDto implements Serializable {
             for (Player player : origin.getPlayers()) {
                 if (!player.getNickname().equals(nickname)) {
                     opponents.add(new PlayerDto(player));
-                    opponentsBoard.add(new SchoolBoardDto(player.getBoard()));
                 }
             }
             this.me = new PlayerDto(currentPlayer);
@@ -45,10 +41,8 @@ public class GameDto implements Serializable {
             if (origin instanceof ExpertGame expertGame) {
                 this.tableCoins = expertGame.getTable().getCoins();
             }
-            this.schoolBoard = new SchoolBoardDto(currentPlayer.getBoard());
             this.gamePhase = origin.getGamePhase();
             this.currentPlayer = origin.getPlayer(origin.getCurrentPlayer()).getNickname();
-            this.currentPlayerDeck = origin.getPlayer(origin.getCurrentPlayer()).getAssistantDeck();
         }
     }
 
@@ -68,12 +62,8 @@ public class GameDto implements Serializable {
         return this.opponents;
     }
 
-    public List<SchoolBoardDto> getOpponentsBoard() {
-        return this.opponentsBoard;
-    }
-
     public SchoolBoardDto getSchoolBoard() {
-        return this.schoolBoard;
+        return this.me.getSchoolBoard();
     }
 
     public GamePhase getGamePhase() {
@@ -85,7 +75,7 @@ public class GameDto implements Serializable {
     }
 
     public List<AssistantCard> getCurrentPlayerDeck() {
-        return currentPlayerDeck;
+        return this.me.getDeck();
     }
 
     public boolean isExpert() {
