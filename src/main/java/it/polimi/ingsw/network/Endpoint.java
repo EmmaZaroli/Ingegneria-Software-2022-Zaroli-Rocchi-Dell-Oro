@@ -49,8 +49,8 @@ public class Endpoint {
         }
 
         this.isOnline = true;
-        resetDisconnectionTimer();
-        startPinging();
+        //resetDisconnectionTimer();
+        //startPinging();
     }
 
     public boolean isOnline() {
@@ -101,7 +101,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            resetDisconnectionTimer();
+            //resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
                 for (MessageListener l : messageListeners) {
                     l.onMessageReceived(m);
@@ -135,7 +135,7 @@ public class Endpoint {
     }
 
     public void disconnect() {
-        //System.out.println("DISCONNESSIONE");
+        /*
         isOnline = false;
         try {
             this.receiverThread.stopThread();
@@ -143,6 +143,8 @@ public class Endpoint {
         } catch (IOException e) {
             logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
         }
+
+         */
     }
 
     public void notifyDisconnection() {

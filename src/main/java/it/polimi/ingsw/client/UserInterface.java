@@ -23,19 +23,24 @@ public interface UserInterface {
 
     void genericMessage(String Message);
 
+    //TODO is this ok or it's already incorporated in print() ?
     void changePhase(GamePhase phase);
 
     void askAssistantCard(List<AssistantCard> deck);
 
     void askMotherNatureSteps();
 
+    void askStudents();
+
+    void askCloud();
+
     void updateCurrentPlayersTurn(String otherPlayer);
 
     void win();
 
-    void lose();
+    void lose(List<String> winners);
 
-    void draw();
+    void draw(String otherWinner);
 
     void errorAndExit(String error);
 
@@ -44,4 +49,8 @@ public interface UserInterface {
     void print();
 
     void printGameStarting();
+
+    void notEnoughPlayer();
+
+    void gameOverFromDisconnection();
 }

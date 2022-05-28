@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.cli;
 
+import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.enums.Character;
 
@@ -18,15 +19,15 @@ public class PrinterCharacterCards {
     private final String CHARACTER_NINE = "9";
     private final String CHARACTER_ELEVEN = "11";
 
-    public void print(List<CharacterCard> cards) {
+    public void print(List<CharacterCardDto> cards) {
         PrintStream out = System.out;
         for (int i = 0; i < 3; i++) {
             out.print("   __________    ");
         }
         out.println();
         for (int i = 0; i < 3; i++) {
-            CharacterCard card = cards.get(i);
-            out.print("  |" + card.getCurrentPrice() + fromCardToString(card.getCharacter()) + "|    ");
+            CharacterCardDto card = cards.get(i);
+            out.print("  |" + card.getPrice() + fromCardToString(card.getCharacter()) + "|    ");
         }
         out.println();
         for (int i = 0; i < 3; i++) {

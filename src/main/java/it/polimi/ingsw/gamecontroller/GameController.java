@@ -14,6 +14,7 @@ import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.CloudMessage;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
@@ -23,9 +24,9 @@ import java.util.*;
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
-//TODO implement ViewObserver
+
 //TODO add observables/observers
-public class GameController implements DisconnectionListener {
+public class GameController implements DisconnectionListener, Observer {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
@@ -43,8 +44,17 @@ public class GameController implements DisconnectionListener {
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
         }
-        this.game.setCurrentPlayer(0);
+        this.game.changePlayer(0);
         this.game.setGamePhase(PLANNING);
+
+        //setting observers
+        for (VirtualView virtualView : virtualViews) {
+            game.addObserver(virtualView);
+            for (Player player : players) {
+                player.addObserver(virtualView);
+                player.getBoard().addObserver(virtualView);
+            }
+        }
     }
 
     private void checkMessage(Message message) throws WrongPlayerException {
@@ -61,7 +71,8 @@ public class GameController implements DisconnectionListener {
         }
     }
 
-    public void update(Message message) {
+    public void update(Object m) {
+        Message message = (Message) m;
         try {
             checkMessage(message);
             switch (game.getGamePhase()) {
@@ -97,7 +108,7 @@ public class GameController implements DisconnectionListener {
     }
 
     private void planning(Message message) {
-        if (message.getType().equals(MessageType.ASSISTANT_CARD)) {
+        if (message.getType().equals(MessageType.ACTION_PLAY_ASSISTANT)) {
             try {
                 this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard().value());
             } catch (IllegalActionException | IllegalAssistantException e) {
@@ -146,7 +157,6 @@ public class GameController implements DisconnectionListener {
 
     private void playerHasEndedPlanning() {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
-
         if (!this.isTurnComplete()) {
             changePlayer();
         } else {
@@ -337,6 +347,7 @@ public class GameController implements DisconnectionListener {
     }
 
     private void changePlayer() {
+        System.out.println("changed player");
         int nextPlayer = pickNextPlayer();
         game.changePlayer(nextPlayer);
 

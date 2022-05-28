@@ -1,20 +1,31 @@
 package it.polimi.ingsw.dtos;
 
+import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.ExpertPlayer;
 import it.polimi.ingsw.model.Player;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 105L;
 
     private final String nickname;
+    private final SchoolBoardDto schoolBoard;
+    private final AssistantCard discardPileHead;
+    private final ArrayList<AssistantCard> deck;
     private final int coins;
+    private final boolean isOnline;
 
     public PlayerDto(Player origin) {
         this.nickname = origin.getNickname();
+        this.schoolBoard = new SchoolBoardDto(origin.getBoard());
+        this.discardPileHead = origin.getDiscardPileHead();
+        this.deck = new ArrayList<>(origin.getAssistantDeck());
+        this.isOnline = origin.isOnline();
         this.coins = origin instanceof ExpertPlayer ? ((ExpertPlayer) origin).getCoins() : 0;
     }
 
@@ -22,7 +33,23 @@ public class PlayerDto implements Serializable {
         return nickname;
     }
 
+    public SchoolBoardDto getSchoolBoard() {
+        return schoolBoard;
+    }
+
+    public AssistantCard getDiscardPileHead() {
+        return discardPileHead;
+    }
+
+    public ArrayList<AssistantCard> getDeck() {
+        return deck;
+    }
+
     public int getCoins() {
         return coins;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
     }
 }

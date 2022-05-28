@@ -91,7 +91,7 @@ public class Game extends Observable implements Serializable {
 
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
-        notify(gamePhase);
+        notifyModelObserver(gamePhase);
     }
 
     public void setPlayedCount(int playedCount) {
@@ -117,6 +117,7 @@ public class Game extends Observable implements Serializable {
 
     public void movePawn() {
         this.movedPawns++;
+        notifyModelObserver("ask student");
     }
 
     public void callWin(String nicknameWinner) {
@@ -146,6 +147,8 @@ public class Game extends Observable implements Serializable {
     public void changePlayer(int playerIndex) {
         setCurrentPlayer(playerIndex);
         setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
+
+        notifyModelObserver(this.players[currentPlayer]);
     }
 
     public void setError(Exception e) {
@@ -164,4 +167,6 @@ public class Game extends Observable implements Serializable {
     public int howManyPlayersOnline() {
         return (int) Arrays.stream(players).filter(Player::isOnline).count();
     }
+
+
 }

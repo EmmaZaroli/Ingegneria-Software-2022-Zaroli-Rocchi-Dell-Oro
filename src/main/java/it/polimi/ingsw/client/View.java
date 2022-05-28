@@ -2,26 +2,26 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.dtos.CloudTileDto;
-import it.polimi.ingsw.dtos.SchoolBoardDto;
+import it.polimi.ingsw.dtos.GameDto;
 import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.IslandCard;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
+import java.util.List;
 
 /**
  * View class contains a small representation of the game model
@@ -34,8 +34,11 @@ public abstract class View implements MessageListener, UserInterface {
     private int tableCoins;
     private List<LinkedIslands> islands;
     private String currentPlayer;
-    private List<CharacterCard> characterCards;
+    private List<CharacterCardDto> characterCards;
     protected int numberOfIslandOnTable;
+    private GamePhase currentPhase;
+    private boolean areEnoughPlayers;
+    private String error;
     private Endpoint endpoint;
 
     protected View() {
@@ -43,7 +46,11 @@ public abstract class View implements MessageListener, UserInterface {
         this.me = new PlayerInfo();
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
+        for (int i = 0; i < 12; i++)
+            this.islands.add(new LinkedIslands(new IslandCardDto()));
         this.tableCoins = 0;
+        this.characterCards = new ArrayList<>();
+        this.areEnoughPlayers = true;
     }
 
     //<editor-fold desc="Getters">
@@ -85,10 +92,59 @@ public abstract class View implements MessageListener, UserInterface {
         return this.tableCoins;
     }
 
-    public List<CharacterCard> getCharacterCards() {
+    public List<CharacterCardDto> getCharacterCards() {
         return this.characterCards;
     }
+
+    public boolean areEnoughPlayers() {
+        return areEnoughPlayers;
+    }
+
+    public Optional<Integer> getCloudIndex(UUID cloudUuid) {
+        for (int cloudIndex = 0; cloudIndex < clouds.size(); cloudIndex++) {
+            if (clouds.get(cloudIndex).getUuid().equals(cloudUuid))
+                return Optional.of(cloudIndex);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<PlayerInfo> getOpponent(String nickname) {
+        return opponents.stream().filter(o -> o.getNickname().equals(nickname)).findFirst();
+    }
+
+    public Optional<Integer> getOpponentIndex(String nickname) {
+        for (int opponentIndex = 0; opponentIndex < opponents.size(); opponentIndex++) {
+            if (opponents.get(opponentIndex).getNickname().equals(nickname))
+                return Optional.of(opponentIndex);
+        }
+        return Optional.empty();
+    }
+
+    public GamePhase getCurrentPhase() {
+        return this.currentPhase;
+    }
+
     //</editor-fold>
+
+    @Override
+    public void onMessageReceived(Message message) {
+        if (message instanceof NicknameResponseMessage nicknameResponseMessage) handleMessage(nicknameResponseMessage);
+        if (message instanceof GametypeResponseMessage gametypeResponseMessage) handleMessage(gametypeResponseMessage);
+        if (message instanceof GameStartingMessage gameStartingMessage) handleMessage(gameStartingMessage);
+        if (message instanceof ChangedPhaseMessage changedPhaseMessage) handleMessage(changedPhaseMessage);
+        if (message instanceof ChangedPlayerMessage changedPlayerMessage) handleMessage(changedPlayerMessage);
+        if (message instanceof AssistantPlayedMessage assistantPlayedMessage) handleMessage(assistantPlayedMessage);
+        if (message instanceof CloudMessage cloudMessage) handleMessage(cloudMessage);
+        if (message instanceof SchoolBoardMessage schoolBoardMessage) handleMessage(schoolBoardMessage);
+        if (message instanceof IslandMessage islandMessage) handleMessage(islandMessage);
+        if (message instanceof CoinMessage coinMessage) handleMessage(coinMessage);
+        if (message instanceof CharacterCardMessage characterCardMessage) handleMessage(characterCardMessage);
+        if (message instanceof GameOverMessage gameOverMessage) handleMessage(gameOverMessage);
+        if (message instanceof ConnectionMessage connectionMessage) handleMessage(connectionMessage);
+        if (message instanceof ErrorMessage errorMessage) handleMessage(errorMessage);
+        if (message instanceof GetDeckMessage getDeckMessage) handleMessage(getDeckMessage);
+        if (message instanceof MoveStudentMessage moveStudentMessage) handleMessage(moveStudentMessage);
+    }
 
     //<editor-fold desc="Message handlers">
     private void handleMessage(NicknameResponseMessage message) {
@@ -101,12 +157,24 @@ public abstract class View implements MessageListener, UserInterface {
             case FROM_DISCONNECTED_PLAYER -> {
                 me = me.with(message.getNickname());
                 this.showNicknameResult(true, true);
-                //TODO restore model view
             }
             case FROM_CONNECTED_PLAYER -> {
                 this.showNicknameResult(false, false);
                 this.askPlayerNickname();
             }
+        }
+    }
+
+    //TODO maybe create another message for this
+    private void handleMessage(MoveStudentMessage message){
+        if(message.getNickname().equals(getMe().getNickname()))
+            askAction();
+    }
+
+    private void handleMessage(GetDeckMessage message) {
+        if (message.getNickname().equals(getMe().getNickname())) {
+            me = me.with(message.getDeck());
+            this.askAssistantCard(message.getDeck());
         }
     }
 
@@ -119,171 +187,211 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    private void handleMessage(CloudMessage message) {
+    private void handleMessage(GameStartingMessage message) {
+            GameDto game = message.getGame();
+            this.printGameStarting();
+            for (int i = 0; i < game.getOpponents().size(); i++)
+                this.opponents.add(new PlayerInfo(game.getOpponents().get(i)));
+            this.me = new PlayerInfo(game.getMe());
+            this.clouds = new ArrayList<>(game.getClouds());
+            for (IslandCardDto islandCardDto : game.getIslands())
 
-        Optional<CloudTileDto> cloud = this.clouds.stream()
-                .filter(x -> x.getUuid().equals(message.getCloud().getUuid())).findFirst();
-        //TODO
-    }
+                updateIsland(islandCardDto);
+            this.tableCoins = game.getTableCoins();
+            this.characterCards = game.getCharacterCards();
+            print();
+            this.currentPhase = game.getGamePhase();
+            this.changePhase(game.getGamePhase());
 
-    private void handleMessage(SchoolBoardMessage message) {
-        //TODO dto with wither
-        if (message.getNickname().equals(me.getNickname())) {
-            this.me = this.me.with(message.getSchoolBoard());
-        } else {
-            Optional<PlayerInfo> player = this.opponents.stream()
-                    .filter(x -> x.getNickname().equals(message.getNickname())).findFirst();
+            this.currentPlayer = game.getCurrentPlayer();
 
-            if (player.isPresent()) {
-                //TODO change schoolboard
+            updateCurrentPlayersTurn(game.getCurrentPlayer());
+            if (game.getCurrentPlayer().equals(getMe().getNickname())) {
+                //TODO may not be planning phase
+                this.askAssistantCard(getMe().getDeck());
             }
-        }
-        this.print();
+
     }
+
+    private void handleMessage(ChangedPhaseMessage message) {
+        currentPhase = message.getNewPhase();
+    }
+
+    private void handleMessage(ChangedPlayerMessage message) {
+        print();
+        currentPlayer = message.getNickname();
+        updateCurrentPlayersTurn(message.getNickname());
+        if (currentPlayer.equals(getMe().getNickname())) askAction();
+    }
+
+    private void handleMessage(ErrorMessage message) {
+        if (message.getNickname().equals(getMe().getNickname())) {
+            error = message.getError();
+            error(message.getError());
+            askAction();
+        }
+    }
+
+    private void askAction() {
+        if (currentPhase.equals(GamePhase.ACTION_MOVE_STUDENTS)) askStudents();
+        if (currentPhase.equals(GamePhase.ACTION_MOVE_MOTHER_NATURE)) askMotherNatureSteps();
+        if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) askCloud();
+
+    }
+
 
     private void handleMessage(AssistantPlayedMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(message.getAssistantCard());
+            this.me = this.me.with(me.getDeck().remove(message.getAssistantCard()));
         } else {
-            //TODO withers in list
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if (opponentIndex.isPresent()) {
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove(opponentIndex.get());
+                opponent = opponent.with(message.getAssistantCard());
+                opponent = opponent.with(opponent.getDeck().remove(message.getAssistantCard()));
+                opponents.add(opponentIndex.get(), opponent);
+            }
         }
-        this.print();
     }
 
-    private void handleMessage(CoinMessage message) {
-        //TODO coins on the table?
+    private void handleMessage(CloudMessage message) {
+        Optional<Integer> cloudIndex = getCloudIndex(message.getCloud().getUuid());
+        if (cloudIndex.isPresent()) {
+            clouds.remove((int) cloudIndex.get());
+            clouds.add(cloudIndex.get(), message.getCloud());
+            print();
+        }
+    }
+
+    private void handleMessage(SchoolBoardMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
-            this.me = this.me.with(message.getCoins());
+            this.me = this.me.with(message.getSchoolBoard());
         } else {
-            //TODO withers in list
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if (opponentIndex.isPresent()) {
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove((int) opponentIndex.get());
+                opponents.add(opponentIndex.get(), opponent.with(message.getSchoolBoard()));
+            }
         }
         this.print();
     }
 
     private void handleMessage(IslandMessage message) {
-        //TODO after we put the deleted island in the message
-        //only if the field deletedIsland is not empty, else only update the island and print
-        int islandMain = 0; // main island
-        int islandCancelled = 0; // island deleted
-        for (int k = 0; k < 12; k++) {
-            if (islands.get(k).getMainIsland().getUuid().equals(message.getIsland().getUuid())) {
-                islandMain = k;
-            }
-            if (islands.get(k).getMainIsland().getUuid().equals(message.getDeletedIsland().getUuid())) {
-                islandCancelled = k;
-            }
-        }
+        updateIsland(message.getIsland());
 
-        if (islands.get(islandMain).getLinkedislands().contains(islands.get(Math.floorMod(islandCancelled - 1, 12)).getMainIsland())) {
-            islands.get(Math.floorMod(islandCancelled - 1, 12)).setLinkedislands(islands.get(islandCancelled).getMainIsland());
-        } else {
-            islands.get(islandCancelled).setLinkedislands(islands.get((Math.floorMod(islandCancelled + 1, 12))).getMainIsland());
-        }
-        islands.get(islandCancelled).setMainConnected(false);
-        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getLinkedislands());
-        islands.get(islandMain).setLinkedislands(islands.get(islandCancelled).getMainIsland());
-
-        //update island part
-
-        //TODO need a function to add only the new students on the islands
-        //islands.get(islandMain).getMainIsland().movePawnOnIsland();
-
-        Tower newTower = message.getIsland().getTower();
-        islands.get(islandMain).setMainIsland(islands.get(islandMain).getMainIsland().withTower(newTower));
-        for (IslandCardDto island : islands.get(islandMain).getLinkedislands()) {
-            island.setTower(newTower);
-        }
         this.print();
     }
 
-    private void handleMessage(GameStartingMessage message) {
-        this.printGameStarting();
-        for (int i = 0; i < message.getGame().getOpponents().size(); i++)
-            this.opponents.add(new PlayerInfo(message.getGame().getOpponents().get(i)).with(message.getGame().getOpponentsBoard().get(i)));
-        this.me = new PlayerInfo(message.getGame().getMe()).with(message.getGame().getSchoolBoard());
-        this.clouds = new ArrayList<>(message.getGame().getClouds());
-        this.islands = getLinkedIslands(message.getGame().getIslands());
-        this.tableCoins = message.getGame().getTableCoins();
-        print();
-        this.changePhase(GamePhase.PLANNING);
-        updateCurrentPlayersTurn(message.getFirstPlayer());
-        if (message.getFirstPlayer().equals(getMe().getNickname()))
-            this.askAssistantCard(message.getDeckfirstPlayer());
-    }
-    //</editor-fold>
+    private void updateIsland(IslandCardDto newIsland) {
+        int firstIsland = newIsland.getIndices().get(0);
+        LinkedIslands linkedIsland = islands.get(firstIsland);
+        linkedIsland.setIsland(linkedIsland.getIsland().withUuid(newIsland.getUuid()));
+        linkedIsland.setIsland(linkedIsland.getIsland().withStudents(newIsland.getStudents()));
+        linkedIsland.setIsland(linkedIsland.getIsland().withTower(newIsland.getTower()));
+        linkedIsland.setIsland(linkedIsland.getIsland().withMotherNature(newIsland.isHasMotherNature()));
+        linkedIsland.setIsMainIsland(true);
 
-    private List<LinkedIslands> getLinkedIslands(List<IslandCardDto> list){
-        List<LinkedIslands> res = new LinkedList<>();
-        for(IslandCardDto island : list){
-            res.addAll(getLinkedIslands(island));
-        }
-        return res;
-    }
-
-    private List<LinkedIslands> getLinkedIslands(IslandCardDto island){
-        List<LinkedIslands> res = new LinkedList<>();
-        int studentsPerIsland = Math.max(1, island.getStudents().size() / island.getSize());
-        int studentsIndex = 0;
-        for(int i = 0; i < island.getSize(); i++){
-            LinkedIslands linkedIsland = new LinkedIslands();
-            IslandCardDto islandDto = new IslandCardDto();
-            //TODO set uuid
-            islandDto = islandDto.withIndeces(island.getIndices().get(i));
-            if(i == 0)
-                islandDto = islandDto.withMotherNature(island.isHasMotherNature());
-            else
-                islandDto = islandDto.withMotherNature(false);
-            islandDto = islandDto.withTower(island.getTower());
-            if(studentsIndex + studentsPerIsland > island.getStudents().size()){
-                islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
-                studentsIndex = island.getStudents().size();
-            }
-            else{
-                if(i == island.getSize() - 1){
-                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, island.getStudents().size()));
-                }
-                else{
-                    islandDto = islandDto.withStudents(island.getStudents().subList(studentsIndex, studentsIndex + studentsPerIsland));
-                    studentsIndex += studentsPerIsland;
-                }
-            }
-
-            linkedIsland.setMainIsland(island);
-            if(i == 0)
-                linkedIsland.setMainConnected(true);
-            else
-                linkedIsland.setMainConnected(false);
-
-            if(i == island.getSize() - 1)
-                linkedIsland.setConnectedWithNext(false);
-            else
+        for (Integer index : newIsland.getIndices()) {
+            if (index != firstIsland) {
+                linkedIsland = islands.get(index);
+                linkedIsland.setIsland(linkedIsland.getIsland().withoutStudents());
+                linkedIsland.setIsland(linkedIsland.getIsland().withTower(newIsland.getTower()));
+                linkedIsland.setIsland(linkedIsland.getIsland().withMotherNature(false));
+                linkedIsland.setIsMainIsland(false);
                 linkedIsland.setConnectedWithNext(true);
-            res.add(linkedIsland);
-        }
-
-        for (int i = 0; i < res.size(); i++){
-            LinkedIslands linkedIsland = res.get(i);
-            for(int j = 0; j < res.size(); j++){
-                if(j != i)
-                    linkedIsland.setLinkedislands(res.get(j).getMainIsland());
+                if (index == getLastIndex(newIsland.getIndices(), islands.size())) {
+                    linkedIsland.setConnectedWithNext(false);
+                }
             }
         }
+    }
+
+    private int getLastIndex(List<Integer> list, int dim) {
+        if (list.size() == dim)
+            return -1;
+        int res = Math.floorMod(list.get(0), dim);
+        while (list.contains(Math.floorMod(res + 1, dim)))
+            res = Math.floorMod(res + 1, dim);
         return res;
     }
 
-    @Override
-    public void onMessageReceived(Message message) {
-        //TODO
-        if (message instanceof NicknameResponseMessage) handleMessage((NicknameResponseMessage) message);
-        if (message instanceof GametypeResponseMessage) handleMessage((GametypeResponseMessage) message);
-        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
-        if (message instanceof CloudMessage) handleMessage((CloudMessage) message);
-        if (message instanceof SchoolBoardMessage) handleMessage((SchoolBoardMessage) message);
-        if (message instanceof AssistantPlayedMessage) handleMessage((AssistantPlayedMessage) message);
-        if (message instanceof CoinMessage) handleMessage((CoinMessage) message);
-        if (message instanceof IslandMessage) handleMessage((IslandMessage) message);
-        if (message instanceof GameStartingMessage) handleMessage((GameStartingMessage) message);
+    private void handleMessage(CoinMessage message) {
+        if(!message.isOnTable()){
+            if (message.getNickname().equals(me.getNickname())) {
+                this.me = this.me.with(message.getCoins());
+            } else {
+                Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+                if (opponentIndex.isPresent()) {
+                    PlayerInfo opponent = opponents.get(opponentIndex.get());
+                    opponents.remove((int)opponentIndex.get());
+                    opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
+                }
+
+            }
+        }
+        else{
+            this.tableCoins = message.getCoins();
+        }
+
+        this.print();
     }
+
+    private void handleMessage(CharacterCardMessage message) {
+        CharacterCardDto newCharacterCard = message.getCharacterCard();
+        for(int i = 0; i < characterCards.size(); i++){
+            if(characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()){
+                CharacterCardDto characterCard = characterCards.get(i);
+                characterCard = characterCard.with(newCharacterCard.getPrice());
+                characterCard = characterCard.with(newCharacterCard.getStudents());
+                characterCards.remove(i);
+                characterCards.add(i, characterCard);
+            }
+        }
+    }
+
+    private void handleMessage(GameOverMessage message) {
+        if (message.getWinners().contains(me.getNickname())) {
+            if (message.getWinners().size() == 1)
+                win();
+            else
+                draw(message.getWinners().stream().filter(w -> !w.equals(me.getNickname())).findFirst().get());
+        } else
+            lose(message.getWinners());
+    }
+
+    private void handleMessage(ConnectionMessage message) {
+        switch (message.getType()) {
+            case IS_ONLINE -> playerOnline(message.getNickname(), true);
+            case IS_OFFLINE -> playerOnline(message.getNickname(), false);
+            case NOT_ENOUGH_PLAYERS -> enoughPlayers(false);
+            case ENOUGH_PLAYERS -> enoughPlayers(true);
+            case GAME_OVER_FROM_DISCONNECTION -> gameOverFromDisconnection();
+        }
+    }
+
+    private void playerOnline(String nickname, boolean isOnline) {
+        Optional<Integer> playerIndex = getOpponentIndex(nickname);
+        if (playerIndex.isPresent()) {
+            PlayerInfo opponent = opponents.get(playerIndex.get());
+            opponents.remove(playerIndex.get());
+            opponents.add(playerIndex.get(), opponent.with(isOnline));
+            print();
+        }
+    }
+
+    private void enoughPlayers(boolean areEnoughPlayers) {
+        this.areEnoughPlayers = areEnoughPlayers;
+        if (areEnoughPlayers)
+            print();
+        else
+            notEnoughPlayer();
+    }
+
+
+    //</editor-fold>
 
     //<editor-fold desc="Presentation logic">
     public void start() {
@@ -304,40 +412,151 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    public final void sendPlayerNickname(String nickname) {
-        Message m = new NicknameProposalMessage(nickname, MessageType.NICKNAME_PROPOSAL);
-        endpoint.sendMessage(m);
+    protected final boolean sendPlayerNickname(String nickname) {
+        Message message = new NicknameProposalMessage(nickname);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendGameSettings(int numberOfPlayers, boolean expertGame) {
-        Message m = new GametypeRequestMessage(
+    protected final boolean sendGameSettings(PlayersNumber playersNumber, GameMode gameMode) {
+        Message message = new GametypeRequestMessage(
                 me.getNickname(),
-                MessageType.GAME_TYPE_REQUEST,
-                expertGame ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE,
-                numberOfPlayers == 2 ? PlayersNumber.TWO : PlayersNumber.THREE);
-        endpoint.sendMessage(m);
-        this.isExpertGame = expertGame;
+                gameMode, playersNumber);
+        endpoint.sendMessage(message);
+        this.isExpertGame = (gameMode == GameMode.EXPERT_MODE);
+        return true;
     }
 
-    protected final void sendMotherNatureSteps(int steps) {
-        Message m = new MoveMotherNatureMessage(me.getNickname(), steps);
-        endpoint.sendMessage(m);
+    protected final boolean sendMotherNatureSteps(int steps) {
+        if (steps < 0)
+            return false;
+        Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendAssistantCard(AssistantCard assistantCard) {
-
+    protected final boolean sendAssistantCard(int cardIndex) {
+        if (cardIndex < 0 || cardIndex >= me.getDeck().size()) {
+            return false;
+        }
+        AssistantCard assistantCard = me.getDeck().get(cardIndex);
+        Message message = new AssistantPlayedMessage(me.getNickname(), MessageType.ACTION_PLAY_ASSISTANT, assistantCard);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendStudents(Map<PawnColor, Integer> move) {
 
+    protected final boolean sendStudentMoveOnBoard(PawnColor student) {
+        Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendCloudChoice(CloudTileDto cloud) {
-
+    protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
+        MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        message.setIslandCard(getIslands().get(islandIndex).getIsland());
+        endpoint.sendMessage(message);
+        return true;
     }
 
-    protected final void sendCharacterCard(CharacterCard card) {
+    protected final boolean sendCloudChoice(int cloudIndex) {
+        if (cloudIndex < 0 || cloudIndex >= getClouds().size())
+            return false;
+        CloudTileDto cloudTile = getClouds().get(cloudIndex);
+        Message message = new CloudMessage(me.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, cloudTile);
+        endpoint.sendMessage(message);
+        return true;
+    }
 
+    /*  parameters:
+     *   CHARACTER_ONE:      {PawnColor colorFromCard, island UUID}
+     *   CHARACTER_SEVEN:    {List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance}
+     *   CHARACTER_NINE:     {PawnColor}
+     *   CHARACTER_ELEVEN:   {PawnColor colorFromCard}
+     *   NB parameters.lenght must be exactly the size required for the specific character
+     * */
+    protected final boolean sendCharacterCard(int characterIndex, Object[] parameters) {
+        if (characterIndex < 0 || characterIndex >= characterCards.size())
+            return false;
+        if (!areCharacterParametersOk(getCharacterCards().get(characterIndex), parameters))
+            return false;
+        Message message = new CharacterCardMessage(me.getNickname(), MessageType.ACTION_USE_CHARACTER, getCharacterCards().get(characterIndex), parameters);
+        endpoint.sendMessage(message);
+        return true;
+    }
+
+    private boolean areCharacterParametersOk(CharacterCardDto characterCard, Object[] parameters){
+        return switch (characterCard.getCharacter()){
+
+
+            case CHARACTER_ONE -> areParametersOkCharacter1(characterCard, parameters);
+            case CHARACTER_SEVEN -> areParametersOkCharacter7(characterCard, parameters);
+            case CHARACTER_NINE -> areParametersOkCharacter9(parameters);
+            case CHARACTER_ELEVEN -> areParametersOkCharacter11(characterCard, parameters);
+            default -> true;
+        };
+    }
+
+    private boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters){
+        if(parameters.length != 2)
+
+            return false;
+        if (!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
+            return false;
+        if(!(card.isWithSetUpAction()))
+            return false;
+        if(!(card.getStudents().contains(parameters[0])))
+
+            return false;
+
+
+        for (LinkedIslands island : getIslands()) {
+            if (island.getIsland().getUuid().equals(parameters[1]))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
+        if(parameters.length != 2)
+
+            return false;
+        if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
+            return false;
+        if(!(card.isWithSetUpAction()))
+
+
+            return false;
+        List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
+        List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
+        Map<PawnColor, Integer> cardinalityCard = card.getStudentsCardinality();
+        Map<PawnColor, Integer> cardinalityEntrance = me.getBoard().getStudentsInEntranceCardinality();
+        for (PawnColor color : PawnColor.values()) {
+            if (colorsFromCard.stream().filter(x -> x == color).count() > cardinalityCard.get(color))
+                return false;
+        }
+        for (PawnColor color : PawnColor.values()) {
+            if (colorsFromEntrance.stream().filter(x -> x == color).count() > cardinalityEntrance.get(color))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean areParametersOkCharacter9(Object[] parameters) {
+        return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
+    }
+
+    private boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
+        if(parameters.length != 1)
+
+            return false;
+        if (!(parameters[0] instanceof PawnColor))
+            return false;
+        if(!(card.isWithSetUpAction()))
+
+
+            return false;
+        return card.getStudents().contains(parameters[0]);
     }
     //</editor-fold>
 }
