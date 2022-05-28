@@ -201,8 +201,7 @@ public abstract class View implements MessageListener, UserInterface {
             updateCurrentPlayersTurn(game.getCurrentPlayer());
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
                 //TODO may not be planning phase
-                me = me.with(message.getDeckFirstPlayer());
-                this.askAssistantCard(game.getCurrentPlayerDeck());
+                this.askAssistantCard(getMe().getDeck());
             }
 
     }
