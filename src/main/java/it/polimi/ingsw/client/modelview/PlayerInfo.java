@@ -30,7 +30,7 @@ public class PlayerInfo {
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, ArrayList<AssistantCard> deck, boolean isOnline) {
+    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline) {
         this.nickname = nickname;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;

@@ -50,7 +50,10 @@ public class GameController implements DisconnectionListener, Observer {
         //setting observers
         for (VirtualView virtualView : virtualViews) {
             game.addObserver(virtualView);
-            for (Player player : players) player.addObserver(virtualView);
+            for (Player player : players) {
+                player.addObserver(virtualView);
+                player.getBoard().addObserver(virtualView);
+            }
         }
     }
 
