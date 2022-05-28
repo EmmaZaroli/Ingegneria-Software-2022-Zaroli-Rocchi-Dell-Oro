@@ -5,10 +5,7 @@ import it.polimi.ingsw.servercontroller.MessagesHelper;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,7 +59,7 @@ public class Endpoint {
             out.writeObject(message);
             out.flush();
         } catch (Exception e) {
-            disconnect();
+            disconnect("SCRITTURA");
             this.notifyDisconnection();
         }
     }
@@ -85,9 +82,8 @@ public class Endpoint {
 
     }
 
-    //TODO I don't think reflection is the best way to do this
     public Message synchronizedReceive(Class messageClass) {
-        Message message = null;//TODO is this ok?
+        Message message = null;
         do {
             try {
                 message = synchronizedReceive();
@@ -103,12 +99,15 @@ public class Endpoint {
             Message m = (Message) in.readObject();
             //resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
-                for (MessageListener l : messageListeners) {
-                    l.onMessageReceived(m);
+                synchronized (messageListeners){
+                    List<MessageListener> temporaryList = new ArrayList<>(messageListeners);
+                    for(MessageListener l : temporaryList){
+                        l.onMessageReceived(m);
+                    }
                 }
             }
         } catch (Exception e) {
-            disconnect();
+            disconnect("LETTURA");
             notifyDisconnection();
         }
     }
@@ -119,7 +118,7 @@ public class Endpoint {
         this.disconnectionTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                disconnect();
+                disconnect("TIMER SCADUTO");
                 notifyDisconnection();
             }
         }, 30000); //TODO parameterize this
@@ -134,8 +133,8 @@ public class Endpoint {
         }, 5000, 5000); //TODO parameterize this
     }
 
-    public void disconnect() {
-        /*
+    public void disconnect(String motivo) {
+        System.out.println("DISCONNESSIONE" + motivo);
         isOnline = false;
         try {
             this.receiverThread.stopThread();
@@ -144,7 +143,7 @@ public class Endpoint {
             logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
         }
 
-         */
+
     }
 
     public void notifyDisconnection() {
