@@ -172,15 +172,17 @@ public abstract class View implements MessageListener, UserInterface {
         GameDto game = message.getGame();
         this.printGameStarting();
         for (int i = 0; i < game.getOpponents().size(); i++)
-            this.opponents.add(new PlayerInfo(game.getOpponents().get(i)).with(game.getOpponentsBoard().get(i)));
-        this.me = new PlayerInfo(game.getMe()).with(game.getSchoolBoard());
+            this.opponents.add(new PlayerInfo(game.getOpponents().get(i)));
+        this.me = new PlayerInfo(game.getMe());
         this.clouds = new ArrayList<>(game.getClouds());
         for(IslandCardDto islandCardDto: game.getIslands())
             updateIsland(islandCardDto);
         this.tableCoins = game.getTableCoins();
         this.characterCards = game.getCharacterCards();
         print();
+        this.currentPhase = game.getGamePhase();
         this.changePhase(game.getGamePhase());
+        this.currentPlayer = game.getCurrentPlayer();
         updateCurrentPlayersTurn(game.getCurrentPlayer());
         if (game.getCurrentPlayer().equals(getMe().getNickname()))
             //TODO may not be planning phase
