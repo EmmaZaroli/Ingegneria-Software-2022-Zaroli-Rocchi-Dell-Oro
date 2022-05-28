@@ -12,6 +12,8 @@ import it.polimi.ingsw.observer.ModelObserver;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.servercontroller.User;
 
+import java.util.Optional;
+
 public class VirtualView extends Observable implements ModelObserver, MessageListener {
     private final User user;
     private final Game game;
@@ -20,12 +22,12 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
         this.user = user;
         this.game = game;
         //case loadSavedGames method has the endpoint null
-        if (user.getEndpoint() != null)
-            user.getEndpoint().addMessageListener(this);
+        if (user.getEndpoint().isPresent())
+            user.getEndpoint().get().addMessageListener(this);
 
     }
 
-    public Endpoint getClientHandler() {
+    public Optional<Endpoint> getClientHandler() {
         return user.getEndpoint();
     }
 
