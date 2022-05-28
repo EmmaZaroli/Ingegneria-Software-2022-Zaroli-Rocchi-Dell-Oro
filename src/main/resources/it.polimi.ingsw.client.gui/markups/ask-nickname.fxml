@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<StackPane prefHeight="590.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.client.gui.sceneControllers.AskNickname">
+    <ImageView>
+        <Image
+                url="/it.polimi.ingsw.client.gui/assets/opening.jpg"
+                backgroundLoading="true"/>
+    </ImageView>
+    <VBox alignment="CENTER">
+        <HBox alignment="CENTER">
+            <GridPane
+                    hgap="10"
+                    vgap="5"
+                    style="-fx-padding: 20 20 20 20; -fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 10;">
+                <Label
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                        style="-fx-font-weight: bold;">
+                    Insert your nickname
+                </Label>
+                <TextField
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"
+                        fx:id="nickname"
+                        style="-fx-margin: 50 00 50 00;"/>
+                <Button
+                        GridPane.rowIndex="3"
+                        GridPane.columnIndex="0"
+                        GridPane.columnSpan="2"
+                        GridPane.halignment="CENTER"
+                        onAction="#sendNickname">
+                    Confirm
+                </Button>
+            </GridPane>
+        </HBox>
+    </VBox>
+</StackPane>

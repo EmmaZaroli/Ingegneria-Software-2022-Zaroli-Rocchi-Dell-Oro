@@ -399,7 +399,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.askServerInfo();
     }
 
-    protected final void startConnection(String ipAddress, int port) {
+    public final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
 
