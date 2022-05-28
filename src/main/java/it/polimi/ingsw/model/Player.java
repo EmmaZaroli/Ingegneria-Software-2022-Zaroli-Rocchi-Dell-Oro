@@ -155,7 +155,7 @@ public class Player extends Observable implements Serializable {
      */
     public void playAssistant(AssistantCard a) {
         this.discardPileHead = a;
-        notify(a);
+        notifyModelObserver(a);
         assistantDeck.remove(a);
 
     }

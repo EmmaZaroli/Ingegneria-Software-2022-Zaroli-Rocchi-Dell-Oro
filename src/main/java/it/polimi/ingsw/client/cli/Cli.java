@@ -11,7 +11,6 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 
-import java.beans.PropertyChangeSupport;
 import java.io.PrintStream;
 import java.util.*;
 
@@ -20,6 +19,7 @@ public class Cli extends View {
     private final Scanner in;
     private final InputParser inputParser;
     public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
     public static final String COIN = "¢";
     public static final String ANSI_YELLOW = "\u001B[33m";
     private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
@@ -139,7 +139,8 @@ public class Cli extends View {
     }
 
     public void changePhase(GamePhase phase) {
-        out.println("Phase: " + phase);
+        space(57);
+        out.println(ANSI_YELLOW + "Phase: " + phase + ANSI_RESET);
     }
 
     /**
@@ -170,14 +171,17 @@ public class Cli extends View {
             out.print("  |_____|    ");
         }
         out.println();
-        out.print("chose the assistant card to play");
-        if (isExpertGame()) out.print(" or choose character card to activate");
-        out.print(": ");
         int card;
-        card = Integer.parseInt(readLine());
-        //TODO check if the number is valid
-        //setCardThrown(deck.get(card));
-        this.sendAssistantCard(card);
+        boolean valid = false;
+        while (!valid) {
+            out.print("chose the assistant card to play");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            card = Integer.parseInt(readLine());
+            if (this.sendAssistantCard(card - 1)) {
+                valid = true;
+            } else error("Error, the card you selected is not valid!");
+        }
     }
 
     public void askMotherNatureSteps() {
@@ -197,29 +201,64 @@ public class Cli extends View {
         this.sendCloudChoice(indexCloud);
     }
 
+    public void askStudents(){
+        CliParsen parsenStudents = new CliParsen();
+        boolean validObject = false;
+        boolean validDestination;
+        int destination = 0;
+        while (!validObject) {
+            out.print("Choose student to move");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            String input = readLine();
+            PawnColor student = parsenStudents.checkIfStudent(input);
+            if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
+                validDestination = false;
+                while (!validDestination) {
+                    out.print("Choose location (island's index/schoolboard) : ");
+                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
+                    if (destination != 13) {
+                        validObject=true;
+                        validDestination = true;
+                    } else {
+                        this.error("the destination selected is invalid, please retry");
+                    }
+                }
+                if(destination == 12) sendStudentMoveOnBoard(student);
+                else sendStudentMoveOnIsland(student,destination);
+            }
+            // the input was not a color, checking if it's a character card
+            else if (isExpertGame()) {
+                //TODO
+                if (isACard(input)) ;
+            } else error("invalid student selected");
+        }
+    }
+
+    /*
     public void askStudents() {
         int moves = getOpponents().size() + 2;
-        CliParsen parsen2 = new CliParsen();
+        CliParsen parsenStudents = new CliParsen();
         Map<PawnColor, Integer> response = new HashMap<>(moves);
         int validObject = 0;
-        boolean validDestination = false;
+        boolean validDestination;
         int destination = 0;
         while (validObject < moves) {
             out.print("Choose student to move");
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
-            PawnColor student = parsen2.checkIfStudent(input);
+            PawnColor student = parsenStudents.checkIfStudent(input);
             if (student != PawnColor.NONE) {
                 validDestination = false;
                 while (!validDestination) {
                     out.print("Choose location (island's index/schoolboard) : ");
-                    destination = parsen2.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
+                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
                     if (destination != 13) {
                         validObject++;
                         validDestination = true;
                     } else {
-                        this.error("Error, the destination selected is invalid, please retry");
+                        this.error("the destination selected is invalid, please retry");
                     }
                 }
                 response.put(student, destination);
@@ -228,9 +267,12 @@ public class Cli extends View {
             else if (isExpertGame()) {
                 //TODO
                 if (isACard(input)) ;
-            } else out.print("error, ");
+            } else error("invalid student selected");
         }
+
     }
+
+     */
 
     private boolean isACard(String input) {
         //TODO check if input is a card
@@ -248,6 +290,7 @@ public class Cli extends View {
     @Override
     public void print() {
         clearCli();
+        changePhase(getCurrentPhase());
         printCloud();
         printIslands();
         if (isExpertGame()) printCharacterCards();
@@ -330,13 +373,13 @@ public class Cli extends View {
      * this method is called when there's a fatal error on the server and the game needs to be closed
      */
     public void errorAndExit(String error) {
-        out.println("\nERROR: " + error);
+        error(error);
         out.println("EXIT.");
         System.exit(1);
     }
 
     public void error(String error) {
-        out.println(error);
+        out.println("\nERROR: " + ANSI_RED + error + ANSI_RESET);
     }
 
     private void space(int space) {
@@ -352,7 +395,7 @@ public class Cli extends View {
 
     }
 
-    public void notEnoughPlayer(){
+    public void notEnoughPlayer() {
 
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 public enum MessageType {
+    ASK_STUDENTS_TO_MOVE,
     CHANGE_PLAYER,
     PLANNING,
     ACTION_PLAY_ASSISTANT,

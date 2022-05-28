@@ -9,7 +9,6 @@ import java.util.List;
 
 public class PrinterIslands {
 
-    //TODO extend top third row and all the bottom
 
     private static final String MOTHER_NATURE = "M";
     public static final String TOP = "_______";
@@ -40,7 +39,11 @@ public class PrinterIslands {
     private boolean up4;
 
     public void printIslands(List<LinkedIslands> islands) {
-        //TODO initialized the arrays
+
+        for (int i = 0; i < 12; i++) {
+            size[i] = 0;
+            studentsAlreadyPrinted[i] = 0;
+        }
         isnext = false;
         upConnected = false;
         up0 = false;
@@ -53,6 +56,7 @@ public class PrinterIslands {
         isnext = false;
 
         //second row
+        centre();
         if (!up0) System.out.print(" ");
         int intermediate = (islands.get(11).getIsland().getStudents().size() - 11) / 2;
         size[11] = Math.max(intermediate, 0);
@@ -66,6 +70,7 @@ public class PrinterIslands {
         if (islands.get(5).isMainIsland()) topWithConnection(up4, size[5]);
         else topWithConnection(up4);
         System.out.println();
+        centre();
 
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 5);
         else side(false, false, islands.get(11).getIsland().getTower());
@@ -73,12 +78,15 @@ public class PrinterIslands {
         if (islands.get(5).isMainIsland()) side(false, false, islands.get(5).getIsland(), 5, 5);
         else side(false, false, islands.get(5).getIsland().getTower());
         System.out.println();
+        centre();
+        
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 7);
         else side(false, false, Tower.NONE);
         System.out.print("                                 ");
         if (islands.get(5).isMainIsland()) side(false, false, islands.get(5).getIsland(), 5, 7);
         else side(false, false, Tower.NONE);
         System.out.println();
+        centre();
 
         up0 = islands.get(10).isConnectedWithNext();
         up4 = islands.get(5).isConnectedWithNext();
@@ -89,6 +97,7 @@ public class PrinterIslands {
         if (up4) System.out.print(SIDE);
         else bottom(false, false);
         System.out.println();
+        centre();
 
         thirdRow(islands);
 
@@ -97,9 +106,11 @@ public class PrinterIslands {
 
     private void firstRow(List<LinkedIslands> islands) {
         //top
+        centre();
         firstRowTop(islands);
 
         System.out.println();
+        centre();
 
         //sides
 
@@ -107,6 +118,7 @@ public class PrinterIslands {
 
         isnext = false;
         System.out.println();
+        centre();
 
         //bottom
         firstRowBottom(islands);
@@ -140,6 +152,7 @@ public class PrinterIslands {
 
         isnext = false;
         System.out.println();
+        centre();
         firstRowSidetwo(islands);
 
     }
@@ -214,12 +227,14 @@ public class PrinterIslands {
         thirdRowOtherTops(islands);
 
         System.out.println();
+        centre();
 
         //sides
         thirdRowSides(islands);
 
         isnext = false;
         System.out.println();
+        centre();
 
         //bottoms
         for (int i = 10; i > 5; i--) {
@@ -274,6 +289,7 @@ public class PrinterIslands {
             }
         }
         System.out.println();
+        centre();
         isnext = false;
         thirdRowSideTwo(islands);
 
@@ -463,6 +479,10 @@ public class PrinterIslands {
             default -> towerColor = " ";
         }
         return towerColor;
+    }
+
+    private void centre() {
+        for (int i = 0; i < 40; i++) System.out.print(" ");
     }
 
 }

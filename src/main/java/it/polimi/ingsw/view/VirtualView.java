@@ -2,21 +2,27 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.ModelObserver;
 import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.servercontroller.User;
 
-public class VirtualView extends Observable implements ModelObserver {
+public class VirtualView extends Observable implements ModelObserver, MessageListener {
     private final User user;
     private final Game game;
 
     public VirtualView(User user, Game game) {
         this.user = user;
         this.game = game;
+        //case loadSavedGames method has the endpoint null
+        if (user.getEndpoint() != null)
+            user.getEndpoint().addMessageListener(this);
+
     }
 
     public Endpoint getClientHandler() {
@@ -36,8 +42,8 @@ public class VirtualView extends Observable implements ModelObserver {
      *
      * @param message a message coming from the client
      */
-    public void notifyGame(Message message) {
-        //TODO before sending the message to the controller, it should add the nickname of the player ?
+    public void onMessageReceived(Message message) {
+
         notify(message);
     }
 
@@ -66,18 +72,18 @@ public class VirtualView extends Observable implements ModelObserver {
             case PLANNING ->
                     //TODO why this?
                     user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
-            case ACTION_MOVE_STUDENTS ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
-            case ACTION_MOVE_MOTHER_NATURE ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
-            case ACTION_CHOOSE_CLOUD ->
-                    user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_MOVE_STUDENTS -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_MOVE_MOTHER_NATURE -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_CHOOSE_CLOUD -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
         }
     }
 
     @Override
     public void update(Player message) {
+
         user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
+        if (game.getGamePhase().equals(GamePhase.PLANNING))
+            user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
     }
 
     @Override
@@ -100,6 +106,10 @@ public class VirtualView extends Observable implements ModelObserver {
         user.sendMessage(new ErrorMessage(getCurrentPlayer(), game.getLastError().getMessage()));
     }
 
+    @Override
+    public void update(String message){
+        if(message.equals("ask student")) user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));
+    }
     /**
      * Receives a notification from the model
      * create a message and sends it to the Socket
@@ -129,4 +139,6 @@ public class VirtualView extends Observable implements ModelObserver {
         }
 
     }
+
+
 }

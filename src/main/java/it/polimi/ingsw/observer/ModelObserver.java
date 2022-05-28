@@ -23,4 +23,6 @@ public interface ModelObserver extends Observer {
     void update(SchoolBoard message);
 
     void update(Exception message);
+
+    void update (String message);
 }

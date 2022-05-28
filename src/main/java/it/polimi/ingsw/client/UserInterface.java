@@ -30,6 +30,10 @@ public interface UserInterface {
 
     void askMotherNatureSteps();
 
+    void askStudents();
+
+    void askCloud();
+
     void updateCurrentPlayersTurn(String otherPlayer);
 
     void win();
