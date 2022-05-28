@@ -203,6 +203,7 @@ class GameControllerTest extends TestCase {
         int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
         MoveMotherNatureMessage message2 = new MoveMotherNatureMessage("player2", 1);
         gameController.update(message2);
+        //TODO sometimes this assertion fail, sometimes it does not, why?
         Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
 
         //player2 choose cloud
