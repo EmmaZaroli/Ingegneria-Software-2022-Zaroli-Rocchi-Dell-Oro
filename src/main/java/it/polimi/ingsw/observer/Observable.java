@@ -21,10 +21,6 @@ public class Observable {
         observers.add(modelObserver);
     }
 
-    public void addObserver(ModelObserver modelObserver) {
-        observers.add(modelObserver);
-    }
-
 
     /**
      * Removes an observer.
@@ -60,6 +56,12 @@ public class Observable {
     }
 
     public void notifyModelObserver(SchoolBoard message) {
+        for (Observer observer : observers) {
+            ((ModelObserver) observer).update(message);
+        }
+    }
+
+    public void notifyModelObserver(String message) {
         for (Observer observer : observers) {
             ((ModelObserver) observer).update(message);
         }

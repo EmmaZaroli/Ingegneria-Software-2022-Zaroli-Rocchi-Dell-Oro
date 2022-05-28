@@ -143,6 +143,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message instanceof ConnectionMessage connectionMessage) handleMessage(connectionMessage);
         if (message instanceof ErrorMessage errorMessage) handleMessage(errorMessage);
         if (message instanceof GetDeckMessage getDeckMessage) handleMessage(getDeckMessage);
+        if (message instanceof MoveStudentMessage moveStudentMessage) handleMessage(moveStudentMessage);
     }
 
     //<editor-fold desc="Message handlers">
@@ -162,6 +163,12 @@ public abstract class View implements MessageListener, UserInterface {
                 this.askPlayerNickname();
             }
         }
+    }
+
+    //TODO maybe create another message for this
+    private void handleMessage(MoveStudentMessage message){
+        if(message.getNickname().equals(getMe().getNickname()))
+            askAction();
     }
 
     private void handleMessage(GetDeckMessage message) {
@@ -270,8 +277,6 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
         this.print();
-        if(message.getNickname().equals(me.getNickname()))
-            askAction();
     }
 
     private void handleMessage(IslandMessage message) {

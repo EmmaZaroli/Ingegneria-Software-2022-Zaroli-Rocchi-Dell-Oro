@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
@@ -105,6 +106,10 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
         user.sendMessage(new ErrorMessage(getCurrentPlayer(), game.getLastError().getMessage()));
     }
 
+    @Override
+    public void update(String message){
+        if(message.equals("ask student")) user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));
+    }
     /**
      * Receives a notification from the model
      * create a message and sends it to the Socket
