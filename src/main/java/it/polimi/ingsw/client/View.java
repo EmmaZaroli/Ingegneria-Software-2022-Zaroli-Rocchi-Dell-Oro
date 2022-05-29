@@ -128,6 +128,14 @@ public abstract class View implements MessageListener, UserInterface {
         return Optional.empty();
     }
 
+    public Optional<Integer> getOpponentIndex(UUID uuid) {
+        for (int opponentIndex = 0; opponentIndex < opponents.size(); opponentIndex++) {
+            if (opponents.get(opponentIndex).getBoard().getUuid().equals(uuid))
+                return Optional.of(opponentIndex);
+        }
+        return Optional.empty();
+    }
+
     public GamePhase getCurrentPhase() {
         return this.currentPhase;
     }
@@ -271,10 +279,10 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(SchoolBoardMessage message) {
-        if (message.getNickname().equals(me.getNickname())) {
+        if(message.getSchoolBoard().getUuid().equals(getMe().getBoard().getUuid()))
             this.me = this.me.with(message.getSchoolBoard());
-        } else {
-            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+        else {
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getSchoolBoard().getUuid());
             if (opponentIndex.isPresent()) {
                 PlayerInfo opponent = opponents.get(opponentIndex.get());
                 opponents.remove((int) opponentIndex.get());
