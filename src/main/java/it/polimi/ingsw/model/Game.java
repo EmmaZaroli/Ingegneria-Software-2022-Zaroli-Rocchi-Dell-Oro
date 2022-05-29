@@ -124,9 +124,15 @@ public class Game extends Observable implements Serializable {
         notifyModelObserver("ask student");
     }
 
-    public void callWin(String nicknameWinner) {
+    public void callWin(List<String> winners) {
         this.gameOver = true;
-        notify(nicknameWinner);
+        setWinners(winners);
+    }
+
+    public void callWin(String winner){
+        List<String> winners = new ArrayList<>();
+        winners.add(winner);
+        callWin(winners);
     }
 
     public void callGameOverFromDisconnection() {
