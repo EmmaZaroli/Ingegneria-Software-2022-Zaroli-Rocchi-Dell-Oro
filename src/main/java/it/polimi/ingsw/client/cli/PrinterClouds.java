@@ -19,6 +19,12 @@ public class PrinterClouds {
     public void printClouds(List<CloudTileDto> clouds) {
         int i;
         space(50);
+        for(i=0;i< clouds.size();i++){
+            System.out.print("     "+i+"     ");
+            space(7);
+        }
+        System.out.println();
+        space(50);
         for (i = 0; i < clouds.size(); i++) {
             System.out.print("   _____   ");
             space(7);

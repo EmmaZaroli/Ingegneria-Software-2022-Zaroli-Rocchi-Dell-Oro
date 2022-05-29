@@ -206,13 +206,9 @@ public abstract class View implements MessageListener, UserInterface {
                 updateIsland(islandCardDto);
             this.tableCoins = game.getTableCoins();
             this.characterCards = game.getCharacterCards();
-            print();
             this.currentPhase = game.getGamePhase();
-            this.changePhase(game.getGamePhase());
-
             this.currentPlayer = game.getCurrentPlayer();
-
-            updateCurrentPlayersTurn(game.getCurrentPlayer());
+            print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
                 //TODO may not be planning phase
                 this.askAssistantCard(getMe().getDeck());
@@ -227,10 +223,11 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
-        print();
         currentPlayer = message.getNickname();
-        updateCurrentPlayersTurn(message.getNickname());
-        if (currentPlayer.equals(getMe().getNickname())) askAction();
+        print();
+        if (currentPlayer.equals(getMe().getNickname())) {
+            askAction();
+        }
     }
 
     private void handleMessage(ErrorMessage message) {

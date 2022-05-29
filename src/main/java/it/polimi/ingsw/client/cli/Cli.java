@@ -151,7 +151,7 @@ public class Cli extends View {
 
         out.println();
         for (int i = 0; i < deck.size(); i++) {
-            out.print("     " + i + ".      ");
+            out.print("     " + (i+1) + ".      ");
         }
         out.println();
         for (int i = 0; i < deck.size(); i++) {
@@ -177,7 +177,7 @@ public class Cli extends View {
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
             card = Integer.parseInt(readLine());
-            if (this.sendAssistantCard(card - 1)) {
+            if (this.sendAssistantCard(card-1)) {
                 valid = true;
             } else error("Error, the card you selected is not valid!");
         }
@@ -190,7 +190,6 @@ public class Cli extends View {
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
             int steps = Integer.parseInt(readLine());
-            //TODO check if number is <0 or >cardplayed.steps
             if(this.sendMotherNatureSteps(steps)) valid = true;
             else error("invalid number of steps");
         }
@@ -238,48 +237,9 @@ public class Cli extends View {
         }
     }
 
-    //TODO to cancel
-    /*
-    public void askStudents() {
-        int moves = getOpponents().size() + 2;
-        CliParsen parsenStudents = new CliParsen();
-        Map<PawnColor, Integer> response = new HashMap<>(moves);
-        int validObject = 0;
-        boolean validDestination;
-        int destination = 0;
-        while (validObject < moves) {
-            out.print("Choose student to move");
-            if (isExpertGame()) out.print(" or choose character card to activate");
-            out.print(": ");
-            String input = readLine();
-            PawnColor student = parsenStudents.checkIfStudent(input);
-            if (student != PawnColor.NONE) {
-                validDestination = false;
-                while (!validDestination) {
-                    out.print("Choose location (island's index/schoolboard) : ");
-                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), numberOfIslandOnTable);
-                    if (destination != 13) {
-                        validObject++;
-                        validDestination = true;
-                    } else {
-                        this.error("the destination selected is invalid, please retry");
-                    }
-                }
-                response.put(student, destination);
-            }
-            // the input was not a color, checking if it's a character card
-            else if (isExpertGame()) {
-                //TODO
-                if (isACard(input)) ;
-            } else error("invalid student selected");
-        }
-
-    }
-
-     */
 
     private boolean isACard(String input) {
-        //TODO check if input is a card
+        //TODO
         return false;
     }
 
@@ -299,6 +259,7 @@ public class Cli extends View {
         printIslands();
         if (isExpertGame()) printCharacterCards();
         printSchoolBoard();
+        updateCurrentPlayersTurn(getCurrentPlayer());
     }
 
     public void printCoins() {
@@ -351,12 +312,11 @@ public class Cli extends View {
 
 
     private void printAssistantCardPlayed() {
-        List assistantCards = new ArrayList();
-        if (getMe().getDiscardPileHead() != null) assistantCards.add(getMe().getDiscardPileHead());
-        for (PlayerInfo opponents : getOpponents()) {
-            if (opponents.getDiscardPileHead() != null) assistantCards.add(opponents.getDiscardPileHead());
-        }
-        printerAssistantCards.print(assistantCards);
+        List<PlayerInfo> players = new ArrayList();
+        players.add(getMe());
+        for(PlayerInfo opponent : getOpponents())
+            players.add(opponent);
+        printerAssistantCards.print(players);
         out.println();
     }
 

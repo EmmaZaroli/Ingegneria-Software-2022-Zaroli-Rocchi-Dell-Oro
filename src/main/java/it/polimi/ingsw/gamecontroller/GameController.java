@@ -383,8 +383,8 @@ public class GameController implements DisconnectionListener, Observer {
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             if (!this.isTurnComplete()) {
-                changePlayer();
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
+                changePlayer();
             } else {
                 try {
                     tableController.fillClouds();
