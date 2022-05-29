@@ -140,6 +140,10 @@ public abstract class View implements MessageListener, UserInterface {
         return this.currentPhase;
     }
 
+    public String getError() {
+        return error;
+    }
+
     //</editor-fold>
 
     @Override
@@ -198,6 +202,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message.isOk()) {
             this.printEnqueuedMessage();
         } else {
+            this.error = ErrorMessages.PARAMETERS_ERROR;
             error(ErrorMessages.PARAMETERS_ERROR);
             this.askServerInfo();
         }
