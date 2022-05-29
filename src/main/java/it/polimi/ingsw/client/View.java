@@ -100,6 +100,14 @@ public abstract class View implements MessageListener, UserInterface {
         return areEnoughPlayers;
     }
 
+    public int getNumberOfIslandOnTable(){
+        int count = 0;
+        for(LinkedIslands islands : this.islands){
+            if(!islands.isConnectedWithNext()) count ++;
+        }
+        return count;
+    }
+
     public Optional<Integer> getCloudIndex(UUID cloudUuid) {
         for (int cloudIndex = 0; cloudIndex < clouds.size(); cloudIndex++) {
             if (clouds.get(cloudIndex).getUuid().equals(cloudUuid))
@@ -115,6 +123,14 @@ public abstract class View implements MessageListener, UserInterface {
     public Optional<Integer> getOpponentIndex(String nickname) {
         for (int opponentIndex = 0; opponentIndex < opponents.size(); opponentIndex++) {
             if (opponents.get(opponentIndex).getNickname().equals(nickname))
+                return Optional.of(opponentIndex);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Integer> getOpponentIndex(UUID uuid) {
+        for (int opponentIndex = 0; opponentIndex < opponents.size(); opponentIndex++) {
+            if (opponents.get(opponentIndex).getBoard().getUuid().equals(uuid))
                 return Optional.of(opponentIndex);
         }
         return Optional.empty();
@@ -195,17 +211,12 @@ public abstract class View implements MessageListener, UserInterface {
             this.me = new PlayerInfo(game.getMe());
             this.clouds = new ArrayList<>(game.getClouds());
             for (IslandCardDto islandCardDto : game.getIslands())
-
                 updateIsland(islandCardDto);
             this.tableCoins = game.getTableCoins();
             this.characterCards = game.getCharacterCards();
-            print();
             this.currentPhase = game.getGamePhase();
-            this.changePhase(game.getGamePhase());
-
             this.currentPlayer = game.getCurrentPlayer();
-
-            updateCurrentPlayersTurn(game.getCurrentPlayer());
+            print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
                 //TODO may not be planning phase
                 this.askAssistantCard(getMe().getDeck());
@@ -215,13 +226,16 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(ChangedPhaseMessage message) {
         currentPhase = message.getNewPhase();
+        print();
+        if (currentPlayer.equals(getMe().getNickname()) && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS)) askAction();
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
-        print();
         currentPlayer = message.getNickname();
-        updateCurrentPlayersTurn(message.getNickname());
-        if (currentPlayer.equals(getMe().getNickname())) askAction();
+        print();
+        if (currentPlayer.equals(getMe().getNickname())) {
+            askAction();
+        }
     }
 
     private void handleMessage(ErrorMessage message) {
@@ -236,7 +250,6 @@ public abstract class View implements MessageListener, UserInterface {
         if (currentPhase.equals(GamePhase.ACTION_MOVE_STUDENTS)) askStudents();
         if (currentPhase.equals(GamePhase.ACTION_MOVE_MOTHER_NATURE)) askMotherNatureSteps();
         if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) askCloud();
-
     }
 
 
@@ -266,10 +279,10 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(SchoolBoardMessage message) {
-        if (message.getNickname().equals(me.getNickname())) {
+        if(message.getSchoolBoard().getUuid().equals(getMe().getBoard().getUuid()))
             this.me = this.me.with(message.getSchoolBoard());
-        } else {
-            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+        else {
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getSchoolBoard().getUuid());
             if (opponentIndex.isPresent()) {
                 PlayerInfo opponent = opponents.get(opponentIndex.get());
                 opponents.remove((int) opponentIndex.get());
@@ -281,9 +294,9 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(IslandMessage message) {
         updateIsland(message.getIsland());
-
         this.print();
     }
+
 
     private void updateIsland(IslandCardDto newIsland) {
         int firstIsland = newIsland.getIndices().get(0);
@@ -428,7 +441,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     protected final boolean sendMotherNatureSteps(int steps) {
-        if (steps < 0)
+        if (steps < 0 || steps > getMe().getDiscardPileHead().motherNatureMovement())
             return false;
         Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
         endpoint.sendMessage(message);
@@ -453,7 +466,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
-        MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+        MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, student);
         message.setIslandCard(getIslands().get(islandIndex).getIsland());
         endpoint.sendMessage(message);
         return true;

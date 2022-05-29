@@ -54,6 +54,7 @@ public class GameController implements DisconnectionListener, Observer {
                 player.addObserver(virtualView);
                 player.getBoard().addObserver(virtualView);
             }
+            tableController.table.addObserver(virtualView);
         }
     }
 
@@ -313,8 +314,9 @@ public class GameController implements DisconnectionListener, Observer {
     }
 
     void movedPawn() {
-        game.movePawn();
-        if (this.game.getMovedPawns() == game.getPlayersCount() + 1) {
+        if((game.getMovedPawns() + 1 )!= (game.getPlayersCount() +1))
+            game.movePawn();
+        else {
             this.game.setMovedPawns(0);
             this.playerHasEndedAction();
         }
@@ -347,7 +349,6 @@ public class GameController implements DisconnectionListener, Observer {
     }
 
     private void changePlayer() {
-        System.out.println("changed player");
         int nextPlayer = pickNextPlayer();
         game.changePlayer(nextPlayer);
 
@@ -382,8 +383,8 @@ public class GameController implements DisconnectionListener, Observer {
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             if (!this.isTurnComplete()) {
-                changePlayer();
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
+                changePlayer();
             } else {
                 try {
                     tableController.fillClouds();
@@ -410,7 +411,7 @@ public class GameController implements DisconnectionListener, Observer {
             return;
         //TODO the game end when the round does, we can set a boolean RoundGameOver
         //TODO what to do after the game has ended
-        game.callWin(whoIsWinner());
+        //game.callWin(whoIsWinner());
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 

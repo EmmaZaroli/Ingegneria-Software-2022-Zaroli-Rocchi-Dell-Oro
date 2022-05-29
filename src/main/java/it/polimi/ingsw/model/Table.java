@@ -72,12 +72,12 @@ public class Table extends Observable implements Serializable {
 
     public void movePawnOnIsland(IslandCard island, List<PawnColor> students) {
         island.movePawnOnIsland(students);
-        notify(island);
+        notifyModelObserver(island);
     }
 
     public void movePawnOnIsland(IslandCard island, PawnColor students) {
         island.movePawnOnIsland(students);
-        notify(island);
+        notifyModelObserver(island);
     }
 
     public IslandCard getIsland(UUID uuid) throws WrongUUIDException {
@@ -91,17 +91,17 @@ public class Table extends Observable implements Serializable {
 
     public void setTower(IslandCard island, Tower tower) {
         island.setTower(tower);
-        notify(island);
+        notifyModelObserver(island);
     }
 
     public void addStudents(CloudTile cloud, List<PawnColor> students) {
         cloud.addStudents(students);
-        notify(cloud);
+        notifyModelObserver(cloud);
     }
 
     public List<PawnColor> takeStudentsFromCloud(CloudTile cloud) {
         List<PawnColor> retVal = cloud.takeStudentsFromCloud();
-        notify(cloud);
+        notifyModelObserver(cloud);
         return retVal;
     }
 
@@ -133,9 +133,9 @@ public class Table extends Observable implements Serializable {
     public void setIslandWithMotherNature(int index) {
         int oldPosition = getIslandWithMotherNature();
         this.getIsland(getIslandWithMotherNature()).setHasMotherNature(false);
-        notify(getIsland(oldPosition));
+        notifyModelObserver(getIsland(oldPosition));
         this.getIsland(index).setHasMotherNature(true);
-        notify(getIslandWithMotherNature());
+        notifyModelObserver(getIsland(getIslandWithMotherNature()));
     }
 
     public void unifyIslands(int originalIndex, int otherIndex){

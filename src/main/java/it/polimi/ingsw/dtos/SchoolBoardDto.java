@@ -6,10 +6,7 @@ import it.polimi.ingsw.model.enums.Tower;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 //TODO substitute in code
 public class SchoolBoardDto implements Serializable {
@@ -20,6 +17,7 @@ public class SchoolBoardDto implements Serializable {
     private final DiningRoomDto diningRoom;
     private final HashSet<PawnColor> professorTable;
     private final int towers;
+    private final UUID uuid;
 
     public SchoolBoardDto(SchoolBoard origin) {
         this.diningRoom = new DiningRoomDto(origin);
@@ -27,6 +25,7 @@ public class SchoolBoardDto implements Serializable {
         this.professorTable = new HashSet<>(origin.getProfessors());
         this.towerColor = origin.getTowerColor();
         this.towers = origin.getTowersCount();
+        this.uuid = origin.getUuid();
     }
 
     public Tower getTowerColor() {
@@ -71,5 +70,9 @@ public class SchoolBoardDto implements Serializable {
             res.put(color, getStudentsInEntrance(color));
         }
         return res;
+    }
+
+    public UUID getUuid(){
+        return this.uuid;
     }
 }

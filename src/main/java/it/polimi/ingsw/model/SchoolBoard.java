@@ -20,6 +20,7 @@ public class SchoolBoard extends Observable implements Serializable {
     private final DiningRoom diningRoom;
     private final HashSet<PawnColor> professorTable;
     private int towers;
+    private UUID uuid;
 
     /**
      * Instantiates a new School board.
@@ -33,6 +34,7 @@ public class SchoolBoard extends Observable implements Serializable {
         this.entrance = new ArrayList<>();
         this.diningRoom = new DiningRoom();
         this.professorTable = new HashSet<>();
+        this.uuid = java.util.UUID.randomUUID();
     }
 
     /**
@@ -215,5 +217,9 @@ public class SchoolBoard extends Observable implements Serializable {
             res.put(color, getStudentsInEntrance(color));
         }
         return res;
+    }
+
+    public UUID getUuid(){
+        return this.uuid;
     }
 }
