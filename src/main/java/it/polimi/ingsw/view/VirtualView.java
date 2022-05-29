@@ -13,6 +13,8 @@ import it.polimi.ingsw.observer.Observable;
 import it.polimi.ingsw.servercontroller.User;
 
 import java.util.Optional;
+import java.util.List;
+
 
 public class VirtualView extends Observable implements ModelObserver, MessageListener {
     private final User user;
@@ -110,7 +112,13 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     public void update(String message){
         if(message.equals("ask student")) user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));
     }
-    
+
+    @Override
+    public void update(List<String> message){
+        //notify winners
+        user.sendMessage(new GameOverMessage(MessageType.GAME_OVER, message));
+    }
+
     /**
      * Receives a notification from the model
      * create a message and sends it to the Socket

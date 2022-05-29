@@ -5,7 +5,9 @@ import it.polimi.ingsw.observer.Observable;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class Game extends Observable implements Serializable {
@@ -25,6 +27,7 @@ public class Game extends Observable implements Serializable {
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
     private boolean gameOver = false;
+    private List<String> winners = new ArrayList<>();
 
     private Exception error;
 
@@ -163,6 +166,15 @@ public class Game extends Observable implements Serializable {
 
     public Player getPlayer(int playerIndex) {
         return players[playerIndex];
+    }
+
+    public List<String> getWinners() {
+        return winners;
+    }
+
+    public void setWinners(List<String> winners) {
+        this.winners = winners;
+        notify(this.winners);
     }
 
     public int howManyPlayersOnline() {

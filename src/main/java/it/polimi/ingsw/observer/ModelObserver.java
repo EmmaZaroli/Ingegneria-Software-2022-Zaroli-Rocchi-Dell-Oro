@@ -3,6 +3,8 @@ package it.polimi.ingsw.observer;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 
+import java.util.List;
+
 /**
  * generic interface, supports the update method
  */
@@ -25,4 +27,6 @@ public interface ModelObserver extends Observer {
     void update(Exception message);
 
     void update (String message);
+
+    void update(List<String> message);
 }
