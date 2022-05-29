@@ -110,6 +110,7 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     public void update(String message){
         if(message.equals("ask student")) user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));
     }
+    
     /**
      * Receives a notification from the model
      * create a message and sends it to the Socket

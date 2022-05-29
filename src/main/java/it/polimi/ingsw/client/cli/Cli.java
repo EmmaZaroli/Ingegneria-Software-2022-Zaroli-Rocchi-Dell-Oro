@@ -218,7 +218,9 @@ public class Cli extends View {
                 validDestination = false;
                 while (!validDestination) {
                     out.print("Choose location (island's index/schoolboard) : ");
+                    
                     destination = parsenStudents.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
+
                     if (destination != 13) {
                         validObject=true;
                         validDestination = true;

@@ -5,10 +5,7 @@ import it.polimi.ingsw.model.enums.Tower;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Island card.
@@ -154,5 +151,13 @@ public class IslandCard implements Serializable {
     public void unifyWith(IslandCard islandCard){
         this.movePawnOnIsland(islandCard.getStudentsFromIsland());
         this.addIndex(islandCard.getIndices());
+    }
+
+    public Map<PawnColor, Integer> getStudentsCardinality(){
+        Map<PawnColor, Integer> res = new HashMap<>();
+        for(PawnColor color: PawnColor.values()){
+            res.put(color, getStudentsNumber(color));
+        }
+        return res;
     }
 }

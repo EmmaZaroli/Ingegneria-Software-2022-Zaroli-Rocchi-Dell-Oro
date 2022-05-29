@@ -34,6 +34,7 @@ public class Game extends Observable implements Serializable {
         this.players = players;
         this.table = table;
         this.currentPlayer = 0;
+        this.gamePhase = GamePhase.PLANNING;
         this.parameters = parameters;
     }
 

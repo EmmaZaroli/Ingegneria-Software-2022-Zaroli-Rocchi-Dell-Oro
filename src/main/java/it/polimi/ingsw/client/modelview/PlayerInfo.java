@@ -3,12 +3,14 @@ package it.polimi.ingsw.client.modelview;
 import it.polimi.ingsw.dtos.PlayerDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.enums.Wizzard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerInfo {
     private String nickname;
+    private Wizzard wizzard;
     private SchoolBoardDto schoolBoard;
     private AssistantCard discardPileHead;
     private int coins;
@@ -23,6 +25,7 @@ public class PlayerInfo {
 
     public PlayerInfo(PlayerDto origin) {
         this.nickname = origin.getNickname();
+        this.wizzard = origin.getWizzard();
         this.schoolBoard = origin.getSchoolBoard();
         this.discardPileHead = origin.getDiscardPileHead();
         this.deck = origin.getDeck();
@@ -30,8 +33,9 @@ public class PlayerInfo {
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline) {
+    private PlayerInfo(String nickname, Wizzard wizzard, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline) {
         this.nickname = nickname;
+        this.wizzard = wizzard;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;
         this.deck = deck;
@@ -48,6 +52,12 @@ public class PlayerInfo {
     public PlayerInfo with(String nickname) {
         PlayerInfo retVal = this.deepClone();
         retVal.nickname = nickname;
+        return retVal;
+    }
+
+    public PlayerInfo with(Wizzard wizzard) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.wizzard = wizzard;
         return retVal;
     }
 
@@ -79,6 +89,10 @@ public class PlayerInfo {
         return nickname;
     }
 
+    public Wizzard getWizzard() {
+        return wizzard;
+    }
+
     public SchoolBoardDto getBoard() {
         return schoolBoard;
     }
@@ -101,6 +115,6 @@ public class PlayerInfo {
 
     public PlayerInfo deepClone() {
         //TODO dtos if we have time
-        return new PlayerInfo(this.nickname, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline);
+        return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline);
     }
 }
