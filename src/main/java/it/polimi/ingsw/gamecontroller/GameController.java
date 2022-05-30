@@ -72,9 +72,8 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //TODO eliminate this method
-    public void update(Object m) {
-        Message message = (Message) m;
+    @Override
+    public void onMessageReceived(Message message) {
         try {
             checkMessage(message);
             switch (game.getGamePhase()) {
@@ -497,38 +496,5 @@ public class GameController implements DisconnectionListener, MessageListener {
         timer = new Timer();
     }
 
-    @Override
-    public void onMessageReceived(Message message) {
-        try {
-            checkMessage(message);
-            switch (game.getGamePhase()) {
-                case PLANNING:
-                    planning(message);
-                    break;
-                case ACTION_MOVE_STUDENTS:
-                    moveStudent(message);
-                    break;
-                case ACTION_MOVE_MOTHER_NATURE:
-                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                        tryMoveMotherNature((MoveMotherNatureMessage) message);
-                    } else game.throwException(new IllegalActionException());
-                    break;
-                case ACTION_CHOOSE_CLOUD:
-                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
-                        try {
-                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                            game.throwException(e);
-                        }
-                    } else game.throwException(new IllegalActionException());
-                    break;
-                case ACTION_END:
-                    //should not go here, the player doesn't do anything in this phase
-                    game.throwException(new IllegalActionException());
-                    break;
-            }
-        } catch (WrongPlayerException e) {
-            game.throwException(e);
-        }
-    }
+
 }

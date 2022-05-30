@@ -110,7 +110,7 @@ public class GameHandlerBuilder {
         };
         for (VirtualView virtualView : virtualViews) {
 
-            if (virtualView.getClientHandler() != null) {
+            if (virtualView.getClientHandler().isPresent()) {
                 virtualView.getClientHandler().get().addDisconnectionListener(gameController);
                 virtualView.addListener(gameController);
             }
