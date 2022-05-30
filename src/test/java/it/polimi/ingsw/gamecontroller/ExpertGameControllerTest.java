@@ -44,11 +44,11 @@ class ExpertGameControllerTest extends TestCase {
         AssistantCard cardPlayed1 = player1.getAssistant(0);
         //Wrong Messages
         AssistantPlayedMessage WrongPlayer = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
-        gameController.update(WrongPlayer);
+        gameController.onMessageReceived(WrongPlayer);
         Assertions.assertEquals(10, player2.getAssistantDeck().size());
         //Correct Message
         AssistantPlayedMessage message1 = new AssistantPlayedMessage("player1", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
-        gameController.update(message1);
+        gameController.onMessageReceived(message1);
         Assertions.assertEquals(9, player1.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.PLANNING, game.getGamePhase());
         Assertions.assertEquals(1, game.getCurrentPlayer());
@@ -56,12 +56,12 @@ class ExpertGameControllerTest extends TestCase {
         //2.
 
         AssistantPlayedMessage SameCard = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
-        gameController.update(SameCard);
+        gameController.onMessageReceived(SameCard);
         Assertions.assertEquals(10, player2.getAssistantDeck().size());
         //Correct Message
         AssistantCard cardPlayed2 = player2.getAssistant(1);
         AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed2);
-        gameController.update(message2);
+        gameController.onMessageReceived(message2);
         Assertions.assertEquals(9, player2.getAssistantDeck().size());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
     }
@@ -79,20 +79,20 @@ class ExpertGameControllerTest extends TestCase {
     void actionMoveStudent() {
         //Wrong Messages
         MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
-        gameController.update(WrongMessage);
+        gameController.onMessageReceived(WrongMessage);
 
         //Correct Message
         IslandCard island = game.getTable().getIslands().get(0);
         MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
         message1.setIslandCard(island);
-        gameController.update(message1);
+        gameController.onMessageReceived(message1);
         PawnColor student = pawnColorInEntrance();
         message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.update(message1);
+        gameController.onMessageReceived(message1);
         Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
         PawnColor student2 = pawnColorInEntrance();
         message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
-        gameController.update(message1);
+        gameController.onMessageReceived(message1);
         Assertions.assertEquals(0, game.getCurrentPlayer());
         //2.
 
@@ -104,9 +104,9 @@ class ExpertGameControllerTest extends TestCase {
         game.getCurrentPlayerBoard().addStudentsToEntrance(students);
         game.getCurrentPlayerBoard().addStudentsToEntrance(students);
         MoveStudentMessage message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.update(message2);
+        gameController.onMessageReceived(message2);
         message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.update(message2);
+        gameController.onMessageReceived(message2);
         Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
         Assertions.assertFalse(game.getPlayers()[1].getBoard().isThereProfessor(student));
     }
@@ -134,7 +134,7 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertFalse(game.getParameters().isTakeProfessorEvenIfSameStudents());
 
@@ -145,7 +145,7 @@ class ExpertGameControllerTest extends TestCase {
         parameters[0] = color;
         parameters[1] = island.getUuid();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         int a  = game.getPlayers()[0].getCoins();
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(colorNumber + 1, island.getStudentsNumber(color));
@@ -156,7 +156,7 @@ class ExpertGameControllerTest extends TestCase {
         parameters[0] = PawnColor.BLUE;
         parameters[1] = island.getUuid();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(blue, island.getStudentsNumber(PawnColor.BLUE));
     }
 
@@ -183,20 +183,20 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertFalse(game.getParameters().isTakeProfessorEvenIfSameStudents());
 
         //correct message
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertTrue(game.getParameters().isTakeProfessorEvenIfSameStudents());
 
         //wrong message, player has already played character card
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertTrue(game.getParameters().isTakeProfessorEvenIfSameStudents());
         Assertions.assertEquals(0, game.getParameters().getMotherNatureExtraMovements());
@@ -228,19 +228,19 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertFalse(game.getParameters().isTakeProfessorEvenIfSameStudents());
 
         //correct message
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(2, game.getParameters().getMotherNatureExtraMovements());
 
         //wrong message, player has already played character card
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertFalse(game.getParameters().isTakeProfessorEvenIfSameStudents());
         Assertions.assertEquals(2, game.getParameters().getMotherNatureExtraMovements());
@@ -272,7 +272,7 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertTrue(game.getParameters().isTowersCountInInfluence());
 
@@ -280,7 +280,7 @@ class ExpertGameControllerTest extends TestCase {
         game.getPlayers()[0].addCoin();
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertFalse(game.getParameters().isTowersCountInInfluence());
 
@@ -289,7 +289,7 @@ class ExpertGameControllerTest extends TestCase {
         game.getPlayers()[0].addCoin();
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(3, game.getPlayers()[0].getCoins());
         Assertions.assertFalse(game.getParameters().isTowersCountInInfluence());
 
@@ -320,7 +320,7 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertTrue(game.getParameters().isTowersCountInInfluence());
 
@@ -342,7 +342,7 @@ class ExpertGameControllerTest extends TestCase {
         int colorNumberEntrance1 = game.getPlayers()[0].getBoard().getStudentsInEntrance(colorEntrance1);
         int colorNumberEntrance2 = game.getPlayers()[0].getBoard().getStudentsInEntrance(colorEntrance2);
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         int newColorNumberCard1 = ((CharacterCardWithSetUpAction)game.getCharacterCards()[1]).getStudentsNumber(colorCard1);
         int newColorNumberCard2 = ((CharacterCardWithSetUpAction)game.getCharacterCards()[1]).getStudentsNumber(colorCard2);
@@ -385,7 +385,7 @@ class ExpertGameControllerTest extends TestCase {
         game.getPlayers()[0].addCoin();
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(3, game.getPlayers()[0].getCoins());
         Assertions.assertTrue(game.getParameters().isTowersCountInInfluence());
 
@@ -415,14 +415,14 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(0, game.getParameters().getExtraInfluence());
 
         //correct message
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(2, game.getParameters().getExtraInfluence());
 
@@ -431,7 +431,7 @@ class ExpertGameControllerTest extends TestCase {
         game.getPlayers()[0].addCoin();
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(3, game.getPlayers()[0].getCoins());
         Assertions.assertTrue(game.getParameters().isTowersCountInInfluence());
 
@@ -463,7 +463,7 @@ class ExpertGameControllerTest extends TestCase {
         Object[] parameters = new Object[2];
         parameters[0] = PawnColor.YELLOW;
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(PawnColor.NONE, game.getParameters().getColorWithNoInfluence());
 
@@ -473,7 +473,7 @@ class ExpertGameControllerTest extends TestCase {
         parameters = new Object[1];
         parameters[0] = PawnColor.YELLOW;
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(PawnColor.YELLOW, game.getParameters().getColorWithNoInfluence());
 
@@ -482,7 +482,7 @@ class ExpertGameControllerTest extends TestCase {
         game.getPlayers()[0].addCoin();
         game.getPlayers()[0].addCoin();
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[0], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(3, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(PawnColor.YELLOW, game.getParameters().getColorWithNoInfluence());
 
@@ -514,7 +514,7 @@ class ExpertGameControllerTest extends TestCase {
         //wrong message, player has not enough coins
         Object[] parameters = new Object[2];
         CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(0, game.getParameters().getExtraInfluence());
 
@@ -526,7 +526,7 @@ class ExpertGameControllerTest extends TestCase {
         int colorNumberCard = ((CharacterCardWithSetUpAction)game.getCharacterCards()[1]).getStudentsNumber(color);
         int colorNumberDiningroom = game.getPlayers()[0].getBoard().getStudentsInDiningRoom(color);
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(0, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(colorNumberDiningroom + 1, game.getPlayers()[0].getBoard().getStudentsInDiningRoom(color));
 
@@ -535,7 +535,7 @@ class ExpertGameControllerTest extends TestCase {
         game.getPlayers()[0].addCoin();
         parameters = new Object[2];
         message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
-        gameController.update(message);
+        gameController.onMessageReceived(message);
         Assertions.assertEquals(2, game.getPlayers()[0].getCoins());
         Assertions.assertEquals(0, game.getParameters().getExtraInfluence());
 

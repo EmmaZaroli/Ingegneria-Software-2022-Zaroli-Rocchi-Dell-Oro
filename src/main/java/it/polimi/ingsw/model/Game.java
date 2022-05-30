@@ -138,10 +138,8 @@ public class Game extends ModelObservable implements Serializable {
     public void callGameOverFromDisconnection() {
         this.gameOver = true;
         notifyGameOverFromDisconnection();
-        //TODO notify
     }
 
-    //TODO is this necessary? because there is already setError()
     public void throwException(Exception e) {
         this.error = e;
         notifyException(e);
