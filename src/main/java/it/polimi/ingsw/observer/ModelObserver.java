@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * generic interface, supports the update method
  */
-//TODO something is missing
 public interface ModelObserver{
     void updateCharacterCard(CharacterCard message, Object[] parameters);
 
@@ -17,6 +16,8 @@ public interface ModelObserver{
     void updateGamePhase(GamePhase message);
 
     void updatePlayer(Player message);
+
+    void updatePlayerOnline(Player message);
 
     void updateCloudTile(CloudTile message);
 

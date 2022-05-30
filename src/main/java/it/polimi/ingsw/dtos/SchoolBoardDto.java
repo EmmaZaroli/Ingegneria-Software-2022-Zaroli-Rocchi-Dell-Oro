@@ -8,7 +8,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-//TODO substitute in code
 public class SchoolBoardDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 100L;

@@ -67,7 +67,6 @@ public class IslandCardDto implements Serializable {
     }
 
     public IslandCardDto deepClone() {
-        //TODO dtos if we have time
         return new IslandCardDto(this.uuid, new ArrayList<>(this.students), this.tower, this.hasMotherNature, new ArrayList<>(this.indices));
     }
 

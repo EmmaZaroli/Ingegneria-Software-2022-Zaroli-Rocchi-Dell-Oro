@@ -34,6 +34,12 @@ public class ModelObservable {
         }
     }
 
+    public void notifyPlayerOnline(Player message){
+        for (ModelObserver observer : observers) {
+            observer.updatePlayerOnline(message);
+        }
+    }
+
     public void notifyGamePhase(GamePhase message) {
         for (ModelObserver observer : observers) {
             observer.updateGamePhase(message);
@@ -100,6 +106,4 @@ public class ModelObservable {
             observer.updateCharacterCard(message, parameters);
         }
     }
-
-    //TODO notifyModelObserver for every type of notify from model to view
 }

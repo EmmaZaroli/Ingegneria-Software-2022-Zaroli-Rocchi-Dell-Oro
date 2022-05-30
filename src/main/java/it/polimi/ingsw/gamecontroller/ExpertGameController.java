@@ -87,7 +87,7 @@ public class ExpertGameController extends GameController {
             if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message)) {
                 activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
             } else {
-                //TODO reply with error
+                //TODO reply with error or do nothing?
             }
         } else {
             super.onMessageReceived(message);

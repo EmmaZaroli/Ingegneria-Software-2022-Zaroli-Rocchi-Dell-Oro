@@ -322,23 +322,6 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //TODO does the same thing as whoIsWinner(), maybe we can cancel this
-    public int winner() {
-        //TODO maybe throw an exception if the game is not over?
-        Player[] players = game.getPlayers();
-        int min = 0;
-        for (int i = 0; i < game.getPlayersCount(); i++) {
-            if (players[i].getBoard().getTowersCount() < players[min].getBoard().getTowersCount())
-                min = i;
-            if (players[i].getBoard().getTowersCount() == players[min].getBoard().getTowersCount() &&
-                    players[i].getBoard().countProfessors() > players[min].getBoard().countProfessors()) {
-                min = i;
-            }
-        }
-        //return player with the minimum number of towers
-        return min;
-    }
-
     private GamePhase pickNextPhase() {
         return switch (this.game.getGamePhase()) {
             case PLANNING -> ACTION_MOVE_STUDENTS;
@@ -477,7 +460,6 @@ public class GameController implements DisconnectionListener, MessageListener {
         }, 120000); //TODO parameterize this
     }
 
-    //TODO make this as listener to virtualview or user
     public void onReconnect() {
         synchronized (game) {
             //when one player reconnect, this will set every player to their status (online or offline)

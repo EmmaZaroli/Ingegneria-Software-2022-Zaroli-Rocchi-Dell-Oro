@@ -1,6 +1,5 @@
 package it.polimi.ingsw.gamecontroller.enums;
 
-//TODO 4 is useless
 public enum PlayersNumber {
     TWO(2),
     THREE(3),
