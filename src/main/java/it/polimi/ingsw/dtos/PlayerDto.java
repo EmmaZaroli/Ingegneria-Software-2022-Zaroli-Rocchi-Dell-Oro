@@ -3,6 +3,7 @@ package it.polimi.ingsw.dtos;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.ExpertPlayer;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.enums.Wizzard;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class PlayerDto implements Serializable {
     private static final long serialVersionUID = 105L;
 
     private final String nickname;
+    private final Wizzard wizzard;
     private final SchoolBoardDto schoolBoard;
     private final AssistantCard discardPileHead;
     private final ArrayList<AssistantCard> deck;
@@ -22,6 +24,7 @@ public class PlayerDto implements Serializable {
 
     public PlayerDto(Player origin) {
         this.nickname = origin.getNickname();
+        this.wizzard = origin.getWizzard();
         this.schoolBoard = new SchoolBoardDto(origin.getBoard());
         this.discardPileHead = origin.getDiscardPileHead();
         this.deck = new ArrayList<>(origin.getAssistantDeck());
@@ -31,6 +34,10 @@ public class PlayerDto implements Serializable {
 
     public String getNickname() {
         return nickname;
+    }
+
+    public Wizzard getWizzard() {
+        return wizzard;
     }
 
     public SchoolBoardDto getSchoolBoard() {

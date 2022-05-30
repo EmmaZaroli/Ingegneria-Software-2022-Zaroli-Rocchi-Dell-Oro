@@ -4,7 +4,7 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ModelObservable;
 import it.polimi.ingsw.utils.RandomHelper;
 
 import java.io.Serial;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Table extends Observable implements Serializable {
+public class Table extends ModelObservable implements Serializable {
     @Serial
     private static final long serialVersionUID = 2L;
 
@@ -39,7 +39,7 @@ public class Table extends Observable implements Serializable {
             if ((Math.abs(i - initialPosition) != 6) && (getIslandWithMotherNature() != i)) {
                 int pawnColor = random.getInt(initialized.size());
                 islandCards.get(i).movePawnOnIsland(initialized.get(pawnColor));
-                notify(islandCards.get(i));
+                notifyIslandCard(islandCards.get(i));
                 initialized.remove(pawnColor);
             }
         }
@@ -72,12 +72,14 @@ public class Table extends Observable implements Serializable {
 
     public void movePawnOnIsland(IslandCard island, List<PawnColor> students) {
         island.movePawnOnIsland(students);
-        notifyModelObserver(island);
+
+        notifyIslandCard(island);
     }
 
     public void movePawnOnIsland(IslandCard island, PawnColor students) {
         island.movePawnOnIsland(students);
-        notifyModelObserver(island);
+
+        notifyIslandCard(island);
     }
 
     public IslandCard getIsland(UUID uuid) throws WrongUUIDException {
@@ -91,17 +93,20 @@ public class Table extends Observable implements Serializable {
 
     public void setTower(IslandCard island, Tower tower) {
         island.setTower(tower);
-        notifyModelObserver(island);
+
+        notifyIslandCard(island);
     }
 
     public void addStudents(CloudTile cloud, List<PawnColor> students) {
         cloud.addStudents(students);
-        notifyModelObserver(cloud);
+
+        notifyCloudTile(cloud);
     }
 
     public List<PawnColor> takeStudentsFromCloud(CloudTile cloud) {
         List<PawnColor> retVal = cloud.takeStudentsFromCloud();
-        notifyModelObserver(cloud);
+
+        notifyCloudTile(cloud);
         return retVal;
     }
 
@@ -133,15 +138,16 @@ public class Table extends Observable implements Serializable {
     public void setIslandWithMotherNature(int index) {
         int oldPosition = getIslandWithMotherNature();
         this.getIsland(getIslandWithMotherNature()).setHasMotherNature(false);
-        notifyModelObserver(getIsland(oldPosition));
+
+        notifyIslandCard(getIsland(oldPosition));
         this.getIsland(index).setHasMotherNature(true);
-        notifyModelObserver(getIsland(getIslandWithMotherNature()));
+        notifyIslandCard(getIsland(getIslandWithMotherNature()));
     }
 
     public void unifyIslands(int originalIndex, int otherIndex){
         IslandCard islandCard = getIsland(originalIndex);
         islandCard.unifyWith(getIsland(otherIndex));
         removeIsland(otherIndex);
-        notify(islandCard);
+        notifyIslandCard(islandCard);
     }
 }

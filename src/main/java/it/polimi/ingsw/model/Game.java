@@ -1,14 +1,16 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ModelObservable;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-public class Game extends Observable implements Serializable {
+public class Game extends ModelObservable implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +27,7 @@ public class Game extends Observable implements Serializable {
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
     private boolean gameOver = false;
+    private List<String> winners = new ArrayList<>();
 
     private Exception error;
 
@@ -34,6 +37,7 @@ public class Game extends Observable implements Serializable {
         this.players = players;
         this.table = table;
         this.currentPlayer = 0;
+        this.gamePhase = GamePhase.PLANNING;
         this.parameters = parameters;
     }
 
@@ -91,7 +95,7 @@ public class Game extends Observable implements Serializable {
 
     public void setGamePhase(GamePhase gamePhase) {
         this.gamePhase = gamePhase;
-        notifyModelObserver(gamePhase);
+        notifyGamePhase(gamePhase);
     }
 
     public void setPlayedCount(int playedCount) {
@@ -100,7 +104,7 @@ public class Game extends Observable implements Serializable {
 
     public void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
-        notify(players[currentPlayer]);
+        notifyPlayer(players[currentPlayer]);
     }
 
     public void setFirstPlayerInRound(int firstPlayerInRound) {
@@ -120,23 +124,32 @@ public class Game extends Observable implements Serializable {
         notifyModelObserver("ask student");
     }
 
-    public void callWin(String nicknameWinner) {
+    public void callWin(List<String> winners) {
         this.gameOver = true;
-        notify(nicknameWinner);
+        setWinners(winners);
+    }
+
+    public void callWin(String winner){
+        List<String> winners = new ArrayList<>();
+        winners.add(winner);
+        callWin(winners);
     }
 
     public void callGameOverFromDisconnection() {
         this.gameOver = true;
+        notifyGameOverFromDisconnection();
         //TODO notify
     }
 
+    //TODO is this necessary? because there is already setError()
     public void throwException(Exception e) {
-        notify(e);
+        this.error = e;
+        notifyException(e);
     }
 
     public void setEnoughPlayerOnline(boolean enoughPlayerOnline) {
         this.enoughPlayerOnline = enoughPlayerOnline;
-        //TODO notify
+        notifyEnoughPlayerOnline(enoughPlayerOnline);
         //TODO block all action if false
     }
 
@@ -147,13 +160,6 @@ public class Game extends Observable implements Serializable {
     public void changePlayer(int playerIndex) {
         setCurrentPlayer(playerIndex);
         setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());
-
-        notifyModelObserver(this.players[currentPlayer]);
-    }
-
-    public void setError(Exception e) {
-        this.error = e;
-        notify(this.error);
     }
 
     public Exception getLastError() {
@@ -162,6 +168,15 @@ public class Game extends Observable implements Serializable {
 
     public Player getPlayer(int playerIndex) {
         return players[playerIndex];
+    }
+
+    public List<String> getWinners() {
+        return winners;
+    }
+
+    public void setWinners(List<String> winners) {
+        this.winners = winners;
+        notifyWinners(this.winners);
     }
 
     public int howManyPlayersOnline() {

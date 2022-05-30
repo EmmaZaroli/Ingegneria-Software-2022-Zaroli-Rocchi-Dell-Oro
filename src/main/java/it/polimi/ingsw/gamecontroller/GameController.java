@@ -9,12 +9,12 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.CloudMessage;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
-import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
@@ -26,7 +26,7 @@ import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 
 //TODO add observables/observers
-public class GameController implements DisconnectionListener, Observer {
+public class GameController implements DisconnectionListener, MessageListener {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
@@ -72,6 +72,7 @@ public class GameController implements DisconnectionListener, Observer {
         }
     }
 
+    //TODO eliminate this method
     public void update(Object m) {
         Message message = (Message) m;
         try {
@@ -395,87 +396,63 @@ public class GameController implements DisconnectionListener, Observer {
             }
         }
         DataDumper.getInstance().saveGame(game);
-        checkTurnGameOver();
+        checkRoundGameOver();
     }
 
     public void checkImmediateGameOver() {
-        if (!isImmediateGameOver())
-            return;
-        //TODO what to do after the game has ended
-        DataDumper.getInstance().removeGameFromMemory(game.getGameId());
-    }
 
-    //TODO think about a better function name
-    public void checkTurnGameOver() {
-        if (!isTurnGameOver())
-            return;
-        //TODO the game end when the round does, we can set a boolean RoundGameOver
-        //TODO what to do after the game has ended
-        //game.callWin(whoIsWinner());
-        DataDumper.getInstance().removeGameFromMemory(game.getGameId());
-    }
-
-    public boolean isImmediateGameOver() {
         //check if any player has build his last tower
         for (Player p : game.getPlayers()) {
             if (p.getBoard().getTowersCount() == 0) {
                 game.callWin(p.getNickname());
-                return true;
             }
         }
 
         //check if only 3 island group remain on the table
         if (tableController.countIslands() == 3) {
-            game.callWin(whoIsWinner());
-            return true;
+            game.callWin(whoIsWinning());
         }
-        return false;
+
+        //TODO what to do after the game has ended
+        DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
-    public boolean isTurnGameOver() {
-        //check if the last student has been drawn from the bag
+    public void checkRoundGameOver() {
+        //check if bag is empty
         if (tableController.getBag().isEmpty())
-            return true;
+            game.callWin(whoIsWinning());
 
         //check if any player has run out of assistant card
         for (Player p : game.getPlayers()) {
             if (p.isDeckEmpty())
-                return true;
+                game.callWin(whoIsWinning());
         }
-        return false;
+
+        //TODO what to do after the game has ended
+        DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
-    //TODO we need to simplify this
-    private String whoIsWinner() {
+    private List<String> whoIsWinning() {
+        List<String> winners = new ArrayList<>();
+
         //check number of tower left
-        List<Integer> towersCount = new ArrayList<>();
-        for (Player p : game.getPlayers()) {
-            towersCount.add(p.getBoard().getTowersCount());
-        }
-        List<Integer> sortedList = towersCount.stream().sorted().toList();
-        if (sortedList.get(0) < sortedList.get(1)) {
-            for (Player p : game.getPlayers()) {
-                if (p.getBoard().getTowersCount() == sortedList.get(0)) {
-                    return p.getNickname();
-                }
-            }
+        List<Player> playerOrderedByTower = Arrays.stream(game.getPlayers()).sorted(Comparator.comparingInt(p -> p.getBoard().getTowersCount())).toList();
+        if (playerOrderedByTower.get(0).getBoard().getTowersCount() < playerOrderedByTower.get(1).getBoard().getTowersCount()) {
+            winners.add(playerOrderedByTower.get(0).getNickname());
+            return winners;
         }
 
-        //else check number of professors
-        List<Integer> professorsCount = new ArrayList<>();
-        for (Player p : game.getPlayers()) {
-            professorsCount.add(p.getBoard().countProfessors());
+        List<Player> playerOrderedByProfessors = playerOrderedByTower.subList(0, 2).stream().sorted(Comparator.comparingInt(p -> p.getBoard().countProfessors())).toList();
+        if (playerOrderedByProfessors.get(0).getBoard().countProfessors() < playerOrderedByProfessors.get(1).getBoard().countProfessors()) {
+            winners.add(playerOrderedByTower.get(1).getNickname());
+            return winners;
         }
-        List<Integer> professorsSortedList = professorsCount.stream().sorted().toList();
-        if (professorsSortedList.get(0) < professorsSortedList.get(1)) {
-            for (Player p : game.getPlayers()) {
-                if (p.getBoard().countProfessors() == professorsSortedList.get(0)) {
-                    return p.getNickname();
-                }
-            }
-        }
+
+
         // it arrives here only if there are 2 player with the same number of tower and professors
-        return "draw";
+        winners.add(playerOrderedByTower.get(0).getNickname());
+        winners.add(playerOrderedByTower.get(1).getNickname());
+        return winners;
     }
 
     @Override
@@ -518,5 +495,40 @@ public class GameController implements DisconnectionListener, Observer {
         game.setEnoughPlayerOnline(true);
         timer.cancel();
         timer = new Timer();
+    }
+
+    @Override
+    public void onMessageReceived(Message message) {
+        try {
+            checkMessage(message);
+            switch (game.getGamePhase()) {
+                case PLANNING:
+                    planning(message);
+                    break;
+                case ACTION_MOVE_STUDENTS:
+                    moveStudent(message);
+                    break;
+                case ACTION_MOVE_MOTHER_NATURE:
+                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                        tryMoveMotherNature((MoveMotherNatureMessage) message);
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_CHOOSE_CLOUD:
+                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                        try {
+                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                            game.throwException(e);
+                        }
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_END:
+                    //should not go here, the player doesn't do anything in this phase
+                    game.throwException(new IllegalActionException());
+                    break;
+            }
+        } catch (WrongPlayerException e) {
+            game.throwException(e);
+        }
     }
 }

@@ -35,7 +35,6 @@ public abstract class View implements MessageListener, UserInterface {
     private List<LinkedIslands> islands;
     private String currentPlayer;
     private List<CharacterCardDto> characterCards;
-    protected int numberOfIslandOnTable;
     private GamePhase currentPhase;
     private boolean areEnoughPlayers;
     private String error;
@@ -47,7 +46,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
         for (int i = 0; i < 12; i++)
-            this.islands.add(new LinkedIslands(new IslandCardDto()));
+            this.islands.add(new LinkedIslands((new IslandCardDto()).withIndeces(i)));
         this.tableCoins = 0;
         this.characterCards = new ArrayList<>();
         this.areEnoughPlayers = true;
@@ -140,6 +139,10 @@ public abstract class View implements MessageListener, UserInterface {
         return this.currentPhase;
     }
 
+    public String getError() {
+        return error;
+    }
+
     //</editor-fold>
 
     @Override
@@ -198,6 +201,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message.isOk()) {
             this.printEnqueuedMessage();
         } else {
+            this.error = ErrorMessages.PARAMETERS_ERROR;
             error(ErrorMessages.PARAMETERS_ERROR);
             this.askServerInfo();
         }
