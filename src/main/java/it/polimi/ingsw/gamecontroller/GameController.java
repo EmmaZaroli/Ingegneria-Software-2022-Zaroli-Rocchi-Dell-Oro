@@ -9,12 +9,12 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Message;
+import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.CloudMessage;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
-import it.polimi.ingsw.observer.Observer;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
@@ -26,7 +26,7 @@ import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 
 //TODO add observables/observers
-public class GameController implements DisconnectionListener, Observer {
+public class GameController implements DisconnectionListener, MessageListener {
     protected Game game;
     protected TableController tableController;
     protected VirtualView[] virtualViews;
@@ -72,6 +72,7 @@ public class GameController implements DisconnectionListener, Observer {
         }
     }
 
+    //TODO eliminate this method
     public void update(Object m) {
         Message message = (Message) m;
         try {
@@ -494,5 +495,40 @@ public class GameController implements DisconnectionListener, Observer {
         game.setEnoughPlayerOnline(true);
         timer.cancel();
         timer = new Timer();
+    }
+
+    @Override
+    public void onMessageReceived(Message message) {
+        try {
+            checkMessage(message);
+            switch (game.getGamePhase()) {
+                case PLANNING:
+                    planning(message);
+                    break;
+                case ACTION_MOVE_STUDENTS:
+                    moveStudent(message);
+                    break;
+                case ACTION_MOVE_MOTHER_NATURE:
+                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                        tryMoveMotherNature((MoveMotherNatureMessage) message);
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_CHOOSE_CLOUD:
+                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                        try {
+                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                            game.throwException(e);
+                        }
+                    } else game.throwException(new IllegalActionException());
+                    break;
+                case ACTION_END:
+                    //should not go here, the player doesn't do anything in this phase
+                    game.throwException(new IllegalActionException());
+                    break;
+            }
+        } catch (WrongPlayerException e) {
+            game.throwException(e);
+        }
     }
 }

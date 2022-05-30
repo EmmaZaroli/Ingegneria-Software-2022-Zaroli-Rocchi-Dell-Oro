@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ModelObservable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * class Cloud tile.
  */
-public class CloudTile extends Observable implements Serializable {
+public class CloudTile extends ModelObservable implements Serializable {
     @Serial
     private static final long serialVersionUID = 6L;
     private final UUID uuid;
@@ -48,7 +48,7 @@ public class CloudTile extends Observable implements Serializable {
     protected List<PawnColor> takeStudentsFromCloud() {
         List<PawnColor> copy = new ArrayList<>(students);
         this.students.clear();
-        notify(this);
+        notifyCloudTile(this);
         return copy;
     }
 

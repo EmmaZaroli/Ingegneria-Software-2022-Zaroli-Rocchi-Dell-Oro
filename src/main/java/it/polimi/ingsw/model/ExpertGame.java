@@ -49,7 +49,7 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     x.setUsed();
-                    notify(x);
+                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 
@@ -58,7 +58,7 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     ((CharacterCardWithSetUpAction) x).addStudent(student);
-                    notify(x);
+                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 
@@ -67,7 +67,7 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     ((CharacterCardWithSetUpAction) x).addStudent(student);
-                    notify(x);
+                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 
@@ -76,17 +76,17 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     ((CharacterCardWithSetUpAction) x).removeStudent(student);
-                    notify(x);
+                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 
     public void addCoin(ExpertPlayer player) {
         player.addCoin();
-        notify(player);
+        notifyPlayer(player);
     }
 
     public void decreaseCoins(ExpertPlayer player, int n) {
         player.decreaseCoins(n);
-        notify(player);
+        notifyPlayer(player);
     }
 }

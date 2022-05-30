@@ -250,7 +250,7 @@ public class ExpertGameController extends GameController {
         try {
             tableController.movePawnOnIsland(color, islandIndex);
         } catch (WrongUUIDException e) {
-            game.setError(e);
+            game.throwException(e);
         }
         game.addStudent(character, tableController.drawStudents(1).get(0));
     }

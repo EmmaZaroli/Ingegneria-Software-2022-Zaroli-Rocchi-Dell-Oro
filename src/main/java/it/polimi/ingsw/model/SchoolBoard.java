@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ModelObservable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * School board.
  */
-public class SchoolBoard extends Observable implements Serializable {
+public class SchoolBoard extends ModelObservable implements Serializable {
     @Serial
     private static final long serialVersionUID = 10L;
 
@@ -44,7 +44,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void addProfessor(PawnColor color) {
         professorTable.add(color);
-        notifyModelObserver(this);
+        notifySchoolBoard(this);
     }
 
     /**
@@ -55,7 +55,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public boolean addStudentToDiningRoom(PawnColor color) {
        if(diningRoom.addStudent(color)) {
-           notifyModelObserver(this);
+           notifySchoolBoard(this);
            return true;
        }
        return false;
@@ -68,7 +68,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void addStudentsToEntrance(List<PawnColor> color) {
         entrance.addAll(color);
-        notifyModelObserver(this);
+        notifySchoolBoard(this);
     }
 
     /**
@@ -78,7 +78,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void addTowers(int n) {
         towers += n;
-        notify(this);
+        notifySchoolBoard(this);
     }
 
     /**
@@ -165,7 +165,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void removeProfessor(PawnColor color) {
         professorTable.remove(color);
-        notifyModelObserver(this);
+        notifySchoolBoard(this);
     }
 
     /**
@@ -175,7 +175,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void removeStudentFromEntrance(PawnColor color) {
         entrance.remove(color);
-        notifyModelObserver(this);
+        notifySchoolBoard(this);
     }
 
     /**
@@ -183,7 +183,7 @@ public class SchoolBoard extends Observable implements Serializable {
      */
     public void removeTower() {
         towers--;
-        notify(this);
+        notifySchoolBoard(this);
     }
 
     /**

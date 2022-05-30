@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
-import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ModelObservable;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Player
  */
-public class Player extends Observable implements Serializable {
+public class Player extends ModelObservable implements Serializable {
     @Serial
     private static final long serialVersionUID = 9L;
 
@@ -155,7 +155,7 @@ public class Player extends Observable implements Serializable {
      */
     public void playAssistant(AssistantCard a) {
         this.discardPileHead = a;
-        notifyModelObserver(a);
+        notifyAssistantCard(a);
         assistantDeck.remove(a);
 
     }

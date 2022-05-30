@@ -3,20 +3,17 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.Message;
-import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.MessageType;
+import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.observer.ModelObserver;
-import it.polimi.ingsw.observer.Observable;
+import it.polimi.ingsw.observer.ModelObservable;
 import it.polimi.ingsw.servercontroller.User;
 
 import java.util.Optional;
 import java.util.List;
 
 
-public class VirtualView extends Observable implements ModelObserver, MessageListener {
+public class VirtualView extends MessageObservable implements ModelObserver, MessageListener {
     private final User user;
     private final Game game;
 
@@ -47,8 +44,7 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
      * @param message a message coming from the client
      */
     public void onMessageReceived(Message message) {
-
-        notify(message);
+        notifyMessage(message);
     }
 
     private String getCurrentPlayer() {
@@ -61,17 +57,17 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
      * @param message The changed CharacterCard
      */
     @Override
-    public void update(CharacterCard message, Object[] parameters) {
+    public void updateCharacterCard(CharacterCard message, Object[] parameters) {
         user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.UPDATE_CHARACTER_CARD, message, parameters));
     }
 
     @Override
-    public void update(IslandCard message) {
+    public void updateIslandCard(IslandCard message) {
         user.sendMessage(new IslandMessage(MessageType.UPDATE_ISLAND, message));
     }
 
     @Override
-    public void update(GamePhase message) {
+    public void updateGamePhase(GamePhase message) {
         switch (game.getGamePhase()) {
             case PLANNING ->  user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
             case ACTION_MOVE_STUDENTS -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
@@ -81,7 +77,7 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     }
 
     @Override
-    public void update(Player message) {
+    public void updatePlayer(Player message) {
 
         user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
         if (game.getGamePhase().equals(GamePhase.PLANNING))
@@ -89,22 +85,22 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     }
 
     @Override
-    public void update(CloudTile message) {
+    public void updateCloudTile(CloudTile message) {
         user.sendMessage(new CloudMessage("server", MessageType.UPDATE_CLOUD, message));
     }
 
     @Override
-    public void update(AssistantCard message) {
+    public void updateAssistantCard(AssistantCard message) {
         user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), MessageType.UPDATE_ASSISTANT_CARD, message));
     }
 
     @Override
-    public void update(SchoolBoard message) {
+    public void updateSchoolBoard(SchoolBoard message) {
         user.sendMessage(new SchoolBoardMessage(getCurrentPlayer(), MessageType.UPDATE_BOARD, message));
     }
 
     @Override
-    public void update(Exception message) {
+    public void updateException(Exception message) {
         user.sendMessage(new ErrorMessage(getCurrentPlayer(), game.getLastError().getMessage()));
     }
 
@@ -114,40 +110,22 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     }
 
     @Override
-    public void update(List<String> message){
+    public void updateWinners(List<String> message){
         //notify winners
         user.sendMessage(new GameOverMessage(MessageType.GAME_OVER, message));
     }
 
-    /**
-     * Receives a notification from the model
-     * create a message and sends it to the Socket
-     */
-    //TODO this should be eliminated, right?
     @Override
-    public void update(Object message) {
-
-        if (message.getClass().equals(String.class)) {
-            //game over, sent to every player
-            if (game.isGameOver()) {
-                if (((String) message).equals("draw")) {
-                    //user.sendMessage(new GameOverMessage(MessageType.DRAW, false));
-                } else {
-                    //user.sendMessage(new GameOverMessage(MessageType.GAME_OVER, ((String) message).equals(this.user.getNickname())));
-                }
-            }
-            //error sent only to the current player
-            else if (this.user.getNickname().equals(getCurrentPlayer())) {
-                user.sendMessage(new ErrorMessage(getCurrentPlayer(), (String) message));
-            }
-        }
-
-        //player's coins varied
-        if (message.getClass().equals(Integer.class) && getCurrentPlayer().equals(this.user.getNickname())) {
-            user.sendMessage(new CoinMessage(getCurrentPlayer(), (int) message, false));
-        }
-
+    public void updateGameOverFromDisconnection() {
+        user.sendMessage(new ConnectionMessage(getCurrentPlayer(), MessageType.GAME_OVER_FROM_DISCONNECTION));
     }
 
+    @Override
+    public void updateEnoughPlayerOnline(boolean message) {
+        if(message)
+            user.sendMessage(new ConnectionMessage(getCurrentPlayer(), MessageType.ENOUGH_PLAYERS));
+        else
+            user.sendMessage(new ConnectionMessage(getCurrentPlayer(), MessageType.NOT_ENOUGH_PLAYERS));
+    }
 
 }
