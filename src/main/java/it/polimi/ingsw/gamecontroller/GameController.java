@@ -20,6 +20,8 @@ import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
@@ -31,6 +33,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     protected TableController tableController;
     protected VirtualView[] virtualViews;
     private Timer timer = new Timer();
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public GameController(Game game, TableController tableController, VirtualView[] virtualViews) {
         this.game = game;
@@ -68,7 +71,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         try {
             moveMotherNature(message.getSteps());
         } catch (NotAllowedMotherNatureMovementException | IllegalActionException e) {
-            game.throwException(e);
+            logger.log(Level.WARNING,"",e);
         }
     }
 
@@ -86,24 +89,24 @@ public class GameController implements DisconnectionListener, MessageListener {
                 case ACTION_MOVE_MOTHER_NATURE:
                     if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
                         tryMoveMotherNature((MoveMotherNatureMessage) message);
-                    } else game.throwException(new IllegalActionException());
+                    } else  logger.log(Level.WARNING,"Illegal Action");;
                     break;
                 case ACTION_CHOOSE_CLOUD:
                     if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
                         try {
                             pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
                         } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                            game.throwException(e);
+                            logger.log(Level.WARNING,"",e);
                         }
-                    } else game.throwException(new IllegalActionException());
+                    } else  logger.log(Level.WARNING,"Illegal Action");
                     break;
                 case ACTION_END:
                     //should not go here, the player doesn't do anything in this phase
-                    game.throwException(new IllegalActionException());
+                    logger.log(Level.WARNING,"Illegal Action");
                     break;
             }
         } catch (WrongPlayerException e) {
-            game.throwException(e);
+            logger.log(Level.WARNING,"",e);
         }
 
     }
@@ -113,10 +116,10 @@ public class GameController implements DisconnectionListener, MessageListener {
             try {
                 this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard());
             } catch (IllegalActionException | IllegalAssistantException e) {
-                game.throwException(e);
+                logger.log(Level.WARNING,"",e);
             }
         } else {
-            game.throwException(new IllegalActionException());
+            logger.log(Level.WARNING,"Invalid Message");
         }
     }
 
@@ -124,6 +127,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         try {
             this.tableController.fillClouds();
         } catch (FullCloudException e) {
+            logger.log(Level.SEVERE,"",e);
             game.throwException(e);
         }
     }
@@ -185,18 +189,18 @@ public class GameController implements DisconnectionListener, MessageListener {
                 try {
                     moveStudentOnIsland(((MoveStudentMessage) message).getStudentColor(), ((MoveStudentMessage) message).getIslandCard().getUuid());
                 } catch (WrongUUIDException e) {
-                    game.throwException(e);
+                    logger.log(Level.WARNING,"",e);
                 }
                 break;
             case ACTION_MOVE_STUDENTS_ON_BOARD:
                 try {
                     moveStudentToDiningRoom(((MoveStudentMessage) message).getStudentColor());
                 } catch (IllegalActionException e) {
-                    game.throwException(e);
+                    logger.log(Level.WARNING,"",e);
                 }
                 break;
             default:
-                game.throwException(new IllegalActionException());
+                logger.log(Level.WARNING,"Invalid Message");
         }
     }
 
