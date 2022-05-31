@@ -82,7 +82,7 @@ public class VirtualView extends Observable implements ModelObserver, MessageLis
     public void update(Player message) {
 
         user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
-        if (game.getGamePhase().equals(GamePhase.PLANNING))
+        if (game.getGamePhase().equals(GamePhase.PLANNING) || game.getGamePhase().equals(GamePhase.ACTION_END))
             user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
     }
 

@@ -37,6 +37,7 @@ public class PrinterCharacterCards {
         for (int i = 0; i < 3; i++) {
             out.print("  |__________|    ");
         }
+        System.out.println();
     }
 
     private String fromCardToString(Character character) {
