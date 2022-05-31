@@ -54,11 +54,9 @@ public class SchoolBoard extends ModelObservable implements Serializable {
      * @return true if the player is supposed to take one coin from the table, false otherwise
      */
     public boolean addStudentToDiningRoom(PawnColor color) {
-       if(diningRoom.addStudent(color)) {
-           notifySchoolBoard(this);
-           return true;
-       }
-       return false;
+        boolean retVal = diningRoom.addStudent(color);
+        notifySchoolBoard(this);
+        return retVal;
     }
 
     /**
