@@ -196,6 +196,7 @@ public class ExpertGameController extends GameController {
         return new Pair<>(false, null);
     }
 
+    //TODO change to optional
     private Pair<Boolean, Integer> isCardOnTable(CharacterCardDto card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {

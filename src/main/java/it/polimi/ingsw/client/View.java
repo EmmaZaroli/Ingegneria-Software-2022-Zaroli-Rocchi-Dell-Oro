@@ -232,7 +232,10 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(ChangedPhaseMessage message) {
         currentPhase = message.getNewPhase();
         print();
-        if (currentPlayer.equals(getMe().getNickname()) && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS) && !message.getNewPhase().equals(GamePhase.PLANNING)) askAction();
+
+        if (currentPlayer.equals(getMe().getNickname())
+                && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS))
+            askAction();
     }
 
     private void handleMessage(ChangedPlayerMessage message) {

@@ -111,7 +111,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     private void planning(Message message) {
         if (message.getType().equals(MessageType.ACTION_PLAY_ASSISTANT)) {
             try {
-                this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard().value());
+                this.playAssistant(((AssistantPlayedMessage) message).getAssistantCard());
             } catch (IllegalActionException | IllegalAssistantException e) {
                 game.throwException(e);
             }
@@ -126,7 +126,17 @@ public class GameController implements DisconnectionListener, MessageListener {
         } catch (FullCloudException e) {
             game.throwException(e);
         }
-        this.game.setPlayedCount(0);
+    }
+
+    private void playAssistant(AssistantCard assistantCard) throws IllegalActionException, IllegalAssistantException{
+        int index;
+
+        for(index = 0; index < game.getPlayer(game.getCurrentPlayer()).getAssistantDeck().size(); index++){
+            if(game.getPlayer(game.getCurrentPlayer()).getAssistant(index).equals(assistantCard)){
+                playAssistant(index);
+                return;
+            }
+        }
     }
 
     private void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
@@ -158,7 +168,7 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     private void playerHasEndedPlanning() {
         this.game.setPlayedCount(game.getPlayedCount() + 1);
-        if (!this.isTurnComplete()) {
+        if (!this.isRoundComplete()) {
             changePlayer();
         } else {
             this.game.setPlayedCount(0);
@@ -303,13 +313,13 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
-        for (int i = game.getFirstPlayerInRound(); i != game.getCurrentPlayer(); i = (i + 1) % game.getPlayersCount()) {
+        for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
             if (game.getPlayers()[i].getDiscardPileHead().equals(assistant)) return false;
         }
         return true;
     }
 
-    private boolean isTurnComplete() {
+    private boolean isRoundComplete() {
         return this.game.getPlayedCount() == this.game.getPlayersCount();
     }
 
@@ -339,49 +349,72 @@ public class GameController implements DisconnectionListener, MessageListener {
             changePlayer();
     }
 
-    //TODO hopefully it will become less complex
+    private class PlayerOrderComparator implements Comparator<Player> {
+        @Override
+        public int compare(Player o1, Player o2) {
+            if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
+                for(int i = 0; i < game.getFirstPlayerInPlanning(); Math.floorMod(i + 1, game.getPlayersCount())){
+                    if(game.getPlayer(i).getNickname().equals(o1.getNickname()))
+                        return -1;
+                    if(game.getPlayer(i).getNickname().equals(o2.getNickname()))
+                        return 1;
+                }
+            }
+            return o1.getDiscardPileHead().value() - o2.getDiscardPileHead().value();
+        }
+    }
+
     private int pickNextPlayer() {
         switch (game.getGamePhase()) {
             case PLANNING:
-                return (game.getCurrentPlayer() + 1) % game.getPlayersCount();
+                return Math.floorMod(game.getFirstPlayerInPlanning() + game.getPlayedCount(), game.getPlayersCount());
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD, ACTION_END:
-                if(this.isTurnComplete())
-                    return 0;
+                List<Player> playersSorted = Arrays.stream(game.getPlayers())
+                        .sorted(new PlayerOrderComparator())
+                        .toList();
 
-                Player nextPlayer = Arrays.stream(game.getPlayers())
-                        .sorted(Comparator.comparingInt(p -> p.getDiscardPileHead().value()))
-                        .toList().get(game.getPlayedCount());
-                //TODO what if two player had played the same card
+                Player nextPlayer = playersSorted.get(game.getPlayedCount());
 
                 for (int i = 0; i < game.getPlayers().length; i++) {
                     if (game.getPlayer(i).getNickname().equals(nextPlayer.getNickname()))
                         return i;
                 }
                 break;
-            default:
-                return game.getCurrentPlayer();
         }
-        return 0;
+        return game.getCurrentPlayer();
     }
 
     protected void playerHasEndedAction() {
         this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
-            if (!this.isTurnComplete()) {
+            if (!this.isRoundComplete()) {
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {
-                try {
-                    tableController.fillClouds();
-                } catch (FullCloudException e) {
-                    game.throwException(e);
-                }
-                this.game.setGamePhase(PLANNING);
+                endOfRound();
             }
             changePlayer();
         }
         DataDumper.getInstance().saveGame(game);
         checkRoundGameOver();
+    }
+
+    public void endOfRound(){
+        this.fillClouds();
+        this.game.setPlayedCount(0);
+        this.game.setGamePhase(PLANNING);
+
+        List<Player> playersSorted = Arrays.stream(game.getPlayers())
+                .sorted(new PlayerOrderComparator())
+                .toList();
+
+        int index;
+        for (index = 0; index < game.getPlayers().length; index++) {
+            if (game.getPlayer(index).getNickname().equals(playersSorted.get(0).getNickname())){
+                this.game.setFirstPlayerInPlanning(index);
+                return;
+            }
+        }
     }
 
     public void checkImmediateGameOver() {
