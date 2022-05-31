@@ -130,7 +130,7 @@
 <i class="no-highlight">30</i>&nbsp;
 <i class="no-highlight">31</i>&nbsp;    private int currentPlayer;
 <i class="no-highlight">32</i>&nbsp;    //TODO this value is used but never initialized
-<i class="no-highlight">33</i>&nbsp;    private int firstPlayerInRound;
+<i class="no-highlight">33</i>&nbsp;    private int firstPlayerInPlanning;
 <i class="no-highlight">34</i>&nbsp;    private SchoolBoard currentPlayerBoard;
 <i class="no-highlight">35</i>&nbsp;    private int movedPawns;
 <i class="no-highlight">36</i>&nbsp;
@@ -350,7 +350,7 @@
 <i class="no-highlight">245</i>&nbsp;
 <i class="no-highlight">246</i>&nbsp;    //Returns true if assistant is different from every other assistants already played in this turn
 <i class="no-highlight">247</i>&nbsp;    private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
-<b class="nc"><i class="no-highlight">248</i>&nbsp;        for (int i = firstPlayerInRound; i != currentPlayer; i = (i + 1) % players.length) {</b>
+<b class="nc"><i class="no-highlight">248</i>&nbsp;        for (int i = firstPlayerInPlanning; i != currentPlayer; i = (i + 1) % players.length) {</b>
 <b class="nc"><i class="no-highlight">249</i>&nbsp;            if (players[i].getDiscardPileHead().equals(assistant)) return false;</b>
 <i class="no-highlight">250</i>&nbsp;        }
 <b class="nc"><i class="no-highlight">251</i>&nbsp;        return true;</b>

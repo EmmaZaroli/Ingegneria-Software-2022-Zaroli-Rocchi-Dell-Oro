@@ -23,7 +23,7 @@ public class Game extends ModelObservable implements Serializable {
     protected GameParameters parameters;
 
     protected int currentPlayer;
-    private int firstPlayerInRound;
+    private int firstPlayerInPlanning;
     protected SchoolBoard currentPlayerBoard;
     private int movedPawns;
     private boolean gameOver = false;
@@ -73,8 +73,8 @@ public class Game extends ModelObservable implements Serializable {
         return currentPlayer;
     }
 
-    public int getFirstPlayerInRound() {
-        return firstPlayerInRound;
+    public int getFirstPlayerInPlanning() {
+        return firstPlayerInPlanning;
     }
 
     public SchoolBoard getCurrentPlayerBoard() {
@@ -107,8 +107,8 @@ public class Game extends ModelObservable implements Serializable {
         notifyPlayer(players[currentPlayer]);
     }
 
-    public void setFirstPlayerInRound(int firstPlayerInRound) {
-        this.firstPlayerInRound = firstPlayerInRound;
+    public void setFirstPlayerInPlanning(int firstPlayerInPlanning) {
+        this.firstPlayerInPlanning = firstPlayerInPlanning;
     }
 
     public void setCurrentPlayerBoard(SchoolBoard currentPlayerBoard) {
