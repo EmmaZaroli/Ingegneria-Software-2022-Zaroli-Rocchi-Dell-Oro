@@ -265,7 +265,7 @@ public abstract class View implements MessageListener, UserInterface {
             Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
             if (opponentIndex.isPresent()) {
                 PlayerInfo opponent = opponents.get(opponentIndex.get());
-                opponents.remove(opponentIndex.get());
+                opponents.remove((int)opponentIndex.get());
                 opponent = opponent.with(message.getAssistantCard());
                 opponent = opponent.with(opponent.getDeck().remove(message.getAssistantCard()));
                 opponents.add(opponentIndex.get(), opponent);
@@ -393,7 +393,7 @@ public abstract class View implements MessageListener, UserInterface {
         Optional<Integer> playerIndex = getOpponentIndex(nickname);
         if (playerIndex.isPresent()) {
             PlayerInfo opponent = opponents.get(playerIndex.get());
-            opponents.remove(playerIndex.get());
+            opponents.remove((int)playerIndex.get());
             opponents.add(playerIndex.get(), opponent.with(isOnline));
             print();
         }
