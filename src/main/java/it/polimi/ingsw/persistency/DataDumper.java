@@ -57,10 +57,12 @@ public class DataDumper {
      */
     public void removeGameFromMemory(UUID gameId) {
         Path filePath = Paths.get(gameId + SERIALIZED_FILE_FORMAT);
-        try {
-            Files.delete(filePath);
-        } catch (IOException e) {
-            this.logger.log(Level.SEVERE, e.getMessage(), e);
+        if(Files.exists(filePath)){//   TODO check if ok
+            try {
+                Files.delete(filePath);
+            } catch (IOException e) {
+                this.logger.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 
