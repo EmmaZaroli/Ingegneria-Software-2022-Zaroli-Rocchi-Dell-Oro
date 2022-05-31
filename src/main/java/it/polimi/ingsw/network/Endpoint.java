@@ -54,12 +54,14 @@ public class Endpoint {
     }
 
     public void sendMessage(Message message) {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (Exception e) {
-            disconnect("SCRITTURA");
-            this.notifyDisconnection();
+        if(isOnline){
+            try {
+                out.writeObject(message);
+                out.flush();
+            } catch (Exception e) {
+                disconnect("SCRITTURA");
+                this.notifyDisconnection();
+            }
         }
     }
 
