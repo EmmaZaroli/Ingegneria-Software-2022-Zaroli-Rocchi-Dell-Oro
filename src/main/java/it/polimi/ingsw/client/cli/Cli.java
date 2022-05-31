@@ -121,20 +121,29 @@ public class Cli extends View {
     }
 
     public void askGameSettings() {
-        int playersNumber;
-        String gameMode;
-        out.print("Please enter the Game mode: [normal/expert] ");
-        gameMode = readLine();
-        //TODO check if is valid
-        out.print("How many players are you going to play with? [2/3] ");
-        playersNumber = Integer.parseInt(readLine());
-        //TODO check if the number is 2 or 3
+        int playersNumber = 0;
+        String gameMode = null;
+        boolean valid = false;
+        while(!valid) {
+            out.print("Please enter the Game mode: [normal/expert] ");
+            gameMode = readLine();
+            valid = (gameMode.equals("normal") || gameMode.equals("expert"));
+        }
+        while(!valid) {
+            out.print("How many players are you going to play with? [2/3] ");
+            playersNumber = Integer.parseInt(readLine());
+            valid = (playersNumber==2 || playersNumber == 3);
+        }
         this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,
                 gameMode.equals("expert") ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);
     }
 
     public void genericMessage(String message) {
         out.println(message);
+    }
+
+    public void helpMessage(){
+        //TODO
     }
 
     public void changePhase(GamePhase phase) {
@@ -340,7 +349,8 @@ public class Cli extends View {
      */
     public void errorAndExit(String error) {
         error(error);
-        out.println("EXIT.");
+        out.println("Press ENTER for EXIT.");
+        readLine();
         System.exit(1);
     }
 
