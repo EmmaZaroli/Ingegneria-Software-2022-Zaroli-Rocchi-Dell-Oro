@@ -80,7 +80,7 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
     public void updatePlayer(Player message) {
 
         user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));
-        if (game.getGamePhase().equals(GamePhase.PLANNING))
+        if (game.getGamePhase().equals(GamePhase.PLANNING) || game.getGamePhase().equals(GamePhase.ACTION_END))
             user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));
     }
 

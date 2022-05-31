@@ -15,7 +15,6 @@ public class PrinterClouds {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-    //TODO instead of 2 put parameter based on the number of player
     public void printClouds(List<CloudTileDto> clouds) {
         int i;
         space(50);
@@ -35,12 +34,15 @@ public class PrinterClouds {
             if ((clouds.get(i)).getStudents().isEmpty())
                 System.out.print("  (     )  ");
             else {
-                PawnColor student1 = (clouds.get(i)).getStudents().get(0);
-                PawnColor student2 = (clouds.get(i)).getStudents().get(1);
-                PawnColor student3 = (clouds.get(i)).getStudents().get(2);
-                System.out.print("  ( " + assignColor(student1, FULL_CIRCLE) + assignColor(student2, FULL_CIRCLE) + assignColor(student3, FULL_CIRCLE) + " )  ");
+                System.out.print("  ( ");
+                for(int j=0 ; j<clouds.get(i).getStudents().size() ; j++){
+                    PawnColor student = (clouds.get(i)).getStudents().get(j);
+                    System.out.print(assignColor(student,FULL_CIRCLE));
+                }
+                System.out.print(" )  ");
             }
-            space(7);
+            int space = clouds.get(i).getStudents().size()==4 ? 1 : 0;
+            space(7-space);
         }
         System.out.println();
         space(50);

@@ -193,6 +193,7 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(GetDeckMessage message) {
         if (message.getNickname().equals(getMe().getNickname())) {
             me = me.with(message.getDeck());
+            this.currentPhase = GamePhase.PLANNING;
             this.askAssistantCard(message.getDeck());
         }
     }
@@ -231,7 +232,7 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(ChangedPhaseMessage message) {
         currentPhase = message.getNewPhase();
         print();
-        if (currentPlayer.equals(getMe().getNickname()) && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS)) askAction();
+        if (currentPlayer.equals(getMe().getNickname()) && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS) && !message.getNewPhase().equals(GamePhase.PLANNING)) askAction();
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
