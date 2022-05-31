@@ -345,6 +345,9 @@ public class GameController implements DisconnectionListener, MessageListener {
             case PLANNING:
                 return (game.getCurrentPlayer() + 1) % game.getPlayersCount();
             case ACTION_MOVE_STUDENTS, ACTION_MOVE_MOTHER_NATURE, ACTION_CHOOSE_CLOUD, ACTION_END:
+                if(this.isTurnComplete())
+                    return 0;
+
                 Player nextPlayer = Arrays.stream(game.getPlayers())
                         .sorted(Comparator.comparingInt(p -> p.getDiscardPileHead().value()))
                         .toList().get(game.getPlayedCount());
@@ -367,7 +370,6 @@ public class GameController implements DisconnectionListener, MessageListener {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             if (!this.isTurnComplete()) {
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
-                changePlayer();
             } else {
                 try {
                     tableController.fillClouds();
@@ -376,6 +378,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
                 this.game.setGamePhase(PLANNING);
             }
+            changePlayer();
         }
         DataDumper.getInstance().saveGame(game);
         checkRoundGameOver();
