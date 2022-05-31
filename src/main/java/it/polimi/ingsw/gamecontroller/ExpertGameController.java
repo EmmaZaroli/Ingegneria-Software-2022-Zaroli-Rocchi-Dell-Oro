@@ -79,11 +79,11 @@ public class ExpertGameController extends GameController {
     public void onMessageReceived(Message message) {
         if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
             CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
-            Pair<Boolean, Integer> pair = isCardOnTable(card);
-            if (!(boolean) pair.first()) {
+            Optional<Integer> cardIndex = isCardOnTable(card);
+            if (cardIndex.isEmpty()) {
                 game.throwException(new IllegalCharacterException());
             }
-            int index = pair.second();
+            int index = cardIndex.get();
             if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message)) {
                 activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
             } else {
@@ -196,14 +196,13 @@ public class ExpertGameController extends GameController {
         return new Pair<>(false, null);
     }
 
-    //TODO change to optional
-    private Pair<Boolean, Integer> isCardOnTable(CharacterCardDto card) {
+    private Optional<Integer> isCardOnTable(CharacterCardDto card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
-                return new Pair<>(true, i);
+                return Optional.of(i);
             }
         }
-        return new Pair<>(false, null);
+        return Optional.empty();
     }
 
     public boolean canActivateCharacterAbility(int characterIndex) {
