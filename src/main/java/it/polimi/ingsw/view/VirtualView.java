@@ -85,6 +85,14 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
     }
 
     @Override
+    public void updatePlayerOnline(Player message) {
+        if(message.isOnline())
+            user.sendMessage(new ConnectionMessage(message.getNickname(), MessageType.IS_ONLINE));
+        else
+            user.sendMessage(new ConnectionMessage(message.getNickname(), MessageType.IS_OFFLINE));
+    }
+
+    @Override
     public void updateCloudTile(CloudTile message) {
         user.sendMessage(new CloudMessage("server", MessageType.UPDATE_CLOUD, message));
     }

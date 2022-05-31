@@ -162,6 +162,6 @@ public class Player extends ModelObservable implements Serializable {
 
     public void setOnline(boolean isOnline) {
         this.isOnline = isOnline;
-        //TODO notify
+        notifyPlayerOnline(this);
     }
 }

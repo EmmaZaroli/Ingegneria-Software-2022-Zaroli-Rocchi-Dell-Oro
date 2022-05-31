@@ -76,8 +76,7 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    public void update(Object m) {
-        Message message = (Message) m;
+    public void onMessageReceived(Message message) {
         if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
             CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
             Pair<Boolean, Integer> pair = isCardOnTable(card);
@@ -88,10 +87,10 @@ public class ExpertGameController extends GameController {
             if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message)) {
                 activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
             } else {
-                //TODO reply with error
+                //TODO reply with error or do nothing?
             }
         } else {
-            super.update(message);
+            super.onMessageReceived(message);
         }
     }
 

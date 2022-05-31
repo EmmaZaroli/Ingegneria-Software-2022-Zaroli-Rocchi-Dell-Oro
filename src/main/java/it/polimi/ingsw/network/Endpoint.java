@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//TODO check this is working
 public class Endpoint {
     private final Socket socket;
     private ObjectInputStream in;

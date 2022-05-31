@@ -72,9 +72,8 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //TODO eliminate this method
-    public void update(Object m) {
-        Message message = (Message) m;
+    @Override
+    public void onMessageReceived(Message message) {
         try {
             checkMessage(message);
             switch (game.getGamePhase()) {
@@ -323,23 +322,6 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //TODO does the same thing as whoIsWinner(), maybe we can cancel this
-    public int winner() {
-        //TODO maybe throw an exception if the game is not over?
-        Player[] players = game.getPlayers();
-        int min = 0;
-        for (int i = 0; i < game.getPlayersCount(); i++) {
-            if (players[i].getBoard().getTowersCount() < players[min].getBoard().getTowersCount())
-                min = i;
-            if (players[i].getBoard().getTowersCount() == players[min].getBoard().getTowersCount() &&
-                    players[i].getBoard().countProfessors() > players[min].getBoard().countProfessors()) {
-                min = i;
-            }
-        }
-        //return player with the minimum number of towers
-        return min;
-    }
-
     private GamePhase pickNextPhase() {
         return switch (this.game.getGamePhase()) {
             case PLANNING -> ACTION_MOVE_STUDENTS;
@@ -478,7 +460,6 @@ public class GameController implements DisconnectionListener, MessageListener {
         }, 120000); //TODO parameterize this
     }
 
-    //TODO make this as listener to virtualview or user
     public void onReconnect() {
         synchronized (game) {
             //when one player reconnect, this will set every player to their status (online or offline)
@@ -497,38 +478,5 @@ public class GameController implements DisconnectionListener, MessageListener {
         timer = new Timer();
     }
 
-    @Override
-    public void onMessageReceived(Message message) {
-        try {
-            checkMessage(message);
-            switch (game.getGamePhase()) {
-                case PLANNING:
-                    planning(message);
-                    break;
-                case ACTION_MOVE_STUDENTS:
-                    moveStudent(message);
-                    break;
-                case ACTION_MOVE_MOTHER_NATURE:
-                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                        tryMoveMotherNature((MoveMotherNatureMessage) message);
-                    } else game.throwException(new IllegalActionException());
-                    break;
-                case ACTION_CHOOSE_CLOUD:
-                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
-                        try {
-                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                            game.throwException(e);
-                        }
-                    } else game.throwException(new IllegalActionException());
-                    break;
-                case ACTION_END:
-                    //should not go here, the player doesn't do anything in this phase
-                    game.throwException(new IllegalActionException());
-                    break;
-            }
-        } catch (WrongPlayerException e) {
-            game.throwException(e);
-        }
-    }
+
 }
