@@ -279,12 +279,13 @@ class GameControllerTest extends TestCase {
 
             //player2 move mother nature
             int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            int originalIslandsNumber = tableController.getTable().getIslands().size();
             MoveMotherNatureMessage message2 = new MoveMotherNatureMessage("player2", 1);
             gameController.onMessageReceived(message2);
-            //TODO sometimes this assertion fail, sometimes it does not, why?
-            //TODO maybe because there is a unification of islands?
-            Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
-
+            if(tableController.getTable().getIslands().size() == originalIslandsNumber)
+                Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
+            else
+                Assertions.assertEquals(Math.floorMod(originalMnPosition, 12), tableController.getTable().getIslandWithMotherNature());
             //player2 choose cloud
             //wrong message (cloud empty)
             CloudMessage message3 = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
