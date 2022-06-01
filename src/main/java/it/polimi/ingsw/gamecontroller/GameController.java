@@ -169,7 +169,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
         // different from every other one
         for (AssistantCard ac : game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()) {
-            if (!isAssistantDifferentFromOthers(ac)) return false;
+            if (isAssistantDifferentFromOthers(ac)) return false;
         }
         return true;
     }
@@ -362,7 +362,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         @Override
         public int compare(Player o1, Player o2) {
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
-                for(int i = 0; i < game.getFirstPlayerInPlanning(); Math.floorMod(i + 1, game.getPlayersCount())){
+                for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
                     if(game.getPlayer(i).getNickname().equals(o1.getNickname()))
                         return -1;
                     if(game.getPlayer(i).getNickname().equals(o2.getNickname()))
