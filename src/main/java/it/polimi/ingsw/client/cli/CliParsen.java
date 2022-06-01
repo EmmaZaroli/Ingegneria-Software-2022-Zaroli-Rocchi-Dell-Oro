@@ -4,7 +4,9 @@ import it.polimi.ingsw.model.enums.PawnColor;
 
 public class CliParsen {
 
-    public PawnColor checkIfStudent(String input) {
+    String character = "CHARACTER";
+
+    public static PawnColor checkIfStudent(String input) {
         switch (input.toUpperCase()) {
             case "YELLOW":
                 return PawnColor.YELLOW;
@@ -21,8 +23,10 @@ public class CliParsen {
         }
     }
 
-    public void checkIfCard() {
-
+    public boolean checkIfCard(String input) {
+            input = input.toUpperCase();
+            if(!input.contains(character)) return true;
+            return false;
     }
 
     /**
@@ -30,7 +34,7 @@ public class CliParsen {
      * @param islandCount number of island still on the table
      * @return 0-11 island index, 12 schoolboard, 13 invalid input
      */
-    public int isIslandOrSchoolBoard(String input, int islandCount) {
+    public static int isIslandOrSchoolBoard(String input, int islandCount) {
         if (input.toLowerCase().equals("schoolboard")) return 12;
         int number;
         try {

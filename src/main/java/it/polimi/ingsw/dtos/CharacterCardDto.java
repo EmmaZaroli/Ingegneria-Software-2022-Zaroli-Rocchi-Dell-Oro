@@ -15,6 +15,7 @@ public class CharacterCardDto implements Serializable {
     private int price;
     private final boolean isWithSetUpAction;
     private List<PawnColor> students;
+    private boolean hasCoin;
 
     public CharacterCardDto(CharacterCard origin) {
         this.character = origin.getCharacter();
@@ -24,13 +25,15 @@ public class CharacterCardDto implements Serializable {
             this.students = ((CharacterCardWithSetUpAction) origin).getStudents();
         else
             this.students = new ArrayList<>();
+        this.hasCoin = origin.hasCoin();
     }
 
-    public CharacterCardDto(Character character, int price, boolean isWithSetUpAction, List<PawnColor> students) {
+    public CharacterCardDto(Character character, int price, boolean isWithSetUpAction, List<PawnColor> students,boolean hasCoin) {
         this.character = character;
         this.price = price;
         this.isWithSetUpAction = isWithSetUpAction;
         this.students = students;
+        this.hasCoin = hasCoin;
     }
 
     public Character getCharacter() {
@@ -50,7 +53,7 @@ public class CharacterCardDto implements Serializable {
     }
 
     public CharacterCardDto deepClone() {
-        return new CharacterCardDto(this.character, this.price, this.isWithSetUpAction, new ArrayList<>(this.students));
+        return new CharacterCardDto(this.character, this.price, this.isWithSetUpAction, new ArrayList<>(this.students),this.hasCoin);
     }
 
     public CharacterCardDto with(int price) {
@@ -79,5 +82,9 @@ public class CharacterCardDto implements Serializable {
             res.put(color, getStudentsNumber(color));
         }
         return res;
+    }
+
+    public boolean HasCoin() {
+        return hasCoin;
     }
 }

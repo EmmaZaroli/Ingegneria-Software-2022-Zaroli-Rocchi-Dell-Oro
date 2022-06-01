@@ -22,9 +22,9 @@ public class PrinterSchoolBoard {
     public static final String COIN = "⦿";
     public static final String PROFESSOR_EMPTY = "⬡";
     public static final String PROFESSOR_FULL = "⬢";
-    public static final String TOWER_WHITE = "\uD83D\uDEE2";
-    public static final String TOWER_BLACK = ANSI_BLACK + "\uD83D\uDEE2" + ANSI_RESET;
-    public static final String TOWER_GREY = ANSI_WHITE + "\uD83D\uDEE2" + ANSI_RESET;
+    public static final String TOWER_WHITE = "█";
+    public static final String TOWER_BLACK = ANSI_BLACK + TOWER_WHITE + ANSI_RESET;
+    public static final String TOWER_GREY = ANSI_WHITE + TOWER_WHITE + ANSI_RESET;
 
 
     public void printBoard(List<SchoolBoardDto> boards) {
@@ -68,7 +68,7 @@ public class PrinterSchoolBoard {
                 out.print("| " + student1 + " " + student2 + " ");
                 studentsTable(rows, boards.get(j));
                 countTowers[j] = Towers(boards.get(j).getTowersCount(), boards.get(j).getTowerColor(), countTowers[j]);
-                System.out.print(" |");
+                System.out.print("  |");
                 out.print("          "); //10 spaces
             }
             studentPosition = studentPosition + 2;

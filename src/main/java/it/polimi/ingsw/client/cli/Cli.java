@@ -26,6 +26,7 @@ public class Cli extends View {
     private final PrinterIslands islandsPrinter = new PrinterIslands();
     private final PrinterCharacterCards PrinterCharacterCard = new PrinterCharacterCards();
     private final PrinterAssistantCards printerAssistantCards = new PrinterAssistantCards();
+    private CliParsen cliParsen = new CliParsen();
 
     public Cli() {
         out = System.out;
@@ -121,20 +122,30 @@ public class Cli extends View {
     }
 
     public void askGameSettings() {
-        int playersNumber;
-        String gameMode;
-        out.print("Please enter the Game mode: [normal/expert] ");
-        gameMode = readLine();
-        //TODO check if is valid
-        out.print("How many players are you going to play with? [2/3] ");
-        playersNumber = Integer.parseInt(readLine());
-        //TODO check if the number is 2 or 3
+        int playersNumber = 0;
+        String gameMode = null;
+        boolean valid = false;
+        while(!valid) {
+            out.print("Please enter the Game mode: [normal/expert] ");
+            gameMode = readLine();
+            valid = (gameMode.equals("normal") || gameMode.equals("expert"));
+        }
+        valid = false;
+        while(!valid) {
+            out.print("How many players are you going to play with? [2/3] ");
+            playersNumber = Integer.parseInt(readLine());
+            valid = (playersNumber==2 || playersNumber == 3);
+        }
         this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,
                 gameMode.equals("expert") ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);
     }
 
     public void genericMessage(String message) {
         out.println(message);
+    }
+
+    public void helpMessage(){
+        //TODO
     }
 
     public void changePhase(GamePhase phase) {
@@ -159,7 +170,8 @@ public class Cli extends View {
         }
         out.println();
         for (int i = 0; i < deck.size(); i++) {
-            out.print("  |" + deck.get(i).value() + "   " + deck.get(i).motherNatureMovement() + "|    ");
+            if(deck.get(i).value()!=10) out.print("  |" + deck.get(i).value() + "   " + deck.get(i).motherNatureMovement() + "|    ");
+            else out.print("  |" + deck.get(i).value() + "  " + deck.get(i).motherNatureMovement() + "|    ");
         }
         out.println();
         for (int i = 0; i < deck.size(); i++) {
@@ -204,7 +216,7 @@ public class Cli extends View {
     }
 
     public void askStudents(){
-        CliParsen parsenStudents = new CliParsen();
+
         boolean validObject = false;
         boolean validDestination;
         int destination = 0;
@@ -213,13 +225,13 @@ public class Cli extends View {
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
-            PawnColor student = parsenStudents.checkIfStudent(input);
+            PawnColor student = CliParsen.checkIfStudent(input);
             if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
                 validDestination = false;
                 while (!validDestination) {
                     out.print("Choose location (island's index/schoolboard) : ");
 
-                    destination = parsenStudents.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
+                    destination = CliParsen.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
 
                     if (destination != 13) {
                         validObject=true;
@@ -234,16 +246,10 @@ public class Cli extends View {
             // the input was not a color, checking if it's a character card
             else if (isExpertGame()) {
                 //TODO
-                if (isACard(input)) ;
             } else error("invalid student selected");
         }
     }
 
-
-    private boolean isACard(String input) {
-        //TODO
-        return false;
-    }
 
     public void printGameStarting() {
         out.println("The game is starting!");
@@ -340,7 +346,8 @@ public class Cli extends View {
      */
     public void errorAndExit(String error) {
         error(error);
-        out.println("EXIT.");
+        out.println("Press ENTER for EXIT.");
+        readLine();
         System.exit(1);
     }
 

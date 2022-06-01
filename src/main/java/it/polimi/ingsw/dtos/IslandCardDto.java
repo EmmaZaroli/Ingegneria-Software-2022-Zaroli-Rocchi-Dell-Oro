@@ -16,14 +16,14 @@ public class IslandCardDto implements Serializable {
     private List<PawnColor> students;
     private Tower tower;
     private boolean hasMotherNature;
-    private List<Integer> indices;
+    private List<Integer> indices = new ArrayList<>();
 
     public IslandCardDto(IslandCard origin) {
         this.uuid = origin.getUuid();
         this.students = new ArrayList<>(origin.getStudentsFromIsland());
         this.tower = origin.getTower();
         this.hasMotherNature = origin.isHasMotherNature();
-        this.indices = origin.getIndices();
+        this.indices.addAll(origin.getIndices());
     }
 
     public IslandCardDto(UUID uuid, List<PawnColor> students, Tower tower, boolean hasMotherNature, List<Integer> indices) {
@@ -31,7 +31,7 @@ public class IslandCardDto implements Serializable {
         this.students = students;
         this.tower = tower;
         this.hasMotherNature = hasMotherNature;
-        this.indices = indices;
+        this.indices.addAll(indices);
     }
 
     public IslandCardDto(){
