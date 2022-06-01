@@ -2,6 +2,9 @@ package it.polimi.ingsw.gamecontroller;
 
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+import it.polimi.ingsw.gamecontroller.exceptions.IllegalActionException;
+import it.polimi.ingsw.gamecontroller.exceptions.IllegalAssistantException;
+import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -17,11 +20,13 @@ import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 class GameControllerTest extends TestCase {
 
@@ -32,22 +37,16 @@ class GameControllerTest extends TestCase {
     TableController tableController = new TableController(game.getTable(), game.getParameters());
     VirtualView[] virtualViews = {new VirtualView(new User("player1"), game), new VirtualView(new User("player2"), game)};
 
-    //TODO initialize virtualViews
     GameController gameController = new GameController(game, tableController, virtualViews);
 
-    @BeforeEach
-    public void planning() {
+    @Test
+    void planningWithOnlyEqualsAssistants(){
         Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());
         Assertions.assertEquals(7, player2.getBoard().countStudentsInEntrance());
 
         //1.
 
         AssistantCard cardPlayed1 = player1.getAssistant(0);
-        //Wrong Messages
-        AssistantPlayedMessage WrongPlayer = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
-        gameController.onMessageReceived(WrongPlayer);
-        Assertions.assertEquals(10, player2.getAssistantDeck().size());
-        //Correct Message
         AssistantPlayedMessage message1 = new AssistantPlayedMessage("player1", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
         gameController.onMessageReceived(message1);
         Assertions.assertEquals(9, player1.getAssistantDeck().size());
@@ -56,243 +55,323 @@ class GameControllerTest extends TestCase {
 
         //2.
 
-        AssistantPlayedMessage SameCard = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
-        gameController.onMessageReceived(SameCard);
-        Assertions.assertEquals(10, player2.getAssistantDeck().size());
-        //Correct Message
-        AssistantCard cardPlayed2 = player2.getAssistant(1);
-        AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed2);
-        gameController.onMessageReceived(message2);
-        Assertions.assertEquals(9, player2.getAssistantDeck().size());
+        //remove all character card except first two
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(9));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(8));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(7));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(6));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(5));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(4));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(3));
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(2));
+        Assertions.assertEquals(2, player2.getAssistantDeck().size());
+        AssistantPlayedMessage sameCardMessage = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
+        gameController.onMessageReceived(sameCardMessage);
+        Assertions.assertEquals(2, player2.getAssistantDeck().size());
+        Assertions.assertTrue(game.getLastError() instanceof IllegalAssistantException);
+        Assertions.assertEquals(1, game.getCurrentPlayer());
+        Assertions.assertEquals(GamePhase.PLANNING, game.getGamePhase());
+
+        //remove even the second card, player2 remain only with first card
+        game.getPlayer(1).removeAssistant(game.getPlayer(1).getAssistant(1));
+        Assertions.assertEquals(1, player2.getAssistantDeck().size());
+        gameController.onMessageReceived(sameCardMessage);
+        Assertions.assertEquals(0, player2.getAssistantDeck().size());
+        Assertions.assertEquals(cardPlayed1, player2.getDiscardPileHead());
+        Assertions.assertEquals(0, game.getCurrentPlayer());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
 
-        Assertions.assertEquals(7, game.getPlayers()[0].getBoard().getStudentsInEntrance());
-        Assertions.assertEquals(7, game.getPlayers()[0].getBoard().getStudentsInEntrance());
-    }
-
-    private PawnColor pawnColorInEntrance() {
-        for (PawnColor p : PawnColor.getValidValues()) {
-            if (game.getCurrentPlayerBoard().isStudentInEntrance(p)) {
-                return p;
-            }
-        }
-        return PawnColor.NONE;
-    }
-
-    @Test
-    void actionMoveStudent() {
-        //Wrong Messages
-        int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
-        gameController.onMessageReceived(WrongMessage);
-        Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
-
-        //Correct Message
-        IslandCard island = game.getTable().getIslands().get(0);
-        MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
-        message1.setIslandCard(island);
-        Assertions.assertEquals(7, game.getPlayers()[0].getBoard().getStudentsInEntrance());
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(6, game.getPlayers()[0].getBoard().getStudentsInEntrance());
-        PawnColor student = pawnColorInEntrance();
-        message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(5, game.getPlayers()[0].getBoard().getStudentsInEntrance());
-        Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
-        PawnColor student2 = pawnColorInEntrance();
-        message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(4, game.getPlayers()[0].getBoard().getStudentsInEntrance());
-        Assertions.assertEquals(0, game.getCurrentPlayer());
-        //2.
-
-        //steal professor
-        game.getCurrentPlayerBoard().removeStudentFromEntrance(pawnColorInEntrance());
-        game.getCurrentPlayerBoard().removeStudentFromEntrance(pawnColorInEntrance());
-        List<PawnColor> students = new ArrayList<>();
-        students.add(student);
-        game.getCurrentPlayerBoard().addStudentsToEntrance(students);
-        game.getCurrentPlayerBoard().addStudentsToEntrance(students);
-        MoveStudentMessage message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.onMessageReceived(message2);
-        message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.onMessageReceived(message2);
-        Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
-        Assertions.assertFalse(game.getPlayers()[1].getBoard().isThereProfessor(student));
-    }
-
-    @Test
-    void actionMoveMotherNature() {
-        actionMoveStudent();
-
-        //Wrong messages (wrong action)
-        int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        IslandCard island = game.getTable().getIslands().get(0);
-        MoveStudentMessage wrongMessage1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
-        wrongMessage1.setIslandCard(island);
-        gameController.onMessageReceived(wrongMessage1);
-        Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
-
-        //Wrong messages (wrong player)
-        originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        MoveMotherNatureMessage wrongMessage2 = new MoveMotherNatureMessage("player2", 3);
-        gameController.onMessageReceived(wrongMessage2);
-        Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
-
-        //Wrong messages (illegal number of steps)
-        originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        wrongMessage2 = new MoveMotherNatureMessage("player1", 20);
-        gameController.onMessageReceived(wrongMessage2);
-        Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
-
-        //Correct message
-        originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        MoveMotherNatureMessage correctMessage = new MoveMotherNatureMessage("player1", 1);
-        gameController.onMessageReceived(correctMessage);
-        Assertions.assertEquals((originalMnPosition + 1) % 12, tableController.getTable().getIslandWithMotherNature());
-    }
-
-    @Test
-    void actionChooseCloud() {
-        actionMoveMotherNature();
-
-        //Wrong messages (wrong action)
-        int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        IslandCard island = game.getTable().getIslands().get(0);
-        MoveStudentMessage wrongMessage1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
-        wrongMessage1.setIslandCard(island);
-        gameController.onMessageReceived(wrongMessage1);
-        Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
-
-        //Wrong messages (wrong player)
-        CloudMessage correctMessage = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
-        Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
-        gameController.onMessageReceived(correctMessage);
-        Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
-        Assertions.assertEquals(4, game.getPlayers()[0].getBoard().countStudentsInEntrance());
-
-        //Correct message
-        correctMessage = new CloudMessage("player1", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
-        Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
-        gameController.onMessageReceived(correctMessage);
-        Assertions.assertEquals(0, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
-        Assertions.assertEquals(7, game.getPlayers()[0].getBoard().countStudentsInEntrance());
-    }
-
-    @Test
-    void actionPlayer2Turn() {
-        actionChooseCloud();
-
-        //player2 move students
-        IslandCard island = game.getTable().getIslands().get(0);
-        MoveStudentMessage message1 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
-        message1.setIslandCard(island);
-        Assertions.assertEquals(7, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(6, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
-        PawnColor student = pawnColorInEntrance();
-        message1 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(5, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
-        PawnColor student2 = pawnColorInEntrance();
-        message1 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(4, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
+        //player1 action
+        MoveStudentMessage messageMoveStudent = new MoveStudentMessage(player1.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, player1.getBoard().getEntrance().get(0));
+        gameController.onMessageReceived(messageMoveStudent);
+        messageMoveStudent = new MoveStudentMessage(player1.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, player1.getBoard().getEntrance().get(0));
+        gameController.onMessageReceived(messageMoveStudent);
+        messageMoveStudent = new MoveStudentMessage(player1.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, player1.getBoard().getEntrance().get(0));
+        gameController.onMessageReceived(messageMoveStudent);
+        MoveMotherNatureMessage messageMoveMN = new MoveMotherNatureMessage(player1.getNickname(), 1);
+        gameController.onMessageReceived(messageMoveMN);
+        CloudMessage messageChooseCloud = new CloudMessage(player1.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
+        gameController.onMessageReceived(messageChooseCloud);
         Assertions.assertEquals(1, game.getCurrentPlayer());
-
-        //player2 move mother nature
-        int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
-        MoveMotherNatureMessage message2 = new MoveMotherNatureMessage("player2", 1);
-        gameController.onMessageReceived(message2);
-        //TODO sometimes this assertion fail, sometimes it does not, why?
-        Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
-
-        //player2 choose cloud
-        //wrong message (cloud empty)
-        CloudMessage message3 = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
-        Assertions.assertEquals(0, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
-        gameController.onMessageReceived(message3);
-        Assertions.assertEquals(0, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
-        Assertions.assertEquals(4, game.getCurrentPlayerSchoolBoard().countStudentsInEntrance());
-        //correct message
-        message3 = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(1));
-        Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(1).getStudentsNumber());
-        gameController.onMessageReceived(message3);
-        Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(1).getStudentsNumber());
-        Assertions.assertEquals(7, game.getCurrentPlayerSchoolBoard().countStudentsInEntrance());
+        Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
     }
 
-    @Test
-    void player1BuildLastTower(){
-        //move 3 students on island 0
-        IslandCard island = game.getTable().getIslands().get(0);
-        MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, game.getPlayer(0).getBoard().getEntrance().get(0));
-        message1.setIslandCard(island);
-        gameController.onMessageReceived(message1);
-        gameController.onMessageReceived(message1);
-        gameController.onMessageReceived(message1);
-        Assertions.assertEquals(GamePhase.ACTION_MOVE_MOTHER_NATURE, game.getGamePhase());
+    @Nested
+    class NormalPlanningTestNest{
+        @BeforeEach
+        public void planning() {
+            Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());
+            Assertions.assertEquals(7, player2.getBoard().countStudentsInEntrance());
 
-        Table table = tableController.getTable();
+            //1.
 
-        //set first 7 islands of player1's tower color
-        table.setTower(table.getIsland(0), player1.getBoard().getTowerColor());
-        table.setTower(table.getIsland(1), player1.getBoard().getTowerColor());
-        table.setTower(table.getIsland(2), player1.getBoard().getTowerColor());
-        table.setTower(table.getIsland(3), player1.getBoard().getTowerColor());
-        table.setTower(table.getIsland(4), player1.getBoard().getTowerColor());
-        table.setTower(table.getIsland(5), player1.getBoard().getTowerColor());
-        table.setTower(table.getIsland(6), player1.getBoard().getTowerColor());
+            AssistantCard cardPlayed1 = player1.getAssistant(0);
+            //Wrong Messages (wrong player)
+            AssistantPlayedMessage WrongPlayer = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
+            gameController.onMessageReceived(WrongPlayer);
+            Assertions.assertEquals(10, player2.getAssistantDeck().size());
 
-        //unify first 9 islands
-        table.unifyIslands(0, 1);
-        table.unifyIslands(0, 1);
-        table.unifyIslands(0, 1);
-        table.unifyIslands(0, 1);
-        table.unifyIslands(0, 1);
-        table.unifyIslands(0, 1);
+            //wrong message (wrong action)
+            MoveStudentMessage wrongAction = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, PawnColor.RED);
+            gameController.onMessageReceived(wrongAction);
+            Assertions.assertTrue(game.getLastError() instanceof IllegalActionException);
 
-        //move 5 red students on player1 diningroom and add red professor
-        List<PawnColor> list = new LinkedList<>();
-        for(int i = 0; i < 5; i++)
-            list.add(PawnColor.RED);
-        game.getPlayer(0).getBoard().addStudentsToEntrance(list);
-        for(int i = 0; i < 5; i++)
-            game.getPlayer(0).getBoard().moveStudentFromEntranceToDiningRoom(PawnColor.RED);
-        game.getPlayer(0).getBoard().addProfessor(PawnColor.RED);
+            //Correct Message
+            AssistantPlayedMessage message1 = new AssistantPlayedMessage("player1", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(9, player1.getAssistantDeck().size());
+            Assertions.assertEquals(GamePhase.PLANNING, game.getGamePhase());
+            Assertions.assertEquals(1, game.getCurrentPlayer());
 
-        //move 20 red students on island 1 to ensure influence
-        for(int i = 0; i < 20; i++)
-            table.getIsland(1).movePawnOnIsland(PawnColor.RED);
+            //2.
 
-        //set mn on island 0
-        if(table.getIslandWithMotherNature() == -1)
-            table.getIsland(0).setHasMotherNature(true);
-        else
-            table.setIslandWithMotherNature(0);
+            AssistantPlayedMessage SameCard = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
+            gameController.onMessageReceived(SameCard);
+            Assertions.assertEquals(10, player2.getAssistantDeck().size());
+            //Correct Message
+            AssistantCard cardPlayed2 = player2.getAssistant(1);
+            AssistantPlayedMessage message2 = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed2);
+            gameController.onMessageReceived(message2);
+            Assertions.assertEquals(9, player2.getAssistantDeck().size());
+            Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
 
-        //remove 7 towers from player1
-        for(int i = 0; i < 7; i++)
-            game.getPlayer(0).getBoard().removeTower();
+            Assertions.assertEquals(7, game.getPlayers()[0].getBoard().getStudentsInEntrance());
+            Assertions.assertEquals(7, game.getPlayers()[0].getBoard().getStudentsInEntrance());
+        }
 
-        Assertions.assertEquals(player1.getBoard().getTowerColor(), table.getIsland(0).getTower());
-        Assertions.assertEquals(7, table.getIsland(0).getSize());
-        Assertions.assertEquals(6, table.getIslands().size());
-        Assertions.assertTrue(table.getIsland(1).getStudentsNumber(PawnColor.RED) >= 20);
-        Assertions.assertEquals(5, game.getPlayer(0).getBoard().getStudentsInDiningRoom(PawnColor.RED));
-        Assertions.assertTrue(game.getPlayer(0).getBoard().getProfessors().contains(PawnColor.RED));
-        Assertions.assertEquals(0, table.getIslandWithMotherNature());
-        Assertions.assertEquals(1, game.getPlayer(0).getBoard().getTowersCount());
 
-        gameController.onMessageReceived(new MoveMotherNatureMessage(player1.getNickname(), 1));
 
-        Assertions.assertTrue(game.isGameOver());
-        Assertions.assertEquals(1, game.getWinners().size());
-        Assertions.assertEquals(game.getPlayer(0).getNickname(), game.getWinners().get(0));
+        private PawnColor pawnColorInEntrance() {
+            for (PawnColor p : PawnColor.getValidValues()) {
+                if (game.getCurrentPlayerBoard().isStudentInEntrance(p)) {
+                    return p;
+                }
+            }
+            return PawnColor.NONE;
+        }
 
-        Assertions.assertEquals(8, table.getIsland(0).getSize());
-        Assertions.assertEquals(5, table.getIslands().size());
-        Assertions.assertEquals(0, table.getIslandWithMotherNature());
-        //TODO in gamecontroller ulteriori check su gameover devono essere fatti solo se non è gia gameover
+        @Test
+        void actionMoveStudent() {
+            //Wrong Messages (wrong action)
+            int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            MoveMotherNatureMessage WrongMessage = new MoveMotherNatureMessage("player1", 3);
+            gameController.onMessageReceived(WrongMessage);
+            Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
+
+            //wrong message (wrong island uuid)
+            MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
+            message1.setIslandCard(new IslandCard(UUID.randomUUID(), 1));
+            gameController.onMessageReceived(message1);
+            Assertions.assertTrue(game.getLastError() instanceof WrongUUIDException);
+
+            //Correct Message
+            IslandCard island = game.getTable().getIslands().get(0);
+            message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
+            message1.setIslandCard(island);
+            Assertions.assertEquals(7, game.getPlayers()[0].getBoard().getStudentsInEntrance());
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(6, game.getPlayers()[0].getBoard().getStudentsInEntrance());
+            PawnColor student = pawnColorInEntrance();
+            message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(5, game.getPlayers()[0].getBoard().getStudentsInEntrance());
+            Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
+            PawnColor student2 = pawnColorInEntrance();
+            message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(4, game.getPlayers()[0].getBoard().getStudentsInEntrance());
+            Assertions.assertEquals(0, game.getCurrentPlayer());
+            //2.
+
+            //steal professor
+            game.getCurrentPlayerBoard().removeStudentFromEntrance(pawnColorInEntrance());
+            game.getCurrentPlayerBoard().removeStudentFromEntrance(pawnColorInEntrance());
+            List<PawnColor> students = new ArrayList<>();
+            students.add(student);
+            game.getCurrentPlayerBoard().addStudentsToEntrance(students);
+            game.getCurrentPlayerBoard().addStudentsToEntrance(students);
+            MoveStudentMessage message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+            gameController.onMessageReceived(message2);
+            message2 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+            gameController.onMessageReceived(message2);
+            Assertions.assertTrue(game.getCurrentPlayerBoard().isThereProfessor(student));
+            Assertions.assertFalse(game.getPlayers()[1].getBoard().isThereProfessor(student));
+        }
+
+        @Test
+        void actionMoveMotherNature() {
+            actionMoveStudent();
+
+            //Wrong messages (wrong action)
+            int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            IslandCard island = game.getTable().getIslands().get(0);
+            MoveStudentMessage wrongMessage1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
+            wrongMessage1.setIslandCard(island);
+            gameController.onMessageReceived(wrongMessage1);
+            Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
+
+            //Wrong messages (wrong player)
+            originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            MoveMotherNatureMessage wrongMessage2 = new MoveMotherNatureMessage("player2", 3);
+            gameController.onMessageReceived(wrongMessage2);
+            Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
+
+            //Wrong messages (illegal number of steps)
+            originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            wrongMessage2 = new MoveMotherNatureMessage("player1", 20);
+            gameController.onMessageReceived(wrongMessage2);
+            Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
+
+            //Correct message
+            originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            MoveMotherNatureMessage correctMessage = new MoveMotherNatureMessage("player1", 1);
+            gameController.onMessageReceived(correctMessage);
+            Assertions.assertEquals((originalMnPosition + 1) % 12, tableController.getTable().getIslandWithMotherNature());
+        }
+
+        @Test
+        void actionChooseCloud() {
+            actionMoveMotherNature();
+
+            //Wrong messages (wrong action)
+            int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            IslandCard island = game.getTable().getIslands().get(0);
+            MoveStudentMessage wrongMessage1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
+            wrongMessage1.setIslandCard(island);
+            gameController.onMessageReceived(wrongMessage1);
+            Assertions.assertEquals(originalMnPosition, tableController.getTable().getIslandWithMotherNature());
+
+            //Wrong messages (wrong player)
+            CloudMessage correctMessage = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
+            Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
+            gameController.onMessageReceived(correctMessage);
+            Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
+            Assertions.assertEquals(4, game.getPlayers()[0].getBoard().countStudentsInEntrance());
+
+            //Correct message
+            correctMessage = new CloudMessage("player1", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
+            Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
+            gameController.onMessageReceived(correctMessage);
+            Assertions.assertEquals(0, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
+            Assertions.assertEquals(7, game.getPlayers()[0].getBoard().countStudentsInEntrance());
+        }
+
+        @Test
+        void actionPlayer2Turn() {
+            actionChooseCloud();
+
+            //player2 move students
+            IslandCard island = game.getTable().getIslands().get(0);
+            MoveStudentMessage message1 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
+            message1.setIslandCard(island);
+            Assertions.assertEquals(7, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(6, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
+            PawnColor student = pawnColorInEntrance();
+            message1 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(5, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
+            PawnColor student2 = pawnColorInEntrance();
+            message1 = new MoveStudentMessage("player2", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student2);
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(4, game.getCurrentPlayerSchoolBoard().getStudentsInEntrance());
+            Assertions.assertEquals(1, game.getCurrentPlayer());
+
+            //player2 move mother nature
+            int originalMnPosition = tableController.getTable().getIslandWithMotherNature();
+            MoveMotherNatureMessage message2 = new MoveMotherNatureMessage("player2", 1);
+            gameController.onMessageReceived(message2);
+            //TODO sometimes this assertion fail, sometimes it does not, why?
+            Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
+
+            //player2 choose cloud
+            //wrong message (cloud empty)
+            CloudMessage message3 = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
+            Assertions.assertEquals(0, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
+            gameController.onMessageReceived(message3);
+            Assertions.assertEquals(0, tableController.getTable().getCloudTiles().get(0).getStudentsNumber());
+            Assertions.assertEquals(4, game.getCurrentPlayerSchoolBoard().countStudentsInEntrance());
+            //correct message
+            message3 = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(1));
+            Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(1).getStudentsNumber());
+            gameController.onMessageReceived(message3);
+            Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(1).getStudentsNumber());
+            Assertions.assertEquals(7, game.getCurrentPlayerSchoolBoard().countStudentsInEntrance());
+        }
+
+        @Test
+        void player1BuildLastTower(){
+            //move 3 students on island 0
+            IslandCard island = game.getTable().getIslands().get(0);
+            MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, game.getPlayer(0).getBoard().getEntrance().get(0));
+            message1.setIslandCard(island);
+            gameController.onMessageReceived(message1);
+            gameController.onMessageReceived(message1);
+            gameController.onMessageReceived(message1);
+            Assertions.assertEquals(GamePhase.ACTION_MOVE_MOTHER_NATURE, game.getGamePhase());
+
+            Table table = tableController.getTable();
+
+            //set first 7 islands of player1's tower color
+            table.setTower(table.getIsland(0), player1.getBoard().getTowerColor());
+            table.setTower(table.getIsland(1), player1.getBoard().getTowerColor());
+            table.setTower(table.getIsland(2), player1.getBoard().getTowerColor());
+            table.setTower(table.getIsland(3), player1.getBoard().getTowerColor());
+            table.setTower(table.getIsland(4), player1.getBoard().getTowerColor());
+            table.setTower(table.getIsland(5), player1.getBoard().getTowerColor());
+            table.setTower(table.getIsland(6), player1.getBoard().getTowerColor());
+
+            //unify first 9 islands
+            table.unifyIslands(0, 1);
+            table.unifyIslands(0, 1);
+            table.unifyIslands(0, 1);
+            table.unifyIslands(0, 1);
+            table.unifyIslands(0, 1);
+            table.unifyIslands(0, 1);
+
+            //move 5 red students on player1 diningroom and add red professor
+            List<PawnColor> list = new LinkedList<>();
+            for(int i = 0; i < 5; i++)
+                list.add(PawnColor.RED);
+            game.getPlayer(0).getBoard().addStudentsToEntrance(list);
+            for(int i = 0; i < 5; i++)
+                game.getPlayer(0).getBoard().moveStudentFromEntranceToDiningRoom(PawnColor.RED);
+            game.getPlayer(0).getBoard().addProfessor(PawnColor.RED);
+
+            //move 20 red students on island 1 to ensure influence
+            for(int i = 0; i < 20; i++)
+                table.getIsland(1).movePawnOnIsland(PawnColor.RED);
+
+            //set mn on island 0
+            if(table.getIslandWithMotherNature() == -1)
+                table.getIsland(0).setHasMotherNature(true);
+            else
+                table.setIslandWithMotherNature(0);
+
+            //remove 7 towers from player1
+            for(int i = 0; i < 7; i++)
+                game.getPlayer(0).getBoard().removeTower();
+
+            Assertions.assertEquals(player1.getBoard().getTowerColor(), table.getIsland(0).getTower());
+            Assertions.assertEquals(7, table.getIsland(0).getSize());
+            Assertions.assertEquals(6, table.getIslands().size());
+            Assertions.assertTrue(table.getIsland(1).getStudentsNumber(PawnColor.RED) >= 20);
+            Assertions.assertEquals(5, game.getPlayer(0).getBoard().getStudentsInDiningRoom(PawnColor.RED));
+            Assertions.assertTrue(game.getPlayer(0).getBoard().getProfessors().contains(PawnColor.RED));
+            Assertions.assertEquals(0, table.getIslandWithMotherNature());
+            Assertions.assertEquals(1, game.getPlayer(0).getBoard().getTowersCount());
+
+            gameController.onMessageReceived(new MoveMotherNatureMessage(player1.getNickname(), 1));
+
+            Assertions.assertTrue(game.isGameOver());
+            Assertions.assertEquals(1, game.getWinners().size());
+            Assertions.assertEquals(game.getPlayer(0).getNickname(), game.getWinners().get(0));
+
+            Assertions.assertEquals(8, table.getIsland(0).getSize());
+            Assertions.assertEquals(5, table.getIslands().size());
+            Assertions.assertEquals(0, table.getIslandWithMotherNature());
+        }
     }
+
+
 }
