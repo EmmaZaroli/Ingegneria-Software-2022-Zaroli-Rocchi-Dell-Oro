@@ -185,15 +185,15 @@ public class ExpertGameController extends GameController {
 
     /**
      * @param card the card that the player selected
-     * @return Pair (true,cardIndex) if the card is on the table, (false,null) otherwise
+     * @return Optional.of(i) if the card is on the table, Optional.empty() otherwise
      */
-    private Pair<Boolean, Integer> isCardOnTable(CharacterCard card) {
+    private Optional<Integer> isCardOnTable(CharacterCard card) {
         for (int i = 0; i < getGame().getCharacterCards().length; i++) {
             if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {
-                return new Pair<>(true, i);
+                return Optional.of(i);
             }
         }
-        return new Pair<>(false, null);
+        return Optional.empty();
     }
 
     private Optional<Integer> isCardOnTable(CharacterCardDto card) {
