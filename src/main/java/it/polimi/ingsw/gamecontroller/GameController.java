@@ -463,6 +463,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     }
 
     private List<String> whoIsWinning() {
+        //TODO check if this is ok even with 3 players
         List<String> winners = new ArrayList<>();
 
         //check number of tower left
@@ -505,7 +506,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             public void run() {
                 game.callGameOverFromDisconnection();
             }
-        }, 120000); //TODO parameterize this
+        }, 5000); //TODO parameterize this
     }
 
     public void onReconnect() {

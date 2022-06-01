@@ -587,7 +587,25 @@ class GameControllerTest extends TestCase {
     @Nested
     class DisconnectionTestNest{
         @Test
-        void lastStudentDrawnFomBag(){
+        void allPlayersGoOffline(){
+            game.setEnoughPlayerOnline(true);
+            Assertions.assertTrue(game.isEnoughPlayerOnline());
+            Assertions.assertFalse(virtualViews[0].isOnline());
+            Assertions.assertFalse(virtualViews[1].isOnline());
+            Assertions.assertTrue(player1.isOnline());
+            Assertions.assertTrue(player2.isOnline());
+            gameController.onDisconnect();
+            Assertions.assertFalse(player1.isOnline());
+            Assertions.assertFalse(player2.isOnline());
+            Assertions.assertFalse(game.isEnoughPlayerOnline());
+            /*
+            try {
+                wait(10000); //TODO this should be 4-5 seconds more than the disconnection timer duration
+                Assertions.assertTrue(game.isGameOver());
+                Assertions.assertEquals(0, game.getWinners().size());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
 
         }
     }
