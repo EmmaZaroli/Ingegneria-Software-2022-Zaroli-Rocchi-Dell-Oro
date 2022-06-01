@@ -126,6 +126,7 @@ public class Game extends ModelObservable implements Serializable {
 
     public void callWin(List<String> winners) {
         this.gameOver = true;
+        this.setGamePhase(GamePhase.GAME_OVER);
         setWinners(winners);
     }
 
