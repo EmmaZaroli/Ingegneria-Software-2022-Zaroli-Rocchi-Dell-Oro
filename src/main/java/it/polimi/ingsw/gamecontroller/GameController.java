@@ -104,6 +104,10 @@ public class GameController implements DisconnectionListener, MessageListener {
                     //should not go here, the player doesn't do anything in this phase
                     logger.log(Level.WARNING,"Illegal Action");
                     break;
+
+                case GAME_OVER:
+                    //TODO do we want to throw an exception or just ignore it?
+                    break;
             }
         } catch (WrongPlayerException e) {
             logger.log(Level.WARNING,"",e);
@@ -165,7 +169,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
         // different from every other one
         for (AssistantCard ac : game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()) {
-            if (!isAssistantDifferentFromOthers(ac)) return false;
+            if (isAssistantDifferentFromOthers(ac)) return false;
         }
         return true;
     }
@@ -328,7 +332,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     }
 
     void movedPawn() {
-        if((game.getMovedPawns() + 1 )!= (game.getPlayersCount() +1))
+        if((game.getMovedPawns() + 1 ) != (game.getPlayersCount() + 1))
             game.movePawn();
         else {
             this.game.setMovedPawns(0);
@@ -342,6 +346,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             case ACTION_MOVE_STUDENTS -> GamePhase.ACTION_MOVE_MOTHER_NATURE;
             case ACTION_MOVE_MOTHER_NATURE -> GamePhase.ACTION_CHOOSE_CLOUD;
             case ACTION_CHOOSE_CLOUD, ACTION_END -> GamePhase.ACTION_END;
+            case GAME_OVER -> GamePhase.GAME_OVER;
         };
     }
 
@@ -357,7 +362,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         @Override
         public int compare(Player o1, Player o2) {
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
-                for(int i = 0; i < game.getFirstPlayerInPlanning(); Math.floorMod(i + 1, game.getPlayersCount())){
+                for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
                     if(game.getPlayer(i).getNickname().equals(o1.getNickname()))
                         return -1;
                     if(game.getPlayer(i).getNickname().equals(o2.getNickname()))
@@ -400,23 +405,26 @@ public class GameController implements DisconnectionListener, MessageListener {
             changePlayer();
         }
         DataDumper.getInstance().saveGame(game);
-        checkRoundGameOver();
     }
 
     public void endOfRound(){
-        this.fillClouds();
-        this.game.setPlayedCount(0);
-        this.game.setGamePhase(PLANNING);
+        if(!game.isGameOver())
+            checkRoundGameOver();
+        if(!game.isGameOver()){
+            this.fillClouds();
+            this.game.setPlayedCount(0);
+            this.game.setGamePhase(PLANNING);
 
-        List<Player> playersSorted = Arrays.stream(game.getPlayers())
-                .sorted(new PlayerOrderComparator())
-                .toList();
+            List<Player> playersSorted = Arrays.stream(game.getPlayers())
+                    .sorted(new PlayerOrderComparator())
+                    .toList();
 
-        int index;
-        for (index = 0; index < game.getPlayers().length; index++) {
-            if (game.getPlayer(index).getNickname().equals(playersSorted.get(0).getNickname())){
-                this.game.setFirstPlayerInPlanning(index);
-                return;
+            int index;
+            for (index = 0; index < game.getPlayers().length; index++) {
+                if (game.getPlayer(index).getNickname().equals(playersSorted.get(0).getNickname())){
+                    this.game.setFirstPlayerInPlanning(index);
+                    return;
+                }
             }
         }
     }
@@ -455,6 +463,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     }
 
     private List<String> whoIsWinning() {
+        //TODO check if this is ok even with 3 players
         List<String> winners = new ArrayList<>();
 
         //check number of tower left
@@ -497,7 +506,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             public void run() {
                 game.callGameOverFromDisconnection();
             }
-        }, 120000); //TODO parameterize this
+        }, 5000); //TODO parameterize this
     }
 
     public void onReconnect() {

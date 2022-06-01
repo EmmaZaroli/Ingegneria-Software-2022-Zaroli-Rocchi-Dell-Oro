@@ -156,8 +156,12 @@ public class Player extends ModelObservable implements Serializable {
     public void playAssistant(AssistantCard a) {
         this.discardPileHead = a;
         notifyAssistantCard(a);
-        assistantDeck.remove(a);
+        removeAssistant(a);
 
+    }
+
+    public void removeAssistant(AssistantCard a){
+        assistantDeck.remove(a);
     }
 
     public void setOnline(boolean isOnline) {
