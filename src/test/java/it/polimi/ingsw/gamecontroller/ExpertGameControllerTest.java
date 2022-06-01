@@ -64,7 +64,6 @@ class ExpertGameControllerTest extends TestCase {
         AssistantPlayedMessage sameCardMessage = new AssistantPlayedMessage("player2", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
         gameController.onMessageReceived(sameCardMessage);
         Assertions.assertEquals(2, player2.getAssistantDeck().size());
-        Assertions.assertTrue(game.getLastError() instanceof IllegalAssistantException);
         Assertions.assertEquals(1, game.getCurrentPlayer());
         Assertions.assertEquals(GamePhase.PLANNING, game.getGamePhase());
 
@@ -110,7 +109,6 @@ class ExpertGameControllerTest extends TestCase {
             //wrong message (wrong action)
             MoveStudentMessage wrongAction = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, PawnColor.RED);
             gameController.onMessageReceived(wrongAction);
-            Assertions.assertTrue(game.getLastError() instanceof IllegalActionException);
 
             //Correct Message
             AssistantPlayedMessage message1 = new AssistantPlayedMessage("player1", MessageType.ACTION_PLAY_ASSISTANT, cardPlayed1);
@@ -153,7 +151,6 @@ class ExpertGameControllerTest extends TestCase {
             MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, pawnColorInEntrance());
             message1.setIslandCard(new IslandCard(UUID.randomUUID(), 1));
             gameController.onMessageReceived(message1);
-            Assertions.assertTrue(game.getLastError() instanceof WrongUUIDException);
 
             //Correct Message
             IslandCard island = game.getTable().getIslands().get(0);
