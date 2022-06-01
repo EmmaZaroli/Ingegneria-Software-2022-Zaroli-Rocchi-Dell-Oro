@@ -28,7 +28,7 @@ public class PrinterIslands {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
     public static final String FULL_CIRCLE = "●";
-    public static final String TOWER_WHITE = "\uD83D\uDEE2";
+    public static final String TOWER_WHITE = "█";
     public static final String TOWER_BLACK = ANSI_BLACK + TOWER_WHITE + ANSI_RESET;
     public static final String TOWER_GREY = ANSI_WHITE + TOWER_WHITE + ANSI_RESET;
     private boolean isnext;
