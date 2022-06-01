@@ -74,4 +74,15 @@ public class Bag implements Serializable {
         }
         return true;
     }
+
+    /**
+     * @return numver of students left in bag
+     */
+    public int getStudentsLeft(){
+        int res = 0;
+        for (Map.Entry<PawnColor, Integer> e : students.entrySet()) {
+            res += e.getValue();
+        }
+        return res;
+    }
 }
