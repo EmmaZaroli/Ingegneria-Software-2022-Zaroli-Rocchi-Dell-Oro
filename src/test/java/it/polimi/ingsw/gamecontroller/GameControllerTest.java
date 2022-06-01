@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 class GameControllerTest extends TestCase {
@@ -219,5 +220,79 @@ class GameControllerTest extends TestCase {
         gameController.onMessageReceived(message3);
         Assertions.assertEquals(3, tableController.getTable().getCloudTiles().get(1).getStudentsNumber());
         Assertions.assertEquals(7, game.getCurrentPlayerSchoolBoard().countStudentsInEntrance());
+    }
+
+    @Test
+    void player1BuildLastTower(){
+        //move 3 students on island 0
+        IslandCard island = game.getTable().getIslands().get(0);
+        MoveStudentMessage message1 = new MoveStudentMessage("player1", MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, game.getPlayer(0).getBoard().getEntrance().get(0));
+        message1.setIslandCard(island);
+        gameController.onMessageReceived(message1);
+        gameController.onMessageReceived(message1);
+        gameController.onMessageReceived(message1);
+        Assertions.assertEquals(GamePhase.ACTION_MOVE_MOTHER_NATURE, game.getGamePhase());
+
+        Table table = tableController.getTable();
+
+        //set first 7 islands of player1's tower color
+        table.setTower(table.getIsland(0), player1.getBoard().getTowerColor());
+        table.setTower(table.getIsland(1), player1.getBoard().getTowerColor());
+        table.setTower(table.getIsland(2), player1.getBoard().getTowerColor());
+        table.setTower(table.getIsland(3), player1.getBoard().getTowerColor());
+        table.setTower(table.getIsland(4), player1.getBoard().getTowerColor());
+        table.setTower(table.getIsland(5), player1.getBoard().getTowerColor());
+        table.setTower(table.getIsland(6), player1.getBoard().getTowerColor());
+
+        //unify first 9 islands
+        table.unifyIslands(0, 1);
+        table.unifyIslands(0, 1);
+        table.unifyIslands(0, 1);
+        table.unifyIslands(0, 1);
+        table.unifyIslands(0, 1);
+        table.unifyIslands(0, 1);
+
+        //move 5 red students on player1 diningroom and add red professor
+        List<PawnColor> list = new LinkedList<>();
+        for(int i = 0; i < 5; i++)
+            list.add(PawnColor.RED);
+        game.getPlayer(0).getBoard().addStudentsToEntrance(list);
+        for(int i = 0; i < 5; i++)
+            game.getPlayer(0).getBoard().moveStudentFromEntranceToDiningRoom(PawnColor.RED);
+        game.getPlayer(0).getBoard().addProfessor(PawnColor.RED);
+
+        //move 20 red students on island 1 to ensure influence
+        for(int i = 0; i < 20; i++)
+            table.getIsland(1).movePawnOnIsland(PawnColor.RED);
+
+        //set mn on island 0
+        if(table.getIslandWithMotherNature() == -1)
+            table.getIsland(0).setHasMotherNature(true);
+        else
+            table.setIslandWithMotherNature(0);
+
+        //remove 7 towers from player1
+        for(int i = 0; i < 7; i++)
+            game.getPlayer(0).getBoard().removeTower();
+
+        Assertions.assertEquals(player1.getBoard().getTowerColor(), table.getIsland(0).getTower());
+        Assertions.assertEquals(7, table.getIsland(0).getSize());
+        Assertions.assertEquals(6, table.getIslands().size());
+        Assertions.assertTrue(table.getIsland(1).getStudentsNumber(PawnColor.RED) >= 20);
+        Assertions.assertEquals(5, game.getPlayer(0).getBoard().getStudentsInDiningRoom(PawnColor.RED));
+        Assertions.assertTrue(game.getPlayer(0).getBoard().getProfessors().contains(PawnColor.RED));
+        Assertions.assertEquals(0, table.getIslandWithMotherNature());
+        Assertions.assertEquals(1, game.getPlayer(0).getBoard().getTowersCount());
+
+        gameController.onMessageReceived(new MoveMotherNatureMessage(player1.getNickname(), 1));
+
+        Assertions.assertTrue(game.isGameOver());
+        Assertions.assertEquals(1, game.getWinners().size());
+        Assertions.assertEquals(game.getPlayer(0).getNickname(), game.getWinners().get(0));
+
+        Assertions.assertEquals(8, table.getIsland(0).getSize());
+        Assertions.assertEquals(5, table.getIslands().size());
+        Assertions.assertEquals(0, table.getIslandWithMotherNature());
+        //TODO in gamecontroller ulteriori check su gameover devono essere fatti solo se non è gia gameover
     }
 }

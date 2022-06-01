@@ -18,6 +18,7 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -194,7 +195,6 @@ class ViewTest{
 
         return true;
     }
-
 
 
 /*
