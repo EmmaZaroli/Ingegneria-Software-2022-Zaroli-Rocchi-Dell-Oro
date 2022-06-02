@@ -125,16 +125,16 @@ public class Cli extends View {
         int playersNumber = 0;
         String gameMode = null;
         boolean valid = false;
-        while(!valid) {
+        while (!valid) {
             out.print("Please enter the Game mode: [normal/expert] ");
             gameMode = readLine();
             valid = (gameMode.equals("normal") || gameMode.equals("expert"));
         }
         valid = false;
-        while(!valid) {
+        while (!valid) {
             out.print("How many players are you going to play with? [2/3] ");
             playersNumber = Integer.parseInt(readLine());
-            valid = (playersNumber==2 || playersNumber == 3);
+            valid = (playersNumber == 2 || playersNumber == 3);
         }
         this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,
                 gameMode.equals("expert") ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);
@@ -144,7 +144,7 @@ public class Cli extends View {
         out.println(message);
     }
 
-    public void helpMessage(){
+    public void helpMessage() {
         //TODO
     }
 
@@ -162,7 +162,7 @@ public class Cli extends View {
 
         out.println();
         for (int i = 0; i < deck.size(); i++) {
-            out.print("     " + (i+1) + ".      ");
+            out.print("     " + (i + 1) + ".      ");
         }
         out.println();
         for (int i = 0; i < deck.size(); i++) {
@@ -170,7 +170,8 @@ public class Cli extends View {
         }
         out.println();
         for (int i = 0; i < deck.size(); i++) {
-            if(deck.get(i).value()!=10) out.print("  |" + deck.get(i).value() + "   " + deck.get(i).motherNatureMovement() + "|    ");
+            if (deck.get(i).value() != 10)
+                out.print("  |" + deck.get(i).value() + "   " + deck.get(i).motherNatureMovement() + "|    ");
             else out.print("  |" + deck.get(i).value() + "  " + deck.get(i).motherNatureMovement() + "|    ");
         }
         out.println();
@@ -188,32 +189,77 @@ public class Cli extends View {
             out.print("chose the assistant card to play");
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
-            card = Integer.parseInt(readLine());
-            if (this.sendAssistantCard(card-1)) {
-                valid = true;
-            } else error("Error, the card you selected is not valid!");
+            String input = readLine();
+            Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+            if (characterCard.isEmpty()) {
+                try {
+                    card = Integer.parseInt(input);
+                    valid = this.sendAssistantCard(card - 1);
+                } catch (NumberFormatException e) {
+                    valid = false;
+                }
+            } else {
+                //TODO ask parameters
+                valid = sendCharacterCard(characterCard.get(), null);
+            }
+            if (!valid) error("Error, the card you selected is not valid!");
         }
+    }
+
+    private void askCharacterCardParameters() {
+        //TODO
     }
 
     public void askMotherNatureSteps() {
         boolean valid = false;
-        while(!valid) {
+        while (!valid) {
             out.print("Mother Nature steps");
             if (isExpertGame()) out.print(" or choose character card to activate");
             out.print(": ");
-            int steps = Integer.parseInt(readLine());
-            if(this.sendMotherNatureSteps(steps)) valid = true;
-            else error("invalid number of steps");
+
+            String input = readLine();
+            Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+            if (characterCard.isEmpty()) {
+                try {
+                    int steps = Integer.parseInt(input);
+                    valid = this.sendMotherNatureSteps(steps);
+                } catch (NumberFormatException e) {
+                    valid = false;
+                }
+            } else {
+                //TODO ask parameters
+                valid = sendCharacterCard(characterCard.get(), null);
+            }
+            if (!valid && isExpertGame()) error("invalid number of steps or invalid character card");
+            else error("or invalid character card");
         }
     }
 
     public void askCloud() {
-        out.print("Choose Cloud");
-        if (isExpertGame()) out.print(" or choose character card to activate");
-        out.print(": ");
-        int indexCloud = Integer.parseInt(readLine());
-        this.sendCloudChoice(indexCloud);
+        boolean valid = false;
+        while (!valid) {
+            out.print("Choose Cloud");
+            if (isExpertGame()) out.print(" or choose character card to activate");
+            out.print(": ");
+            String input = readLine();
+            Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+            if (characterCard.isEmpty()) {
+                try {
+                    int indexCloud = Integer.parseInt(input);
+                    valid = this.sendCloudChoice(indexCloud);
+                } catch (NumberFormatException e) {
+                    valid = false;
+                }
+            } else {
+                //TODO ask parameters
+                valid = sendCharacterCard(characterCard.get(), null);
+            }
+            if (!valid && isExpertGame()) error("invalid cloud or invalid character card");
+            else error("invalid cloud");
+        }
+
     }
+
 
     public void askStudents(){
 
@@ -227,26 +273,30 @@ public class Cli extends View {
             String input = readLine();
             PawnColor student = CliParsen.checkIfStudent(input);
             if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
-                validDestination = false;
-                while (!validDestination) {
-                    out.print("Choose location (island's index/schoolboard) : ");
-
-                    destination = CliParsen.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
-
-                    if (destination != 13) {
-                        validObject=true;
-                        validDestination = true;
-                    } else {
-                        this.error("the destination selected is invalid, please retry");
+                    validDestination = false;
+                    while (!validDestination) {
+                        out.print("Choose location (island's index/schoolboard) : ");
+                        destination = CliParsen.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
+                        if (destination != 13) {
+                            validObject = true;
+                            validDestination = true;
+                        } else {
+                            this.error("the destination selected is invalid, please retry");
+                        }
                     }
+                    if (destination == 12) sendStudentMoveOnBoard(student);
+                    else sendStudentMoveOnIsland(student, destination);
                 }
-                if(destination == 12) sendStudentMoveOnBoard(student);
-                else sendStudentMoveOnIsland(student,destination);
-            }
             // the input was not a color, checking if it's a character card
-            else if (isExpertGame()) {
-                //TODO
-            } else error("invalid student selected");
+            else {
+                Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+                if (!characterCard.isEmpty()) {
+                    //TODO ask parameters
+                    validObject = sendCharacterCard(characterCard.get(), null);
+                }
+                if (!validObject && isExpertGame()) error("invalid student or invalid character card");
+                else error("invalid student");
+            }
         }
     }
 
