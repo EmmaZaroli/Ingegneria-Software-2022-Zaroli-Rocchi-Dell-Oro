@@ -4,10 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="it.polimi.ingsw.client.gui.sceneControllers.Table"
-           prefHeight="400.0" prefWidth="600.0">
+<StackPane xmlns="http://javafx.com/javafx" prefHeight="400.0" prefWidth="600.0">
 
     <ImageView opacity="0.90">
         <Image url="/it.polimi.ingsw.client.gui/assets/background.jpg" backgroundLoading="true"/>
@@ -110,7 +107,7 @@
                                     <Label style="-fx-padding: 10 0 0 0; -fx-font-size: 16; -fx-text-fill: red;"
                                            text="Your coins:"/>
                                     <Label style="-fx-padding: 0 0 10 30; -fx-font-size: 24; -fx-text-fill: red;"
-                                           text="3"/>
+                                           text="${controller.myCoins}"/>
 
                                     <Label style="-fx-padding: 20 0 0 0; -fx-font-size: 16; -fx-text-fill: blue;"
                                            text="Coins available"/>
