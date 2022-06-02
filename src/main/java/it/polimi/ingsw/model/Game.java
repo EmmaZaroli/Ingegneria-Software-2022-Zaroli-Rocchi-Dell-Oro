@@ -138,6 +138,7 @@ public class Game extends ModelObservable implements Serializable {
 
     public void callGameOverFromDisconnection() {
         this.gameOver = true;
+        this.setGamePhase(GamePhase.GAME_OVER);
         notifyGameOverFromDisconnection();
     }
 

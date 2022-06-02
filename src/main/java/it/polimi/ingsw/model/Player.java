@@ -168,4 +168,8 @@ public class Player extends ModelObservable implements Serializable {
         this.isOnline = isOnline;
         notifyPlayerOnline(this);
     }
+
+    public int getProfessorsCount(){
+        return schoolBoard.getProfessorsCount();
+    }
 }

@@ -50,9 +50,9 @@ class SchoolBoardTest extends TestCase {
             schoolBoard.addProfessor(PawnColor.RED);
         }
         Assertions.assertEquals(1, countProfessor(PawnColor.RED));
-        Assertions.assertEquals(1, schoolBoard.countProfessors());
+        Assertions.assertEquals(1, schoolBoard.getProfessorsCount());
         schoolBoard.removeProfessor(PawnColor.RED);
-        Assertions.assertEquals(0, schoolBoard.countProfessors());
+        Assertions.assertEquals(0, schoolBoard.getProfessorsCount());
     }
 
     @Test

@@ -23,8 +23,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
-import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
+import static it.polimi.ingsw.model.enums.GamePhase.*;
 
 
 //TODO add observables/observers
@@ -443,7 +442,6 @@ public class GameController implements DisconnectionListener, MessageListener {
             game.callWin(whoIsWinning());
         }
 
-        //TODO what to do after the game has ended
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
@@ -458,31 +456,41 @@ public class GameController implements DisconnectionListener, MessageListener {
                 game.callWin(whoIsWinning());
         }
 
-        //TODO what to do after the game has ended
         DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     private List<String> whoIsWinning() {
-        //TODO check if this is ok even with 3 players
         List<String> winners = new ArrayList<>();
 
         //check number of tower left
-        List<Player> playerOrderedByTower = Arrays.stream(game.getPlayers()).sorted(Comparator.comparingInt(p -> p.getBoard().getTowersCount())).toList();
-        if (playerOrderedByTower.get(0).getBoard().getTowersCount() < playerOrderedByTower.get(1).getBoard().getTowersCount()) {
-            winners.add(playerOrderedByTower.get(0).getNickname());
+        List<Player> playerSortedByTower = Arrays.stream(game.getPlayers()).
+                sorted(Comparator.comparingInt(p -> p.getBoard().getTowersCount())).toList();
+        if (playerSortedByTower.get(0).getBoard().getTowersCount() < playerSortedByTower.get(1).getBoard().getTowersCount()) {
+            winners.add(playerSortedByTower.get(0).getNickname());
             return winners;
         }
 
-        List<Player> playerOrderedByProfessors = playerOrderedByTower.subList(0, 2).stream().sorted(Comparator.comparingInt(p -> p.getBoard().countProfessors())).toList();
-        if (playerOrderedByProfessors.get(0).getBoard().countProfessors() < playerOrderedByProfessors.get(1).getBoard().countProfessors()) {
-            winners.add(playerOrderedByTower.get(1).getNickname());
+        List<Player> playerSortedByProfessors;
+        if(game.getParameters().getPlayersNumber().getPlayersNumber() == 3
+                && playerSortedByTower.get(1).getBoard().getTowersCount() == playerSortedByTower.get(2).getBoard().getTowersCount())
+            playerSortedByProfessors = playerSortedByTower.subList(0, 3);
+        else
+            playerSortedByProfessors = playerSortedByTower.subList(0, 2);
+        playerSortedByProfessors.stream().
+                sorted(Comparator.comparing(Player::getProfessorsCount).reversed()).toList();
+
+        if (playerSortedByProfessors.get(0).getBoard().getProfessorsCount() > playerSortedByProfessors.get(1).getBoard().getProfessorsCount()) {
+            winners.add(playerSortedByTower.get(1).getNickname());
             return winners;
         }
 
 
-        // it arrives here only if there are 2 player with the same number of tower and professors
-        winners.add(playerOrderedByTower.get(0).getNickname());
-        winners.add(playerOrderedByTower.get(1).getNickname());
+        // it arrives here only if there are 2 or 3 player with the same number of tower and professors
+        winners.add(playerSortedByTower.get(0).getNickname());
+        winners.add(playerSortedByTower.get(1).getNickname());
+        if(game.getParameters().getPlayersNumber().getPlayersNumber() == 3
+                && playerSortedByProfessors.get(1).getBoard().getProfessorsCount() == playerSortedByProfessors.get(2).getBoard().getProfessorsCount())
+            winners.add(playerSortedByTower.get(2).getNickname());
         return winners;
     }
 

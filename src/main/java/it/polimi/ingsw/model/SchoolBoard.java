@@ -84,7 +84,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
      *
      * @return the number of professors
      */
-    public int countProfessors() {
+    public int getProfessorsCount() {
         return professorTable.size();
     }
 
