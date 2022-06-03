@@ -3,15 +3,18 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Cli extends View {
     private final PrintStream out;
@@ -199,15 +202,10 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                //TODO ask parameters
-                valid = sendCharacterCard(characterCard.get(), null);
+                valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid) error("Error, the card you selected is not valid!");
         }
-    }
-
-    private void askCharacterCardParameters() {
-        //TODO
     }
 
     public void askMotherNatureSteps() {
@@ -227,8 +225,7 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                //TODO ask parameters
-                valid = sendCharacterCard(characterCard.get(), null);
+                valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid number of steps or invalid character card");
             else error("or invalid character card");
@@ -251,8 +248,7 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                //TODO ask parameters
-                valid = sendCharacterCard(characterCard.get(), null);
+                valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid cloud or invalid character card");
             else error("invalid cloud");
@@ -292,10 +288,10 @@ public class Cli extends View {
                 Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
                 if (!characterCard.isEmpty()) {
                     //TODO ask parameters
-                    validObject = sendCharacterCard(characterCard.get(), null);
+                    validObject = askCharacterCardParameters(characterCard.get());
                 }
                 if (!validObject && isExpertGame()) error("invalid student or invalid character card");
-                else error("invalid student");
+                else if(!validObject && !isExpertGame())error("invalid student");
             }
         }
     }
@@ -377,6 +373,116 @@ public class Cli extends View {
         printerAssistantCards.print(players);
         out.println();
     }
+
+
+    private boolean askCharacterCardParameters(int index) {
+        Character character = getCharacterCards().get(index).getCharacter();
+        switch (character){
+            case CHARACTER_ONE -> {
+                return askCharacterOneParameters(index);
+            }
+            case CHARACTER_SEVEN -> {
+                return askCharacterSevenParameters(index);
+            }
+            case CHARACTER_NINE -> {
+                return askCharacterNineParameters(index);
+            }
+            case CHARACTER_ELEVEN -> {
+                return askCharacterElevenParameters(index);
+            }
+            default -> {
+                return sendCharacterCard(index,null);
+            }
+        }
+    }
+
+    private boolean askCharacterOneParameters(int index){
+        boolean validSend = false;
+        Object[] parameters = new Object[2];
+        while(!validSend){
+            boolean valid = false;
+            while (!valid) {
+                System.out.println("Choose student from card 1 to move: ");
+                PawnColor student = cliParsen.checkIfStudent(readLine());
+                if (student != PawnColor.NONE) {
+                    parameters[0] = student;
+                    valid = true;
+                } else error("invalid student selected!");
+            }
+            valid = false;
+            while (!valid) {
+                System.out.println("Choose Island index: ");
+                try {
+                    int islandIndex = Integer.parseInt(readLine());
+                    parameters[1] = getIslands().get(islandIndex).getIsland().getUuid();
+                    valid = true;
+                } catch (NumberFormatException e) {
+                    error("invalid Island index selected!");
+                }
+            }
+            validSend = sendCharacterCard(index,parameters);
+            if(!validSend) error("Some parameters are incorrect!");
+        }
+        return true;
+    }
+
+    private boolean askCharacterSevenParameters(int index){
+        boolean valid = false;
+        Object[] parameters = new Object[2];
+        do{
+            while (!valid) {
+                System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
+                List<PawnColor> studentsFromCard = (List<PawnColor>) Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s));
+                int size = (int) studentsFromCard.stream().filter(s -> s != PawnColor.NONE).count();
+                if (studentsFromCard.size() == size) {
+                    parameters[0] = studentsFromCard;
+                    valid = true;
+                } else error("invalid students selected!");
+            }
+            valid = false;
+            while (!valid) {
+                System.out.println("Choose student from entrance [max 3, separated by commas]: ");
+                List<PawnColor> studentsFromEntrance = (List<PawnColor>) Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s));
+                int size = (int) studentsFromEntrance.stream().filter(s -> s != PawnColor.NONE).count();
+                if (studentsFromEntrance.size() == size) {
+                    parameters[1] = studentsFromEntrance;
+                    valid = true;
+                } else error("invalid students selected!");
+            }
+        } while (sendCharacterCard(index,parameters));
+        return true;
+    }
+
+    private boolean askCharacterNineParameters(int index){
+        Object[] parameters = new Object[1];
+        boolean valid = false;
+        while (!valid) {
+            System.out.println("Choose student's color: ");
+            PawnColor student = cliParsen.checkIfStudent(readLine());
+            if (student != PawnColor.NONE) {
+                parameters[0] = student;
+                valid = sendCharacterCard(index,parameters);
+            }
+            if(!valid) error("invalid student selected!");
+        }
+        return true;
+    }
+
+    private boolean askCharacterElevenParameters(int index){
+        boolean valid = false;
+        Object[] parameters = new Object[1];
+        while (!valid) {
+            System.out.println("Choose student from card 11 to move in your schoolboard: ");
+            PawnColor student = cliParsen.checkIfStudent(readLine());
+            if (student != PawnColor.NONE) {
+                parameters[0] = student;
+                valid = sendCharacterCard(index,parameters);
+            }
+            if(!valid) error("invalid student selected!");
+        }
+        return true;
+    }
+
 
     public void win() {
         out.println("Well done, you won the game!");

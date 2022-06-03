@@ -27,26 +27,6 @@ public class ExpertGameController extends GameController {
         activateSetupEffect();
     }
 
-    @Override
-    protected void init(Player[] players) {
-        //TODO what is this for?
-        /*
-        LinkedList<PawnColor> students = new LinkedList<>();
-        for (Player c : game.getPlayers()) {
-            for (int i = 0; i < game.getParameters().getInitialStudentsCount(); i++) {
-                students.add(tableController.getBag().drawStudent());
-            }
-            c.getBoard().addStudentsToEntrance(students);
-        }*/
-
-        fillClouds();
-        for (Player player : game.getPlayers()) {
-            player.getBoard().addStudentsToEntrance(tableController.drawStudents());
-        }
-        this.game.setCurrentPlayer(0);
-        this.game.setGamePhase(PLANNING);
-    }
-
     public Effect[] getEffects() {
         return effects.clone();
     }
