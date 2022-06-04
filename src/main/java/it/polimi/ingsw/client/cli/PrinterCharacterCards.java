@@ -32,19 +32,27 @@ public class PrinterCharacterCards {
         out.println();
         space(40);
         for (int i = 0; i < 3; i++) {
-            out.print("   ______________    ");
+            if(cards.get(i).isActive()) out.print(ANSI_YELLOW+"   ______________    "+ANSI_RESET);
+            else out.print("   ______________    ");
         }
         out.println();
         space(40);
         for (int i = 0; i < 3; i++) {
             CharacterCardDto card = cards.get(i);
-            if(card.getCharacter().equals(Character.CHARACTER_ELEVEN)) out.print("  | " +fromCardToString(card.getCharacter())+ " |   ");
-            else out.print("  | " +fromCardToString(card.getCharacter()) +"  |   ");
+            if(card.getCharacter().equals(Character.CHARACTER_ELEVEN)) {
+                if(card.isActive()) out.print(ANSI_YELLOW+"  | "+ANSI_RESET +fromCardToString(card.getCharacter())+ ANSI_YELLOW+" |   "+ANSI_RESET);
+                else out.print("  | " +fromCardToString(card.getCharacter())+ " |   ");
+            }
+            else{
+                if(card.isActive()) out.print(ANSI_YELLOW+"  | "+ANSI_RESET +fromCardToString(card.getCharacter()) +ANSI_YELLOW+"  |   "+ANSI_RESET);
+                else out.print("  | "+fromCardToString(card.getCharacter()) +"  |   ");
+            }
         }
         out.println();
         space(40);
         for (int i = 0; i < 3; i++) {
-            out.print("  |   price: "+cards.get(i).getPrice() +"   |   ");
+            if(cards.get(i).isActive()) out.print(ANSI_YELLOW+"  |   "+ANSI_RESET+"price: "+cards.get(i).getPrice() +ANSI_YELLOW+"   |   "+ANSI_RESET);
+            else out.print("  |   price: "+cards.get(i).getPrice() +"   |   ");
         }
         out.println();
         space(40);
@@ -54,7 +62,8 @@ public class PrinterCharacterCards {
         out.println();
         space(40);
         for (int i = 0; i < 3; i++) {
-            out.print("  |______________|   ");
+            if(cards.get(i).isActive()) out.print(ANSI_YELLOW+"  |______________|   "+ANSI_RESET);
+            else  out.print("  |______________|   ");
         }
         System.out.println();
         System.out.println();
@@ -95,17 +104,20 @@ public class PrinterCharacterCards {
 
     private void printStudents(CharacterCardDto card){
         if(!card.isWithSetUpAction()) {
-            System.out.print("  |              |   ");
+            if(card.isActive()) System.out.print(ANSI_YELLOW+"  |              |   "+ANSI_RESET);
+            else System.out.print("  |              |   ");
             return;
         }
         int align = card.getStudents().size()/2;
-        System.out.print("  |");
+        if(card.isActive()) System.out.print(ANSI_YELLOW+"  |"+ANSI_RESET);
+        else System.out.print("  |");
         space(7-align);
         for(PawnColor student : card.getStudents()){
             System.out.print(assignColor(student));
         }
         space(14-(7-align+card.getStudents().size()));
-        System.out.print("|   ");
+        if(card.isActive()) System.out.print(ANSI_YELLOW+"|   "+ANSI_RESET);
+        else System.out.print("|   ");
     }
 
     private void space(int space){

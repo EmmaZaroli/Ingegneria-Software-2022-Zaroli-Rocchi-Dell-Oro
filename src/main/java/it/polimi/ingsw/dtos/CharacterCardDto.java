@@ -16,6 +16,7 @@ public class CharacterCardDto implements Serializable {
     private final boolean isWithSetUpAction;
     private List<PawnColor> students;
     private boolean hasCoin;
+    private boolean isActive = false;
 
     public CharacterCardDto(CharacterCard origin) {
         this.character = origin.getCharacter();
@@ -62,6 +63,10 @@ public class CharacterCardDto implements Serializable {
         return retVal;
     }
 
+    public void setActive(){
+        this.isActive = true;
+    }
+
     public CharacterCardDto with(List<PawnColor> students) {
         CharacterCardDto retVal = this.deepClone();
         retVal.students = students;
@@ -86,5 +91,9 @@ public class CharacterCardDto implements Serializable {
 
     public boolean HasCoin() {
         return hasCoin;
+    }
+
+    public boolean isActive(){
+        return this.isActive;
     }
 }

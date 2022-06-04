@@ -206,6 +206,7 @@ public class ExpertGameController extends GameController {
         getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);
         ((ExpertTableController) tableController).depositCoins(cardPrice);
         getGameParameters().setAlreadyActivateCharacterCard(true);
+        ((ExpertGame) game).useCharacterCard(getGame().getCharacterCards()[characterIndex]);
     }
 
     private void activateSetupEffect(int effectIndex) {

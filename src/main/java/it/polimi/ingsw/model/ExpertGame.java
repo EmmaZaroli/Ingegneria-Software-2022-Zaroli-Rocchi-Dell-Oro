@@ -49,7 +49,7 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     x.setUsed();
-                    notifyCharacterCard(x, new Object[0]);
+                    notifyCharacterCard(x, new Object[0],true);
                 });
     }
 
@@ -82,11 +82,11 @@ public class ExpertGame extends Game {
 
     public void addCoin(ExpertPlayer player) {
         player.addCoin();
-        notifyPlayer(player);
+        notifyCoins(player.getCoins());
     }
 
     public void decreaseCoins(ExpertPlayer player, int n) {
         player.decreaseCoins(n);
-        notifyPlayer(player);
+        notifyCoins(player.getCoins());
     }
 }

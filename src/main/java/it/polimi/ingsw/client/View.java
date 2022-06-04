@@ -350,27 +350,40 @@ public abstract class View implements MessageListener, UserInterface {
                     opponents.remove((int)opponentIndex.get());
                     opponents.add(opponentIndex.get(), opponent.with(message.getCoins()));
                 }
-
             }
         }
         else{
             this.tableCoins = message.getCoins();
         }
-
         this.print();
     }
 
     private void handleMessage(CharacterCardMessage message) {
         CharacterCardDto newCharacterCard = message.getCharacterCard();
-        for(int i = 0; i < characterCards.size(); i++){
-            if(characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()){
-                CharacterCardDto characterCard = characterCards.get(i);
-                characterCard = characterCard.with(newCharacterCard.getPrice());
-                characterCard = characterCard.with(newCharacterCard.getStudents());
-                characterCards.remove(i);
-                characterCards.add(i, characterCard);
+        if(message.getType().equals(MessageType.SET_CHARACTER_CARD_ACTIVE)){
+            for (int i = 0; i < characterCards.size(); i++) {
+                if (characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()) {
+                     characterCards.get(i).setActive();
+                }
+            }
+            print();
+            if(message.getNickname().equals(getMe().getNickname())) {
+                if(currentPhase.equals(GamePhase.PLANNING)) askAssistantCard(getDeck());
+                else askAction();
             }
         }
+        else {
+            for (int i = 0; i < characterCards.size(); i++) {
+                if (characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()) {
+                    CharacterCardDto characterCard = characterCards.get(i);
+                    characterCard = characterCard.with(newCharacterCard.getPrice());
+                    characterCard = characterCard.with(newCharacterCard.getStudents());
+                    characterCards.remove(i);
+                    characterCards.add(i, characterCard);
+                }
+            }
+        }
+
     }
 
     private void handleMessage(GameOverMessage message) {
@@ -500,6 +513,8 @@ public abstract class View implements MessageListener, UserInterface {
         if (characterIndex < 0 || characterIndex >= characterCards.size())
             return false;
         if (!areCharacterParametersOk(getCharacterCards().get(characterIndex), parameters))
+            return false;
+        if (getMe().getCoins()<getCharacterCards().get(characterIndex).getPrice())
             return false;
         Message message = new CharacterCardMessage(me.getNickname(), MessageType.ACTION_USE_CHARACTER, getCharacterCards().get(characterIndex), parameters);
         endpoint.sendMessage(message);

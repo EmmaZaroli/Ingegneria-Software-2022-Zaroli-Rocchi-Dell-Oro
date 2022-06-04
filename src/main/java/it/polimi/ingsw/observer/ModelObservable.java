@@ -40,6 +40,12 @@ public class ModelObservable {
         }
     }
 
+    public void notifyCoins(int coins){
+        for (ModelObserver observer : observers) {
+            observer.updatePlayersCoin(coins);
+        }
+    }
+
     public void notifyGamePhase(GamePhase message) {
         for (ModelObserver observer : observers) {
             observer.updateGamePhase(message);
@@ -104,6 +110,12 @@ public class ModelObservable {
     public void notifyCharacterCard(CharacterCard message, Object[] parameters){
         for (ModelObserver observer : observers) {
             observer.updateCharacterCard(message, parameters);
+        }
+    }
+
+    public void notifyCharacterCard(CharacterCard message, Object[] parameters,boolean active){
+        for (ModelObserver observer : observers) {
+            observer.updateCharacterCard(message, parameters,active);
         }
     }
 }
