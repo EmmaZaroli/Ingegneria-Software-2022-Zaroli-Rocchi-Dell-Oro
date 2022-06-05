@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.CharacterCardMessage;
-import it.polimi.ingsw.utils.CharacterCardHelper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 import it.polimi.ingsw.view.VirtualView;

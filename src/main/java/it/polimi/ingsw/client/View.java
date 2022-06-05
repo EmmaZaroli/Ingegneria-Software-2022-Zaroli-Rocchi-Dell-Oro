@@ -16,7 +16,6 @@ import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.utils.CharacterCardHelper;
 
 import javax.swing.*;
 import java.io.IOException;
