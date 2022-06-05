@@ -16,6 +16,7 @@ import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.utils.CharacterCardHelper;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -508,76 +509,12 @@ public abstract class View implements MessageListener, UserInterface {
 
     private boolean areCharacterParametersOk(CharacterCardDto characterCard, Object[] parameters){
         return switch (characterCard.getCharacter()){
-
-
-            case CHARACTER_ONE -> areParametersOkCharacter1(characterCard, parameters);
-            case CHARACTER_SEVEN -> areParametersOkCharacter7(characterCard, parameters);
-            case CHARACTER_NINE -> areParametersOkCharacter9(parameters);
-            case CHARACTER_ELEVEN -> areParametersOkCharacter11(characterCard, parameters);
+            case CHARACTER_ONE -> CharacterCardHelper.areParametersOkCharacter1(characterCard, parameters, getIslands());
+            case CHARACTER_SEVEN -> CharacterCardHelper.areParametersOkCharacter7(characterCard, parameters, me);
+            case CHARACTER_NINE -> CharacterCardHelper.areParametersOkCharacter9(parameters);
+            case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(characterCard, parameters);
             default -> true;
         };
-    }
-
-    private boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters){
-        if(parameters.length != 2)
-
-            return false;
-        if (!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
-            return false;
-        if(!(card.isWithSetUpAction()))
-            return false;
-        if(!(card.getStudents().contains(parameters[0])))
-
-            return false;
-
-
-        for (LinkedIslands island : getIslands()) {
-            if (island.getIsland().getUuid().equals(parameters[1]))
-                return true;
-        }
-        return false;
-    }
-
-    private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
-        if(parameters.length != 2)
-
-            return false;
-        if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
-            return false;
-        if(!(card.isWithSetUpAction()))
-
-
-            return false;
-        List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
-        List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
-        Map<PawnColor, Integer> cardinalityCard = card.getStudentsCardinality();
-        Map<PawnColor, Integer> cardinalityEntrance = me.getBoard().getStudentsInEntranceCardinality();
-        for (PawnColor color : PawnColor.values()) {
-            if (colorsFromCard.stream().filter(x -> x == color).count() > cardinalityCard.get(color))
-                return false;
-        }
-        for (PawnColor color : PawnColor.values()) {
-            if (colorsFromEntrance.stream().filter(x -> x == color).count() > cardinalityEntrance.get(color))
-                return false;
-        }
-        return true;
-    }
-
-    private boolean areParametersOkCharacter9(Object[] parameters) {
-        return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
-    }
-
-    private boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
-        if(parameters.length != 1)
-
-            return false;
-        if (!(parameters[0] instanceof PawnColor))
-            return false;
-        if(!(card.isWithSetUpAction()))
-
-
-            return false;
-        return card.getStudents().contains(parameters[0]);
     }
     //</editor-fold>
 }

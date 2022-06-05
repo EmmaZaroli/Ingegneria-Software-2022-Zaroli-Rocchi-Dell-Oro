@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.CharacterCardMessage;
+import it.polimi.ingsw.utils.CharacterCardHelper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 import it.polimi.ingsw.view.VirtualView;
@@ -84,7 +85,7 @@ public class ExpertGameController extends GameController {
                 game.throwException(new IllegalCharacterException());
             }
             int index = cardIndex.get();
-            if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message)) {
+            if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message, index)) {
                 activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
             } else {
                 //TODO reply with error or do nothing?
@@ -94,12 +95,12 @@ public class ExpertGameController extends GameController {
         }
     }
 
-    private boolean areParametersOk(CharacterCardMessage message) {
+    private boolean areParametersOk(CharacterCardMessage message, int index) {
         return switch (message.getCharacterCard().getCharacter()) {
-            case CHARACTER_ONE -> areParametersOkCharacter1(message.getCharacterCard(), message.getParameters());
-            case CHARACTER_SEVEN -> areParametersOkCharacter7(message.getCharacterCard(), message.getParameters());
-            case CHARACTER_NINE -> areParametersOkCharacter9(message.getParameters());
-            case CHARACTER_ELEVEN -> areParametersOkCharacter11(message.getCharacterCard(), message.getParameters());
+            case CHARACTER_ONE -> CharacterCardHelper.areParametersOkCharacter1(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getTable().getIslands());
+            case CHARACTER_SEVEN -> CharacterCardHelper.areParametersOkCharacter7(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);
+            case CHARACTER_NINE -> CharacterCardHelper.areParametersOkCharacter9(message.getParameters());
+            case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters());
             default -> true;
         };
     }
@@ -125,13 +126,10 @@ public class ExpertGameController extends GameController {
 
     private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
         if(parameters.length != 2)
-
             return false;
         if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
             return false;
         if(!(card.isWithSetUpAction()))
-
-
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
         List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
@@ -164,7 +162,6 @@ public class ExpertGameController extends GameController {
             return false;
         return ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0]);
     }
-
 
     @Override
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
