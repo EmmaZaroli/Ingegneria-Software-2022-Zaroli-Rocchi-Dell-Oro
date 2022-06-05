@@ -1,11 +1,15 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.gamecontroller.enums.GameMode;
+import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -27,21 +31,18 @@ public class Gui extends View {
     }
 
     private void loadScene(String resourceName) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
-        fxmlLoader.setController(this);
-        try {
-            Scene scene = new Scene(fxmlLoader.load(), SCREEN_WIDTH, SCREEN_HEIGHT);
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
-        } catch (IOException e) {
-            logger.log(Level.WARNING, "Unable to load scene " + resourceName, e);
-        }
-    }
-
-    @Override
-    public void start() {
-        this.loadScene("/it.polimi.ingsw.client.gui/markups/start-connection.fxml");
+        Platform.runLater(() -> {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
+            fxmlLoader.setController(this);
+            try {
+                Scene scene = new Scene(fxmlLoader.load(), SCREEN_WIDTH, SCREEN_HEIGHT);
+                stage.setScene(scene);
+                stage.setMaximized(true);
+                stage.show();
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "Unable to load scene " + resourceName, e);
+            }
+        });
     }
 
     @Override
@@ -50,7 +51,6 @@ public class Gui extends View {
         //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/table.fxml"));
 
         //TODO dev only
-
     }
 
     @Override
@@ -65,6 +65,7 @@ public class Gui extends View {
 
     @Override
     public void askServerInfo() {
+        this.loadScene("/it.polimi.ingsw.client.gui/markups/start-connection.fxml");
     }
 
     @Override
@@ -75,16 +76,12 @@ public class Gui extends View {
     @Override
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
         //TODO show message
+        this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
     }
 
     @Override
     public void askGameSettings() {
-        /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml"));
-        try {
-            stage.getScene().setRoot(fxmlLoader.load());
-        } catch (IOException e) {
-            //TODO
-        }*/
+        //this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
     }
 
     @Override
@@ -176,5 +173,18 @@ public class Gui extends View {
     public void sendNickname(ActionEvent actionEvent) {
         TextField nickname = (TextField) stage.getScene().lookup("#nickname");
         this.sendPlayerNickname(nickname.getText());
+    }
+
+    public void sendSettings(ActionEvent event) {
+        RadioButton twoPlayers = (RadioButton) stage.getScene().lookup("#twoPlayers");
+        RadioButton threePlayers = (RadioButton) stage.getScene().lookup("#threePlayers");
+        RadioButton standard = (RadioButton) stage.getScene().lookup("#standardMode");
+        RadioButton expert = (RadioButton) stage.getScene().lookup("#expert");
+
+        if ((twoPlayers.isSelected() || threePlayers.isSelected()) && (standard.isSelected() || expert.isSelected())) {
+            PlayersNumber playersNumber = twoPlayers.isSelected() ? PlayersNumber.TWO : PlayersNumber.THREE;
+            GameMode mode = standard.isSelected() ? GameMode.NORMAL_MODE : GameMode.EXPERT_MODE;
+            this.sendGameSettings(playersNumber, mode);
+        }
     }
 }
