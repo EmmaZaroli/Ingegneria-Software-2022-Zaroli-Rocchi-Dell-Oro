@@ -228,7 +228,7 @@ public class Cli extends View {
                 valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid number of steps or invalid character card");
-            else error("or invalid character card");
+            else if(!valid) error("invalid number of steps");
         }
     }
 
@@ -251,7 +251,7 @@ public class Cli extends View {
                 valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid cloud or invalid character card");
-            else error("invalid cloud");
+            else if(!valid) error("invalid cloud");
         }
 
     }
@@ -508,7 +508,7 @@ public class Cli extends View {
     }
 
     public void error(String error) {
-        out.println("\nERROR: " + ANSI_RED + error + ANSI_RESET);
+        out.println("\nERROR: " + ANSI_RED + error.toUpperCase() + ANSI_RESET);
     }
 
     private void space(int space) {

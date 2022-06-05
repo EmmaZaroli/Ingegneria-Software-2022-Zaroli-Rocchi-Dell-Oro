@@ -9,6 +9,7 @@ import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Endpoint;
@@ -462,8 +463,20 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     protected final boolean sendMotherNatureSteps(int steps) {
-        if (steps < 0 || steps > getMe().getDiscardPileHead().motherNatureMovement())
+        if(steps<0) return false;
+        if ((steps > getMe().getDiscardPileHead().motherNatureMovement()) && !isExpertGame)
             return false;
+        if(isExpertGame){
+            for(CharacterCardDto card : getCharacterCards()) {
+                if (card.getCharacter().equals(Character.CHARACTER_FOUR)) {
+                    if (card.isActive()) {
+                        if (steps > getMe().getDiscardPileHead().motherNatureMovement() + 2) return false;
+                    } else {
+                        if (steps > getMe().getDiscardPileHead().motherNatureMovement()) return false;
+                    }
+                }
+            }
+        }
         Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
         endpoint.sendMessage(message);
         return true;
@@ -472,6 +485,10 @@ public abstract class View implements MessageListener, UserInterface {
     protected final boolean sendAssistantCard(int cardIndex) {
         if (cardIndex < 0 || cardIndex >= me.getDeck().size()) {
             return false;
+        }
+        for(PlayerInfo opponent : getOpponents()){
+            if(opponent.getDiscardPileHead()!=null && opponent.getDiscardPileHead().value() == getMe().getDeck().get(cardIndex).value() && getMe().getDeck().size()!=1)
+                return false;
         }
         AssistantCard assistantCard = me.getDeck().get(cardIndex);
         Message message = new AssistantPlayedMessage(me.getNickname(), MessageType.ACTION_PLAY_ASSISTANT, assistantCard);

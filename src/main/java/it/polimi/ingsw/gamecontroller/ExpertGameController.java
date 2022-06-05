@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.CharacterCardMessage;
+import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 import it.polimi.ingsw.view.VirtualView;
@@ -266,8 +267,20 @@ public class ExpertGameController extends GameController {
 
     @Override
     protected void playerHasEndedAction() {
-        reverseEffect();
-        getGameParameters().setAlreadyActivateCharacterCard(false);
+        this.game.setGamePhase(super.pickNextPhase());
+        if (this.game.getGamePhase() == GamePhase.ACTION_END) {
+            this.game.setPlayedCount(game.getPlayedCount() + 1);
+            reverseEffect();
+            getGameParameters().setAlreadyActivateCharacterCard(false);
+            if (!super.isRoundComplete()) {
+                this.game.setGamePhase(ACTION_MOVE_STUDENTS);
+            } else {
+                endOfRound();
+            }
+            super.changePlayer();
+        }
+        DataDumper.getInstance().saveGame(game);
+
         super.playerHasEndedAction();
     }
 
