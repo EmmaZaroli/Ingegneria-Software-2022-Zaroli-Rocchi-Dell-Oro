@@ -62,6 +62,11 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
     }
 
     @Override
+    public void updateCharacterCard(CharacterCard message, Object[] parameters,boolean active) {
+        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.SET_CHARACTER_CARD_ACTIVE, message, parameters));
+    }
+
+    @Override
     public void updateIslandCard(IslandCard message) {
         user.sendMessage(new IslandMessage(MessageType.UPDATE_ISLAND, message));
     }
@@ -90,6 +95,11 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
             user.sendMessage(new ConnectionMessage(message.getNickname(), MessageType.IS_ONLINE));
         else
             user.sendMessage(new ConnectionMessage(message.getNickname(), MessageType.IS_OFFLINE));
+    }
+
+    @Override
+    public void updatePlayersCoin(int message) {
+        user.sendMessage(new CoinMessage(getCurrentPlayer(),message,false));
     }
 
     @Override

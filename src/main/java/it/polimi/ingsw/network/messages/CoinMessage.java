@@ -5,6 +5,8 @@ import it.polimi.ingsw.network.MessageType;
 
 public class CoinMessage extends Message {
 
+    //TODO do we need isOnTable?
+
     private final int coins;
     private final boolean isOnTable;
     //true: coin on table

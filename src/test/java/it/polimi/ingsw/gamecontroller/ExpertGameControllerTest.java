@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.servercontroller.User;
 import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
@@ -32,7 +33,9 @@ class ExpertGameControllerTest extends TestCase {
     ExpertPlayer[] players = {player1, player2};
     ExpertGame game = new ExpertGame(players, new ExpertTable(PlayersNumber.TWO), new ExpertGameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
     ExpertTableController tableController = new ExpertTableController(game.getTable(), game.getParameters());
-    VirtualView[] virtualViews = new VirtualView[2];
+    VirtualView virtualView1 = new VirtualView(new User(player1.getNickname()),game);
+    VirtualView virtualView2 = new VirtualView(new User(player2.getNickname()),game);
+    VirtualView[] virtualViews = {virtualView1,virtualView2};
     ExpertGameController gameController = new ExpertGameController(game, tableController, virtualViews);
 
     @Test
