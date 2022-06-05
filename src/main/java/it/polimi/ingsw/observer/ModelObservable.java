@@ -58,10 +58,9 @@ public class ModelObservable {
         }
     }
 
-    //TODO what does this notify?
-    public void notifyModelObserver(String message) {
+    public void notifyAskStudent() {
         for (ModelObserver observer : observers) {
-            observer.update(message);
+            observer.updateAskStudent();
         }
     }
 

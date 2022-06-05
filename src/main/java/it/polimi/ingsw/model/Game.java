@@ -121,7 +121,7 @@ public class Game extends ModelObservable implements Serializable {
 
     public void movePawn() {
         this.movedPawns++;
-        notifyModelObserver("ask student");
+        notifyAskStudent();
     }
 
     public void callWin(List<String> winners) {

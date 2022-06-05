@@ -113,8 +113,8 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
     }
 
     @Override
-    public void update(String message){
-        if(message.equals("ask student")) user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));
+    public void updateAskStudent(){
+        user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));
     }
 
     @Override

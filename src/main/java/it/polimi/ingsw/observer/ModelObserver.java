@@ -27,8 +27,7 @@ public interface ModelObserver{
 
     void updateException(Exception message);
 
-    //TODO what does this update?
-    void update(String message);
+    void updateAskStudent();
 
     void updateWinners(List<String> message);
 
