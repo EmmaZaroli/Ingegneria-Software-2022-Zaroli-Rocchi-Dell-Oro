@@ -14,6 +14,7 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,16 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         this.server = server;
         this.nickname = Optional.empty();
         this.loginPhase = LoginPhase.WAITING_FOR_NICKNAME;
+        this.gameReady = false;
+    }
+
+    public UserHandler(User user, Server server){
+        this.endpoint = user.getEndpoint().get();
+        this.endpoint.addDisconnectionListener(this);
+        this.endpoint.addMessageListener(this);
+        this.server = server;
+        this.nickname = Optional.of(user.getNickname());
+        this.loginPhase = LoginPhase.WAITING_FOR_GAMETYPE;
         this.gameReady = false;
     }
 
@@ -61,13 +72,13 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
     public void onMessageReceived(Message message) {
         switch (loginPhase){
             case WAITING_FOR_NICKNAME -> {
-                if (message instanceof NicknameProposalMessage){
-                    waitingForNickname((NicknameProposalMessage) message);
+                if (message instanceof NicknameProposalMessage nicknameProposalMessage){
+                    waitingForNickname(nicknameProposalMessage);
                 }
             }
             case WAITING_FOR_GAMETYPE -> {
-                if (message instanceof GametypeRequestMessage){
-                    waitingForGametype((GametypeRequestMessage) message);
+                if (message instanceof GametypeRequestMessage gametypeRequestMessage){
+                    waitingForGametype(gametypeRequestMessage);
                 }
             }
             case WAITING_FOR_GAMEREADY, END -> {

@@ -8,17 +8,24 @@ import it.polimi.ingsw.network.messages.GameStartingMessage;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import it.polimi.ingsw.view.VirtualView;
 
-public class GameHandler {
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+
+public class GameHandler implements GameEndingListener {
     GameController gameController;
     Game gameModel; //this is superfluous
     VirtualView[] virtualViews;
-    User[] users;
+    List<User> users;
 
-    public GameHandler(User[] users, GameController gameController, Game gameModel, VirtualView[] virtualViews) {
+    private final List<GameEndingListener> gameEndingListeners = new LinkedList<>();
+
+    public GameHandler(List<User> users, GameController gameController, Game gameModel, VirtualView[] virtualViews) {
         this.users = users;
         this.gameController = gameController;
         this.gameModel = gameModel;
         this.virtualViews = virtualViews;
+        this.gameModel.addGameEndingListener(this);
     }
 
     public void start() {
@@ -48,7 +55,7 @@ public class GameHandler {
         return false;
     }
 
-    public void reconnectPlayer(String nickname, Endpoint endpoint) {
+    public synchronized void reconnectPlayer(String nickname, Endpoint endpoint) {
         for (User user : users) {
             if (user.getNickname().equals(nickname)) {
                 if(user.getEndpoint().isPresent())
@@ -59,5 +66,32 @@ public class GameHandler {
             }
         }
         gameController.onReconnect();
+    }
+
+    @Override
+    public void onGameEnding(UUID uuid) {
+        gameModel.removeGameEndingListener(this);
+        notifyGameEnding();
+    }
+
+    public void addGameEndingListener(GameEndingListener l) {
+        this.gameEndingListeners.add(l);
+    }
+
+    public void removeGameEndingListener(GameEndingListener l) {
+        this.gameEndingListeners.remove(l);
+    }
+
+    private void notifyGameEnding() {
+        for(GameEndingListener l : gameEndingListeners)
+            l.onGameEnding(getGameId());
+    }
+
+    public UUID getGameId() {
+        return gameModel.getGameId();
+    }
+
+    public List<User> getUsers() {
+        return users;
     }
 }

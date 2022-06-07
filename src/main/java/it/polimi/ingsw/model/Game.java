@@ -2,13 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.observer.ModelObservable;
+import it.polimi.ingsw.servercontroller.GameEndingListener;
+import it.polimi.ingsw.servercontroller.GameReadyListener;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Game extends ModelObservable implements Serializable {
     @Serial
@@ -32,6 +31,8 @@ public class Game extends ModelObservable implements Serializable {
     private Exception error;
 
     private boolean enoughPlayerOnline;
+
+    private final List<GameEndingListener> gameEndingListeners = new LinkedList<>();
 
     public Game(Player[] players, Table table, GameParameters parameters) {
         this.players = players;
@@ -128,6 +129,7 @@ public class Game extends ModelObservable implements Serializable {
         this.gameOver = true;
         this.setGamePhase(GamePhase.GAME_OVER);
         setWinners(winners);
+        notifyGameEnding();
     }
 
     public void callWin(String winner){
@@ -140,6 +142,7 @@ public class Game extends ModelObservable implements Serializable {
         this.gameOver = true;
         this.setGamePhase(GamePhase.GAME_OVER);
         notifyGameOverFromDisconnection();
+        notifyGameEnding();
     }
 
     public void throwException(Exception e) {
@@ -183,5 +186,16 @@ public class Game extends ModelObservable implements Serializable {
         return (int) Arrays.stream(players).filter(Player::isOnline).count();
     }
 
+    public void addGameEndingListener(GameEndingListener l) {
+        this.gameEndingListeners.add(l);
+    }
 
+    public void removeGameEndingListener(GameEndingListener l) {
+        this.gameEndingListeners.remove(l);
+    }
+
+    private void notifyGameEnding() {
+        for(GameEndingListener l : gameEndingListeners)
+            l.onGameEnding(getGameId());
+    }
 }

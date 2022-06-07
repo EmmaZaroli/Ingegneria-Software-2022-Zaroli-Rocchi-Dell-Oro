@@ -67,7 +67,7 @@ public class GameHandlerBuilder {
         VirtualView[] virtualViews = buildVirtualViews(gameModel);
         GameController gameController = buildGameController(gameModel, virtualViews);
         notifyGameReady();
-        return new GameHandler(users.toArray(new User[0]), gameController, gameModel, virtualViews);
+        return new GameHandler(users, gameController, gameModel, virtualViews);
     }
 
     private Game buildGameModel() {
