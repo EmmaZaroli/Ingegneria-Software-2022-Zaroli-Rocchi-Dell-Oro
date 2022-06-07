@@ -371,7 +371,8 @@ public abstract class View implements MessageListener, UserInterface {
         if(message.getType().equals(MessageType.SET_CHARACTER_CARD_ACTIVE)){
             for (int i = 0; i < characterCards.size(); i++) {
                 if (characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()) {
-                     characterCards.get(i).setActive();
+                    characterCards.get(i).setActive();
+                    characterCards.get(i).HasCoin();
                 }
             }
             print();
@@ -386,7 +387,7 @@ public abstract class View implements MessageListener, UserInterface {
                     CharacterCardDto characterCard = characterCards.get(i);
                     characterCard = characterCard.with(newCharacterCard.getPrice());
                     characterCard = characterCard.with(newCharacterCard.getStudents());
-                    characterCards.remove(i);
+                    characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
                     characterCards.add(i, characterCard);
                 }
             }
@@ -470,7 +471,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     protected final boolean sendMotherNatureSteps(int steps) {
-        if(steps<0) return false;
+        if(steps<=0) return false;
         if ((steps > getMe().getDiscardPileHead().motherNatureMovement()) && !isExpertGame)
             return false;
         if(isExpertGame){

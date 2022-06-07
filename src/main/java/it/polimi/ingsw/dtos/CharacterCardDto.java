@@ -67,6 +67,10 @@ public class CharacterCardDto implements Serializable {
         this.isActive = true;
     }
 
+    public void setCoin(){
+        this.hasCoin = true;
+    }
+
     public CharacterCardDto with(List<PawnColor> students) {
         CharacterCardDto retVal = this.deepClone();
         retVal.students = students;

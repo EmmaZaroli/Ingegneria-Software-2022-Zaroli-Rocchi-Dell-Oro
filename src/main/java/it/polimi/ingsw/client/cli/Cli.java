@@ -189,20 +189,13 @@ public class Cli extends View {
         int card;
         boolean valid = false;
         while (!valid) {
-            out.print("chose the assistant card to play");
-            if (isExpertGame()) out.print(" or choose character card to activate");
-            out.print(": ");
+            out.print("chose the assistant card to play: ");
             String input = readLine();
-            Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
-            if (characterCard.isEmpty()) {
-                try {
-                    card = Integer.parseInt(input);
-                    valid = this.sendAssistantCard(card - 1);
-                } catch (NumberFormatException e) {
-                    valid = false;
-                }
-            } else {
-                valid = askCharacterCardParameters(characterCard.get());
+            try {
+                card = Integer.parseInt(input);
+                valid = this.sendAssistantCard(card - 1);
+            } catch (NumberFormatException e) {
+                valid = false;
             }
             if (!valid) error("Error, the card you selected is not valid!");
         }
@@ -432,12 +425,7 @@ public class Cli extends View {
         do{
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
-                List<PawnColor> studentsFromCard = null;
-                try {
-                     studentsFromCard = (List<PawnColor>) Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s));
-                }catch(Exception e){
-                    out.println(e);
-                }
+                List<PawnColor> studentsFromCard = Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s)).collect(Collectors.toList());
                 int size = (int) studentsFromCard.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromCard.size() == size) {
                     parameters[0] = studentsFromCard;
@@ -447,14 +435,15 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose student from entrance [max 3, separated by commas]: ");
-                List<PawnColor> studentsFromEntrance = (List<PawnColor>) Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s));
+                List<PawnColor> studentsFromEntrance = Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s)).collect(Collectors.toList());
                 int size = (int) studentsFromEntrance.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromEntrance.size() == size) {
                     parameters[1] = studentsFromEntrance;
                     valid = true;
-                } else error("invalid students selected!");
+                }
+                else error("invalid students selected!");
             }
-        } while (sendCharacterCard(index,parameters));
+        } while (!sendCharacterCard(index,parameters));
         return true;
     }
 

@@ -108,7 +108,7 @@ public class Endpoint {
                 }
             }
         } catch (Exception e) {
-            disconnect("LETTURA");
+            disconnect(e.getMessage());
             notifyDisconnection();
         }
     }
