@@ -237,6 +237,13 @@ public abstract class View implements MessageListener, UserInterface {
         if (currentPlayer.equals(getMe().getNickname())
                 && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS))
             askAction();
+        if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) deactivateCharacterCards();
+    }
+
+    private void deactivateCharacterCards(){
+        for(CharacterCardDto card : getCharacterCards()){
+            card.deactivate();
+        }
     }
 
     private void handleMessage(ChangedPlayerMessage message) {

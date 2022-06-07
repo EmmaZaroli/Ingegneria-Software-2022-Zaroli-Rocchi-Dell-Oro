@@ -432,7 +432,12 @@ public class Cli extends View {
         do{
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
-                List<PawnColor> studentsFromCard = (List<PawnColor>) Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s));
+                List<PawnColor> studentsFromCard = null;
+                try {
+                     studentsFromCard = (List<PawnColor>) Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s));
+                }catch(Exception e){
+                    out.println(e);
+                }
                 int size = (int) studentsFromCard.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromCard.size() == size) {
                     parameters[0] = studentsFromCard;
@@ -521,10 +526,13 @@ public class Cli extends View {
 
     @Override
     public void gameOverFromDisconnection() {
-
+        out.println("TIMER OUT");
+        out.println("it seems that you're the only player left...");
+        out.println("congratulation, you won!");
+        errorAndExit("");
     }
 
     public void notEnoughPlayer() {
-
+        out.println("your opponent has disconnected, please wait...");
     }
 }

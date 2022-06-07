@@ -280,8 +280,6 @@ public class ExpertGameController extends GameController {
             super.changePlayer();
         }
         DataDumper.getInstance().saveGame(game);
-
-        super.playerHasEndedAction();
     }
 
     public ExpertGameParameters getGameParameters() {

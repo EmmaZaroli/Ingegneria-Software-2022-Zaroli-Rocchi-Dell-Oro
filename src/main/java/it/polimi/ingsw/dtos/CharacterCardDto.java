@@ -96,4 +96,8 @@ public class CharacterCardDto implements Serializable {
     public boolean isActive(){
         return this.isActive;
     }
+
+    public void deactivate() {
+        this.isActive=false;
+    }
 }
