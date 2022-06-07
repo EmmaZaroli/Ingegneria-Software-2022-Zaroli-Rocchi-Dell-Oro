@@ -6,8 +6,6 @@ import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameParameters;
 import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.MessageType;
-import it.polimi.ingsw.network.messages.GameStartingMessage;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.servercontroller.*;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
@@ -21,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server {
+public class Server implements GameEndingListener{
     private final int port;
 
     private static Logger logger = Logger.getLogger(Server.class.getName());
@@ -139,7 +137,7 @@ public class Server {
         builder.reset();
     }
 
-    public synchronized void addGameReadyListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
+    public synchronized void addGameStartingListener(GameReadyListener l, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) {
         if (selectedGameMode == GameMode.NORMAL_MODE) {
             if (selectedPlayersNumber == PlayersNumber.TWO)
                 normal2PlayersBuilder.addGameStartingListener(l);
@@ -162,7 +160,7 @@ public class Server {
 
     //User must be already present in allUser list
     public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber, GameReadyListener l) throws InvalidPlayerNumberException {
-        addGameReadyListener(l, selectedGameMode, selectedPlayersNumber);
+        addGameStartingListener(l, selectedGameMode, selectedPlayersNumber);
         enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
     }
 
@@ -192,6 +190,7 @@ public class Server {
 
                 if (builder.isGameFull()) {
                     GameHandler gameHandler = builder.build();
+                    gameHandler.addGameEndingListener(this);
                     runningGames.add(gameHandler);
                     gameHandler.start();
                     builder.reset();
@@ -231,6 +230,51 @@ public class Server {
         return Optional.empty();
     }
 
+    private Optional<GameHandler> getGame(UUID uuid) {
+        synchronized (normal2PlayersRunningGames){
+            for (GameHandler gameHandler : normal2PlayersRunningGames) {
+                if (gameHandler.getGameId().equals(uuid))
+                    return Optional.of(gameHandler);
+            }
+        }
+        synchronized (normal3PlayersRunningGames){
+            for (GameHandler gameHandler : normal3PlayersRunningGames) {
+                if (gameHandler.getGameId().equals(uuid))
+                    return Optional.of(gameHandler);
+            }
+        }
+        synchronized (expert2PlayersRunningGames){
+            for (GameHandler gameHandler : expert2PlayersRunningGames) {
+                if (gameHandler.getGameId().equals(uuid))
+                    return Optional.of(gameHandler);
+            }
+        }
+        synchronized (expert3PlayersRunningGames){
+            for (GameHandler gameHandler : expert3PlayersRunningGames) {
+                if (gameHandler.getGameId().equals(uuid))
+                    return Optional.of(gameHandler);
+            }
+        }
+        return Optional.empty();
+    }
+
+    //remove GameHandler specified by uuid
+    //if uuid is not present, it does nothing
+    private void removeGame(UUID uuid){
+        synchronized (normal2PlayersRunningGames){
+            normal2PlayersRunningGames.removeIf(gameHandler -> gameHandler.getGameId().equals(uuid));
+        }
+        synchronized (normal3PlayersRunningGames){
+            normal3PlayersRunningGames.removeIf(gameHandler -> gameHandler.getGameId().equals(uuid));
+        }
+        synchronized (expert2PlayersRunningGames){
+            expert2PlayersRunningGames.removeIf(gameHandler -> gameHandler.getGameId().equals(uuid));
+        }
+        synchronized (expert3PlayersRunningGames){
+            expert3PlayersRunningGames.removeIf(gameHandler -> gameHandler.getGameId().equals(uuid));
+        }
+    }
+
     public synchronized void reconnectUser(String nickname, Endpoint endpoint) {
         Optional<GameHandler> gameHandler = getGameByPlayer(nickname);
         if (gameHandler.isPresent()) {
@@ -262,17 +306,50 @@ public class Server {
     //return true if the removal is succesfull, false if not (user does not exist or is in an active game)
     public synchronized boolean removeUser(String nickname) {
         Optional<User> user = getUser(nickname);
-        if (user.isEmpty() || !getGameByPlayer(nickname).isEmpty())
+        if (user.isEmpty() || getGameByPlayer(nickname).isPresent())
             return false;
-        allUsers.remove(user.get().getNickname());
-        normal2PlayersBuilder.removePlayer(user.get());
-        normal3PlayersBuilder.removePlayer(user.get());
-        expert2PlayersBuilder.removePlayer(user.get());
-        expert3PlayersBuilder.removePlayer(user.get());
+        synchronized (allUsers){
+            allUsers.remove(user.get().getNickname());
+        }
+        synchronized (normal2PlayersBuilder){
+            normal2PlayersBuilder.removePlayer(user.get());
+        }
+        synchronized (normal3PlayersBuilder){
+            normal3PlayersBuilder.removePlayer(user.get());
+        }
+        synchronized (expert2PlayersBuilder){
+            expert2PlayersBuilder.removePlayer(user.get());
+        }
+        synchronized (expert3PlayersBuilder){
+            expert3PlayersBuilder.removePlayer(user.get());
+        }
         return true;
     }
 
     public void removeUserHandler(UserHandler userHandler) {
-        userHandlers.remove(userHandler);
+        synchronized (userHandlers){
+            userHandlers.remove(userHandler);
+        }
+    }
+
+    @Override
+    public void onGameEnding(UUID uuid) {
+        Optional<GameHandler> optionalGameHandler = getGame(uuid);
+        if(optionalGameHandler.isPresent()){
+            GameHandler gameHandler = optionalGameHandler.get();
+            gameHandler.removeGameEndingListener(this);
+            for(User user : gameHandler.getUsers()){
+                if(user.isOnline()){
+                    UserHandler userHandler = new UserHandler(user, this);
+                    synchronized (userHandlers){
+                        userHandlers.add(userHandler);
+                    }
+                }
+                else{
+                    removeUser(user.getNickname());
+                }
+            }
+            removeGame(uuid);
+        }
     }
 }
