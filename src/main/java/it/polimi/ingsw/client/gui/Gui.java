@@ -24,7 +24,7 @@ public class Gui extends View {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private Stage stage;
+    private final Stage stage;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -48,19 +48,16 @@ public class Gui extends View {
     @Override
     public void printWelcomeMessage() {
         //TODO evaluate if this methods are in the right place
-        //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/table.fxml"));
-
-        //TODO dev only
     }
 
     @Override
     public void printEnqueuedMessage() {
-
+        //TODO
     }
 
     @Override
-    public void printGameStartingMessage() {
-
+    public void printGameStarting() {
+        this.loadScene("/it.polimi.ingsw.client.gui/markups/table.fxml");
     }
 
     @Override
@@ -76,12 +73,11 @@ public class Gui extends View {
     @Override
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
         //TODO show message
-        this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
     }
 
     @Override
     public void askGameSettings() {
-        //this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
+        this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
     }
 
     @Override
@@ -150,11 +146,6 @@ public class Gui extends View {
     }
 
     @Override
-    public void printGameStarting() {
-
-    }
-
-    @Override
     public void notEnoughPlayer() {
 
     }
@@ -187,4 +178,14 @@ public class Gui extends View {
             this.sendGameSettings(playersNumber, mode);
         }
     }
+
+    //<editor-fold desc="Bindings">
+    public boolean getIsThreePlayers() {
+        return this.getOpponents().size() == 2;
+    }
+
+    public boolean getIsExpertPlayer() {
+        return isExpertGame();
+    }
+    //</editor-fold>
 }
