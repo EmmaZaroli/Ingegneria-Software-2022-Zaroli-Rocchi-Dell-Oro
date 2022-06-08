@@ -393,6 +393,8 @@ public abstract class View implements MessageListener, UserInterface {
                 ViewCharacterCard characterCard = characterCards.get(i);
                 characterCard = characterCard.withPrice(newCharacterCard.getPrice());
                 characterCard = characterCard.withStudents(newCharacterCard.getStudents());
+                if(message.getNickname().equals(me.getNickname()))
+                    characterCard = characterCard.withIsActive(true);
                 characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
                 characterCards.add(i, characterCard);
             }
@@ -409,7 +411,6 @@ public abstract class View implements MessageListener, UserInterface {
         expertParameters = expertParameters.withIsTowersCountInInfluence(newParameters.isTowersCountInInfluence());
         expertParameters = expertParameters.withExtraInfluence(newParameters.getExtraInfluence());
         expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());
-        //TODO call print?
     }
 
     private void handleMessage(GameOverMessage message) {
