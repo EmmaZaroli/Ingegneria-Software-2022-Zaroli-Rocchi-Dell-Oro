@@ -1,8 +1,8 @@
 package it.polimi.ingsw.dtos;
 
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
-import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
@@ -16,7 +16,6 @@ public class CharacterCardDto implements Serializable {
     private final boolean isWithSetUpAction;
     private List<PawnColor> students;
     private boolean hasCoin;
-    private boolean isActive = false;
 
     public CharacterCardDto(CharacterCard origin) {
         this.character = origin.getCharacter();
@@ -24,6 +23,17 @@ public class CharacterCardDto implements Serializable {
         this.isWithSetUpAction = origin instanceof CharacterCardWithSetUpAction;
         if (this.isWithSetUpAction)
             this.students = ((CharacterCardWithSetUpAction) origin).getStudents();
+        else
+            this.students = new ArrayList<>();
+        this.hasCoin = origin.hasCoin();
+    }
+
+    public CharacterCardDto(ViewCharacterCard origin) {
+        this.character = origin.getCharacter();
+        this.price = origin.getPrice();
+        this.isWithSetUpAction = origin.isWithSetUpAction();
+        if (this.isWithSetUpAction)
+            this.students = origin.getStudents();
         else
             this.students = new ArrayList<>();
         this.hasCoin = origin.hasCoin();
@@ -63,8 +73,8 @@ public class CharacterCardDto implements Serializable {
         return retVal;
     }
 
-    public void setActive(){
-        this.isActive = true;
+    public void setCoin(){
+        this.hasCoin = true;
     }
 
     public CharacterCardDto with(List<PawnColor> students) {
@@ -89,11 +99,7 @@ public class CharacterCardDto implements Serializable {
         return res;
     }
 
-    public boolean HasCoin() {
+    public boolean hasCoin() {
         return hasCoin;
-    }
-
-    public boolean isActive(){
-        return this.isActive;
     }
 }

@@ -43,14 +43,14 @@ public class ExpertGame extends Game {
         this.characterCards = cards;
     }
 
-    //TODO call this method when someone uses a character
     public void useCharacterCard(CharacterCard c) {
         Arrays.stream(characterCards)
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     x.setUsed();
-                    notifyCharacterCard(x, new Object[0],true);
+                    notifyCharacterCard(x, new Object[0]);
                 });
+        notifyExpertParameters(getParameters());
     }
 
     public void addStudent(CharacterCard c, PawnColor student) {
@@ -58,7 +58,6 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     ((CharacterCardWithSetUpAction) x).addStudent(student);
-                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 
@@ -67,7 +66,6 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     ((CharacterCardWithSetUpAction) x).addStudent(student);
-                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 
@@ -76,7 +74,6 @@ public class ExpertGame extends Game {
                 .filter(x -> x.equals(c))
                 .forEach(x -> {
                     ((CharacterCardWithSetUpAction) x).removeStudent(student);
-                    notifyCharacterCard(x, new Object[0]);
                 });
     }
 

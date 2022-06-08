@@ -1,5 +1,6 @@
 package it.polimi.ingsw.dtos;
 
+import it.polimi.ingsw.client.modelview.ExpertParameters;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 
@@ -20,12 +21,14 @@ public class GameDto implements Serializable {
     private List<IslandCardDto> islands;
     private GamePhase gamePhase;
     private String currentPlayer;
+    private ExpertParametersDto expertParameters;
 
     public GameDto(Game origin, String nickname) {
         this.isExpert = origin instanceof ExpertGame;
         if(isExpert){
             this.tableCoins = ((ExpertGame)origin).getTable().getCoins();
             this.characterCards = Arrays.stream(((ExpertGame) origin).getCharacterCards()).map(x -> new CharacterCardDto(x)).toList();
+            this.expertParameters = new ExpertParametersDto(((ExpertGame)origin).getParameters());
         }
         Optional<Player> currentPlayerOptional = Arrays.stream(origin.getPlayers()).filter(x -> x.getNickname().equals(nickname)).findFirst();
         if (currentPlayerOptional.isPresent()) {
@@ -80,6 +83,10 @@ public class GameDto implements Serializable {
 
     public boolean isExpert() {
         return isExpert;
+    }
+
+    public ExpertParametersDto getExpertParameters() {
+        return expertParameters;
     }
 
     public int getTableCoins() {

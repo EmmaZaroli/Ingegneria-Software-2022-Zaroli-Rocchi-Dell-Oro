@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client.cli;
 
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
 import it.polimi.ingsw.dtos.CharacterCardDto;
-import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
@@ -21,11 +21,11 @@ public class PrinterCharacterCards {
     public static final String FULL_CIRCLE = "●";
 
 
-    public void print(List<CharacterCardDto> cards) {
+    public void print(List<ViewCharacterCard> cards) {
         PrintStream out = System.out;
         space(46);
         for (int i = 0; i < 3; i++) {
-            if(cards.get(i).HasCoin()) out.print(COIN);
+            if(cards.get(i).hasCoin()) out.print(COIN);
             else out.print(" ");
             space(12);
         }
@@ -38,7 +38,7 @@ public class PrinterCharacterCards {
         out.println();
         space(40);
         for (int i = 0; i < 3; i++) {
-            CharacterCardDto card = cards.get(i);
+            ViewCharacterCard card = cards.get(i);
             if(card.getCharacter().equals(Character.CHARACTER_ELEVEN)) {
                 if(card.isActive()) out.print(ANSI_YELLOW+"  | "+ANSI_RESET +fromCardToString(card.getCharacter())+ ANSI_YELLOW+" |   "+ANSI_RESET);
                 else out.print("  | " +fromCardToString(card.getCharacter())+ " |   ");
@@ -102,7 +102,7 @@ public class PrinterCharacterCards {
         }
     }
 
-    private void printStudents(CharacterCardDto card){
+    private void printStudents(ViewCharacterCard card){
         if(!card.isWithSetUpAction()) {
             if(card.isActive()) System.out.print(ANSI_YELLOW+"  |              |   "+ANSI_RESET);
             else System.out.print("  |              |   ");

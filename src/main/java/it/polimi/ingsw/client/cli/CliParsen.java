@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.cli;
 
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
 import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -28,7 +29,7 @@ public class CliParsen {
         }
     }
 
-    public Optional<Integer> indexCharacterCard(String card, List<CharacterCardDto> deck){
+    public Optional<Integer> indexCharacterCard(String card, List<ViewCharacterCard> deck){
         card = card.toUpperCase();
         Optional<Character> choice = fromStringToCard(card);
         if(choice.isEmpty()) return Optional.empty();

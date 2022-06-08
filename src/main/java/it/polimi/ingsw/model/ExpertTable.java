@@ -16,6 +16,7 @@ public class ExpertTable extends Table {
 
     public void depositCoins(int coins) {
         this.coins += coins;
+        //TODO notify
     }
 
     public int getCoins() {

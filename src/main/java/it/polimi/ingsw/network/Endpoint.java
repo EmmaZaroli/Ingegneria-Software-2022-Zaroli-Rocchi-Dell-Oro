@@ -108,7 +108,7 @@ public class Endpoint {
                 }
             }
         } catch (Exception e) {
-            disconnect("LETTURA");
+            disconnect(e.getMessage());
             notifyDisconnection();
         }
     }
@@ -135,7 +135,7 @@ public class Endpoint {
     }
 
     public void disconnect(String motivo) {
-        System.out.println("DISCONNESSIONE" + motivo);
+        System.out.println("DISCONNESSIONE " + motivo);
         isOnline = false;
         try {
             this.receiverThread.stopThread();

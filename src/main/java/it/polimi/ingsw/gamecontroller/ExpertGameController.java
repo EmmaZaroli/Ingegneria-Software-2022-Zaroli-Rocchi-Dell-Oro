@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.CharacterCardMessage;
+import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 import it.polimi.ingsw.view.VirtualView;
@@ -84,64 +85,6 @@ public class ExpertGameController extends GameController {
         };
     }
 
-    private boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters){
-        if(parameters.length != 2)
-
-            return false;
-        if (!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
-            return false;
-        if(!(card.isWithSetUpAction()))
-            return false;
-        if(!(((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0])))
-
-
-            return false;
-        for (IslandCard island : getGame().getTable().getIslands()) {
-            if (island.getUuid().equals(parameters[1]))
-                return true;
-        }
-        return false;
-    }
-
-    private boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters){
-        if(parameters.length != 2)
-            return false;
-        if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
-            return false;
-        if(!(card.isWithSetUpAction()))
-            return false;
-        List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
-        List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
-        Map<PawnColor, Integer> cardinalityCard = ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudentsCardinality();
-        Map<PawnColor, Integer> cardinalityEntrance = getGame().getPlayers()[getGame().getCurrentPlayer()].getBoard().getStudentsInEntranceCardinality();
-        for (PawnColor color : PawnColor.values()) {
-            if (colorsFromCard.stream().filter(x -> x == color).count() > cardinalityCard.get(color))
-                return false;
-        }
-        for (PawnColor color : PawnColor.values()) {
-            if (colorsFromEntrance.stream().filter(x -> x == color).count() > cardinalityEntrance.get(color))
-                return false;
-        }
-        return true;
-    }
-
-    private boolean areParametersOkCharacter9(Object[] parameters) {
-        return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
-    }
-
-    private boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
-        if(parameters.length != 1)
-
-            return false;
-        if (!(parameters[0] instanceof PawnColor))
-            return false;
-        if(!(card.isWithSetUpAction()))
-
-
-            return false;
-        return ((CharacterCardWithSetUpAction)getGame().getCharacterCard(card.getCharacter()).get()).getStudents().contains(parameters[0]);
-    }
-
     @Override
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
         if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {
@@ -200,14 +143,12 @@ public class ExpertGameController extends GameController {
         }
         int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();
         getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);
-        ((ExpertTableController) tableController).depositCoins(cardPrice);
+        if(getGame().getCharacterCards()[characterIndex].hasCoin())
+            ((ExpertTableController) tableController).depositCoins(cardPrice);
+        else
+            ((ExpertTableController) tableController).depositCoins(cardPrice - 1);
         getGameParameters().setAlreadyActivateCharacterCard(true);
         ((ExpertGame) game).useCharacterCard(getGame().getCharacterCards()[characterIndex]);
-    }
-
-    private void activateSetupEffect(int effectIndex) {
-        ((SetupEffect) getEffects()[effectIndex])
-                .setupEffect((ExpertGame) game, tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[effectIndex]);
     }
 
     private void activateStandardEffect(int effectIndex, Object[] parameters) {
@@ -215,10 +156,6 @@ public class ExpertGameController extends GameController {
             ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters(), (PawnColor) parameters[0]);
         else
             ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());
-    }
-
-    private void activateReverseEffect(int effectIndex) {
-        ((StandardEffect) getEffects()[effectIndex]).reverseEffect(getGameParameters());
     }
 
     private void effect1(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
@@ -266,9 +203,21 @@ public class ExpertGameController extends GameController {
 
     @Override
     protected void playerHasEndedAction() {
-        reverseEffect();
-        getGameParameters().setAlreadyActivateCharacterCard(false);
-        super.playerHasEndedAction();
+        this.game.setGamePhase(super.pickNextPhase());
+        if (this.game.getGamePhase() == GamePhase.ACTION_END) {
+            this.game.setPlayedCount(game.getPlayedCount() + 1);
+            reverseEffect();
+            getGameParameters().setAlreadyActivateCharacterCard(false);
+            //TODO is there a way to put the next line in the model?
+            getGame().notifyExpertParameters(getGameParameters());
+            if (!super.isRoundComplete()) {
+                this.game.setGamePhase(ACTION_MOVE_STUDENTS);
+            } else {
+                endOfRound();
+            }
+            super.changePlayer();
+        }
+        DataDumper.getInstance().saveGame(game);
     }
 
     public ExpertGameParameters getGameParameters() {

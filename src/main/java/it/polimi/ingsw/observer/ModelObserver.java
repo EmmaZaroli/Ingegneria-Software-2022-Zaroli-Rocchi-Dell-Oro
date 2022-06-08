@@ -11,8 +11,6 @@ import java.util.List;
 public interface ModelObserver{
     void updateCharacterCard(CharacterCard message, Object[] parameters);
 
-    void updateCharacterCard(CharacterCard message, Object[] parameters, boolean active);
-
     void updateIslandCard(IslandCard message);
 
     void updateGamePhase(GamePhase message);
@@ -38,4 +36,6 @@ public interface ModelObserver{
     void updateGameOverFromDisconnection();
 
     void updateEnoughPlayerOnline(boolean message);
+
+    void updateExpertParameters(ExpertGameParameters parameters);
 }

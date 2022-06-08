@@ -326,7 +326,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         return true;
     }
 
-    private boolean isRoundComplete() {
+    protected boolean isRoundComplete() {
         return this.game.getPlayedCount() == this.game.getPlayersCount();
     }
 
@@ -339,7 +339,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    private GamePhase pickNextPhase() {
+    protected GamePhase pickNextPhase() {
         return switch (this.game.getGamePhase()) {
             case PLANNING -> ACTION_MOVE_STUDENTS;
             case ACTION_MOVE_STUDENTS -> GamePhase.ACTION_MOVE_MOTHER_NATURE;
@@ -349,7 +349,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         };
     }
 
-    private void changePlayer() {
+    protected void changePlayer() {
         int nextPlayer = pickNextPlayer();
         game.changePlayer(nextPlayer);
 
