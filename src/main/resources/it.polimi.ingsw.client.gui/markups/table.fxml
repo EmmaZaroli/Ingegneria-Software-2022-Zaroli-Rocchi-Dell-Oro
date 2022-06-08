@@ -24,9 +24,8 @@
                             <VBox VBox.vgrow="ALWAYS" alignment="CENTER" style="-fx-padding: 0 10 0 0;">
                                 <Card/>
                             </VBox>
-                            <SchoolBoard style="-fx-padding: 10 0 0 10;" visible="${isThreePlayers}"
-                                         name="Nome giocatore"/>
-                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER" visible="${isThreePlayers}">
+                            <SchoolBoard style="-fx-padding: 10 0 0 10;" visible="${controller.isThreePlayers}"/>
+                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER" visible="${controller.isThreePlayers}">
                                 <Card/>
                             </VBox>
                         </HBox>
@@ -71,14 +70,14 @@
                     <!-- Right panel -->
                     <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 0 0 0 20;">
                         <!-- Character cards -->
-                        <GridPane hgap="35" alignment="CENTER" visible="isExpertGame">
+                        <GridPane hgap="35" alignment="CENTER" visible="${controller.isExpertGame}">
                             <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"/>
                             <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS"/>
                         </GridPane>
                         <Pane prefHeight="15"/>
                         <HBox>
                             <Pane prefWidth="99"/>
-                            <CharacterCard HBox.hgrow="ALWAYS" visible="isExpertGame"/>
+                            <CharacterCard HBox.hgrow="ALWAYS" visible="${controller.isExpertGame}"/>
                         </HBox>
                         <!-- Deck and coins -->
                         <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;">
@@ -107,7 +106,7 @@
                                     <Label style="-fx-padding: 10 0 0 0; -fx-font-size: 16; -fx-text-fill: red;"
                                            text="Your coins:"/>
                                     <Label style="-fx-padding: 0 0 10 30; -fx-font-size: 24; -fx-text-fill: red;"
-                                           text="0"/>
+                                           text="${controller.myCoins}"/>
 
                                     <Label style="-fx-padding: 20 0 0 0; -fx-font-size: 16; -fx-text-fill: blue;"
                                            text="Coins available"/>

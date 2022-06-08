@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
@@ -184,8 +185,20 @@ public class Gui extends View {
         return this.getOpponents().size() == 2;
     }
 
-    public boolean getIsExpertPlayer() {
+    public boolean getIsExpertGame() {
         return isExpertGame();
+    }
+
+    public PlayerInfo getFirstOpponent() {
+        return this.getOpponents().get(0);
+    }
+
+    public PlayerInfo getSecondOpponent() {
+        return this.getOpponents().get(1);
+    }
+
+    public int getMyCoins() {
+        return 46;
     }
     //</editor-fold>
 }

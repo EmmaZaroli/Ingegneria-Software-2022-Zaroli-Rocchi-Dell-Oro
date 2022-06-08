@@ -6,14 +6,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml"
-         fx:controller="it.polimi.ingsw.client.gui.sceneControllers.SchoolBoard">
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
 
     <VBox>
         <HBox>
             <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="${controller.name}"/>
             <Label style="-fx-font-size: 12;"
-                   text="                                                                                              coins: 3"/>
+                   text="${controller.coinsString}"/>
         </HBox>
         <ImageView
                 fitWidth="450"

@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.util.List;
 
-class TestView extends View{
+class TestView extends View {
     @Override
     public void printWelcomeMessage() {
 
@@ -13,11 +13,6 @@ class TestView extends View{
 
     @Override
     public void printEnqueuedMessage() {
-
-    }
-
-    @Override
-    public void printGameStartingMessage() {
 
     }
 
