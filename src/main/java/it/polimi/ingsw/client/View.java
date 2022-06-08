@@ -1,11 +1,10 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.modelview.ExpertParameters;
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
-import it.polimi.ingsw.dtos.CharacterCardDto;
-import it.polimi.ingsw.dtos.CloudTileDto;
-import it.polimi.ingsw.dtos.GameDto;
-import it.polimi.ingsw.dtos.IslandCardDto;
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
+import it.polimi.ingsw.dtos.*;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
@@ -18,7 +17,6 @@ import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
@@ -35,7 +33,8 @@ public abstract class View implements MessageListener, UserInterface {
     private int tableCoins;
     private List<LinkedIslands> islands;
     private String currentPlayer;
-    private List<CharacterCardDto> characterCards;
+    private List<ViewCharacterCard> characterCards;
+    private ExpertParameters expertParameters;
     private GamePhase currentPhase;
     private boolean areEnoughPlayers;
     private String error;
@@ -51,6 +50,7 @@ public abstract class View implements MessageListener, UserInterface {
         this.tableCoins = 0;
         this.characterCards = new ArrayList<>();
         this.areEnoughPlayers = true;
+        this.expertParameters = new ExpertParameters();
     }
 
     //<editor-fold desc="Getters">
@@ -92,7 +92,7 @@ public abstract class View implements MessageListener, UserInterface {
         return this.tableCoins;
     }
 
-    public List<CharacterCardDto> getCharacterCards() {
+    public List<ViewCharacterCard> getCharacterCards() {
         return this.characterCards;
     }
 
@@ -159,6 +159,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message instanceof IslandMessage islandMessage) handleMessage(islandMessage);
         if (message instanceof CoinMessage coinMessage) handleMessage(coinMessage);
         if (message instanceof CharacterCardMessage characterCardMessage) handleMessage(characterCardMessage);
+        if (message instanceof ExpertParametersMessage expertParametersMessage) handleMessage(expertParametersMessage);
         if (message instanceof GameOverMessage gameOverMessage) handleMessage(gameOverMessage);
         if (message instanceof ConnectionMessage connectionMessage) handleMessage(connectionMessage);
         if (message instanceof ErrorMessage errorMessage) handleMessage(errorMessage);
@@ -212,6 +213,9 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(GameStartingMessage message) {
             GameDto game = message.getGame();
             this.printGameStarting();
+            this.isExpertGame = game.isExpert();
+            if(this.isExpertGame)
+                this.expertParameters = new ExpertParameters(game.getExpertParameters());
             for (int i = 0; i < game.getOpponents().size(); i++)
                 this.opponents.add(new PlayerInfo(game.getOpponents().get(i)));
             this.me = new PlayerInfo(game.getMe());
@@ -219,7 +223,10 @@ public abstract class View implements MessageListener, UserInterface {
             for (IslandCardDto islandCardDto : game.getIslands())
                 updateIsland(islandCardDto);
             this.tableCoins = game.getTableCoins();
-            this.characterCards = game.getCharacterCards();
+            this.characterCards = new ArrayList<>();
+            for(CharacterCardDto messageCard: game.getCharacterCards())
+                this.characterCards.add(new ViewCharacterCard(messageCard, true, false)); //TODO check this
+            checkCharacterCardActivable();
             this.currentPhase = game.getGamePhase();
             this.currentPlayer = game.getCurrentPlayer();
             print();
@@ -227,7 +234,6 @@ public abstract class View implements MessageListener, UserInterface {
                 //TODO may not be planning phase
                 this.askAssistantCard(getMe().getDeck());
             }
-
     }
 
     private void handleMessage(ChangedPhaseMessage message) {
@@ -237,13 +243,6 @@ public abstract class View implements MessageListener, UserInterface {
         if (currentPlayer.equals(getMe().getNickname())
                 && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS))
             askAction();
-        if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) deactivateCharacterCards();
-    }
-
-    private void deactivateCharacterCards(){
-        for(CharacterCardDto card : getCharacterCards()){
-            card.deactivate();
-        }
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
@@ -351,6 +350,7 @@ public abstract class View implements MessageListener, UserInterface {
         if(!message.isOnTable()){
             if (message.getNickname().equals(me.getNickname())) {
                 this.me = this.me.with(message.getCoins());
+                checkCharacterCardActivable();
             } else {
                 Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
                 if (opponentIndex.isPresent()) {
@@ -366,33 +366,50 @@ public abstract class View implements MessageListener, UserInterface {
         this.print();
     }
 
+    //for every character card, set if it can be activated or not
+    private void checkCharacterCardActivable(){
+        if(expertParameters.isAlreadyActivateCharacterCard()){
+            for(int i = 0; i < characterCards.size(); i++){
+                ViewCharacterCard newCharacterCard = characterCards.get(i);
+                newCharacterCard = newCharacterCard.withIsActivable(false);
+                characterCards.remove(i);
+                characterCards.add(i, newCharacterCard);
+            }
+        }
+        else{
+            for(int i = 0; i < characterCards.size(); i++){
+                ViewCharacterCard newCharacterCard = characterCards.get(i);
+                newCharacterCard = newCharacterCard.withIsActivable(me.getCoins() >= newCharacterCard.getPrice());
+                characterCards.remove(i);
+                characterCards.add(i, newCharacterCard);
+            }
+        }
+    }
+
     private void handleMessage(CharacterCardMessage message) {
         CharacterCardDto newCharacterCard = message.getCharacterCard();
-        if(message.getType().equals(MessageType.SET_CHARACTER_CARD_ACTIVE)){
-            for (int i = 0; i < characterCards.size(); i++) {
-                if (characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()) {
-                    characterCards.get(i).setActive();
-                    characterCards.get(i).HasCoin();
-                }
-            }
-            print();
-            if(message.getNickname().equals(getMe().getNickname())) {
-                if(currentPhase.equals(GamePhase.PLANNING)) askAssistantCard(getDeck());
-                else askAction();
+        for (int i = 0; i < characterCards.size(); i++) {
+            if (characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()) {
+                ViewCharacterCard characterCard = characterCards.get(i);
+                characterCard = characterCard.withPrice(newCharacterCard.getPrice());
+                characterCard = characterCard.withStudents(newCharacterCard.getStudents());
+                characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
+                characterCards.add(i, characterCard);
             }
         }
-        else {
-            for (int i = 0; i < characterCards.size(); i++) {
-                if (characterCards.get(i).getCharacter() == newCharacterCard.getCharacter()) {
-                    CharacterCardDto characterCard = characterCards.get(i);
-                    characterCard = characterCard.with(newCharacterCard.getPrice());
-                    characterCard = characterCard.with(newCharacterCard.getStudents());
-                    characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
-                    characterCards.add(i, characterCard);
-                }
-            }
-        }
+        checkCharacterCardActivable();
+        //TODO call print?
+    }
 
+    private void handleMessage(ExpertParametersMessage message) {
+        ExpertParametersDto newParameters = message.getExpertParameters();
+        expertParameters = expertParameters.withHasAlreadyActivateCharacterCard(newParameters.hasAlreadyActivateCharacterCard());
+        expertParameters = expertParameters.withIsTakeProfessorEvenIfSameStudents(newParameters.isTakeProfessorEvenIfSameStudents());
+        expertParameters = expertParameters.withmotherNatureExtraMovements(newParameters.getMotherNatureExtraMovements());
+        expertParameters = expertParameters.withIsTowersCountInInfluence(newParameters.isTowersCountInInfluence());
+        expertParameters = expertParameters.withExtraInfluence(newParameters.getExtraInfluence());
+        expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());
+        //TODO call print?
     }
 
     private void handleMessage(GameOverMessage message) {
@@ -472,19 +489,9 @@ public abstract class View implements MessageListener, UserInterface {
 
     protected final boolean sendMotherNatureSteps(int steps) {
         if(steps<=0) return false;
-        if ((steps > getMe().getDiscardPileHead().motherNatureMovement()) && !isExpertGame)
+        if ((steps > getMe().getDiscardPileHead().motherNatureMovement() + expertParameters.getMotherNatureExtraMovements()) && !isExpertGame)
             return false;
-        if(isExpertGame){
-            for(CharacterCardDto card : getCharacterCards()) {
-                if (card.getCharacter().equals(Character.CHARACTER_FOUR)) {
-                    if (card.isActive()) {
-                        if (steps > getMe().getDiscardPileHead().motherNatureMovement() + 2) return false;
-                    } else {
-                        if (steps > getMe().getDiscardPileHead().motherNatureMovement()) return false;
-                    }
-                }
-            }
-        }
+
         Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
         endpoint.sendMessage(message);
         return true;
@@ -539,6 +546,8 @@ public abstract class View implements MessageListener, UserInterface {
             return false;
         if (!areCharacterParametersOk(getCharacterCards().get(characterIndex), parameters))
             return false;
+        if(!getCharacterCards().get(characterIndex).isActivable())
+            return false;
         if (getMe().getCoins()<getCharacterCards().get(characterIndex).getPrice())
             return false;
         Message message = new CharacterCardMessage(me.getNickname(), MessageType.ACTION_USE_CHARACTER, getCharacterCards().get(characterIndex), parameters);
@@ -546,7 +555,7 @@ public abstract class View implements MessageListener, UserInterface {
         return true;
     }
 
-    private boolean areCharacterParametersOk(CharacterCardDto characterCard, Object[] parameters){
+    private boolean areCharacterParametersOk(ViewCharacterCard characterCard, Object[] parameters){
         return switch (characterCard.getCharacter()){
             case CHARACTER_ONE -> CharacterCardHelper.areParametersOkCharacter1(characterCard, parameters, getIslands());
             case CHARACTER_SEVEN -> CharacterCardHelper.areParametersOkCharacter7(characterCard, parameters, me);

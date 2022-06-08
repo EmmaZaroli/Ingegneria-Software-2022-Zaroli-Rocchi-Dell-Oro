@@ -3,7 +3,6 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.client.InputParser;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
-import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
@@ -27,8 +26,8 @@ public class Cli extends View {
     private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();
     private final PrinterClouds cloudPrinter = new PrinterClouds();
     private final PrinterIslands islandsPrinter = new PrinterIslands();
-    private final PrinterCharacterCards PrinterCharacterCard = new PrinterCharacterCards();
-    private final PrinterAssistantCards printerAssistantCards = new PrinterAssistantCards();
+    private final PrinterCharacterCards characterCardPrinter = new PrinterCharacterCards();
+    private final PrinterAssistantCards assistantCardsPrinter = new PrinterAssistantCards();
     private CliParsen cliParsen = new CliParsen();
 
     public Cli() {
@@ -330,7 +329,7 @@ public class Cli extends View {
     }
 
     private void printCharacterCards() {
-        PrinterCharacterCard.print(getCharacterCards());
+        characterCardPrinter.print(getCharacterCards());
     }
 
     private void printCloud() {
@@ -363,7 +362,7 @@ public class Cli extends View {
         players.add(getMe());
         for(PlayerInfo opponent : getOpponents())
             players.add(opponent);
-        printerAssistantCards.print(players);
+        assistantCardsPrinter.print(players);
         out.println();
     }
 

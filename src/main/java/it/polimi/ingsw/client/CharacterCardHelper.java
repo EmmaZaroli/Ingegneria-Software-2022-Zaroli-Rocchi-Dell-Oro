@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
 import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.dtos.IslandCardDto;
 import it.polimi.ingsw.model.CharacterCard;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class CharacterCardHelper {
 
     //check client side
-    public static boolean areParametersOkCharacter1(CharacterCardDto card, Object[] parameters, List<LinkedIslands> islands){
+    public static boolean areParametersOkCharacter1(ViewCharacterCard card, Object[] parameters, List<LinkedIslands> islands){
         if(parameters.length != 2)
             return false;
         if (!(parameters[0] instanceof PawnColor && parameters[1] instanceof UUID))
@@ -35,7 +36,7 @@ public class CharacterCardHelper {
     }
 
     //check client side
-    public static boolean areParametersOkCharacter7(CharacterCardDto card, Object[] parameters, PlayerInfo playerInfo){
+    public static boolean areParametersOkCharacter7(ViewCharacterCard card, Object[] parameters, PlayerInfo playerInfo){
         if(parameters.length != 2)
             return false;
         if (!(parameters[0] instanceof List<?> && parameters[1] instanceof List<?>))
@@ -63,7 +64,7 @@ public class CharacterCardHelper {
     }
 
     //check client side
-    public static boolean areParametersOkCharacter11(CharacterCardDto card, Object[] parameters){
+    public static boolean areParametersOkCharacter11(ViewCharacterCard card, Object[] parameters){
         if(parameters.length != 1)
             return false;
         if (!(parameters[0] instanceof PawnColor))

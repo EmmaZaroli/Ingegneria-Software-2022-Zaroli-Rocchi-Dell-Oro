@@ -62,8 +62,8 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
     }
 
     @Override
-    public void updateCharacterCard(CharacterCard message, Object[] parameters,boolean active) {
-        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.SET_CHARACTER_CARD_ACTIVE, message, parameters));
+    public void updateExpertParameters(ExpertGameParameters message) {
+        user.sendMessage(new ExpertParametersMessage(getCurrentPlayer(), message));
     }
 
     @Override

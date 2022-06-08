@@ -112,9 +112,9 @@ public class ModelObservable {
         }
     }
 
-    public void notifyCharacterCard(CharacterCard message, Object[] parameters,boolean active){
+    public void notifyExpertParameters(ExpertGameParameters message){
         for (ModelObserver observer : observers) {
-            observer.updateCharacterCard(message, parameters,active);
+            observer.updateExpertParameters(message);
         }
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
 import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.network.Message;
@@ -17,11 +18,19 @@ public class CharacterCardMessage extends Message {
         this.parameters = parameters;
     }
 
+    public CharacterCardMessage(String nickname, MessageType messageType, ViewCharacterCard characterCard, Object[] parameters) {
+        super(nickname, messageType);
+        this.characterCard = new CharacterCardDto(characterCard);
+        this.parameters = parameters;
+    }
+
     public CharacterCardMessage(String nickname, MessageType messageType, CharacterCardDto characterCard, Object[] parameters) {
         super(nickname, messageType);
         this.characterCard = characterCard;
         this.parameters = parameters;
     }
+
+
 
     public CharacterCardDto getCharacterCard() {
         return this.characterCard;
