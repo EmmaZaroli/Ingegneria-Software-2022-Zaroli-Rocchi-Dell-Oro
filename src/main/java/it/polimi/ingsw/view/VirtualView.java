@@ -78,6 +78,7 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
             case ACTION_MOVE_STUDENTS -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
             case ACTION_MOVE_MOTHER_NATURE -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
             case ACTION_CHOOSE_CLOUD -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
+            case ACTION_END -> user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));
         }
     }
 

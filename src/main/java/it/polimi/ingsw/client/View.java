@@ -401,6 +401,7 @@ public abstract class View implements MessageListener, UserInterface {
         }
         checkCharacterCardActivable();
         //TODO call print?
+        print();
     }
 
     private void handleMessage(ExpertParametersMessage message) {
@@ -411,6 +412,9 @@ public abstract class View implements MessageListener, UserInterface {
         expertParameters = expertParameters.withIsTowersCountInInfluence(newParameters.isTowersCountInInfluence());
         expertParameters = expertParameters.withExtraInfluence(newParameters.getExtraInfluence());
         expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());
+        print();
+        if (currentPlayer.equals(getMe().getNickname()) && currentPhase != GamePhase.ACTION_END)
+            askAction();
     }
 
     private void handleMessage(GameOverMessage message) {
