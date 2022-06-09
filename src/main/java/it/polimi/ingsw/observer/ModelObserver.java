@@ -21,7 +21,9 @@ public interface ModelObserver{
 
     void updateCloudTile(CloudTile message);
 
-    void updatePlayersCoin(int message);
+    void updatePlayerCoin(int message);
+
+    void updateTableCoins(int message);
 
     void updateAssistantCard(AssistantCard message);
 

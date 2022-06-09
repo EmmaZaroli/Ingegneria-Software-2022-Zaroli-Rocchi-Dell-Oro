@@ -79,11 +79,11 @@ public class ExpertGame extends Game {
 
     public void addCoin(ExpertPlayer player) {
         player.addCoin();
-        notifyCoins(player.getCoins());
+        notifyPlayerCoins(player.getCoins());
     }
 
     public void decreaseCoins(ExpertPlayer player, int n) {
         player.decreaseCoins(n);
-        notifyCoins(player.getCoins());
+        notifyPlayerCoins(player.getCoins());
     }
 }

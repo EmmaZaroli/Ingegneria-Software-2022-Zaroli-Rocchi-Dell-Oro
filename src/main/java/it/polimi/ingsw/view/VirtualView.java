@@ -98,8 +98,13 @@ public class VirtualView extends MessageObservable implements ModelObserver, Mes
     }
 
     @Override
-    public void updatePlayersCoin(int message) {
+    public void updatePlayerCoin(int message) {
         user.sendMessage(new CoinMessage(getCurrentPlayer(),message,false));
+    }
+
+    @Override
+    public void updateTableCoins(int message) {
+        user.sendMessage(new CoinMessage(getCurrentPlayer(),message,true));
     }
 
     @Override

@@ -40,9 +40,15 @@ public class ModelObservable {
         }
     }
 
-    public void notifyCoins(int coins){
+    public void notifyPlayerCoins(int coins){
         for (ModelObserver observer : observers) {
-            observer.updatePlayersCoin(coins);
+            observer.updatePlayerCoin(coins);
+        }
+    }
+
+    public void notifyTableCoins(int coins){
+        for (ModelObserver observer : observers) {
+            observer.updateTableCoins(coins);
         }
     }
 
