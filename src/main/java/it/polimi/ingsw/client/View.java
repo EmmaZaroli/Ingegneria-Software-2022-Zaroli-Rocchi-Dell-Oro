@@ -569,5 +569,19 @@ public abstract class View implements MessageListener, UserInterface {
             default -> true;
         };
     }
+
+    protected boolean canActivateCharacter(ViewCharacterCard characterCard){
+        if (expertParameters.isAlreadyActivateCharacterCard())
+            return false;
+        if(me.getCoins() < characterCard.getPrice())
+            return false;
+        return true;
+    }
+
+    protected boolean canActivateCharacter(int characterInedx){
+        if(characterInedx < 0 || characterInedx >= getCharacterCards().size())
+            return false;
+        return canActivateCharacter(getCharacterCards().get(characterInedx));
+    }
     //</editor-fold>
 }
