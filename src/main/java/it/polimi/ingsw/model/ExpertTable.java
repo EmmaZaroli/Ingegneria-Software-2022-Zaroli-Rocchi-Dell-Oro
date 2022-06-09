@@ -12,11 +12,12 @@ public class ExpertTable extends Table {
 
     public void takeCoin() {
         this.coins--;
+        notifyTableCoins(this.coins);
     }
 
     public void depositCoins(int coins) {
         this.coins += coins;
-        //TODO notify
+        notifyTableCoins(this.coins);
     }
 
     public int getCoins() {
