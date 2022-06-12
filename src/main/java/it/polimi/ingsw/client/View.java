@@ -243,6 +243,18 @@ public abstract class View implements MessageListener, UserInterface {
         if (currentPlayer.equals(getMe().getNickname())
                 && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS))
             askAction();
+        if(currentPhase.equals(GamePhase.ACTION_END)) resetCharacterCards();
+    }
+
+    private void resetCharacterCards(){
+        for(int i=0;i<getCharacterCards().size();i++){
+            if(getCharacterCards().get(i).isActive()){
+                ViewCharacterCard newCard = getCharacterCards().get(i);
+                newCard = newCard.withIsActive(false);
+                characterCards.remove(i);
+                characterCards.add(i,newCard);
+            }
+        }
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
@@ -393,8 +405,7 @@ public abstract class View implements MessageListener, UserInterface {
                 ViewCharacterCard characterCard = characterCards.get(i);
                 characterCard = characterCard.withPrice(newCharacterCard.getPrice());
                 characterCard = characterCard.withStudents(newCharacterCard.getStudents());
-                if(message.getNickname().equals(me.getNickname()))
-                    characterCard = characterCard.withIsActive(true);
+                characterCard = characterCard.withIsActive(true);
                 characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
                 characterCards.add(i, characterCard);
             }
@@ -568,6 +579,12 @@ public abstract class View implements MessageListener, UserInterface {
             case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(characterCard, parameters);
             default -> true;
         };
+    }
+
+    protected boolean areCharacterActive(){
+        if (expertParameters.isAlreadyActivateCharacterCard())
+            return true;
+        return false;
     }
 
     protected boolean canActivateCharacter(ViewCharacterCard characterCard){
