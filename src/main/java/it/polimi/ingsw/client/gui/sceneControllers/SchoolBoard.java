@@ -1,24 +1,22 @@
 package it.polimi.ingsw.client.gui.sceneControllers;
 
 import it.polimi.ingsw.client.modelview.PlayerInfo;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
 public class SchoolBoard extends Pane {
-    private PlayerInfo opponent;
+    @FXML
+    private PlayerInfo player;
 
-    public void setOpponent(PlayerInfo opponent) {
-        this.opponent = opponent;
-    }
-
-    public String getName() {
-        return this.opponent != null ? this.opponent.getNickname() : "";
+    public void setPlayer(PlayerInfo opponent) {
+        this.player = player;
     }
 
     public int getCoins() {
-        return this.opponent != null ? this.opponent.getCoins() : 0;
+        return this.player != null ? this.player.getCoins() : 0;
     }
 
     public String getCoinsString() {

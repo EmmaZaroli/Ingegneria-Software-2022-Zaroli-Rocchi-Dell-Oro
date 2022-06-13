@@ -10,6 +10,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -26,6 +28,9 @@ public class Gui extends View {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     private final Stage stage;
+
+    private Alert sharedAlert;
+    private boolean gameHasStarted = false;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -53,12 +58,28 @@ public class Gui extends View {
 
     @Override
     public void printEnqueuedMessage() {
-        //TODO
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You've been added to the lobby. Please, wait for a game to start");
+                while (sharedAlert.showAndWait() != null && !gameHasStarted) {
+                }
+            }
+        });
     }
 
     @Override
     public void printGameStarting() {
+        if (this.sharedAlert != null) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    sharedAlert.close();
+                }
+            });
+        }
         this.loadScene("/it.polimi.ingsw.client.gui/markups/table.fxml");
+        this.gameHasStarted = true;
     }
 
     @Override
@@ -73,7 +94,18 @@ public class Gui extends View {
 
     @Override
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
-        //TODO show message
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (playerReconnected) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "You've been reconnected to your previous game", ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!nicknameAccepted) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Youor nickname is not available, please, select another nickname", ButtonType.OK);
+                    alert.showAndWait();
+                }
+            }
+        });
     }
 
     @Override
