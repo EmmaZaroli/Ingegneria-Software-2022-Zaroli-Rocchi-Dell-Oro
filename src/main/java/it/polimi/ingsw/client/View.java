@@ -536,15 +536,28 @@ public abstract class View implements MessageListener, UserInterface {
 
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, student);
-        message.setIslandCard(getIslands().get(islandIndex).getIsland());
+        message.setIslandCard(getIslands().get(getMainIsland(islandIndex)).getIsland());
         endpoint.sendMessage(message);
         return true;
+    }
+
+    private int getMainIsland(int index){
+        int count=0;
+        int i=0;
+        while(index!=count){
+            if(!getIslands().get(i).isConnectedWithNext())
+                count++;
+            i++;
+        }
+        return i;
     }
 
     protected final boolean sendCloudChoice(int cloudIndex) {
         if (cloudIndex < 0 || cloudIndex >= getClouds().size())
             return false;
         CloudTileDto cloudTile = getClouds().get(cloudIndex);
+        if(cloudTile.getStudents().isEmpty())
+            return false;
         Message message = new CloudMessage(me.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, cloudTile);
         endpoint.sendMessage(message);
         return true;

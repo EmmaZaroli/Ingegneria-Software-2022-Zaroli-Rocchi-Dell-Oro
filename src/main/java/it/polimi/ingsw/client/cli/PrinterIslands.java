@@ -34,12 +34,14 @@ public class PrinterIslands {
     private boolean isnext;
     private int[] size = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private int[] studentsAlreadyPrinted = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private String[] islandsIndex = {"","","","","","","","","","","",""};
     private boolean upConnected;
     private boolean up0;
     private boolean up4;
 
     public void printIslands(List<LinkedIslands> islands) {
 
+        //initializing
         for (int i = 0; i < 12; i++) {
             size[i] = 0;
             studentsAlreadyPrinted[i] = 0;
@@ -49,13 +51,27 @@ public class PrinterIslands {
         up0 = false;
         up4 = false;
 
-        //first fow
+        //index assignment
+
+        int index = 1;
+        for(int i=0;i<islands.size();i++){
+            if(islands.get(i).isMainIsland()) {
+                islandsIndex[i] = Integer.toString(index);
+                index++;
+            }
+            else islandsIndex[i] = "  ";
+        }
+
+        //first row numbers
+        firstRowNumbers();
+        //first row
         firstRow(islands);
 
         System.out.println();
         isnext = false;
 
         //second row
+        //top
         centre();
         if (!up0) System.out.print(" ");
         int intermediate = (islands.get(11).getIsland().getStudents().size() - 11) / 2;
@@ -70,24 +86,30 @@ public class PrinterIslands {
         if (islands.get(5).isMainIsland()) topWithConnection(up4, size[5]);
         else topWithConnection(up4);
         System.out.println();
-        centre();
 
+        //side 1
+        centre();
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 5);
         else side(false, false, islands.get(11).getIsland().getTower());
         System.out.print("                                 ");
         if (islands.get(5).isMainIsland()) side(false, false, islands.get(5).getIsland(), 5, 5);
         else side(false, false, islands.get(5).getIsland().getTower());
         System.out.println();
-        centre();
-        
+
+        //side 2
+        space(37);
+        System.out.print(islandsIndex[11]); // 1 space
+        space(1);
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 7);
         else side(false, false, Tower.NONE);
         System.out.print("                                 ");
         if (islands.get(5).isMainIsland()) side(false, false, islands.get(5).getIsland(), 5, 7);
         else side(false, false, Tower.NONE);
+        System.out.print(islandsIndex[5]);
         System.out.println();
-        centre();
 
+        //bottom
+        centre();
         up0 = islands.get(10).isConnectedWithNext();
         up4 = islands.get(5).isConnectedWithNext();
         if (up0) {
@@ -99,9 +121,31 @@ public class PrinterIslands {
         System.out.println();
         centre();
 
+        //third row
         thirdRow(islands);
-
+        //third row numbers
+        thirdRowNumbers();
         System.out.println();
+    }
+
+    private void firstRowNumbers(){
+        centre();
+        space(4);
+        for(int i=0;i<5;i++){
+            System.out.print(islandsIndex[i]);
+            space(10);
+        }
+        System.out.println();
+    }
+
+    private void thirdRowNumbers(){
+        System.out.println();
+        centre();
+        space(3); //maybe 4
+        for(int i=10;i>5;i--) {
+            System.out.print(islandsIndex[i]);
+            space(10);
+        }
     }
 
     private void firstRow(List<LinkedIslands> islands) {
@@ -483,6 +527,9 @@ public class PrinterIslands {
 
     private void centre() {
         for (int i = 0; i < 40; i++) System.out.print(" ");
+    }
+    private void space(int space) {
+        for(int i=0;i<space;i++) System.out.print(" ");
     }
 
 }
