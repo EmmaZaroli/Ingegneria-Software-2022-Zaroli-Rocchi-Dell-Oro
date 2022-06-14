@@ -541,6 +541,7 @@ public abstract class View implements MessageListener, UserInterface {
         return true;
     }
 
+    //TODO check if this works
     private int getMainIsland(int index){
         int count=0;
         int i=0;
