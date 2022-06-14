@@ -10,9 +10,8 @@
 
     <VBox>
         <HBox>
-            <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="${controller.name}"/>
-            <Label style="-fx-font-size: 12;"
-                   text="${controller.coinsString}"/>
+            <Label style="-fx-font-size: 12; -fx-font-weight: bold;" fx:id="name"/>
+            <Label style="-fx-font-size: 12;" fx:id="coins"/>
         </HBox>
         <ImageView
                 fitWidth="450"

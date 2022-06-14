@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<StackPane xmlns="http://javafx.com/javafx" prefHeight="400.0" prefWidth="600.0">
+<StackPane xmlns:fx="http://javafx.com/javafx" prefHeight="400.0" prefWidth="600.0">
 
     <ImageView opacity="0.90">
         <Image url="/it.polimi.ingsw.client.gui/assets/background.jpg" backgroundLoading="true"/>
@@ -20,11 +20,12 @@
                         <!-- Opponents -->
                         <HBox style="-fx-background-color: rgba(255,255,255,0.75); -fx-background-radius: 10; -fx-padding: 10 10 0 10;"
                               VBox.vgrow="ALWAYS">
-                            <SchoolBoard style="-fx-padding: 10 10 0 0;" player="${controller.firstOpponent}"/>
+                            <SchoolBoard style="-fx-padding: 10 10 0 0;" fx:id="opponent1"/>
                             <VBox VBox.vgrow="ALWAYS" alignment="CENTER" style="-fx-padding: 0 10 0 0;">
                                 <Card/>
                             </VBox>
-                            <SchoolBoard style="-fx-padding: 10 0 0 10;" visible="${controller.isThreePlayers}"/>
+                            <SchoolBoard style="-fx-padding: 10 0 0 10;" fx:id="opponent2"
+                                         visible="${controller.isThreePlayers}"/>
                             <VBox VBox.vgrow="ALWAYS" alignment="CENTER" visible="${controller.isThreePlayers}">
                                 <Card/>
                             </VBox>

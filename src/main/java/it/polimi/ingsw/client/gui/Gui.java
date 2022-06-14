@@ -1,14 +1,16 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.client.modelview.PlayerInfo;
+import it.polimi.ingsw.client.gui.sceneControllers.SchoolBoard;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -17,11 +19,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Gui extends View {
+public class Gui extends View implements Initializable {
     private static final int SCREEN_WIDTH = 1535;
     private static final int SCREEN_HEIGHT = 840;
 
@@ -31,6 +35,11 @@ public class Gui extends View {
 
     private Alert sharedAlert;
     private boolean gameHasStarted = false;
+
+    @FXML
+    private SchoolBoard opponent1;
+    @FXML
+    private SchoolBoard opponent2;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -49,6 +58,11 @@ public class Gui extends View {
                 logger.log(Level.WARNING, "Unable to load scene " + resourceName, e);
             }
         });
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        print();
     }
 
     @Override
@@ -101,7 +115,7 @@ public class Gui extends View {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "You've been reconnected to your previous game", ButtonType.OK);
                     alert.showAndWait();
                 } else if (!nicknameAccepted) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Youor nickname is not available, please, select another nickname", ButtonType.OK);
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Your nickname is not available, please, select another nickname", ButtonType.OK);
                     alert.showAndWait();
                 }
             }
@@ -175,7 +189,12 @@ public class Gui extends View {
 
     @Override
     public void print() {
-
+        if (opponent1 != null) {
+            opponent1.setPlayer(getOpponents().get(0));
+        }
+        if (opponent2 != null && getOpponents().size() > 1) {
+            opponent2.setPlayer(getOpponents().get(1));
+        }
     }
 
     @Override
@@ -219,14 +238,6 @@ public class Gui extends View {
 
     public boolean getIsExpertGame() {
         return isExpertGame();
-    }
-
-    public PlayerInfo getFirstOpponent() {
-        return this.getOpponents().get(0);
-    }
-
-    public PlayerInfo getSecondOpponent() {
-        return this.getOpponents().get(1);
     }
 
     public int getMyCoins() {
