@@ -24,6 +24,8 @@ public class SchoolBoard extends Pane {
     private Label coins;
     @FXML
     private GridPane board;
+    @FXML
+    private GridPane towers;
 
     public void setPlayer(PlayerInfo opponent) {
         this.name.setText(opponent.getNickname());
@@ -38,7 +40,25 @@ public class SchoolBoard extends Pane {
     }
 
     private void updateTowers(int count, Tower color) {
-        //TODO
+        towers.setVgap(5);
+        towers.setHgap(5);
+
+        String imagePath = "/it.polimi.ingsw.client.gui/assets/black_tower.png";
+        //imagePath += color == Tower.BLACK ? "black_tower" : "white_tower";
+        //imagePath += ".png";
+        int row = 0;
+        int column = 0;
+        for (int i = 0; i < 7; i++) {
+            Image image = new Image(imagePath);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(29);
+            imageView.setFitWidth(14);
+            towers.add(imageView, column, row);
+            column = (column + 1) % 3;
+            if (column == 0) {
+                row++;
+            }
+        }
     }
 
     private void updateDinningRoom(DiningRoomDto opponent) {

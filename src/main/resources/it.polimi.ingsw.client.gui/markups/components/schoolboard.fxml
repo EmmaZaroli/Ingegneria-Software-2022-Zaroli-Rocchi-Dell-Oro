@@ -21,7 +21,14 @@
                 <Pane prefWidth="85"></Pane>
                 <VBox>
                     <Pane prefHeight="27"></Pane>
-                    <GridPane fx:id="board">
+                    <Pane prefWidth="225">
+                        <GridPane fx:id="board">
+                        </GridPane>
+                    </Pane>
+                </VBox>
+                <VBox>
+                    <Pane prefHeight="55"></Pane>
+                    <GridPane fx:id="towers">
                     </GridPane>
                 </VBox>
             </HBox>
