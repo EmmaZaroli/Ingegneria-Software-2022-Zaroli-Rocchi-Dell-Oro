@@ -32,7 +32,7 @@ public class Game extends ModelObservable implements Serializable {
 
     private boolean enoughPlayerOnline;
 
-    private final List<GameEndingListener> gameEndingListeners = new LinkedList<>();
+    private transient final List<GameEndingListener> gameEndingListeners = new LinkedList<>();
 
     public Game(Player[] players, Table table, GameParameters parameters) {
         this.players = players;
