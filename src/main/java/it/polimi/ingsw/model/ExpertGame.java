@@ -86,4 +86,8 @@ public class ExpertGame extends Game {
         player.decreaseCoins(n);
         notifyPlayerCoins(player.getCoins());
     }
+
+    public void ExpertParameters(ExpertGameParameters parameters){
+        notifyExpertParameters(parameters);
+    }
 }

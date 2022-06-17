@@ -413,13 +413,12 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose Island index: ");
-                try {
-                    int islandIndex = Integer.parseInt(readLine());
-                    parameters[1] = getIslands().get(islandIndex).getIsland().getUuid();
-                    valid = true;
-                } catch (NumberFormatException e) {
-                    error("invalid Island index selected!");
-                }
+                    int islandIndex = cliParsen.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
+                    if(islandIndex!=13 && islandIndex!=12) {
+                        parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
+                        valid = true;
+                    }
+                    if(!valid) error("invalid Island index selected!");
             }
             validSend = sendCharacterCard(index,parameters);
             if(!validSend) error("Some parameters are incorrect!");

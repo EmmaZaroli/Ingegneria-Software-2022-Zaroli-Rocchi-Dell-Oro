@@ -8,7 +8,6 @@ import it.polimi.ingsw.dtos.*;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Endpoint;
@@ -186,7 +185,6 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    //TODO maybe create another message for this
     private void handleMessage(MoveStudentMessage message){
         if(message.getNickname().equals(getMe().getNickname()))
             askAction();
@@ -405,13 +403,13 @@ public abstract class View implements MessageListener, UserInterface {
                 ViewCharacterCard characterCard = characterCards.get(i);
                 characterCard = characterCard.withPrice(newCharacterCard.getPrice());
                 characterCard = characterCard.withStudents(newCharacterCard.getStudents());
+                characterCard = characterCard.withHasCoin(newCharacterCard.hasCoin());
                 characterCard = characterCard.withIsActive(true);
-                characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
+                characterCards.remove(i);
                 characterCards.add(i, characterCard);
             }
         }
         checkCharacterCardActivable();
-        //TODO call print?
         print();
     }
 
