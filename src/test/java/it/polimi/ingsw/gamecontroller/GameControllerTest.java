@@ -23,10 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 class GameControllerTest extends TestCase {
 
@@ -76,7 +73,7 @@ class GameControllerTest extends TestCase {
         Assertions.assertEquals(1, player2.getAssistantDeck().size());
         gameController.onMessageReceived(sameCardMessage);
         Assertions.assertEquals(0, player2.getAssistantDeck().size());
-        Assertions.assertEquals(cardPlayed1, player2.getDiscardPileHead());
+        Assertions.assertEquals(Optional.of(cardPlayed1), player2.getDiscardPileHead());
         Assertions.assertEquals(0, game.getCurrentPlayer());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
 
