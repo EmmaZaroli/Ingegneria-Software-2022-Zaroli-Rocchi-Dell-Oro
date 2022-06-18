@@ -146,6 +146,7 @@ public class GameHandlerBuilder {
     }
 
     private void notifyGameReady() {
-        gameStartingListeners.forEach(GameReadyListener::onGameReady);
+        List<GameReadyListener> temporaryCopy = new LinkedList<>(gameStartingListeners);
+        temporaryCopy.forEach(GameReadyListener::onGameReady);
     }
 }

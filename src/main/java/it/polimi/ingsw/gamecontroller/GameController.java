@@ -173,16 +173,20 @@ public class GameController implements DisconnectionListener, MessageListener {
     }
 
     private void playerHasEndedPlanning() {
-        this.game.setPlayedCount(game.getPlayedCount() + 1);
-        if (!this.isRoundComplete()) {
-            changePlayer();
-        } else {
-            this.game.setPlayedCount(0);
-            this.game.setGamePhase(pickNextPhase());
-            changePlayer();
+        do{
+            this.game.setPlayedCount(game.getPlayedCount() + 1);
+            if (!this.isRoundComplete()) {
+                changePlayer();
+            } else {
+                this.game.setPlayedCount(0);
+                this.game.setGamePhase(pickNextPhase());
+                changePlayer();
+            }
         }
+        while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
 
-        DataDumper.getInstance().saveGame(game);
+
+        //DataDumper.getInstance().saveGame(game);
     }
 
     private void moveStudent(Message message) {
@@ -235,7 +239,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);
@@ -320,7 +324,9 @@ public class GameController implements DisconnectionListener, MessageListener {
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
         for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
-            if (game.getPlayers()[i].getDiscardPileHead().equals(assistant)) return false;
+            if(game.getPlayers()[i].getDiscardPileHead().isPresent())
+                if (game.getPlayers()[i].getDiscardPileHead().get().equals(assistant))
+                    return false;
         }
         return true;
     }
@@ -351,14 +357,17 @@ public class GameController implements DisconnectionListener, MessageListener {
     protected void changePlayer() {
         int nextPlayer = pickNextPlayer();
         game.changePlayer(nextPlayer);
-
-        if (!game.getPlayer(game.getCurrentPlayer()).isOnline())
-            changePlayer();
     }
 
     private class PlayerOrderComparator implements Comparator<Player> {
         @Override
         public int compare(Player o1, Player o2) {
+            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isEmpty())
+                return 0;
+            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isPresent())
+                return 1;
+            if(o1.getDiscardPileHead().isPresent() && o2.getDiscardPileHead().isEmpty())
+                return -1;
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
                 for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
                     if(game.getPlayer(i).getNickname().equals(o1.getNickname()))
@@ -367,7 +376,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         return 1;
                 }
             }
-            return o1.getDiscardPileHead().value() - o2.getDiscardPileHead().value();
+            return o1.getDiscardPileHead().get().value() - o2.getDiscardPileHead().get().value();
         }
     }
 
@@ -394,15 +403,19 @@ public class GameController implements DisconnectionListener, MessageListener {
     protected void playerHasEndedAction() {
         this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
-            this.game.setPlayedCount(game.getPlayedCount() + 1);
-            if (!this.isRoundComplete()) {
-                this.game.setGamePhase(ACTION_MOVE_STUDENTS);
-            } else {
-                endOfRound();
+            do{
+                this.game.setPlayedCount(game.getPlayedCount() + 1);
+                if (!this.isRoundComplete()) {
+                    this.game.setGamePhase(ACTION_MOVE_STUDENTS);
+                } else {
+                    endOfRound();
+                }
+                changePlayer();
             }
-            changePlayer();
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
         }
-        DataDumper.getInstance().saveGame(game);
+        //TODO move this
+        //DataDumper.getInstance().saveGame(game);
     }
 
     public void endOfRound(){
@@ -441,7 +454,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             game.callWin(whoIsWinning());
         }
 
-        DataDumper.getInstance().removeGameFromMemory(game.getGameId());
+        //DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     public void checkRoundGameOver() {
@@ -455,7 +468,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 game.callWin(whoIsWinning());
         }
 
-        DataDumper.getInstance().removeGameFromMemory(game.getGameId());
+        //DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     private List<String> whoIsWinning() {

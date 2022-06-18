@@ -19,10 +19,10 @@ public class PrinterAssistantCards {
         out.println();
         space(15);
         for (int i = 0; i < players.size(); i++) {
-            if(players.get(i).getDiscardPileHead()!=null) {
-                int value = players.get(i).getDiscardPileHead().value();
-                if(value!=10)out.print("|" +value + "   " + players.get(i).getDiscardPileHead().motherNatureMovement() + "|");
-                else out.print("|" +value + "  " + players.get(i).getDiscardPileHead().motherNatureMovement() + "|");
+            if(players.get(i).getDiscardPileHead().isPresent()) {
+                int value = players.get(i).getDiscardPileHead().get().value();
+                if(value!=10)out.print("|" +value + "   " + players.get(i).getDiscardPileHead().get().motherNatureMovement() + "|");
+                else out.print("|" +value + "  " + players.get(i).getDiscardPileHead().get().motherNatureMovement() + "|");
             }
             else out.print("|     |");
             space();

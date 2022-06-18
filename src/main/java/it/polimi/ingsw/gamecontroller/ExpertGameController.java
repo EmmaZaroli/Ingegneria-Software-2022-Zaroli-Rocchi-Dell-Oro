@@ -210,20 +210,25 @@ public class ExpertGameController extends GameController {
 
     @Override
     protected void playerHasEndedAction() {
-        this.game.setGamePhase(super.pickNextPhase());
+        this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
-            this.game.setPlayedCount(game.getPlayedCount() + 1);
-            reverseEffect();
-            getGameParameters().setAlreadyActivateCharacterCard(false);
-            getGame().ExpertParameters(getGameParameters());
-            if (!super.isRoundComplete()) {
-                this.game.setGamePhase(ACTION_MOVE_STUDENTS);
-            } else {
-                endOfRound();
+            do{
+                this.game.setPlayedCount(game.getPlayedCount() + 1);
+                reverseEffect();
+                getGameParameters().setAlreadyActivateCharacterCard(false);
+                //TODO is there a way to put the next line in the model?
+                getGame().notifyExpertParameters(getGameParameters());
+                if (!super.isRoundComplete()) {
+                    this.game.setGamePhase(ACTION_MOVE_STUDENTS);
+                } else {
+                    endOfRound();
+                }
+                super.changePlayer();
             }
-            super.changePlayer();
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
         }
-        DataDumper.getInstance().saveGame(game);
+        //TODO move this
+        //DataDumper.getInstance().saveGame(game);
     }
 
     public ExpertGameParameters getGameParameters() {
@@ -259,7 +264,7 @@ public class ExpertGameController extends GameController {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);

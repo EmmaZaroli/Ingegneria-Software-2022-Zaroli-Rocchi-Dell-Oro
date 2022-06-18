@@ -120,8 +120,9 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
                 logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
             }
         }
-        setLoginPhase(LoginPhase.WAITING_FOR_GAMEREADY);
-        checkGameReady();
+        if(!gameReady)
+            setLoginPhase(LoginPhase.WAITING_FOR_GAMEREADY);
+        //checkGameReady();
     }
 
     /*
@@ -180,6 +181,7 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
 
     private void finish() {
         endpoint.removeDisconnectionListener(this);
+        endpoint.removeMessageListener(this);
         server.removeGameStartingListener(this);
         server.removeUserHandler(this);
     }
@@ -187,21 +189,6 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
     @Override
     public void onGameReady() {
         this.gameReady = true;
-    }
-
-    private void checkGameReady(){
-        if(gameReady){
-            switch (loginPhase){
-                case WAITING_FOR_GAMEREADY -> {
-                    gameReady();
-                }
-                case WAITING_FOR_NICKNAME, END, WAITING_FOR_GAMETYPE -> {
-                }
-            }
-        }
-    }
-
-    private void gameReady(){
         finish();
         setLoginPhase(LoginPhase.END);
     }

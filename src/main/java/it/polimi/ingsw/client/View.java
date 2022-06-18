@@ -235,6 +235,15 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(ChangedPhaseMessage message) {
+        if(currentPhase == GamePhase.ACTION_END
+                && message.getNewPhase() == GamePhase.PLANNING){
+            me = me.withIsFromActualTurn(false);
+            for(int i = 0; i < opponents.size(); i++){
+                PlayerInfo opponent = opponents.get(i).withIsFromActualTurn(false);
+                opponents.remove(i);
+                opponents.add(i, opponent);
+            }
+        }
         currentPhase = message.getNewPhase();
         print();
 
@@ -280,15 +289,17 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(AssistantPlayedMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
-            this.me = this.me.with(message.getAssistantCard());
+            this.me = this.me.with(Optional.of(message.getAssistantCard()));
             this.me = this.me.with(me.getDeck().remove(message.getAssistantCard()));
+            this.me = this.me.withIsFromActualTurn(true);
         } else {
             Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
             if (opponentIndex.isPresent()) {
                 PlayerInfo opponent = opponents.get(opponentIndex.get());
                 opponents.remove((int)opponentIndex.get());
-                opponent = opponent.with(message.getAssistantCard());
+                opponent = opponent.with(Optional.of(message.getAssistantCard()));
                 opponent = opponent.with(opponent.getDeck().remove(message.getAssistantCard()));
+                opponent = opponent.withIsFromActualTurn(true);
                 opponents.add(opponentIndex.get(), opponent);
             }
         }
@@ -503,7 +514,7 @@ public abstract class View implements MessageListener, UserInterface {
 
     protected final boolean sendMotherNatureSteps(int steps) {
         if(steps<=0) return false;
-        if ((steps > getMe().getDiscardPileHead().motherNatureMovement() + expertParameters.getMotherNatureExtraMovements()) && !isExpertGame)
+        if ((steps > getMe().getDiscardPileHead().get().motherNatureMovement() + expertParameters.getMotherNatureExtraMovements()) && !isExpertGame)
             return false;
 
         Message message = new MoveMotherNatureMessage(me.getNickname(), steps);
@@ -516,7 +527,7 @@ public abstract class View implements MessageListener, UserInterface {
             return false;
         }
         for(PlayerInfo opponent : getOpponents()){
-            if(opponent.getDiscardPileHead()!=null && opponent.getDiscardPileHead().value() == getMe().getDeck().get(cardIndex).value() && getMe().getDeck().size()!=1)
+            if(opponent.getDiscardPileHead().isPresent() && opponent.isFromActualTurn() && opponent.getDiscardPileHead().get().value() == getMe().getDeck().get(cardIndex).value() && getMe().getDeck().size()!=1)
                 return false;
         }
         AssistantCard assistantCard = me.getDeck().get(cardIndex);
