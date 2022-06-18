@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.client.cli.Cli;
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.CloudTileDto;
@@ -18,7 +17,6 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,7 +64,7 @@ class ViewTest{
         Player player2 = new Player("Player2", Wizzard.GREEN, Tower.WHITE, 2);
         Player[] players = {player1, player2};
         Game game = new Game(players, new Table(PlayersNumber.TWO), new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
-        GameStartingMessage message = new GameStartingMessage(nickname, MessageType.GAME_STARTING, game);
+        GameMessage message = new GameMessage(nickname, MessageType.GAME_STARTING, game);
         view.onMessageReceived(message);
         Assertions.assertEquals(1, view.getOpponents().size());
         Assertions.assertEquals(0, view.getOpponentIndex("Player2").get());

@@ -11,11 +11,9 @@ import it.polimi.ingsw.network.DisconnectionListener;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageListener;
 import it.polimi.ingsw.network.MessageType;
-import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
-import it.polimi.ingsw.network.messages.CloudMessage;
-import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
-import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.persistency.DataDumper;
+import it.polimi.ingsw.persistency.GameNotFoundException;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -76,40 +74,42 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     @Override
     public void onMessageReceived(Message message) {
-        try {
-            checkMessage(message);
-            switch (game.getGamePhase()) {
-                case PLANNING:
-                    planning(message);
-                    break;
-                case ACTION_MOVE_STUDENTS:
-                    moveStudent(message);
-                    break;
-                case ACTION_MOVE_MOTHER_NATURE:
-                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                        tryMoveMotherNature((MoveMotherNatureMessage) message);
-                    } else  logger.log(Level.WARNING,"Illegal Action");;
-                    break;
-                case ACTION_CHOOSE_CLOUD:
-                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
-                        try {
-                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                            logger.log(Level.WARNING,"",e);
-                        }
-                    } else  logger.log(Level.WARNING,"Illegal Action");
-                    break;
-                case ACTION_END:
-                    //should not go here, the player doesn't do anything in this phase
-                    logger.log(Level.WARNING,"Illegal Action");
-                    break;
+        synchronized (game){
+            try {
+                checkMessage(message);
+                switch (game.getGamePhase()) {
+                    case PLANNING:
+                        planning(message);
+                        break;
+                    case ACTION_MOVE_STUDENTS:
+                        moveStudent(message);
+                        break;
+                    case ACTION_MOVE_MOTHER_NATURE:
+                        if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                            tryMoveMotherNature((MoveMotherNatureMessage) message);
+                        } else  logger.log(Level.WARNING,"Illegal Action");;
+                        break;
+                    case ACTION_CHOOSE_CLOUD:
+                        if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                            try {
+                                pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                            } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                                logger.log(Level.WARNING,"",e);
+                            }
+                        } else  logger.log(Level.WARNING,"Illegal Action");
+                        break;
+                    case ACTION_END:
+                        //should not go here, the player doesn't do anything in this phase
+                        logger.log(Level.WARNING,"Illegal Action");
+                        break;
 
-                case GAME_OVER:
-                    //TODO do we want to throw an exception or just ignore it?
-                    break;
+                    case GAME_OVER:
+                        //TODO do we want to throw an exception or just ignore it?
+                        break;
+                }
+            } catch (WrongPlayerException e) {
+                logger.log(Level.WARNING,"",e);
             }
-        } catch (WrongPlayerException e) {
-            logger.log(Level.WARNING,"",e);
         }
 
     }
@@ -509,8 +509,22 @@ public class GameController implements DisconnectionListener, MessageListener {
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+
+            //restore last saved state
+            try {
+                Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
+                this.game = savedGame;
+                for (VirtualView view : virtualViews)
+                    view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+
+            } catch (GameNotFoundException e) {
+                //TODO handle exception
+                e.printStackTrace();
+            }
+
             if (game.howManyPlayersOnline() < 2 && game.isEnoughPlayerOnline())
                 notEnoughOnline();
+
         }
     }
 

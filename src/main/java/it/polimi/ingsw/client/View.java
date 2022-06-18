@@ -149,7 +149,7 @@ public abstract class View implements MessageListener, UserInterface {
     public void onMessageReceived(Message message) {
         if (message instanceof NicknameResponseMessage nicknameResponseMessage) handleMessage(nicknameResponseMessage);
         if (message instanceof GametypeResponseMessage gametypeResponseMessage) handleMessage(gametypeResponseMessage);
-        if (message instanceof GameStartingMessage gameStartingMessage) handleMessage(gameStartingMessage);
+        if (message instanceof GameMessage gameMessage) handleMessage(gameMessage);
         if (message instanceof ChangedPhaseMessage changedPhaseMessage) handleMessage(changedPhaseMessage);
         if (message instanceof ChangedPlayerMessage changedPlayerMessage) handleMessage(changedPlayerMessage);
         if (message instanceof AssistantPlayedMessage assistantPlayedMessage) handleMessage(assistantPlayedMessage);
@@ -208,9 +208,10 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    private void handleMessage(GameStartingMessage message) {
+    private void handleMessage(GameMessage message) {
             GameDto game = message.getGame();
-            this.printGameStarting();
+            if(message.getType() == MessageType.GAME_STARTING)
+                this.printGameStarting();
             this.isExpertGame = game.isExpert();
             if(this.isExpertGame)
                 this.expertParameters = new ExpertParameters(game.getExpertParameters());
@@ -229,8 +230,7 @@ public abstract class View implements MessageListener, UserInterface {
             this.currentPlayer = game.getCurrentPlayer();
             print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
-                //TODO may not be planning phase
-                this.askAssistantCard(getMe().getDeck());
+                askAction();
             }
     }
 
@@ -281,6 +281,7 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void askAction() {
+        if (currentPhase.equals(GamePhase.PLANNING)) askAssistantCard(getMe().getDeck());
         if (currentPhase.equals(GamePhase.ACTION_MOVE_STUDENTS)) askStudents();
         if (currentPhase.equals(GamePhase.ACTION_MOVE_MOTHER_NATURE)) askMotherNatureSteps();
         if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) askCloud();
