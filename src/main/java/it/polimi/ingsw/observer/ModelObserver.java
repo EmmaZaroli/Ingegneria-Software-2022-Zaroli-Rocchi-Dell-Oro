@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * generic interface, supports the update method

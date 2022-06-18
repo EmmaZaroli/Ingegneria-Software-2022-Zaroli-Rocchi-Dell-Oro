@@ -239,7 +239,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);
@@ -324,8 +324,8 @@ public class GameController implements DisconnectionListener, MessageListener {
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
         for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
-            if(game.getPlayers()[i].getDiscardPileHead() != null)
-                if (game.getPlayers()[i].getDiscardPileHead().equals(assistant))
+            if(game.getPlayers()[i].getDiscardPileHead().isPresent())
+                if (game.getPlayers()[i].getDiscardPileHead().get().equals(assistant))
                     return false;
         }
         return true;
@@ -362,11 +362,11 @@ public class GameController implements DisconnectionListener, MessageListener {
     private class PlayerOrderComparator implements Comparator<Player> {
         @Override
         public int compare(Player o1, Player o2) {
-            if(o1.getDiscardPileHead() == null && o2.getDiscardPileHead() == null)
+            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isEmpty())
                 return 0;
-            if(o1.getDiscardPileHead() == null && o2.getDiscardPileHead() != null)
+            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isPresent())
                 return 1;
-            if(o1.getDiscardPileHead() != null && o2.getDiscardPileHead() == null)
+            if(o1.getDiscardPileHead().isPresent() && o2.getDiscardPileHead().isEmpty())
                 return -1;
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
                 for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
@@ -376,7 +376,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         return 1;
                 }
             }
-            return o1.getDiscardPileHead().value() - o2.getDiscardPileHead().value();
+            return o1.getDiscardPileHead().get().value() - o2.getDiscardPileHead().get().value();
         }
     }
 

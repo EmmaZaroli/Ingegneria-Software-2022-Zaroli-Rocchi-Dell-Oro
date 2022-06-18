@@ -9,6 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Player
@@ -21,7 +22,7 @@ public class Player extends ModelObservable implements Serializable {
     private final Wizzard wizzard;
     private final SchoolBoard schoolBoard;
     private final LinkedList<AssistantCard> assistantDeck;
-    private AssistantCard discardPileHead;
+    private Optional<AssistantCard> discardPileHead;
     private boolean isPlayerTurn;
     private boolean isOnline;
 
@@ -48,7 +49,7 @@ public class Player extends ModelObservable implements Serializable {
     public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers, boolean isOnline) {
         this.nickname = nickname;
         this.wizzard = wizzard;
-        this.discardPileHead = null;
+        this.discardPileHead = Optional.empty();
 
         this.isPlayerTurn = isPlayerTurn;
         this.schoolBoard = new SchoolBoard(numberOfPlayers == 2 ? 8 : 6, tower);
@@ -92,7 +93,7 @@ public class Player extends ModelObservable implements Serializable {
      *
      * @return assistant card
      */
-    public AssistantCard getDiscardPileHead() {
+    public Optional<AssistantCard> getDiscardPileHead() {
         return this.discardPileHead;
     }
 
@@ -154,10 +155,9 @@ public class Player extends ModelObservable implements Serializable {
      * @param a the assistant card
      */
     public void playAssistant(AssistantCard a) {
-        this.discardPileHead = a;
+        this.discardPileHead = Optional.ofNullable(a);
         notifyAssistantCard(a);
         removeAssistant(a);
-
     }
 
     public void removeAssistant(AssistantCard a){

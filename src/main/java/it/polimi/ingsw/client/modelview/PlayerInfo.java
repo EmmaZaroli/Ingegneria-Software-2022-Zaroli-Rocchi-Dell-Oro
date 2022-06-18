@@ -7,12 +7,14 @@ import it.polimi.ingsw.model.enums.Wizzard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PlayerInfo {
     private String nickname;
     private Wizzard wizzard;
     private SchoolBoardDto schoolBoard;
-    private AssistantCard discardPileHead;
+    private Optional<AssistantCard> discardPileHead;
+    private boolean isFromActualTurn = false;
     private int coins;
     private List<AssistantCard> deck = new ArrayList<>();
     private boolean isOnline;
@@ -27,13 +29,13 @@ public class PlayerInfo {
         this.nickname = origin.getNickname();
         this.wizzard = origin.getWizzard();
         this.schoolBoard = origin.getSchoolBoard();
-        this.discardPileHead = origin.getDiscardPileHead();
+        this.discardPileHead = Optional.ofNullable(origin.getDiscardPileHead());
         this.deck = origin.getDeck();
         this.isOnline = origin.isOnline();
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, Wizzard wizzard, SchoolBoardDto schoolBoard, AssistantCard discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline) {
+    private PlayerInfo(String nickname, Wizzard wizzard, SchoolBoardDto schoolBoard, Optional<AssistantCard> discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline, boolean isFromActualTurn) {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.schoolBoard = schoolBoard;
@@ -41,6 +43,7 @@ public class PlayerInfo {
         this.deck = deck;
         this.coins = coins;
         this.isOnline = isOnline;
+        this.isFromActualTurn = isFromActualTurn;
     }
 
     public PlayerInfo with(boolean online) {
@@ -61,7 +64,7 @@ public class PlayerInfo {
         return retVal;
     }
 
-    public PlayerInfo with(AssistantCard assistantCard) {
+    public PlayerInfo with(Optional<AssistantCard> assistantCard) {
         PlayerInfo retVal = this.deepClone();
         retVal.discardPileHead = assistantCard;
         return retVal;
@@ -85,6 +88,12 @@ public class PlayerInfo {
         return retVal;
     }
 
+    public PlayerInfo withIsFromActualTurn(boolean isFromActualTurn) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.isFromActualTurn = isFromActualTurn;
+        return retVal;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -97,7 +106,7 @@ public class PlayerInfo {
         return schoolBoard;
     }
 
-    public AssistantCard getDiscardPileHead() {
+    public Optional<AssistantCard> getDiscardPileHead() {
         return discardPileHead;
     }
 
@@ -113,8 +122,12 @@ public class PlayerInfo {
         return isOnline;
     }
 
+    public boolean isFromActualTurn() {
+        return isFromActualTurn;
+    }
+
     public PlayerInfo deepClone() {
         //TODO dtos if we have time
-        return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline);
+        return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.isFromActualTurn);
     }
 }
