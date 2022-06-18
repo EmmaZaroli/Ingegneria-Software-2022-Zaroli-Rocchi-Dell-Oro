@@ -57,6 +57,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             }
             tableController.table.addObserver(virtualView);
         }
+        DataDumper.getInstance().saveGame(game);
     }
 
     private void checkMessage(Message message) throws WrongPlayerException {
@@ -184,9 +185,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             }
         }
         while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
-
-
-        //DataDumper.getInstance().saveGame(game);
+        DataDumper.getInstance().saveGame(game);
     }
 
     private void moveStudent(Message message) {
@@ -413,9 +412,8 @@ public class GameController implements DisconnectionListener, MessageListener {
                 changePlayer();
             }
             while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
+            DataDumper.getInstance().saveGame(game);
         }
-        //TODO move this
-        //DataDumper.getInstance().saveGame(game);
     }
 
     public void endOfRound(){
@@ -454,7 +452,6 @@ public class GameController implements DisconnectionListener, MessageListener {
             game.callWin(whoIsWinning());
         }
 
-        //DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     public void checkRoundGameOver() {
@@ -468,7 +465,6 @@ public class GameController implements DisconnectionListener, MessageListener {
                 game.callWin(whoIsWinning());
         }
 
-        //DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     private List<String> whoIsWinning() {

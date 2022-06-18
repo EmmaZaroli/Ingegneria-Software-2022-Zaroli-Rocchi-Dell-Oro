@@ -226,9 +226,8 @@ public class ExpertGameController extends GameController {
                 super.changePlayer();
             }
             while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
+            DataDumper.getInstance().saveGame(game);
         }
-        //TODO move this
-        //DataDumper.getInstance().saveGame(game);
     }
 
     public ExpertGameParameters getGameParameters() {
