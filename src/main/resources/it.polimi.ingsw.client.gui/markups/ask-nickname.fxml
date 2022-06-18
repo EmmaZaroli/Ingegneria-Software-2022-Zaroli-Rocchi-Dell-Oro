@@ -28,7 +28,8 @@
                         GridPane.columnIndex="1"
                         GridPane.rowIndex="0"
                         fx:id="nickname"
-                        style="-fx-margin: 50 00 50 00;"/>
+                        style="-fx-margin: 50 00 50 00;"
+                        text="Marco"/>
                 <Button
                         GridPane.rowIndex="3"
                         GridPane.columnIndex="0"

@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class SchoolBoard extends Pane {
     private PlayerInfo player;
@@ -26,6 +27,8 @@ public class SchoolBoard extends Pane {
     private GridPane board;
     @FXML
     private GridPane towers;
+    @FXML
+    private GridPane entranceGrid;
 
     public void setPlayer(PlayerInfo opponent) {
         this.name.setText(opponent.getNickname());
@@ -33,10 +36,39 @@ public class SchoolBoard extends Pane {
         this.updateDinningRoom(opponent.getBoard().getDiningRoom());
         this.updateEntrance(opponent.getBoard().getEntrance());
         this.updateTowers(opponent.getBoard().getTowers(), opponent.getBoard().getTowerColor());
+        this.updateProfessors(opponent.getBoard().getProfessorTable());
+    }
+
+    private void updateProfessors(Set<PawnColor> professors) {
+        //TODO
     }
 
     private void updateEntrance(List<PawnColor> entrance) {
-        //TODO
+        entranceGrid.setHgap(6);
+        entranceGrid.setVgap(13);
+
+        int row = 0;
+        int column = 0;
+
+        for (int i = 0; i < entrance.size(); i++) {
+            Image image = switch (entrance.get(i)) {
+                case RED -> new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
+                case BLUE -> new Image("/it.polimi.ingsw.client.gui/assets/student_blue.png");
+                case PINK -> new Image("/it.polimi.ingsw.client.gui/assets/student_pink.png");
+                case GREEN -> new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
+                case YELLOW -> new Image("/it.polimi.ingsw.client.gui/assets/student_yellow.png");
+                case NONE -> new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
+            };
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            board.add(imageView, column, row);
+            column++;
+            if (column % 2 == 0) {
+                row++;
+                column = 0;
+            }
+        }
     }
 
     private void updateTowers(int count, Tower color) {

@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.gui.sceneControllers.SchoolBoard;
+import it.polimi.ingsw.client.gui.sceneControllers.SelectAssistant;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
@@ -12,10 +13,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,8 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Gui extends View implements Initializable {
-    private static final int SCREEN_WIDTH = 1535;
-    private static final int SCREEN_HEIGHT = 840;
+    public static final int SCREEN_WIDTH = 1535;
+    public static final int SCREEN_HEIGHT = 840;
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -40,6 +39,8 @@ public class Gui extends View implements Initializable {
     private SchoolBoard opponent1;
     @FXML
     private SchoolBoard opponent2;
+    @FXML
+    private GridPane assistants;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -139,7 +140,18 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askAssistantCard(List<AssistantCard> deck) {
-        //TODO
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Dialog dialog = new SelectAssistant(stage, getDeck(), new AssistantCardEventHandler() {
+                    @Override
+                    public void onSelect(int index) {
+                        sendAssistantCard(index);
+                    }
+                });
+                dialog.showAndWait();
+            }
+        });
     }
 
     @Override
@@ -189,12 +201,17 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void print() {
-        if (opponent1 != null) {
-            opponent1.setPlayer(getOpponents().get(0));
-        }
-        if (opponent2 != null && getOpponents().size() > 1) {
-            opponent2.setPlayer(getOpponents().get(1));
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (opponent1 != null) {
+                    opponent1.setPlayer(getOpponents().get(0));
+                }
+                if (opponent2 != null && getOpponents().size() > 1) {
+                    opponent2.setPlayer(getOpponents().get(1));
+                }
+            }
+        });
     }
 
     @Override

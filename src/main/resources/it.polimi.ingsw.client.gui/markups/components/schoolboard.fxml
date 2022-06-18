@@ -18,7 +18,10 @@
                         backgroundLoading="true"/>
             </ImageView>
             <HBox>
-                <Pane prefWidth="85"></Pane>
+                <Pane prefWidth="85">
+                    <GridPane fx:id="entranceGrid">
+                    </GridPane>
+                </Pane>
                 <VBox>
                     <Pane prefHeight="27"></Pane>
                     <Pane prefWidth="225">

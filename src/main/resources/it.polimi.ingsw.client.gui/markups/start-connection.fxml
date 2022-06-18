@@ -26,6 +26,7 @@
                         GridPane.columnIndex="1"
                         GridPane.rowIndex="0"
                         fx:id="ip"
+                        text="127.0.0.1"
                         style="-fx-margin: 50 00 50 00;"/>
                 <Label
                         GridPane.columnIndex="0"
@@ -36,7 +37,8 @@
                 <TextField
                         fx:id="port"
                         GridPane.columnIndex="1"
-                        GridPane.rowIndex="1"/>
+                        GridPane.rowIndex="1"
+                        text="24000"/>
                 <Label GridPane.rowIndex="2"/>
                 <Button
                         GridPane.rowIndex="3"
