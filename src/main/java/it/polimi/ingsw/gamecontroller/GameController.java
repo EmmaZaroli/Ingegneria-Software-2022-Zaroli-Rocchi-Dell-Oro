@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import static it.polimi.ingsw.model.enums.GamePhase.*;
 
 
-//TODO add observables/observers
 public class GameController implements DisconnectionListener, MessageListener {
     protected Game game;
     protected TableController tableController;
@@ -260,7 +259,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             }
         }
 
-        //if two player have se same max influence, no tower is build
+        //if two player have same max influence, no tower is build
         if (isInfluenceDraw(maxInfluencePlayer, maxInfluence))
             return;
 

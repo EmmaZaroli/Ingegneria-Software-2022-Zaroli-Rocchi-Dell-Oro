@@ -204,7 +204,7 @@ public class Cli extends View {
         boolean valid = false;
         while (!valid) {
             out.print("Mother Nature steps");
-            if (isExpertGame()) out.print(" or choose character card to activate");
+            if (isExpertGame() && !areCharacterActive()) out.print(" or choose character card to activate");
             out.print(": ");
 
             String input = readLine();
@@ -217,7 +217,8 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                valid = askCharacterCardParameters(characterCard.get());
+                if(canActivateCharacter(characterCard.get()))
+                    valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid number of steps or invalid character card");
             else if(!valid) error("invalid number of steps");
@@ -228,7 +229,7 @@ public class Cli extends View {
         boolean valid = false;
         while (!valid) {
             out.print("Choose Cloud");
-            if (isExpertGame()) out.print(" or choose character card to activate");
+            if (isExpertGame() && !areCharacterActive()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
             Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
@@ -240,7 +241,8 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                valid = askCharacterCardParameters(characterCard.get());
+                if(canActivateCharacter(characterCard.get()))
+                    valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid cloud or invalid character card");
             else if(!valid) error("invalid cloud");
@@ -256,7 +258,7 @@ public class Cli extends View {
         int destination = 0;
         while (!validObject) {
             out.print("Choose student to move");
-            if (isExpertGame()) out.print(" or choose character card to activate");
+            if (isExpertGame() && !areCharacterActive()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
             PawnColor student = CliParsen.checkIfStudent(input);
@@ -278,8 +280,7 @@ public class Cli extends View {
             // the input was not a color, checking if it's a character card
             else {
                 Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
-                if (!characterCard.isEmpty()) {
-                    //TODO ask parameters
+                if (!characterCard.isEmpty() && canActivateCharacter(characterCard.get())) {
                     validObject = askCharacterCardParameters(characterCard.get());
                 }
                 if (!validObject && isExpertGame()) error("invalid student or invalid character card");
@@ -303,7 +304,10 @@ public class Cli extends View {
         changePhase(getCurrentPhase());
         printCloud();
         printIslands();
-        if (isExpertGame()) printCharacterCards();
+        if (isExpertGame()){
+            printTableCoins();
+            printCharacterCards();
+        }
         printSchoolBoard();
         updateCurrentPlayersTurn(getCurrentPlayer());
     }
@@ -330,6 +334,11 @@ public class Cli extends View {
 
     private void printCharacterCards() {
         characterCardPrinter.print(getCharacterCards());
+    }
+
+    private void printTableCoins(){
+        space(56);
+        out.println("COINS ON TABLE: "+getCoins()+" "+COIN);
     }
 
     private void printCloud() {
@@ -404,13 +413,12 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose Island index: ");
-                try {
-                    int islandIndex = Integer.parseInt(readLine());
-                    parameters[1] = getIslands().get(islandIndex).getIsland().getUuid();
-                    valid = true;
-                } catch (NumberFormatException e) {
-                    error("invalid Island index selected!");
-                }
+                    int islandIndex = cliParsen.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
+                    if(islandIndex!=13 && islandIndex!=12) {
+                        parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
+                        valid = true;
+                    }
+                    if(!valid) error("invalid Island index selected!");
             }
             validSend = sendCharacterCard(index,parameters);
             if(!validSend) error("Some parameters are incorrect!");

@@ -15,12 +15,15 @@ import it.polimi.ingsw.utils.RandomHelper;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
 import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
 
 public class ExpertGameController extends GameController {
     private Effect[] effects;
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public ExpertGameController(ExpertGame game, ExpertTableController tableController, VirtualView[] virtualViews) {
         super(game, tableController, virtualViews);
@@ -66,13 +69,13 @@ public class ExpertGameController extends GameController {
             CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
             Optional<Integer> cardIndex = isCardOnTable(card);
             if (cardIndex.isEmpty()) {
-                game.throwException(new IllegalCharacterException());
+                logger.log(Level.WARNING,"Character Card not found");
             }
             int index = cardIndex.get();
             if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message, index)) {
                 activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
             } else {
-                //TODO reply with error or do nothing?
+                logger.log(Level.WARNING,"Incorrect Character Card parameters");
             }
         } else {
             super.onMessageReceived(message);
@@ -212,8 +215,7 @@ public class ExpertGameController extends GameController {
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             reverseEffect();
             getGameParameters().setAlreadyActivateCharacterCard(false);
-            //TODO is there a way to put the next line in the model?
-            getGame().notifyExpertParameters(getGameParameters());
+            getGame().ExpertParameters(getGameParameters());
             if (!super.isRoundComplete()) {
                 this.game.setGamePhase(ACTION_MOVE_STUDENTS);
             } else {

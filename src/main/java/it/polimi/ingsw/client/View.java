@@ -8,7 +8,6 @@ import it.polimi.ingsw.dtos.*;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Endpoint;
@@ -186,7 +185,6 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    //TODO maybe create another message for this
     private void handleMessage(MoveStudentMessage message){
         if(message.getNickname().equals(getMe().getNickname()))
             askAction();
@@ -243,6 +241,18 @@ public abstract class View implements MessageListener, UserInterface {
         if (currentPlayer.equals(getMe().getNickname())
                 && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS))
             askAction();
+        if(currentPhase.equals(GamePhase.ACTION_END)) resetCharacterCards();
+    }
+
+    private void resetCharacterCards(){
+        for(int i=0;i<getCharacterCards().size();i++){
+            if(getCharacterCards().get(i).isActive()){
+                ViewCharacterCard newCard = getCharacterCards().get(i);
+                newCard = newCard.withIsActive(false);
+                characterCards.remove(i);
+                characterCards.add(i,newCard);
+            }
+        }
     }
 
     private void handleMessage(ChangedPlayerMessage message) {
@@ -393,14 +403,13 @@ public abstract class View implements MessageListener, UserInterface {
                 ViewCharacterCard characterCard = characterCards.get(i);
                 characterCard = characterCard.withPrice(newCharacterCard.getPrice());
                 characterCard = characterCard.withStudents(newCharacterCard.getStudents());
-                if(message.getNickname().equals(me.getNickname()))
-                    characterCard = characterCard.withIsActive(true);
-                characterCards.remove(i); //TODO sometimes throws an UnsupportedOperationexception
+                characterCard = characterCard.withHasCoin(newCharacterCard.hasCoin());
+                characterCard = characterCard.withIsActive(true);
+                characterCards.remove(i);
                 characterCards.add(i, characterCard);
             }
         }
         checkCharacterCardActivable();
-        //TODO call print?
         print();
     }
 
@@ -525,15 +534,29 @@ public abstract class View implements MessageListener, UserInterface {
 
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, student);
-        message.setIslandCard(getIslands().get(islandIndex).getIsland());
+        message.setIslandCard(getIslands().get(getMainIsland(islandIndex)).getIsland());
         endpoint.sendMessage(message);
         return true;
+    }
+
+    //TODO check if this works
+    private int getMainIsland(int index){
+        int count=0;
+        int i=0;
+        while(index!=count){
+            if(!getIslands().get(i).isConnectedWithNext())
+                count++;
+            i++;
+        }
+        return i;
     }
 
     protected final boolean sendCloudChoice(int cloudIndex) {
         if (cloudIndex < 0 || cloudIndex >= getClouds().size())
             return false;
         CloudTileDto cloudTile = getClouds().get(cloudIndex);
+        if(cloudTile.getStudents().isEmpty())
+            return false;
         Message message = new CloudMessage(me.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, cloudTile);
         endpoint.sendMessage(message);
         return true;
@@ -568,6 +591,12 @@ public abstract class View implements MessageListener, UserInterface {
             case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(characterCard, parameters);
             default -> true;
         };
+    }
+
+    protected boolean areCharacterActive(){
+        if (expertParameters.isAlreadyActivateCharacterCard())
+            return true;
+        return false;
     }
 
     protected boolean canActivateCharacter(ViewCharacterCard characterCard){
