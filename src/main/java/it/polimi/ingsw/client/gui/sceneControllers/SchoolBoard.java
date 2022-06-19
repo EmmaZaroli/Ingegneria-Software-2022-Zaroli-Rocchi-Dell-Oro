@@ -20,6 +20,9 @@ public class SchoolBoard extends Pane {
     private PlayerInfo player;
 
     @FXML
+    private boolean isExpertGame;
+
+    @FXML
     private Label name;
     @FXML
     private Label coins;
@@ -37,6 +40,10 @@ public class SchoolBoard extends Pane {
         this.updateEntrance(opponent.getBoard().getEntrance());
         this.updateTowers(opponent.getBoard().getTowers(), opponent.getBoard().getTowerColor());
         this.updateProfessors(opponent.getBoard().getProfessorTable());
+    }
+
+    public void setIsExpert(boolean isExpert) {
+        this.isExpertGame = isExpert;
     }
 
     private void updateProfessors(Set<PawnColor> professors) {
@@ -76,8 +83,11 @@ public class SchoolBoard extends Pane {
         towers.setHgap(5);
 
         String imagePath = "/it.polimi.ingsw.client.gui/assets/black_tower.png";
-        //imagePath += color == Tower.BLACK ? "black_tower" : "white_tower";
-        //imagePath += ".png";
+
+        if (color == Tower.WHITE) {
+            imagePath = "/it.polimi.ingsw.client.gui/assets/white_tower.png";
+        }
+
         int row = 0;
         int column = 0;
         for (int i = 0; i < 7; i++) {

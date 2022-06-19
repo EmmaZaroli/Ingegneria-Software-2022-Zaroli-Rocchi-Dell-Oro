@@ -6,8 +6,8 @@
 <fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
 
     <ImageView
-            fitWidth="125"
-            fitHeight="125">
+            fitWidth="150"
+            fitHeight="150">
         <Image
                 url="/it.polimi.ingsw.client.gui/assets/island.png"
                 backgroundLoading="true"

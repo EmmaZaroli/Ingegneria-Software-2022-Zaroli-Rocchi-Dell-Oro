@@ -31,25 +31,23 @@
                             </VBox>
                         </HBox>
                         <!-- Islands -->
-                        <VBox prefHeight="330" style="-fx-padding: 0 0 0 200;">
-                            <HBox>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                            </HBox>
-                            <Pane prefHeight="60"/>
-                            <HBox>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                            </HBox>
-                        </VBox>
+                        <GridPane prefHeight="330" style="-fx-padding: 0 0 0 100;" hgap="12" vgap="-60">
+                            <Island GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="4"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="5"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="5"/>
+                            <Island GridPane.rowIndex="1" GridPane.columnIndex="6"/>
+                            <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
+                                   style="-fx-font-size: 22"
+                                   text="Prova di messaggio da visualizzare all'utente con info su partita ecc..."/>
+                        </GridPane>
                         <!-- Bottom pane -->
                         <HBox>
                             <VBox>
@@ -82,13 +80,7 @@
                             <CharacterCard HBox.hgrow="ALWAYS" visible="${controller.isExpertGame}"/>
                         </HBox>
                         <!-- Deck and coins -->
-                        <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;">
-                            <ImageView>
-                                <Image
-                                        url="/it.polimi.ingsw.client.gui/assets/deck.png"
-                                        backgroundLoading="true"
-                                />
-                            </ImageView>
+                        <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;" visible="${controller.isExpertGame}">
                             <Pane prefWidth="15"/>
                             <HBox style="-fx-padding: 50 0 0 0;">
                                 <VBox HBox.hgrow="ALWAYS">

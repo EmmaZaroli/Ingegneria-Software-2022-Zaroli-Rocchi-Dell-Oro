@@ -15,7 +15,7 @@
                     backgroundLoading="true"
             />
         </ImageView>
-        <GridPane fx:id="students" style="-fx-padding: 20 20 20 2o">
+        <GridPane fx:id="students" style="-fx-padding: 24 24 24 24">
         </GridPane>
     </StackPane>
 </fx:root>

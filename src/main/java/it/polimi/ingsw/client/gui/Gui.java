@@ -208,9 +208,11 @@ public class Gui extends View implements Initializable {
         Platform.runLater(() -> {
             if (opponent1 != null) {
                 opponent1.setPlayer(getOpponents().get(0));
+                opponent1.setIsExpert(this.isExpertGame());
             }
             if (opponent2 != null && getOpponents().size() > 1) {
                 opponent2.setPlayer(getOpponents().get(1));
+                opponent2.setIsExpert(this.isExpertGame());
             }
             if (cloud1 != null) {
                 cloud1.setStudents(getClouds().get(0).getStudents());

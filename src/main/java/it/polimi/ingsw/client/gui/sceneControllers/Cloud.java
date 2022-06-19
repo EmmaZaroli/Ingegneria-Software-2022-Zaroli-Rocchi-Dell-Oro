@@ -30,9 +30,9 @@ public class Cloud extends Pane {
     public void setStudents(List<PawnColor> students) {
         //TODO verify this
         this.students.getChildren().removeAll(this.students.getChildren());
-        
-        this.students.setHgap(12);
-        this.students.setVgap(12);
+
+        this.students.setHgap(8);
+        this.students.setVgap(8);
 
         int row = 0;
         int column = 0;
@@ -49,8 +49,8 @@ public class Cloud extends Pane {
             };
             Image image = new Image(basePath + path);
             ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(40);
-            imageView.setFitWidth(40);
+            imageView.setFitHeight(30);
+            imageView.setFitWidth(30);
             this.students.add(imageView, column, row);
             column++;
             if (column == 2) {
