@@ -172,7 +172,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         return true;
     }
 
-    private void playerHasEndedPlanning() {
+    protected void playerHasEndedPlanning() {
         do{
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             if (!this.isRoundComplete()) {
@@ -322,7 +322,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
         for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
-            if(game.getPlayers()[i].getDiscardPileHead() != null)
+            if(game.getPlayers()[i].getDiscardPileHead() != null && game.getPlayers()[i].isFromActualTurn())
                 if (game.getPlayers()[i].getDiscardPileHead().equals(assistant))
                     return false;
         }
@@ -410,7 +410,9 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
                 changePlayer();
             }
-            while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_END);
+            if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).isOnline())
+                playerHasEndedPlanning();
             DataDumper.getInstance().saveGame(game);
         }
     }
@@ -422,6 +424,9 @@ public class GameController implements DisconnectionListener, MessageListener {
             this.fillClouds();
             this.game.setPlayedCount(0);
             this.game.setGamePhase(PLANNING);
+
+            for(Player player : game.getPlayers())
+                player.setFromActualTurn(false);
 
             List<Player> playersSorted = Arrays.stream(game.getPlayers())
                     .sorted(new PlayerOrderComparator())
@@ -545,6 +550,14 @@ public class GameController implements DisconnectionListener, MessageListener {
     private void restoreLastSavedGame() throws GameNotFoundException {
         Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
         this.game.copyStatusFrom(savedGame);
+        //setting observers
+        for (VirtualView virtualView : virtualViews) {
+            for (Player player : game.getPlayers()) {
+                player.addObserver(virtualView);
+                player.getBoard().addObserver(virtualView);
+            }
+            tableController.table.addObserver(virtualView);
+        }
     }
 
     //called only when, previously a disconnection, there are enough player online, and then there are not

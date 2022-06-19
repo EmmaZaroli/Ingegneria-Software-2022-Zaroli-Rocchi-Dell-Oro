@@ -23,6 +23,7 @@ public class Player extends ModelObservable implements Serializable {
     private final SchoolBoard schoolBoard;
     private final LinkedList<AssistantCard> assistantDeck;
     private AssistantCard discardPileHead;
+    private boolean isFromActualTurn = false;
     private boolean isPlayerTurn;
     private boolean isOnline;
 
@@ -156,6 +157,7 @@ public class Player extends ModelObservable implements Serializable {
      */
     public void playAssistant(AssistantCard a) {
         this.discardPileHead = a;
+        this.isFromActualTurn = true;
         notifyAssistantCard(a);
         removeAssistant(a);
     }
@@ -171,5 +173,13 @@ public class Player extends ModelObservable implements Serializable {
 
     public int getProfessorsCount(){
         return schoolBoard.getProfessorsCount();
+    }
+
+    public boolean isFromActualTurn() {
+        return isFromActualTurn;
+    }
+
+    public void setFromActualTurn(boolean fromActualTurn) {
+        isFromActualTurn = fromActualTurn;
     }
 }
