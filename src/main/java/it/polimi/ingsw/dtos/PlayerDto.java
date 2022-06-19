@@ -19,6 +19,7 @@ public class PlayerDto implements Serializable {
     private final Wizzard wizzard;
     private final SchoolBoardDto schoolBoard;
     private final AssistantCard discardPileHead;
+    private final boolean isFromActualTurn;
     private final ArrayList<AssistantCard> deck;
     private final int coins;
     private final boolean isOnline;
@@ -28,6 +29,7 @@ public class PlayerDto implements Serializable {
         this.wizzard = origin.getWizzard();
         this.schoolBoard = new SchoolBoardDto(origin.getBoard());
         this.discardPileHead = origin.getDiscardPileHead();
+        this.isFromActualTurn = origin.isFromActualTurn();
         this.deck = new ArrayList<>(origin.getAssistantDeck());
         this.isOnline = origin.isOnline();
         this.coins = origin instanceof ExpertPlayer ? ((ExpertPlayer) origin).getCoins() : 0;
@@ -47,6 +49,10 @@ public class PlayerDto implements Serializable {
 
     public AssistantCard getDiscardPileHead() {
         return discardPileHead;
+    }
+
+    public boolean isFromActualTurn() {
+        return isFromActualTurn;
     }
 
     public ArrayList<AssistantCard> getDeck() {
