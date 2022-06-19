@@ -27,7 +27,7 @@ public class PlayerDto implements Serializable {
         this.nickname = origin.getNickname();
         this.wizzard = origin.getWizzard();
         this.schoolBoard = new SchoolBoardDto(origin.getBoard());
-        this.discardPileHead = origin.getDiscardPileHead().isPresent() ? origin.getDiscardPileHead().get() : null;
+        this.discardPileHead = origin.getDiscardPileHead();
         this.deck = new ArrayList<>(origin.getAssistantDeck());
         this.isOnline = origin.isOnline();
         this.coins = origin instanceof ExpertPlayer ? ((ExpertPlayer) origin).getCoins() : 0;

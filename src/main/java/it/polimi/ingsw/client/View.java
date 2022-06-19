@@ -215,6 +215,7 @@ public abstract class View implements MessageListener, UserInterface {
             this.isExpertGame = game.isExpert();
             if(this.isExpertGame)
                 this.expertParameters = new ExpertParameters(game.getExpertParameters());
+            this.opponents = new LinkedList<>();
             for (int i = 0; i < game.getOpponents().size(); i++)
                 this.opponents.add(new PlayerInfo(game.getOpponents().get(i)));
             this.me = new PlayerInfo(game.getMe());
@@ -230,8 +231,12 @@ public abstract class View implements MessageListener, UserInterface {
             this.currentPlayer = game.getCurrentPlayer();
             print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
-                askAction();
+                if(game.getGamePhase() == GamePhase.PLANNING)
+                    askAssistantCard(getMe().getDeck());
+                else
+                    askAction();
             }
+
     }
 
     private void handleMessage(ChangedPhaseMessage message) {
@@ -281,7 +286,6 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void askAction() {
-        if (currentPhase.equals(GamePhase.PLANNING)) askAssistantCard(getMe().getDeck());
         if (currentPhase.equals(GamePhase.ACTION_MOVE_STUDENTS)) askStudents();
         if (currentPhase.equals(GamePhase.ACTION_MOVE_MOTHER_NATURE)) askMotherNatureSteps();
         if (currentPhase.equals(GamePhase.ACTION_CHOOSE_CLOUD)) askCloud();

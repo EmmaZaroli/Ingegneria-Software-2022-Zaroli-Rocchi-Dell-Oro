@@ -263,7 +263,7 @@ public class ExpertGameController extends GameController {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);

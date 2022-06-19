@@ -7,13 +7,12 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.network.DisconnectionListener;
-import it.polimi.ingsw.network.Message;
-import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.MessageType;
+import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.observer.ModelObserver;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.persistency.GameNotFoundException;
+import it.polimi.ingsw.servercontroller.GameEndingListener;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -238,7 +237,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);
@@ -323,8 +322,8 @@ public class GameController implements DisconnectionListener, MessageListener {
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
         for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
-            if(game.getPlayers()[i].getDiscardPileHead().isPresent())
-                if (game.getPlayers()[i].getDiscardPileHead().get().equals(assistant))
+            if(game.getPlayers()[i].getDiscardPileHead() != null)
+                if (game.getPlayers()[i].getDiscardPileHead().equals(assistant))
                     return false;
         }
         return true;
@@ -361,11 +360,11 @@ public class GameController implements DisconnectionListener, MessageListener {
     private class PlayerOrderComparator implements Comparator<Player> {
         @Override
         public int compare(Player o1, Player o2) {
-            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isEmpty())
+            if(o1.getDiscardPileHead() == null && o2.getDiscardPileHead() != null)
                 return 0;
-            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isPresent())
+            if(o1.getDiscardPileHead() == null && o2.getDiscardPileHead() != null)
                 return 1;
-            if(o1.getDiscardPileHead().isPresent() && o2.getDiscardPileHead().isEmpty())
+            if(o1.getDiscardPileHead() != null && o2.getDiscardPileHead() == null)
                 return -1;
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
                 for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
@@ -375,7 +374,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         return 1;
                 }
             }
-            return o1.getDiscardPileHead().get().value() - o2.getDiscardPileHead().get().value();
+            return o1.getDiscardPileHead().value() - o2.getDiscardPileHead().value();
         }
     }
 
@@ -503,29 +502,49 @@ public class GameController implements DisconnectionListener, MessageListener {
     }
 
     @Override
-    public void onDisconnect() {
+    public void onDisconnect(Object disconnected) {
         synchronized (game) {
             //when one player disconnect, this will set every player to their status (online or offline)
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
-            //restore last saved state
-            try {
-                Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
-                this.game = savedGame;
-                for (VirtualView view : virtualViews)
-                    view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
-
-            } catch (GameNotFoundException e) {
-                //TODO handle exception
-                e.printStackTrace();
+            String disconnectedPlayer = "";
+            for(VirtualView view : virtualViews){
+                if(view.getClientHandler().isPresent()){
+                    if(view.getClientHandler().get() == ((Endpoint) disconnected))
+                        disconnectedPlayer = view.getPlayerNickname();
+                }
+            }
+            if(disconnectedPlayer == game.getPlayer(game.getCurrentPlayer()).getNickname()){
+                //restore last saved state
+                try {
+                    restoreLastSavedGame();
+                    for (int i = 0; i < virtualViews.length; i++)
+                        game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+                    for (VirtualView view : virtualViews)
+                        view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+                    if(game.getGamePhase() == PLANNING)
+                        playerHasEndedPlanning();
+                    else {
+                        game.setGamePhase(ACTION_END);
+                        playerHasEndedAction();
+                    }
+                } catch (GameNotFoundException e) {
+                    //TODO handle exception
+                    e.printStackTrace();
+                }
             }
 
             if (game.howManyPlayersOnline() < 2 && game.isEnoughPlayerOnline())
                 notEnoughOnline();
 
         }
+    }
+
+    private void restoreLastSavedGame() throws GameNotFoundException {
+        Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
+        this.game.copyStatusFrom(savedGame);
     }
 
     //called only when, previously a disconnection, there are enough player online, and then there are not
