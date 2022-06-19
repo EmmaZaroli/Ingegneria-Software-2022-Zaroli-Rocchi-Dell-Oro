@@ -37,7 +37,7 @@ class TestView extends View {
     }
 
     @Override
-    public void genericMessage(String Message) {
+    public void genericMessage(String message) {
 
     }
 

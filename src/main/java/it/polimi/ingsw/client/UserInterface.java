@@ -18,7 +18,7 @@ public interface UserInterface {
 
     void askGameSettings();
 
-    void genericMessage(String Message);
+    void genericMessage(String message);
 
     //TODO remove this
     void changePhase(GamePhase phase);

@@ -81,12 +81,9 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void printEnqueuedMessage() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You've been added to the lobby. Please, wait for a game to start");
-                while (sharedAlert.showAndWait() != null && !gameHasStarted) {
-                }
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You've been added to the lobby. Please, wait for a game to start");
+            while (sharedAlert.showAndWait().isPresent() && !gameHasStarted) {
             }
         });
     }
@@ -94,12 +91,7 @@ public class Gui extends View implements Initializable {
     @Override
     public void printGameStarting() {
         if (this.sharedAlert != null) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    sharedAlert.close();
-                }
-            });
+            Platform.runLater(() -> sharedAlert.close());
         }
         this.loadScene("/it.polimi.ingsw.client.gui/markups/table.fxml");
         this.gameHasStarted = true;
@@ -117,16 +109,13 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (playerReconnected) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "You've been reconnected to your previous game", ButtonType.OK);
-                    alert.showAndWait();
-                } else if (!nicknameAccepted) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Your nickname is not available, please, select another nickname", ButtonType.OK);
-                    alert.showAndWait();
-                }
+        Platform.runLater(() -> {
+            if (playerReconnected) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "You've been reconnected to your previous game", ButtonType.OK);
+                alert.showAndWait();
+            } else if (!nicknameAccepted) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Your nickname is not available, please, select another nickname", ButtonType.OK);
+                alert.showAndWait();
             }
         });
     }
@@ -137,7 +126,7 @@ public class Gui extends View implements Initializable {
     }
 
     @Override
-    public void genericMessage(String Message) {
+    public void genericMessage(String message) {
         //TODO
     }
 
@@ -148,17 +137,9 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askAssistantCard(List<AssistantCard> deck) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Dialog dialog = new SelectAssistant(stage, getDeck(), new AssistantCardEventHandler() {
-                    @Override
-                    public void onSelect(int index) {
-                        sendAssistantCard(index);
-                    }
-                });
-                dialog.showAndWait();
-            }
+        Platform.runLater(() -> {
+            Dialog dialog = new SelectAssistant(stage, getDeck(), this::sendAssistantCard);
+            dialog.showAndWait();
         });
     }
 
@@ -216,65 +197,50 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void error(String error) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                sharedAlert = new Alert(Alert.AlertType.WARNING, error);
-                sharedAlert.showAndWait();
-            }
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.WARNING, error);
+            sharedAlert.showAndWait();
         });
     }
 
     @Override
     public void print() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (opponent1 != null) {
-                    opponent1.setPlayer(getOpponents().get(0));
-                }
-                if (opponent2 != null && getOpponents().size() > 1) {
-                    opponent2.setPlayer(getOpponents().get(1));
-                }
-                if (cloud1 != null) {
-                    cloud1.setStudents(getClouds().get(0).getStudents());
-                }
-                if (cloud2 != null) {
-                    cloud2.setStudents(getClouds().get(1).getStudents());
-                }
-                if (cloud3 != null && getClouds().size() > 2) {
-                    cloud3.setStudents(getClouds().get(2).getStudents());
-                }
+        Platform.runLater(() -> {
+            if (opponent1 != null) {
+                opponent1.setPlayer(getOpponents().get(0));
+            }
+            if (opponent2 != null && getOpponents().size() > 1) {
+                opponent2.setPlayer(getOpponents().get(1));
+            }
+            if (cloud1 != null) {
+                cloud1.setStudents(getClouds().get(0).getStudents());
+            }
+            if (cloud2 != null) {
+                cloud2.setStudents(getClouds().get(1).getStudents());
+            }
+            if (cloud3 != null && getClouds().size() > 2) {
+                cloud3.setStudents(getClouds().get(2).getStudents());
             }
         });
     }
 
     @Override
     public void notEnoughPlayer() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                sharedAlert = new Alert(Alert.AlertType.WARNING, "The game has been suspended because you're opponents are offline.");
-                while (sharedAlert.showAndWait() != null && !gameHasStarted) {
-                }
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.WARNING, "The game has been suspended because you're opponents are offline.");
+            while (sharedAlert.showAndWait().isPresent() && !gameHasStarted) {
             }
         });
     }
 
     @Override
     public void gameOverFromDisconnection() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                sharedAlert = new Alert(Alert.AlertType.CONFIRMATION, "You're opponents are offline. You won the game!");
-                sharedAlert.showAndWait();
-                sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
-                    @Override
-                    public void handle(DialogEvent dialogEvent) {
-                        //TODO
-                    }
-                });
-            }
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.CONFIRMATION, "You're opponents are offline. You won the game!");
+            sharedAlert.showAndWait();
+            sharedAlert.setOnCloseRequest(dialogEvent -> {
+                //TODO
+            });
         });
     }
 
