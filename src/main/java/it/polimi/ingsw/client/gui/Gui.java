@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.client.gui.sceneControllers.Cloud;
 import it.polimi.ingsw.client.gui.sceneControllers.SchoolBoard;
 import it.polimi.ingsw.client.gui.sceneControllers.SelectAssistant;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
@@ -9,6 +10,7 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -41,6 +43,12 @@ public class Gui extends View implements Initializable {
     private SchoolBoard opponent2;
     @FXML
     private GridPane assistants;
+    @FXML
+    private Cloud cloud1;
+    @FXML
+    private Cloud cloud2;
+    @FXML
+    private Cloud cloud3;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -191,12 +199,30 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void errorAndExit(String error) {
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sharedAlert = new Alert(Alert.AlertType.ERROR, error);
+                sharedAlert.showAndWait();
+                sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
+                    @Override
+                    public void handle(DialogEvent dialogEvent) {
+                        Platform.exit();
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public void error(String error) {
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sharedAlert = new Alert(Alert.AlertType.WARNING, error);
+                sharedAlert.showAndWait();
+            }
+        });
     }
 
     @Override
@@ -210,18 +236,46 @@ public class Gui extends View implements Initializable {
                 if (opponent2 != null && getOpponents().size() > 1) {
                     opponent2.setPlayer(getOpponents().get(1));
                 }
+                if (cloud1 != null) {
+                    cloud1.setStudents(getClouds().get(0).getStudents());
+                }
+                if (cloud2 != null) {
+                    cloud2.setStudents(getClouds().get(1).getStudents());
+                }
+                if (cloud3 != null && getClouds().size() > 2) {
+                    cloud3.setStudents(getClouds().get(2).getStudents());
+                }
             }
         });
     }
 
     @Override
     public void notEnoughPlayer() {
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sharedAlert = new Alert(Alert.AlertType.WARNING, "The game has been suspended because you're opponents are offline.");
+                while (sharedAlert.showAndWait() != null && !gameHasStarted) {
+                }
+            }
+        });
     }
 
     @Override
     public void gameOverFromDisconnection() {
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                sharedAlert = new Alert(Alert.AlertType.CONFIRMATION, "You're opponents are offline. You won the game!");
+                sharedAlert.showAndWait();
+                sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
+                    @Override
+                    public void handle(DialogEvent dialogEvent) {
+                        //TODO
+                    }
+                });
+            }
+        });
     }
 
     public void tryConnect(ActionEvent event) {

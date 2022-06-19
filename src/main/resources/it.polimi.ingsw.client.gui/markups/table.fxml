@@ -54,15 +54,16 @@
                         <HBox>
                             <VBox>
                                 <Pane prefHeight="35"/>
-                                <Cloud style="-fx-padding: 0 10 0 10;"/>
+                                <Cloud style="-fx-padding: 0 10 0 10;" fx:id="cloud1"/>
                             </VBox>
                             <VBox>
                                 <Pane prefHeight="35"/>
-                                <Cloud style="-fx-padding: 0 10 0 10;"/>
+                                <Cloud style="-fx-padding: 0 10 0 10;" fx:id="cloud2"/>
                             </VBox>
                             <VBox>
                                 <Pane prefHeight="35"/>
-                                <Cloud style="-fx-padding: 0 10 0 10;"/>
+                                <Cloud style="-fx-padding: 0 10 0 10;" fx:id="cloud3"
+                                       visible="${controller.isThreePlayers}"/>
                             </VBox>
                             <Pane prefWidth="90"/>
                             <EditableSchoolboard/>
