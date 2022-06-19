@@ -59,14 +59,27 @@ public class CloudTile extends ModelObservable implements Serializable {
         return (List<PawnColor>) students.clone();
     }
 
+    /**
+     *
+     * @param color the color of the student
+     * @return the number of students of that color on the cloudTile
+     */
     public int getStudentsNumber(PawnColor color){
         return (int) students.stream().filter(x -> x.equals(color)).count();
     }
 
+    /**
+     *
+     * @return the number of students on the cloudTile
+     */
     public int getStudentsNumber(){
         return students.size();
     }
 
+    /**
+     *
+     * @return a map that maps to each student's color, their number of occurrences on the card
+     */
     public Map<PawnColor, Integer> getStudentsCardinality(){
         Map<PawnColor, Integer> res = new HashMap<>();
         for(PawnColor color: PawnColor.values()){

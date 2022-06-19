@@ -27,7 +27,7 @@ public class IslandCard implements Serializable {
     }
 
     /**
-     * @param hasMotherNature
+     * @param hasMotherNature is true if the IslandCard has mother nature, false otherwise
      */
     public void setHasMotherNature(boolean hasMotherNature) {
         this.hasMotherNature = hasMotherNature;
@@ -36,7 +36,7 @@ public class IslandCard implements Serializable {
     /**
      * Instantiates a new Island card.
      *
-     * @param uuid
+     * @param uuid the uuid of the islandCard
      */
     public IslandCard(UUID uuid, int index) {
         this.uuid = uuid;
@@ -122,20 +122,33 @@ public class IslandCard implements Serializable {
     /**
      * Sets the color of the tower of the player that now controls the island
      *
-     * @param tower
+     * @param tower the tower
      */
     public void setTower(Tower tower) {
         this.tower = tower;
     }
 
+    /**
+     *
+     * @param color the color of the student
+     * @return the number of students of that color
+     */
     public int getStudentsNumber(PawnColor color){
         return (int) students.stream().filter(x -> x.equals(color)).count();
     }
 
+    /**
+     *
+     * @return the number of students on the islandCard
+     */
     public int getStudentsNumber(){
         return students.size();
     }
 
+    /**
+     *
+     * @return the list of indices
+     */
     public List<Integer> getIndices() {
         return indices;
     }
@@ -144,15 +157,28 @@ public class IslandCard implements Serializable {
         this.indices.add(index);
     }
 
+    /**
+     *
+     * @param indices the list of indices to add
+     */
     public void addIndex(List<Integer> indices){
         this.indices.addAll(indices);
     }
 
+    /**
+     * Transfers the students from one island to the other
+     * Add the connected island's index to the list of indices
+     * @param islandCard the island to connect
+     */
     public void unifyWith(IslandCard islandCard){
         this.movePawnOnIsland(islandCard.getStudentsFromIsland());
         this.addIndex(islandCard.getIndices());
     }
 
+    /**
+     *
+     * @return a map that maps to each student's color, their number of occurrences on the islandCard
+     */
     public Map<PawnColor, Integer> getStudentsCardinality(){
         Map<PawnColor, Integer> res = new HashMap<>();
         for(PawnColor color: PawnColor.values()){

@@ -56,7 +56,9 @@ public class Bag implements Serializable {
         return PawnColor.NONE;
     }
 
-    //Removes a pawn from the bag
+    /**
+     * Removes a pawn from the bag
+     */
     private void removePawn(PawnColor c) {
         Integer pawnColorCount = this.students.get(c);
         pawnColorCount = pawnColorCount - 1;
@@ -76,7 +78,7 @@ public class Bag implements Serializable {
     }
 
     /**
-     * @return numver of students left in bag
+     * @return number of students left in bag
      */
     public int getStudentsLeft(){
         int res = 0;

@@ -44,7 +44,7 @@ public class Player extends ModelObservable implements Serializable {
      * @param wizzard         the wizzard
      * @param tower           the tower
      * @param numberOfPlayers the number of players of the game this player will be added to
-     * @param isPlayerTurn
+     * @param isPlayerTurn true if it's the player's turn
      */
     public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers, boolean isOnline) {
         this.nickname = nickname;
@@ -136,7 +136,7 @@ public class Player extends ModelObservable implements Serializable {
     /**
      * Sets player turn
      *
-     * @param playerTurn
+     * @param playerTurn true if it's the player's turn
      */
     protected void setPlayerTurn(boolean playerTurn) {
         isPlayerTurn = playerTurn;
@@ -160,15 +160,27 @@ public class Player extends ModelObservable implements Serializable {
         removeAssistant(a);
     }
 
+    /**
+     *
+     * @param a the assistant card to remove from the deck
+     */
     public void removeAssistant(AssistantCard a){
         assistantDeck.remove(a);
     }
 
+    /**
+     * Notify to the views the current object
+     * @param isOnline is true if the player is online
+     */
     public void setOnline(boolean isOnline) {
         this.isOnline = isOnline;
         notifyPlayerOnline(this);
     }
 
+    /**
+     *
+     * @return the number of professor on the schoolBoard
+     */
     public int getProfessorsCount(){
         return schoolBoard.getProfessorsCount();
     }

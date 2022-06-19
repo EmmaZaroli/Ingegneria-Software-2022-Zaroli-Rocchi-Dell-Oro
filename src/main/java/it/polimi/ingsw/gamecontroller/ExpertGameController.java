@@ -216,8 +216,7 @@ public class ExpertGameController extends GameController {
                 this.game.setPlayedCount(game.getPlayedCount() + 1);
                 reverseEffect();
                 getGameParameters().setAlreadyActivateCharacterCard(false);
-                //TODO is there a way to put the next line in the model?
-                getGame().notifyExpertParameters(getGameParameters());
+                getGame().expertParameters(getGameParameters());
                 if (!super.isRoundComplete()) {
                     this.game.setGamePhase(ACTION_MOVE_STUDENTS);
                 } else {

@@ -73,14 +73,27 @@ public class CharacterCardWithSetUpAction extends CharacterCard {
         return super.equals(obj);
     }
 
+    /**
+     *
+     * @param color the color of the student
+     * @return the number of students of that color
+     */
     public int getStudentsNumber(PawnColor color){
         return (int) students.stream().filter(x -> x.equals(color)).count();
     }
 
+    /**
+     *
+     * @return the number of students on the card
+     */
     public int getStudentsNumber(){
         return students.size();
     }
 
+    /**
+     *
+     * @return a map that maps to each student's color, their number of occurrences on the card
+     */
     public Map<PawnColor, Integer> getStudentsCardinality(){
         Map<PawnColor, Integer> res = new HashMap<>();
         for(PawnColor color: PawnColor.values()){
