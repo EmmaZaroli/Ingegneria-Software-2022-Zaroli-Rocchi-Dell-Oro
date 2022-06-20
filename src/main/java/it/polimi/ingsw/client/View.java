@@ -240,8 +240,10 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(ChangedPhaseMessage message) {
-        if(currentPhase == GamePhase.ACTION_END
-                && message.getNewPhase() == GamePhase.PLANNING){
+        if((currentPhase == GamePhase.ACTION_END
+                && message.getNewPhase() == GamePhase.PLANNING)
+        || (currentPhase == GamePhase.ACTION_MOVE_STUDENTS
+                && message.getNewPhase() == GamePhase.PLANNING)){
             me = me.withIsFromActualTurn(false);
             for(int i = 0; i < opponents.size(); i++){
                 PlayerInfo opponent = opponents.get(i).withIsFromActualTurn(false);

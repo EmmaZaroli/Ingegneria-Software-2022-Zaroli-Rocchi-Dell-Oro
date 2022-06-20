@@ -225,7 +225,7 @@ public class ExpertGameController extends GameController {
                 }
                 super.changePlayer();
             }
-            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_END);
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);
             if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).isOnline())
                 playerHasEndedPlanning();
             DataDumper.getInstance().saveGame(game);

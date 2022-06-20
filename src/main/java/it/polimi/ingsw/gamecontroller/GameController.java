@@ -321,9 +321,9 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
-        for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
-            if(game.getPlayers()[i].getDiscardPileHead() != null && game.getPlayers()[i].isFromActualTurn())
-                if (game.getPlayers()[i].getDiscardPileHead().equals(assistant))
+        for (Player p : game.getPlayers()) {
+            if(p.getDiscardPileHead() != null && p.isFromActualTurn())
+                if (p.getDiscardPileHead().equals(assistant))
                     return false;
         }
         return true;
@@ -366,8 +366,14 @@ public class GameController implements DisconnectionListener, MessageListener {
                 return 1;
             if(o1.getDiscardPileHead() != null && o2.getDiscardPileHead() == null)
                 return -1;
+            if(!o1.isFromActualTurn() && !o2.isFromActualTurn())
+                return 0;
+            if(!o1.isFromActualTurn() && o2.isFromActualTurn())
+                return 1;
+            if(o1.isFromActualTurn() && !o2.isFromActualTurn())
+                return -1;
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
-                for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
+                for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); i = Math.floorMod(i + 1, game.getPlayersCount())){
                     if(game.getPlayer(i).getNickname().equals(o1.getNickname()))
                         return -1;
                     if(game.getPlayer(i).getNickname().equals(o2.getNickname()))
@@ -410,7 +416,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
                 changePlayer();
             }
-            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_END);
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);
             if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).isOnline())
                 playerHasEndedPlanning();
             DataDumper.getInstance().saveGame(game);
@@ -425,12 +431,12 @@ public class GameController implements DisconnectionListener, MessageListener {
             this.game.setPlayedCount(0);
             this.game.setGamePhase(PLANNING);
 
-            for(Player player : game.getPlayers())
-                player.setFromActualTurn(false);
-
             List<Player> playersSorted = Arrays.stream(game.getPlayers())
                     .sorted(new PlayerOrderComparator())
                     .toList();
+
+            for(Player player : game.getPlayers())
+                player.setFromActualTurn(false);
 
             int index;
             for (index = 0; index < game.getPlayers().length; index++) {
