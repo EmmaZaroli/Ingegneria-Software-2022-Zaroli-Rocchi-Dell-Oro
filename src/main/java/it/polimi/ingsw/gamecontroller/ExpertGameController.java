@@ -222,6 +222,8 @@ public class ExpertGameController extends GameController {
                     this.game.setGamePhase(ACTION_MOVE_STUDENTS);
                 } else {
                     endOfRound();
+                    if(game.isGameOver())
+                        return;
                 }
                 super.changePlayer();
             }

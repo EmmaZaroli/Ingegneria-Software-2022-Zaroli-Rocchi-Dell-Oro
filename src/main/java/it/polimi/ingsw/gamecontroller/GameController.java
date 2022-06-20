@@ -243,6 +243,8 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.tableController.moveMotherNature(steps);
 
         this.checkInfluence();
+        if(game.isGameOver())
+            return;
 
         this.playerHasEndedAction();
     }
@@ -289,6 +291,8 @@ public class GameController implements DisconnectionListener, MessageListener {
             for (int i = 0; i < result.second(); i++) {
                 player.getBoard().removeTower();
                 checkImmediateGameOver();
+                if(game.isGameOver())
+                    return;
             }
         }
     }
@@ -413,6 +417,8 @@ public class GameController implements DisconnectionListener, MessageListener {
                     this.game.setGamePhase(ACTION_MOVE_STUDENTS);
                 } else {
                     endOfRound();
+                    if(game.isGameOver())
+                        return;
                 }
                 changePlayer();
             }
@@ -454,6 +460,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         for (Player p : game.getPlayers()) {
             if (p.getBoard().getTowersCount() == 0) {
                 game.callWin(p.getNickname());
+                return;
             }
         }
 
@@ -471,8 +478,11 @@ public class GameController implements DisconnectionListener, MessageListener {
 
         //check if any player has run out of assistant card
         for (Player p : game.getPlayers()) {
-            if (p.isDeckEmpty())
+            if (p.isDeckEmpty()){
                 game.callWin(whoIsWinning());
+                return;
+            }
+
         }
 
     }
