@@ -45,6 +45,12 @@ public class ModelObservable {
         }
     }
 
+    public void notifyPlayerCanPlay(Player message){
+        for (ModelObserver observer : observers) {
+            observer.updatePlayerCanPlay(message);
+        }
+    }
+
     public void notifyPlayerCoins(int coins){
         for (ModelObserver observer : observers) {
             observer.updatePlayerCoin(coins);

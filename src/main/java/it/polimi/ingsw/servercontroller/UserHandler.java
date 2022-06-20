@@ -122,7 +122,6 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         }
         if(!gameReady)
             setLoginPhase(LoginPhase.WAITING_FOR_GAMEREADY);
-        //checkGameReady();
     }
 
     /*
@@ -171,6 +170,7 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
 
     private void reconnectUser(String nickname /*or maybe User*/) {
         server.reconnectUser(nickname, endpoint);
+        onGameReady();
     }
 
     private void logUser(String nickname) {

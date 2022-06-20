@@ -23,6 +23,7 @@ public class PlayerDto implements Serializable {
     private final ArrayList<AssistantCard> deck;
     private final int coins;
     private final boolean isOnline;
+    private final boolean canPlayThisRound;
 
     public PlayerDto(Player origin) {
         this.nickname = origin.getNickname();
@@ -32,6 +33,7 @@ public class PlayerDto implements Serializable {
         this.isFromActualTurn = origin.isFromActualTurn();
         this.deck = new ArrayList<>(origin.getAssistantDeck());
         this.isOnline = origin.isOnline();
+        this.canPlayThisRound = origin.canPlayThisRound();
         this.coins = origin instanceof ExpertPlayer ? ((ExpertPlayer) origin).getCoins() : 0;
     }
 
@@ -65,5 +67,9 @@ public class PlayerDto implements Serializable {
 
     public boolean isOnline() {
         return isOnline;
+    }
+
+    public boolean isCanPlayThisRound() {
+        return canPlayThisRound;
     }
 }

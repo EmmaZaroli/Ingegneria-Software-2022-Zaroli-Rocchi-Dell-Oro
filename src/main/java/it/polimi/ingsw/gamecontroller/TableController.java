@@ -222,4 +222,8 @@ public class TableController {
     public GameParameters getParameters() {
         return parameters;
     }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
 }

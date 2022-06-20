@@ -190,5 +190,6 @@ public class Player extends ModelObservable implements Serializable {
 
     public void setCanPlayThisRound(boolean canPlayThisRound) {
         this.canPlayThisRound = canPlayThisRound;
+        notifyPlayerCanPlay(this);
     }
 }

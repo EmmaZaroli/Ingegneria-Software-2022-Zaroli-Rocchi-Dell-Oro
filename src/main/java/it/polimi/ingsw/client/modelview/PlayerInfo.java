@@ -18,6 +18,7 @@ public class PlayerInfo {
     private int coins;
     private List<AssistantCard> deck = new ArrayList<>();
     private boolean isOnline;
+    private boolean canPlayThisRound;
 
     public PlayerInfo() {
         this.nickname = "";
@@ -33,10 +34,11 @@ public class PlayerInfo {
         this.isFromActualTurn = origin.isFromActualTurn();
         this.deck = origin.getDeck();
         this.isOnline = origin.isOnline();
+        this.canPlayThisRound = origin.isCanPlayThisRound();
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, Wizzard wizzard, SchoolBoardDto schoolBoard, Optional<AssistantCard> discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline, boolean isFromActualTurn) {
+    private PlayerInfo(String nickname, Wizzard wizzard, SchoolBoardDto schoolBoard, Optional<AssistantCard> discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline, boolean canPlayThisRound, boolean isFromActualTurn) {
         this.nickname = nickname;
         this.wizzard = wizzard;
         this.schoolBoard = schoolBoard;
@@ -44,6 +46,7 @@ public class PlayerInfo {
         this.deck = deck;
         this.coins = coins;
         this.isOnline = isOnline;
+        this.canPlayThisRound = canPlayThisRound;
         this.isFromActualTurn = isFromActualTurn;
     }
 
@@ -95,6 +98,12 @@ public class PlayerInfo {
         return retVal;
     }
 
+    public PlayerInfo withCanPlayThisRound(boolean canPlayThisRound) {
+        PlayerInfo retVal = this.deepClone();
+        retVal.canPlayThisRound = canPlayThisRound;
+        return retVal;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -123,12 +132,16 @@ public class PlayerInfo {
         return isOnline;
     }
 
+    public boolean isCanPlayThisRound() {
+        return canPlayThisRound;
+    }
+
     public boolean isFromActualTurn() {
         return isFromActualTurn;
     }
 
     public PlayerInfo deepClone() {
         //TODO dtos if we have time
-        return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.isFromActualTurn);
+        return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.canPlayThisRound, this.isFromActualTurn);
     }
 }

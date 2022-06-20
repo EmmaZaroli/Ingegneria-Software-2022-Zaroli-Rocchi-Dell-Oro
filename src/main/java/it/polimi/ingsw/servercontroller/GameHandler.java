@@ -56,13 +56,16 @@ public class GameHandler implements GameEndingListener {
     }
 
     public synchronized void reconnectPlayer(String nickname, Endpoint endpoint) {
-        for (User user : users) {
-            if (user.getNickname().equals(nickname)) {
-                if(user.getEndpoint().isPresent())
-                    user.getEndpoint().get().removeDisconnectionListener(gameController);
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getNickname().equals(nickname)) {
+                if(users.get(i).getEndpoint().isPresent()) {
+                    users.get(i).getEndpoint().get().removeDisconnectionListener(gameController);
+                    users.get(i).getEndpoint().get().removeMessageListener(virtualViews[i]);
+                }
                 endpoint.addDisconnectionListener(gameController);
-                user.setEndpoint(endpoint);
-                user.sendMessage(new GameMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
+                endpoint.addMessageListener(virtualViews[i]);
+                users.get(i).setEndpoint(endpoint);
+                users.get(i).sendMessage(new GameMessage(users.get(i).getNickname(), MessageType.GAME_STARTING, this.gameModel));
             }
         }
         gameController.onReconnect();

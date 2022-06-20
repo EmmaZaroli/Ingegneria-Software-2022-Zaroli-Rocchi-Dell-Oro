@@ -542,12 +542,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
             }
 
-            for(Player p : game.getPlayers()){
-                if(p.getNickname().equals(disconnectedPlayer))
-                    p.setCanPlayThisRound(false);
-            }
-
-            if(disconnectedPlayer == game.getPlayer(game.getCurrentPlayer()).getNickname()){
+            if(disconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())){
                 //restore last saved state
                 try {
                     restoreLastSavedGame();
@@ -555,6 +550,10 @@ public class GameController implements DisconnectionListener, MessageListener {
                         game.getPlayer(i).setOnline(virtualViews[i].isOnline());
                     for (VirtualView view : virtualViews)
                         view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+                    for(Player p : game.getPlayers()) {
+                        if (p.getNickname().equals(disconnectedPlayer))
+                            p.setCanPlayThisRound(false);
+                    }
                     if(game.getGamePhase() == PLANNING)
                         playerHasEndedPlanning();
                     else {
@@ -576,6 +575,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     private void restoreLastSavedGame() throws GameNotFoundException {
         Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
         this.game.copyStatusFrom(savedGame);
+        this.tableController.setTable(game.getTable());
         //setting observers
         for (VirtualView virtualView : virtualViews) {
             for (Player player : game.getPlayers()) {
