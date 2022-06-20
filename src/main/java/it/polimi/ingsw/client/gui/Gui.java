@@ -16,6 +16,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -49,6 +54,10 @@ public class Gui extends View implements Initializable {
     private Cloud cloud2;
     @FXML
     private Cloud cloud3;
+    @FXML
+    private ImageView discard1;
+    @FXML
+    private ImageView discard2;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -95,6 +104,34 @@ public class Gui extends View implements Initializable {
         }
         this.loadScene("/it.polimi.ingsw.client.gui/markups/table.fxml");
         this.gameHasStarted = true;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                //TODO testing purpose only
+                opponent1.setOnDragDropped((DragEvent event) -> {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasString()) {
+                        System.out.println("Dropped: " + db.getString());
+                        event.setDropCompleted(true);
+                    } else {
+                        event.setDropCompleted(false);
+                    }
+                    event.consume();
+                });
+
+                stage.getScene().setOnDragOver(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        //TODO
+                        if (event.getGestureSource() != null && event.getDragboard().hasString()) {
+                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        }
+
+                        event.consume();
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -222,6 +259,18 @@ public class Gui extends View implements Initializable {
             }
             if (cloud3 != null && getClouds().size() > 2) {
                 cloud3.setStudents(getClouds().get(2).getStudents());
+            }
+            if (discard1 != null) {
+                if (getOpponents().get(0).getDiscardPileHead().isPresent()) {
+                    discard1.setImage(new Image("/it.polimi.ingsw.client.gui/assets/Assistente ("
+                            + getOpponents().get(0).getDiscardPileHead().get().value() + ").png"));
+                }
+            }
+            if (discard2 != null && getOpponents().size() > 1) {
+                if (getOpponents().get(1).getDiscardPileHead().isPresent()) {
+                    discard2.setImage(new Image("/it.polimi.ingsw.client.gui/assets/Assistente ("
+                            + getOpponents().get(1).getDiscardPileHead().get().value() + ").png"));
+                }
             }
         });
     }

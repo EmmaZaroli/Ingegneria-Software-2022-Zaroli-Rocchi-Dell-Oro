@@ -22,12 +22,12 @@
                               VBox.vgrow="ALWAYS">
                             <SchoolBoard style="-fx-padding: 10 10 0 0;" fx:id="opponent1"/>
                             <VBox VBox.vgrow="ALWAYS" alignment="CENTER" style="-fx-padding: 0 10 0 0;">
-                                <Card/>
+                                <ImageView fx:id="discard1" fitWidth="82" fitHeight="126"/>
                             </VBox>
                             <SchoolBoard style="-fx-padding: 10 0 0 10;" fx:id="opponent2"
                                          visible="${controller.isThreePlayers}"/>
                             <VBox VBox.vgrow="ALWAYS" alignment="CENTER" visible="${controller.isThreePlayers}">
-                                <Card/>
+                                <ImageView fx:id="discard2" fitWidth="82" fitHeight="126"/>
                             </VBox>
                         </HBox>
                         <!-- Islands -->
