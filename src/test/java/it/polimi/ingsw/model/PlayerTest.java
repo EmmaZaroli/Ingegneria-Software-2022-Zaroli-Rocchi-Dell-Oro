@@ -30,7 +30,7 @@ class PlayerTest extends TestCase {
         }
         AssistantCard a = player.getAssistant(9);
         player.playAssistant(a);
-        Assertions.assertEquals(Optional.of(a), player.getDiscardPileHead());
+        Assertions.assertEquals(a, player.getDiscardPileHead());
         Assertions.assertFalse(player.getAssistantDeck().contains(a));
         for (int i = 0; player.isDeckEmpty(); i++) {
             player.playAssistant(player.getAssistant(i));

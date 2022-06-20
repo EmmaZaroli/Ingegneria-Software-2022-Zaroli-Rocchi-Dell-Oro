@@ -86,9 +86,9 @@ class ViewTest{
         if(!gamePlayer.getWizzard().equals(viewPlayer.getWizzard()))
             return false;
 
-        if(gamePlayer.getDiscardPileHead() == null ^ viewPlayer.getDiscardPileHead() == null)
+        if(gamePlayer.getDiscardPileHead() == null ^ viewPlayer.getDiscardPileHead().isEmpty())
             return false;
-        if(!(gamePlayer.getDiscardPileHead() == null && viewPlayer.getDiscardPileHead() == null)){
+        if(!(gamePlayer.getDiscardPileHead() == null && viewPlayer.getDiscardPileHead().isEmpty())){
             if(!gamePlayer.getDiscardPileHead().equals(viewPlayer.getDiscardPileHead()))
                 return false;
         }
