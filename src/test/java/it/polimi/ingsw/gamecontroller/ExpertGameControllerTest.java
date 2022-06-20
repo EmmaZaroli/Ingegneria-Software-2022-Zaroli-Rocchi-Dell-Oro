@@ -72,7 +72,7 @@ class ExpertGameControllerTest extends TestCase {
         Assertions.assertEquals(1, player2.getAssistantDeck().size());
         gameController.onMessageReceived(sameCardMessage);
         Assertions.assertEquals(0, player2.getAssistantDeck().size());
-        Assertions.assertEquals(Optional.of(cardPlayed1), player2.getDiscardPileHead());
+        Assertions.assertEquals(cardPlayed1, player2.getDiscardPileHead());
         Assertions.assertEquals(0, game.getCurrentPlayer());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
 

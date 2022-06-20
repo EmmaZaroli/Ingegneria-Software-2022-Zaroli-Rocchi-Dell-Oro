@@ -7,15 +7,12 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.network.DisconnectionListener;
-import it.polimi.ingsw.network.Message;
-import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.MessageType;
-import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
-import it.polimi.ingsw.network.messages.CloudMessage;
-import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
-import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.network.*;
+import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.observer.ModelObserver;
 import it.polimi.ingsw.persistency.DataDumper;
+import it.polimi.ingsw.persistency.GameNotFoundException;
+import it.polimi.ingsw.servercontroller.GameEndingListener;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -57,6 +54,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             }
             tableController.table.addObserver(virtualView);
         }
+        DataDumper.getInstance().saveGame(game);
     }
 
     private void checkMessage(Message message) throws WrongPlayerException {
@@ -75,40 +73,42 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     @Override
     public void onMessageReceived(Message message) {
-        try {
-            checkMessage(message);
-            switch (game.getGamePhase()) {
-                case PLANNING:
-                    planning(message);
-                    break;
-                case ACTION_MOVE_STUDENTS:
-                    moveStudent(message);
-                    break;
-                case ACTION_MOVE_MOTHER_NATURE:
-                    if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
-                        tryMoveMotherNature((MoveMotherNatureMessage) message);
-                    } else  logger.log(Level.WARNING,"Illegal Action");;
-                    break;
-                case ACTION_CHOOSE_CLOUD:
-                    if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
-                        try {
-                            pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
-                        } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
-                            logger.log(Level.WARNING,"",e);
-                        }
-                    } else  logger.log(Level.WARNING,"Illegal Action");
-                    break;
-                case ACTION_END:
-                    //should not go here, the player doesn't do anything in this phase
-                    logger.log(Level.WARNING,"Illegal Action");
-                    break;
+        synchronized (game){
+            try {
+                checkMessage(message);
+                switch (game.getGamePhase()) {
+                    case PLANNING:
+                        planning(message);
+                        break;
+                    case ACTION_MOVE_STUDENTS:
+                        moveStudent(message);
+                        break;
+                    case ACTION_MOVE_MOTHER_NATURE:
+                        if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
+                            tryMoveMotherNature((MoveMotherNatureMessage) message);
+                        } else  logger.log(Level.WARNING,"Illegal Action");;
+                        break;
+                    case ACTION_CHOOSE_CLOUD:
+                        if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
+                            try {
+                                pickStudentsFromCloud(((CloudMessage) message).getCloud().getUuid());
+                            } catch (EmptyCloudException | IllegalActionException | WrongUUIDException e) {
+                                logger.log(Level.WARNING,"",e);
+                            }
+                        } else  logger.log(Level.WARNING,"Illegal Action");
+                        break;
+                    case ACTION_END:
+                        //should not go here, the player doesn't do anything in this phase
+                        logger.log(Level.WARNING,"Illegal Action");
+                        break;
 
-                case GAME_OVER:
-                    //TODO do we want to throw an exception or just ignore it?
-                    break;
+                    case GAME_OVER:
+                        //TODO do we want to throw an exception or just ignore it?
+                        break;
+                }
+            } catch (WrongPlayerException e) {
+                logger.log(Level.WARNING,"",e);
             }
-        } catch (WrongPlayerException e) {
-            logger.log(Level.WARNING,"",e);
         }
 
     }
@@ -172,7 +172,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         return true;
     }
 
-    private void playerHasEndedPlanning() {
+    protected void playerHasEndedPlanning() {
         do{
             this.game.setPlayedCount(game.getPlayedCount() + 1);
             if (!this.isRoundComplete()) {
@@ -184,9 +184,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             }
         }
         while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
-
-
-        //DataDumper.getInstance().saveGame(game);
+        DataDumper.getInstance().saveGame(game);
     }
 
     private void moveStudent(Message message) {
@@ -239,7 +237,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);
@@ -323,9 +321,9 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     //Returns true if assistant is different from every other assistants already played in this turn
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
-        for (int i = game.getFirstPlayerInPlanning(); i != game.getCurrentPlayer(); i = Math.floorMod(i + 1 , game.getPlayersCount())) {
-            if(game.getPlayers()[i].getDiscardPileHead().isPresent())
-                if (game.getPlayers()[i].getDiscardPileHead().get().equals(assistant))
+        for (Player p : game.getPlayers()) {
+            if(p.getDiscardPileHead() != null && p.isFromActualTurn())
+                if (p.getDiscardPileHead().equals(assistant))
                     return false;
         }
         return true;
@@ -362,21 +360,27 @@ public class GameController implements DisconnectionListener, MessageListener {
     private class PlayerOrderComparator implements Comparator<Player> {
         @Override
         public int compare(Player o1, Player o2) {
-            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isEmpty())
+            if(o1.getDiscardPileHead() == null && o2.getDiscardPileHead() != null)
                 return 0;
-            if(o1.getDiscardPileHead().isEmpty() && o2.getDiscardPileHead().isPresent())
+            if(o1.getDiscardPileHead() == null && o2.getDiscardPileHead() != null)
                 return 1;
-            if(o1.getDiscardPileHead().isPresent() && o2.getDiscardPileHead().isEmpty())
+            if(o1.getDiscardPileHead() != null && o2.getDiscardPileHead() == null)
+                return -1;
+            if(!o1.isFromActualTurn() && !o2.isFromActualTurn())
+                return 0;
+            if(!o1.isFromActualTurn() && o2.isFromActualTurn())
+                return 1;
+            if(o1.isFromActualTurn() && !o2.isFromActualTurn())
                 return -1;
             if(o1.getDiscardPileHead().equals(o2.getDiscardPileHead())){
-                for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); Math.floorMod(i + 1, game.getPlayersCount())){
+                for(int i = game.getFirstPlayerInPlanning(); i != Math.floorMod(game.getFirstPlayerInPlanning() - 1, game.getPlayersCount()); i = Math.floorMod(i + 1, game.getPlayersCount())){
                     if(game.getPlayer(i).getNickname().equals(o1.getNickname()))
                         return -1;
                     if(game.getPlayer(i).getNickname().equals(o2.getNickname()))
                         return 1;
                 }
             }
-            return o1.getDiscardPileHead().get().value() - o2.getDiscardPileHead().get().value();
+            return o1.getDiscardPileHead().value() - o2.getDiscardPileHead().value();
         }
     }
 
@@ -412,10 +416,11 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
                 changePlayer();
             }
-            while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);
+            if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).isOnline())
+                playerHasEndedPlanning();
+            DataDumper.getInstance().saveGame(game);
         }
-        //TODO move this
-        //DataDumper.getInstance().saveGame(game);
     }
 
     public void endOfRound(){
@@ -429,6 +434,9 @@ public class GameController implements DisconnectionListener, MessageListener {
             List<Player> playersSorted = Arrays.stream(game.getPlayers())
                     .sorted(new PlayerOrderComparator())
                     .toList();
+
+            for(Player player : game.getPlayers())
+                player.setFromActualTurn(false);
 
             int index;
             for (index = 0; index < game.getPlayers().length; index++) {
@@ -454,7 +462,6 @@ public class GameController implements DisconnectionListener, MessageListener {
             game.callWin(whoIsWinning());
         }
 
-        //DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     public void checkRoundGameOver() {
@@ -468,7 +475,6 @@ public class GameController implements DisconnectionListener, MessageListener {
                 game.callWin(whoIsWinning());
         }
 
-        //DataDumper.getInstance().removeGameFromMemory(game.getGameId());
     }
 
     private List<String> whoIsWinning() {
@@ -507,14 +513,56 @@ public class GameController implements DisconnectionListener, MessageListener {
     }
 
     @Override
-    public void onDisconnect() {
+    public void onDisconnect(Object disconnected) {
         synchronized (game) {
             //when one player disconnect, this will set every player to their status (online or offline)
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+
+            String disconnectedPlayer = "";
+            for(VirtualView view : virtualViews){
+                if(view.getClientHandler().isPresent()){
+                    if(view.getClientHandler().get() == ((Endpoint) disconnected))
+                        disconnectedPlayer = view.getPlayerNickname();
+                }
+            }
+            if(disconnectedPlayer == game.getPlayer(game.getCurrentPlayer()).getNickname()){
+                //restore last saved state
+                try {
+                    restoreLastSavedGame();
+                    for (int i = 0; i < virtualViews.length; i++)
+                        game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+                    for (VirtualView view : virtualViews)
+                        view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+                    if(game.getGamePhase() == PLANNING)
+                        playerHasEndedPlanning();
+                    else {
+                        game.setGamePhase(ACTION_END);
+                        playerHasEndedAction();
+                    }
+                } catch (GameNotFoundException e) {
+                    //TODO handle exception
+                    e.printStackTrace();
+                }
+            }
+
             if (game.howManyPlayersOnline() < 2 && game.isEnoughPlayerOnline())
                 notEnoughOnline();
+
+        }
+    }
+
+    private void restoreLastSavedGame() throws GameNotFoundException {
+        Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
+        this.game.copyStatusFrom(savedGame);
+        //setting observers
+        for (VirtualView virtualView : virtualViews) {
+            for (Player player : game.getPlayers()) {
+                player.addObserver(virtualView);
+                player.getBoard().addObserver(virtualView);
+            }
+            tableController.table.addObserver(virtualView);
         }
     }
 

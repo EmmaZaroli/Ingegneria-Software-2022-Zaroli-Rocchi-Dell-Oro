@@ -11,6 +11,10 @@ public class ModelObservable {
 
     private final List<ModelObserver> observers = new ArrayList<>();
 
+    public List<ModelObserver> getObservers() {
+        return observers;
+    }
+
     /**
      * Adds an observer.
      *

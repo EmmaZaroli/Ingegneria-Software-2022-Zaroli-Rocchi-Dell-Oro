@@ -225,10 +225,11 @@ public class ExpertGameController extends GameController {
                 }
                 super.changePlayer();
             }
-            while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
+            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);
+            if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).isOnline())
+                playerHasEndedPlanning();
+            DataDumper.getInstance().saveGame(game);
         }
-        //TODO move this
-        //DataDumper.getInstance().saveGame(game);
     }
 
     public ExpertGameParameters getGameParameters() {
@@ -264,7 +265,7 @@ public class ExpertGameController extends GameController {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
         }
-        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().get().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
+        if (steps < 1 || steps > this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {
             throw new NotAllowedMotherNatureMovementException();
         }
         this.tableController.moveMotherNature(steps);

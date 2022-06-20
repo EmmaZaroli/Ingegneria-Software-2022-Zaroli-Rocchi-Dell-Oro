@@ -73,7 +73,7 @@ class GameControllerTest extends TestCase {
         Assertions.assertEquals(1, player2.getAssistantDeck().size());
         gameController.onMessageReceived(sameCardMessage);
         Assertions.assertEquals(0, player2.getAssistantDeck().size());
-        Assertions.assertEquals(Optional.of(cardPlayed1), player2.getDiscardPileHead());
+        Assertions.assertEquals(cardPlayed1, player2.getDiscardPileHead());
         Assertions.assertEquals(0, game.getCurrentPlayer());
         Assertions.assertEquals(GamePhase.ACTION_MOVE_STUDENTS, game.getGamePhase());
 
@@ -589,7 +589,7 @@ class GameControllerTest extends TestCase {
             Assertions.assertFalse(virtualViews[1].isOnline());
             Assertions.assertTrue(player1.isOnline());
             Assertions.assertTrue(player2.isOnline());
-            gameController.onDisconnect();
+            gameController.onDisconnect(this); //TODO fix this
             Assertions.assertFalse(player1.isOnline());
             Assertions.assertFalse(player2.isOnline());
             Assertions.assertFalse(game.isEnoughPlayerOnline());

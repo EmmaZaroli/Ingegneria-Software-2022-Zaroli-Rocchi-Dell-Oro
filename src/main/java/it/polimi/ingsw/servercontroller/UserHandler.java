@@ -60,7 +60,7 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
     }
 
     @Override
-    public void onDisconnect() {
+    public void onDisconnect(Object disconnected) {
         endpoint.removeDisconnectionListener(this);
         synchronized (server) {
             nickname.ifPresent(server::removeUser);
