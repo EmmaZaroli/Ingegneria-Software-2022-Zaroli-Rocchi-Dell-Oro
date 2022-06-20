@@ -533,16 +533,40 @@ public abstract class View implements MessageListener, UserInterface {
         if (cardIndex < 0 || cardIndex >= me.getDeck().size()) {
             return false;
         }
+        /*
         for(PlayerInfo opponent : getOpponents()){
             if(opponent.getDiscardPileHead().isPresent() && opponent.isFromActualTurn() && opponent.getDiscardPileHead().get().value() == getMe().getDeck().get(cardIndex).value() && getMe().getDeck().size()!=1)
                 return false;
-        }
+        }*/
+        if(!canPlayAssistant(getMe().getDeck().get(cardIndex)))
+            return false;
         AssistantCard assistantCard = me.getDeck().get(cardIndex);
         Message message = new AssistantPlayedMessage(me.getNickname(), MessageType.ACTION_PLAY_ASSISTANT, assistantCard);
         endpoint.sendMessage(message);
         return true;
     }
 
+    private boolean canPlayAssistant(AssistantCard assistant) {
+        //If assistant is different from every other played assistantCard
+        if (isAssistantDifferentFromOthers(assistant)) return true;
+
+        //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
+        // different from every other one
+        for (AssistantCard ac : me.getDeck()) {
+            if (isAssistantDifferentFromOthers(ac)) return false;
+        }
+        return true;
+    }
+
+    //Returns true if assistant is different from every other assistants already played in this turn
+    private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
+        for (PlayerInfo p : opponents) {
+            if(p.getDiscardPileHead().isPresent() && p.isFromActualTurn())
+                if (p.getDiscardPileHead().get().equals(assistant))
+                    return false;
+        }
+        return true;
+    }
 
     protected final boolean sendStudentMoveOnBoard(PawnColor student) {
         Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
