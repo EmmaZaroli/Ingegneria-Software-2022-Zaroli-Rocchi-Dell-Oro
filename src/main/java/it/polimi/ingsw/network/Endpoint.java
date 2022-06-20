@@ -149,7 +149,7 @@ public class Endpoint {
 
     public void notifyDisconnection() {
         for (DisconnectionListener d : this.disconnectionListeners) {
-            d.onDisconnect();
+            d.onDisconnect(this);
         }
     }
 

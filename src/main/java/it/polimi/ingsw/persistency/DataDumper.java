@@ -6,10 +6,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,7 +107,6 @@ public class DataDumper {
         } catch (IOException | ClassNotFoundException e) {
             this.logger.log(Level.SEVERE, e.getMessage(), e);
         }
-
         return gameController;
     }
 }

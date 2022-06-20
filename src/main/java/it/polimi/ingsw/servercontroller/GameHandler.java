@@ -4,7 +4,7 @@ import it.polimi.ingsw.gamecontroller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Endpoint;
 import it.polimi.ingsw.network.MessageType;
-import it.polimi.ingsw.network.messages.GameStartingMessage;
+import it.polimi.ingsw.network.messages.GameMessage;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -30,7 +30,7 @@ public class GameHandler implements GameEndingListener {
 
     public void start() {
         for (User user : users) {
-            user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
+            user.sendMessage(new GameMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
         }
     }
 
@@ -62,7 +62,7 @@ public class GameHandler implements GameEndingListener {
                     user.getEndpoint().get().removeDisconnectionListener(gameController);
                 endpoint.addDisconnectionListener(gameController);
                 user.setEndpoint(endpoint);
-                user.sendMessage(new GameStartingMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
+                user.sendMessage(new GameMessage(user.getNickname(), MessageType.GAME_STARTING, this.gameModel));
             }
         }
         gameController.onReconnect();

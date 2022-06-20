@@ -30,6 +30,7 @@ public class PlayerInfo {
         this.wizzard = origin.getWizzard();
         this.schoolBoard = origin.getSchoolBoard();
         this.discardPileHead = Optional.ofNullable(origin.getDiscardPileHead());
+        this.isFromActualTurn = origin.isFromActualTurn();
         this.deck = origin.getDeck();
         this.isOnline = origin.isOnline();
         this.coins = origin.getCoins();

@@ -498,15 +498,21 @@ public class Cli extends View {
 
     public void win() {
         out.println("Well done, you won the game!");
+        out.println("Press any key to continue");
+        readLine();
     }
 
     public void lose(List<String> winners) {
         out.println("Game ended, you lost!");
+        out.println("Press any key to continue");
+        readLine();
     }
 
     //TODO maybe send who tied
     public void draw(String otherWinner) {
         out.println("The game ended in a tie! ");
+        out.println("Press any key to continue");
+        readLine();
     }
 
     /**

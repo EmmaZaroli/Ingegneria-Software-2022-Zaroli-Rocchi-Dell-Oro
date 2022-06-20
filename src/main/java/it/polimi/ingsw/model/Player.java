@@ -22,7 +22,8 @@ public class Player extends ModelObservable implements Serializable {
     private final Wizzard wizzard;
     private final SchoolBoard schoolBoard;
     private final LinkedList<AssistantCard> assistantDeck;
-    private Optional<AssistantCard> discardPileHead;
+    private AssistantCard discardPileHead;
+    private boolean isFromActualTurn = false;
     private boolean isPlayerTurn;
     private boolean isOnline;
 
@@ -49,7 +50,7 @@ public class Player extends ModelObservable implements Serializable {
     public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers, boolean isOnline) {
         this.nickname = nickname;
         this.wizzard = wizzard;
-        this.discardPileHead = Optional.empty();
+        this.discardPileHead = null;
 
         this.isPlayerTurn = isPlayerTurn;
         this.schoolBoard = new SchoolBoard(numberOfPlayers == 2 ? 8 : 6, tower);
@@ -93,7 +94,7 @@ public class Player extends ModelObservable implements Serializable {
      *
      * @return assistant card
      */
-    public Optional<AssistantCard> getDiscardPileHead() {
+    public AssistantCard getDiscardPileHead() {
         return this.discardPileHead;
     }
 
@@ -155,7 +156,8 @@ public class Player extends ModelObservable implements Serializable {
      * @param a the assistant card
      */
     public void playAssistant(AssistantCard a) {
-        this.discardPileHead = Optional.ofNullable(a);
+        this.discardPileHead = a;
+        this.isFromActualTurn = true;
         notifyAssistantCard(a);
         removeAssistant(a);
     }
@@ -183,5 +185,13 @@ public class Player extends ModelObservable implements Serializable {
      */
     public int getProfessorsCount(){
         return schoolBoard.getProfessorsCount();
+    }
+
+    public boolean isFromActualTurn() {
+        return isFromActualTurn;
+    }
+
+    public void setFromActualTurn(boolean fromActualTurn) {
+        isFromActualTurn = fromActualTurn;
     }
 }

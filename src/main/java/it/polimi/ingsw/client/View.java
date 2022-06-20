@@ -149,7 +149,7 @@ public abstract class View implements MessageListener, UserInterface {
     public void onMessageReceived(Message message) {
         if (message instanceof NicknameResponseMessage nicknameResponseMessage) handleMessage(nicknameResponseMessage);
         if (message instanceof GametypeResponseMessage gametypeResponseMessage) handleMessage(gametypeResponseMessage);
-        if (message instanceof GameStartingMessage gameStartingMessage) handleMessage(gameStartingMessage);
+        if (message instanceof GameMessage gameMessage) handleMessage(gameMessage);
         if (message instanceof ChangedPhaseMessage changedPhaseMessage) handleMessage(changedPhaseMessage);
         if (message instanceof ChangedPlayerMessage changedPlayerMessage) handleMessage(changedPlayerMessage);
         if (message instanceof AssistantPlayedMessage assistantPlayedMessage) handleMessage(assistantPlayedMessage);
@@ -208,12 +208,14 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    private void handleMessage(GameStartingMessage message) {
+    private void handleMessage(GameMessage message) {
             GameDto game = message.getGame();
-            this.printGameStarting();
+            if(message.getType() == MessageType.GAME_STARTING)
+                this.printGameStarting();
             this.isExpertGame = game.isExpert();
             if(this.isExpertGame)
                 this.expertParameters = new ExpertParameters(game.getExpertParameters());
+            this.opponents = new LinkedList<>();
             for (int i = 0; i < game.getOpponents().size(); i++)
                 this.opponents.add(new PlayerInfo(game.getOpponents().get(i)));
             this.me = new PlayerInfo(game.getMe());
@@ -229,14 +231,19 @@ public abstract class View implements MessageListener, UserInterface {
             this.currentPlayer = game.getCurrentPlayer();
             print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
-                //TODO may not be planning phase
-                this.askAssistantCard(getMe().getDeck());
+                if(game.getGamePhase() == GamePhase.PLANNING)
+                    askAssistantCard(getMe().getDeck());
+                else
+                    askAction();
             }
+
     }
 
     private void handleMessage(ChangedPhaseMessage message) {
-        if(currentPhase == GamePhase.ACTION_END
-                && message.getNewPhase() == GamePhase.PLANNING){
+        if((currentPhase == GamePhase.ACTION_END
+                && message.getNewPhase() == GamePhase.PLANNING)
+        || (currentPhase == GamePhase.ACTION_MOVE_STUDENTS
+                && message.getNewPhase() == GamePhase.PLANNING)){
             me = me.withIsFromActualTurn(false);
             for(int i = 0; i < opponents.size(); i++){
                 PlayerInfo opponent = opponents.get(i).withIsFromActualTurn(false);
@@ -526,16 +533,40 @@ public abstract class View implements MessageListener, UserInterface {
         if (cardIndex < 0 || cardIndex >= me.getDeck().size()) {
             return false;
         }
+        /*
         for(PlayerInfo opponent : getOpponents()){
             if(opponent.getDiscardPileHead().isPresent() && opponent.isFromActualTurn() && opponent.getDiscardPileHead().get().value() == getMe().getDeck().get(cardIndex).value() && getMe().getDeck().size()!=1)
                 return false;
-        }
+        }*/
+        if(!canPlayAssistant(getMe().getDeck().get(cardIndex)))
+            return false;
         AssistantCard assistantCard = me.getDeck().get(cardIndex);
         Message message = new AssistantPlayedMessage(me.getNickname(), MessageType.ACTION_PLAY_ASSISTANT, assistantCard);
         endpoint.sendMessage(message);
         return true;
     }
 
+    private boolean canPlayAssistant(AssistantCard assistant) {
+        //If assistant is different from every other played assistantCard
+        if (isAssistantDifferentFromOthers(assistant)) return true;
+
+        //If assistant is equal to another played assistantCard, check if in the player's deck exist at least one card
+        // different from every other one
+        for (AssistantCard ac : me.getDeck()) {
+            if (isAssistantDifferentFromOthers(ac)) return false;
+        }
+        return true;
+    }
+
+    //Returns true if assistant is different from every other assistants already played in this turn
+    private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
+        for (PlayerInfo p : opponents) {
+            if(p.getDiscardPileHead().isPresent() && p.isFromActualTurn())
+                if (p.getDiscardPileHead().get().equals(assistant))
+                    return false;
+        }
+        return true;
+    }
 
     protected final boolean sendStudentMoveOnBoard(PawnColor student) {
         Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);

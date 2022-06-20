@@ -7,12 +7,12 @@ import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
 
-public class GameStartingMessage extends Message {
+public class GameMessage extends Message {
 
     private GameDto game;
 
 
-    public GameStartingMessage(String nickname, MessageType messageType, Game game) {
+    public GameMessage(String nickname, MessageType messageType, Game game) {
         super(nickname, messageType);
         this.game = new GameDto(game, nickname);
     }

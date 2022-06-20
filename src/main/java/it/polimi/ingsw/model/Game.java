@@ -34,7 +34,7 @@ public class Game extends ModelObservable implements Serializable {
 
     private boolean enoughPlayerOnline;
 
-    private transient final List<GameEndingListener> gameEndingListeners = new LinkedList<>();
+    private transient List<GameEndingListener> gameEndingListeners = new LinkedList<>();
 
     /**
      * Instantiates a new Game
@@ -339,11 +339,34 @@ public class Game extends ModelObservable implements Serializable {
         this.gameEndingListeners.remove(l);
     }
 
+    public List<GameEndingListener> getGameEndingListeners(){
+        return gameEndingListeners;
+    }
+
     /**
      * Notify every game ending listeners that the game has ended
      */
     private void notifyGameEnding() {
         for(GameEndingListener l : gameEndingListeners)
             l.onGameEnding(getGameId());
+    }
+
+    public void copyStatusFrom(Game game){
+        this.players = game.players;
+        this.table = game.table;
+        this.gamePhase = game.gamePhase;
+        this.playedCount = game.playedCount;
+        this.parameters = game.parameters;
+
+        this.currentPlayer = game.currentPlayer;
+        this.firstPlayerInPlanning = game.firstPlayerInPlanning;
+        this.currentPlayerBoard = game.currentPlayerBoard;
+        this.movedPawns = game.movedPawns;
+        this.gameOver = game.gameOver;
+        this.winners = game.winners;
+
+        this.error = game.error;
+
+        this.enoughPlayerOnline = game.enoughPlayerOnline;
     }
 }
