@@ -15,6 +15,9 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * CLI
+ */
 public class Cli extends View {
     private final PrintStream out;
     private final Scanner in;
@@ -28,14 +31,20 @@ public class Cli extends View {
     private final PrinterIslands islandsPrinter = new PrinterIslands();
     private final PrinterCharacterCards characterCardPrinter = new PrinterCharacterCards();
     private final PrinterAssistantCards assistantCardsPrinter = new PrinterAssistantCards();
-    private CliParsen cliParsen = new CliParsen();
+    private CliParser cliParser = new CliParser();
 
+    /**
+     * Instantiates a new cli
+     */
     public Cli() {
         out = System.out;
         in = new Scanner(System.in);
         inputParser = new InputParser();
     }
 
+    /**
+     * prints game title
+     */
     @Override
     public void printWelcomeMessage() {
         out.println("                       ▄████████    ▄████████  ▄█     ▄████████ ███▄▄▄▄       ███     ▄██   ▄      ▄████████ \n" +
@@ -51,12 +60,6 @@ public class Cli extends View {
         out.println("");
         space(45);
         out.println("Welcome to Eriantys Board Game!");
-
-        try {
-
-        } catch (Exception e) {
-            out.println(e);
-        }
     }
 
     @Override
@@ -69,6 +72,9 @@ public class Cli extends View {
         System.out.println("Game starting!");
     }
 
+    /**
+     * asks the ip and the port of the server
+     */
     @Override
     public void askServerInfo() {
         String ip;
@@ -111,7 +117,6 @@ public class Cli extends View {
     }
 
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
-        //clearCli();
         if (playerReconnected) {
             out.println("You've been reconnected to your previous game");
         }
@@ -135,8 +140,12 @@ public class Cli extends View {
         valid = false;
         while (!valid) {
             out.print("How many players are you going to play with? [2/3] ");
-            playersNumber = Integer.parseInt(readLine());
-            valid = (playersNumber == 2 || playersNumber == 3);
+            try {
+                playersNumber = Integer.parseInt(readLine());
+                valid = (playersNumber == 2 || playersNumber == 3);
+            }catch(NumberFormatException e){
+                error("not a number");
+            }
         }
         this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,
                 gameMode.equals("expert") ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);
@@ -158,7 +167,7 @@ public class Cli extends View {
     /**
      * print the Assistant Card of the player and asks him which one to play
      *
-     * @param deck
+     * @param deck the list of Assistant cards
      */
     public void askAssistantCard(List<AssistantCard> deck) {
 
@@ -208,7 +217,7 @@ public class Cli extends View {
             out.print(": ");
 
             String input = readLine();
-            Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+            Optional<Integer> characterCard = cliParser.indexCharacterCard(input, getCharacterCards());
             if (characterCard.isEmpty()) {
                 try {
                     int steps = Integer.parseInt(input);
@@ -232,7 +241,7 @@ public class Cli extends View {
             if (isExpertGame() && !areCharacterActive()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
-            Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+            Optional<Integer> characterCard = cliParser.indexCharacterCard(input, getCharacterCards());
             if (characterCard.isEmpty()) {
                 try {
                     int indexCloud = Integer.parseInt(input);
@@ -261,12 +270,12 @@ public class Cli extends View {
             if (isExpertGame() && !areCharacterActive()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
-            PawnColor student = CliParsen.checkIfStudent(input);
+            PawnColor student = CliParser.checkIfStudent(input);
             if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
                     validDestination = false;
                     while (!validDestination) {
                         out.print("Choose location (island's index/schoolboard) : ");
-                        destination = CliParsen.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
+                        destination = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
                         if (destination != 13) {
                             validObject = true;
                             validDestination = true;
@@ -279,7 +288,7 @@ public class Cli extends View {
                 }
             // the input was not a color, checking if it's a character card
             else {
-                Optional<Integer> characterCard = cliParsen.indexCharacterCard(input, getCharacterCards());
+                Optional<Integer> characterCard = cliParser.indexCharacterCard(input, getCharacterCards());
                 if (!characterCard.isEmpty() && canActivateCharacter(characterCard.get())) {
                     validObject = askCharacterCardParameters(characterCard.get());
                 }
@@ -404,7 +413,7 @@ public class Cli extends View {
             boolean valid = false;
             while (!valid) {
                 System.out.println("Choose student from card 1 to move: ");
-                PawnColor student = cliParsen.checkIfStudent(readLine());
+                PawnColor student = cliParser.checkIfStudent(readLine());
                 if (student != PawnColor.NONE) {
                     parameters[0] = student;
                     valid = true;
@@ -413,7 +422,7 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose Island index: ");
-                    int islandIndex = cliParsen.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
+                    int islandIndex = cliParser.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
                     if(islandIndex!=13 && islandIndex!=12) {
                         parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
                         valid = true;
@@ -429,10 +438,12 @@ public class Cli extends View {
     private boolean askCharacterSevenParameters(int index){
         boolean valid = false;
         Object[] parameters = new Object[2];
+        List<PawnColor> studentsFromCard = new ArrayList<>();
+        List<PawnColor> studentsFromEntrance = new ArrayList<>();
         do{
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
-                List<PawnColor> studentsFromCard = Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s)).collect(Collectors.toList());
+                studentsFromCard = Arrays.stream(readLine().split(",")).map(s -> cliParser.checkIfStudent(s)).collect(Collectors.toList());
                 int size = (int) studentsFromCard.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromCard.size() == size) {
                     parameters[0] = studentsFromCard;
@@ -442,9 +453,9 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose student from entrance [max 3, separated by commas]: ");
-                List<PawnColor> studentsFromEntrance = Arrays.stream(readLine().split(",")).map(s -> cliParsen.checkIfStudent(s)).collect(Collectors.toList());
+                studentsFromEntrance = Arrays.stream(readLine().split(",")).map(s -> cliParser.checkIfStudent(s)).collect(Collectors.toList());
                 int size = (int) studentsFromEntrance.stream().filter(s -> s != PawnColor.NONE).count();
-                if (studentsFromEntrance.size() == size) {
+                if (studentsFromEntrance.size() == size && studentsFromEntrance.size() == studentsFromCard.size()) {
                     parameters[1] = studentsFromEntrance;
                     valid = true;
                 }
@@ -459,7 +470,7 @@ public class Cli extends View {
         boolean valid = false;
         while (!valid) {
             System.out.println("Choose student's color: ");
-            PawnColor student = cliParsen.checkIfStudent(readLine());
+            PawnColor student = cliParser.checkIfStudent(readLine());
             if (student != PawnColor.NONE) {
                 parameters[0] = student;
                 valid = sendCharacterCard(index,parameters);
@@ -474,7 +485,7 @@ public class Cli extends View {
         Object[] parameters = new Object[1];
         while (!valid) {
             System.out.println("Choose student from card 11 to move in your schoolboard: ");
-            PawnColor student = cliParsen.checkIfStudent(readLine());
+            PawnColor student = cliParser.checkIfStudent(readLine());
             if (student != PawnColor.NONE) {
                 parameters[0] = student;
                 valid = sendCharacterCard(index,parameters);
