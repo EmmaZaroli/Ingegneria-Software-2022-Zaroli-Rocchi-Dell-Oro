@@ -20,6 +20,8 @@ public interface ModelObserver{
 
     void updatePlayerOnline(Player message);
 
+    void updatePlayerCanPlay(Player message);
+
     void updateCloudTile(CloudTile message);
 
     void updatePlayerCoin(int message);

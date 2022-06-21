@@ -183,7 +183,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 changePlayer();
             }
         }
-        while (!game.getPlayer(game.getCurrentPlayer()).isOnline());
+        while (!game.getPlayer(game.getCurrentPlayer()).canPlayThisRound());
         DataDumper.getInstance().saveGame(game);
     }
 
@@ -422,8 +422,8 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
                 changePlayer();
             }
-            while (!game.getPlayer(game.getCurrentPlayer()).isOnline() && this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);
-            if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).isOnline())
+            while (!game.getPlayer(game.getCurrentPlayer()).canPlayThisRound() && this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);
+            if(this.game.getGamePhase() == PLANNING && !game.getPlayer(game.getCurrentPlayer()).canPlayThisRound())
                 playerHasEndedPlanning();
             DataDumper.getInstance().saveGame(game);
         }
@@ -441,8 +441,12 @@ public class GameController implements DisconnectionListener, MessageListener {
                     .sorted(new PlayerOrderComparator())
                     .toList();
 
-            for(Player player : game.getPlayers())
+            for(Player player : game.getPlayers()){
                 player.setFromActualTurn(false);
+                if(player.isOnline())
+                    player.setCanPlayThisRound(true);
+            }
+
 
             int index;
             for (index = 0; index < game.getPlayers().length; index++) {
@@ -537,7 +541,14 @@ public class GameController implements DisconnectionListener, MessageListener {
                         disconnectedPlayer = view.getPlayerNickname();
                 }
             }
-            if(disconnectedPlayer == game.getPlayer(game.getCurrentPlayer()).getNickname()){
+
+            for(Player p : game.getPlayers()) {
+                if (p.getNickname().equals(disconnectedPlayer))
+                    p.setCanPlayThisRound(false);
+            }
+
+
+            if(disconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())){
                 //restore last saved state
                 try {
                     restoreLastSavedGame();
@@ -545,6 +556,10 @@ public class GameController implements DisconnectionListener, MessageListener {
                         game.getPlayer(i).setOnline(virtualViews[i].isOnline());
                     for (VirtualView view : virtualViews)
                         view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+                    for(Player p : game.getPlayers()) {
+                        if (p.getNickname().equals(disconnectedPlayer))
+                            p.setCanPlayThisRound(false);
+                    }
                     if(game.getGamePhase() == PLANNING)
                         playerHasEndedPlanning();
                     else {
@@ -566,6 +581,7 @@ public class GameController implements DisconnectionListener, MessageListener {
     private void restoreLastSavedGame() throws GameNotFoundException {
         Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
         this.game.copyStatusFrom(savedGame);
+        this.tableController.setTable(game.getTable());
         //setting observers
         for (VirtualView virtualView : virtualViews) {
             for (Player player : game.getPlayers()) {

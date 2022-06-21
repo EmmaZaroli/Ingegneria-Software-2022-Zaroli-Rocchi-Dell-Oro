@@ -32,7 +32,6 @@ public class Bag implements Serializable {
             }
         }
     }
-
     /**
      * Draws a student and removes it from the bag
      *

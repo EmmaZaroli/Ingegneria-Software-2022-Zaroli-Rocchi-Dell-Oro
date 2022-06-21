@@ -26,6 +26,7 @@ public class Player extends ModelObservable implements Serializable {
     private boolean isFromActualTurn = false;
     private boolean isPlayerTurn;
     private boolean isOnline;
+    private boolean canPlayThisRound = true;
 
     /**
      * Instantiates a new Player, sets by default isPlayerTurn to false
@@ -134,6 +135,10 @@ public class Player extends ModelObservable implements Serializable {
         return isOnline;
     }
 
+    public boolean canPlayThisRound() {
+        return canPlayThisRound;
+    }
+
     /**
      * Sets player turn
      *
@@ -181,5 +186,10 @@ public class Player extends ModelObservable implements Serializable {
 
     public void setFromActualTurn(boolean fromActualTurn) {
         isFromActualTurn = fromActualTurn;
+    }
+
+    public void setCanPlayThisRound(boolean canPlayThisRound) {
+        this.canPlayThisRound = canPlayThisRound;
+        notifyPlayerCanPlay(this);
     }
 }

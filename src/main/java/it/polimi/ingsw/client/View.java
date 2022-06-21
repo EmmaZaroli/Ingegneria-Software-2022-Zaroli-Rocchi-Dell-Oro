@@ -164,6 +164,7 @@ public abstract class View implements MessageListener, UserInterface {
         if (message instanceof ErrorMessage errorMessage) handleMessage(errorMessage);
         if (message instanceof GetDeckMessage getDeckMessage) handleMessage(getDeckMessage);
         if (message instanceof MoveStudentMessage moveStudentMessage) handleMessage(moveStudentMessage);
+        if (message instanceof PlayerCanPlayMessage playerCanPlayMessage) handleMessage(playerCanPlayMessage);
     }
 
     //<editor-fold desc="Message handlers">
@@ -186,15 +187,18 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void handleMessage(MoveStudentMessage message){
-        if(message.getNickname().equals(getMe().getNickname()))
-            askAction();
+        if(message.getNickname().equals(getMe().getNickname())) {
+            if(me.isCanPlayThisRound())
+                askAction();
+        }
     }
 
     private void handleMessage(GetDeckMessage message) {
         if (message.getNickname().equals(getMe().getNickname())) {
             me = me.with(message.getDeck());
             this.currentPhase = GamePhase.PLANNING;
-            this.askAssistantCard(message.getDeck());
+            if(me.isCanPlayThisRound())
+                this.askAssistantCard(message.getDeck());
         }
     }
 
@@ -231,10 +235,14 @@ public abstract class View implements MessageListener, UserInterface {
             this.currentPlayer = game.getCurrentPlayer();
             print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
-                if(game.getGamePhase() == GamePhase.PLANNING)
-                    askAssistantCard(getMe().getDeck());
-                else
-                    askAction();
+                if(game.getGamePhase() == GamePhase.PLANNING) {
+                    if(me.isCanPlayThisRound())
+                        askAssistantCard(getMe().getDeck());
+                }
+                else {
+                    if(me.isCanPlayThisRound())
+                        askAction();
+                }
             }
 
     }
@@ -255,8 +263,10 @@ public abstract class View implements MessageListener, UserInterface {
         print();
 
         if (currentPlayer.equals(getMe().getNickname())
-                && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS))
-            askAction();
+                && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS)) {
+            if(me.isCanPlayThisRound())
+                askAction();
+        }
         if(currentPhase.equals(GamePhase.ACTION_END)) resetCharacterCards();
     }
 
@@ -275,7 +285,8 @@ public abstract class View implements MessageListener, UserInterface {
         currentPlayer = message.getNickname();
         print();
         if (currentPlayer.equals(getMe().getNickname())) {
-            askAction();
+            if(me.isCanPlayThisRound())
+                askAction();
         }
     }
 
@@ -283,7 +294,8 @@ public abstract class View implements MessageListener, UserInterface {
         if (message.getNickname().equals(getMe().getNickname())) {
             error = message.getError();
             error(message.getError());
-            askAction();
+            if(me.isCanPlayThisRound())
+                askAction();
         }
     }
 
@@ -440,8 +452,10 @@ public abstract class View implements MessageListener, UserInterface {
         expertParameters = expertParameters.withExtraInfluence(newParameters.getExtraInfluence());
         expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());
         print();
-        if (currentPlayer.equals(getMe().getNickname()) && currentPhase != GamePhase.ACTION_END)
-            askAction();
+        if (currentPlayer.equals(getMe().getNickname()) && currentPhase != GamePhase.ACTION_END) {
+            if(me.isCanPlayThisRound())
+                askAction();
+        }
     }
 
     private void handleMessage(GameOverMessage message) {
@@ -452,6 +466,20 @@ public abstract class View implements MessageListener, UserInterface {
                 draw(message.getWinners().stream().filter(w -> !w.equals(me.getNickname())).findFirst().get());
         } else
             lose(message.getWinners());
+    }
+
+    private void handleMessage(PlayerCanPlayMessage message) {
+        if (message.getNickname().equals(me.getNickname())) {
+            this.me = this.me.withCanPlayThisRound(message.canPlay());
+            checkCharacterCardActivable();
+        } else {
+            Optional<Integer> opponentIndex = getOpponentIndex(message.getNickname());
+            if (opponentIndex.isPresent()) {
+                PlayerInfo opponent = opponents.get(opponentIndex.get());
+                opponents.remove((int)opponentIndex.get());
+                opponents.add(opponentIndex.get(), opponent.withCanPlayThisRound(message.canPlay()));
+            }
+        }
     }
 
     private void handleMessage(ConnectionMessage message) {
