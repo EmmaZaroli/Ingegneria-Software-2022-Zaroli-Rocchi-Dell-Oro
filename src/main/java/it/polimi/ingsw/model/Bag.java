@@ -25,17 +25,13 @@ public class Bag implements Serializable {
      */
     protected Bag() {
         this.students = new EnumMap<>(PawnColor.class);
-        /*
         for (PawnColor pc : PawnColor.values()) {
             if (pc != PawnColor.NONE) {
                 students.put(pc, PAWNS_PER_COLOR);
                 this.pawnCount += PAWNS_PER_COLOR;
             }
-        }*/
-        students.put(PawnColor.RED, PAWNS_PER_COLOR*5);
-        this.pawnCount += PAWNS_PER_COLOR*5;
+        }
     }
-
     /**
      * Draws a student and removes it from the bag
      *
