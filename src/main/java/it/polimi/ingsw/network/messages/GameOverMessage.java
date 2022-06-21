@@ -5,6 +5,9 @@ import it.polimi.ingsw.network.MessageType;
 
 import java.util.List;
 
+/**
+ * Message which contains the list of winners at the end of the game
+ */
 public class GameOverMessage extends Message {
 
     private final List<String> winners;

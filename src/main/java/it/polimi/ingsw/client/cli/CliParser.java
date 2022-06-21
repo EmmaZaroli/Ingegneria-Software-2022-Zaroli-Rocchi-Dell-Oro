@@ -17,7 +17,7 @@ public class CliParser {
      * @param input the string read from input
      * @return the corresponding PawnColor, NONE if it's not a valid input
      */
-    public static PawnColor checkIfStudent(String input) {
+    public PawnColor checkIfStudent(String input) {
         switch (input.toUpperCase()) {
             case "YELLOW":
                 return PawnColor.YELLOW;

@@ -5,9 +5,12 @@ import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message which contains the cloudTile
+ */
 public class CloudMessage extends Message {
 
-    private CloudTileDto cloud;
+    private final CloudTileDto cloud;
 
     public CloudMessage(String nickname, MessageType messageType, CloudTile cloud) {
         super(nickname, messageType);

@@ -6,11 +6,12 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
-
+/**
+ * Message which contains the game
+ */
 public class GameMessage extends Message {
 
-    private GameDto game;
-
+    private final GameDto game;
 
     public GameMessage(String nickname, MessageType messageType, Game game) {
         super(nickname, messageType);

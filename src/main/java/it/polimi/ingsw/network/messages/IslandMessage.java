@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message which contains the IslandCardDto
+ */
 public class IslandMessage extends Message {
 
     private final IslandCardDto island;

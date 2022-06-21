@@ -6,6 +6,9 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message which contains the PawnColor to move and its destination
+ */
 public class MoveStudentMessage extends Message {
 
     private final PawnColor studentColor;
@@ -20,6 +23,7 @@ public class MoveStudentMessage extends Message {
         this.islandCard = island;
     }
 
+    //used only in tests
     public void setIslandCard(IslandCard island) {
         this.islandCard = new IslandCardDto(island);
     }

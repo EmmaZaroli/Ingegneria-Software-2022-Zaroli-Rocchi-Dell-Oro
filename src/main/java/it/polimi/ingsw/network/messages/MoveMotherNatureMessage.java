@@ -3,6 +3,9 @@ package it.polimi.ingsw.network.messages;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message which contains Mother Nature steps
+ */
 public class MoveMotherNatureMessage extends Message {
 
     private final int steps;

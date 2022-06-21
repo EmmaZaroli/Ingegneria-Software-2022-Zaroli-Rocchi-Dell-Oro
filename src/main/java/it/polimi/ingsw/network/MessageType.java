@@ -1,5 +1,9 @@
 package it.polimi.ingsw.network;
 
+
+/**
+ * This enum contains all the message type available and used by the server and clients.
+ */
 public enum MessageType {
     ASK_STUDENTS_TO_MOVE,
     CHANGE_PLAYER,
