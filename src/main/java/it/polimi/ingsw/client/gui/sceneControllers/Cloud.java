@@ -1,12 +1,10 @@
 package it.polimi.ingsw.client.gui.sceneControllers;
 
 import it.polimi.ingsw.model.enums.PawnColor;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -61,29 +59,6 @@ public class Cloud extends Pane {
                 row++;
                 column = 0;
             }
-
-            imageView.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    orgSceneX = mouseEvent.getSceneX();
-                    orgSceneY = mouseEvent.getSceneY();
-                    orgTranslateX = imageView.getTranslateX();
-                    orgTranslateY = imageView.getTranslateY();
-                }
-            });
-
-            imageView.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    double offsetX = mouseEvent.getSceneX() - orgSceneX;
-                    double offsetY = mouseEvent.getSceneY() - orgSceneY;
-                    double newTranslateX = orgTranslateX + offsetX;
-                    double newTranslateY = orgTranslateY + offsetY;
-
-                    imageView.setTranslateX(newTranslateX);
-                    imageView.setTranslateY(newTranslateY);
-                }
-            });
         }
     }
 }

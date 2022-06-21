@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.gui.sceneControllers.Cloud;
+import it.polimi.ingsw.client.gui.sceneControllers.Island;
 import it.polimi.ingsw.client.gui.sceneControllers.SchoolBoard;
 import it.polimi.ingsw.client.gui.sceneControllers.SelectAssistant;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
@@ -19,8 +20,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -58,6 +57,30 @@ public class Gui extends View implements Initializable {
     private ImageView discard1;
     @FXML
     private ImageView discard2;
+    @FXML
+    private Island island0;
+    @FXML
+    private Island island1;
+    @FXML
+    private Island island2;
+    @FXML
+    private Island island3;
+    @FXML
+    private Island island4;
+    @FXML
+    private Island island5;
+    @FXML
+    private Island island6;
+    @FXML
+    private Island island7;
+    @FXML
+    private Island island8;
+    @FXML
+    private Island island9;
+    @FXML
+    private Island island10;
+    @FXML
+    private Island island11;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -107,29 +130,7 @@ public class Gui extends View implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                //TODO testing purpose only
-                opponent1.setOnDragDropped((DragEvent event) -> {
-                    Dragboard db = event.getDragboard();
-                    if (db.hasString()) {
-                        System.out.println("Dropped: " + db.getString());
-                        event.setDropCompleted(true);
-                    } else {
-                        event.setDropCompleted(false);
-                    }
-                    event.consume();
-                });
-
-                stage.getScene().setOnDragOver(new EventHandler<DragEvent>() {
-                    @Override
-                    public void handle(DragEvent event) {
-                        //TODO
-                        if (event.getGestureSource() != null && event.getDragboard().hasString()) {
-                            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        }
-
-                        event.consume();
-                    }
-                });
+                enableDragAndDrop();
             }
         });
     }
@@ -272,6 +273,42 @@ public class Gui extends View implements Initializable {
                             + getOpponents().get(1).getDiscardPileHead().get().value() + ").png"));
                 }
             }
+            if (island0 != null) {
+                island0.setStudents(getIslands().get(0).getIsland().getStudents());
+            }
+            if (island1 != null) {
+                island1.setStudents(getIslands().get(1).getIsland().getStudents());
+            }
+            if (island2 != null) {
+                island2.setStudents(getIslands().get(2).getIsland().getStudents());
+            }
+            if (island3 != null) {
+                island3.setStudents(getIslands().get(3).getIsland().getStudents());
+            }
+            if (island4 != null) {
+                island4.setStudents(getIslands().get(4).getIsland().getStudents());
+            }
+            if (island5 != null) {
+                island5.setStudents(getIslands().get(5).getIsland().getStudents());
+            }
+            if (island6 != null) {
+                island6.setStudents(getIslands().get(6).getIsland().getStudents());
+            }
+            if (island7 != null) {
+                island7.setStudents(getIslands().get(7).getIsland().getStudents());
+            }
+            if (island8 != null) {
+                island8.setStudents(getIslands().get(8).getIsland().getStudents());
+            }
+            if (island9 != null) {
+                island9.setStudents(getIslands().get(9).getIsland().getStudents());
+            }
+            if (island10 != null) {
+                island10.setStudents(getIslands().get(10).getIsland().getStudents());
+            }
+            if (island11 != null) {
+                island11.setStudents(getIslands().get(11).getIsland().getStudents());
+            }
         });
     }
 
@@ -295,6 +332,17 @@ public class Gui extends View implements Initializable {
         });
     }
 
+    private void enableDragAndDrop() {
+        //TODO
+        cloud1.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent dragEvent) {
+                //TODO
+            }
+        });
+    }
+
+    //TODO controls using already defined methods
     public void tryConnect(ActionEvent event) {
         TextField ip = (TextField) stage.getScene().lookup("#ip");
         TextField port = (TextField) stage.getScene().lookup("#port");
