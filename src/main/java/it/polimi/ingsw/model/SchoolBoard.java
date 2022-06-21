@@ -39,7 +39,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Add professor you now control
-     *
+     * Notify the views the changed schoolBoard
      * @param color the professor's color
      */
     public void addProfessor(PawnColor color) {
@@ -49,7 +49,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Adds a student on the row corresponding to the color of the student in the dining room
-     *
+     * Notify the views the changed schoolBoard
      * @param color the color of the student
      * @return true if the player is supposed to take one coin from the table, false otherwise
      */
@@ -61,7 +61,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Add a list of students to the entrance.
-     *
+     * Notify the views the changed schoolBoard
      * @param color the colors of the students
      */
     public void addStudentsToEntrance(List<PawnColor> color) {
@@ -71,7 +71,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Add n towers to the school board
-     *
+     * Notify the views the changed schoolBoard
      * @param n the number of tower to add
      */
     public void addTowers(int n) {
@@ -157,9 +157,9 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Remove professor from the player
+     * Notify the views the changed schoolBoard
      *
-     * @param color the color of the professor
-     * @return true if the specified element is present in the Set otherwise it returns false
+     * @param color the color of the professor to remove from the schoolBoard
      */
     public void removeProfessor(PawnColor color) {
         professorTable.remove(color);
@@ -168,6 +168,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Remove student from entrance
+     * Notify the views the changed schoolBoard
      *
      * @param color the color of the student
      */
@@ -178,6 +179,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
 
     /**
      * Remove one tower from the school board
+     * Notify the views the changed schoolBoard
      */
     public void removeTower() {
         towers--;
@@ -201,14 +203,27 @@ public class SchoolBoard extends ModelObservable implements Serializable {
         return this.entrance;
     }
 
+    /**
+     *
+     * @param color the color of the student
+     * @return the number of students of that color in the entrance
+     */
     public int getStudentsInEntrance(PawnColor color){
         return (int) entrance.stream().filter(x -> x.equals(color)).count();
     }
 
+    /**
+     *
+     * @return the number of students in the entrance
+     */
     public int getStudentsInEntrance(){
         return entrance.size();
     }
 
+    /**
+     *
+     * @return a map that maps to each student's color, their number of occurrences in the entrance
+     */
     public Map<PawnColor, Integer> getStudentsInEntranceCardinality(){
         Map<PawnColor, Integer> res = new HashMap<>();
         for(PawnColor color: PawnColor.values()){
@@ -217,6 +232,10 @@ public class SchoolBoard extends ModelObservable implements Serializable {
         return res;
     }
 
+    /**
+     *
+     * @return the uuid of the schoolBoard
+     */
     public UUID getUuid(){
         return this.uuid;
     }

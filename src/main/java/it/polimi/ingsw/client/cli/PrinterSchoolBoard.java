@@ -7,6 +7,9 @@ import it.polimi.ingsw.model.enums.Tower;
 import java.io.PrintStream;
 import java.util.List;
 
+/**
+ * Class for printing the SchoolBoards
+ */
 public class PrinterSchoolBoard {
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -25,12 +28,15 @@ public class PrinterSchoolBoard {
     public static final String TOWER_WHITE = "█";
     public static final String TOWER_BLACK = ANSI_BLACK + TOWER_WHITE + ANSI_RESET;
     public static final String TOWER_GREY = ANSI_WHITE + TOWER_WHITE + ANSI_RESET;
+    public static final String BOTTOM = "|________________________________________|";
 
-
+    /**
+     * Prints the schoolBoards on the table
+     * @param boards the schoolBoards
+     */
     public void printBoard(List<SchoolBoardDto> boards) {
         PrintStream out = System.out;
 
-        //print board
         int[] actualEntranceSize = {0, 0, 0};
         int[] countTowers = {0, 0, 0};
         for (int i = 0; i < boards.size(); i++) {
@@ -51,7 +57,7 @@ public class PrinterSchoolBoard {
             out.print("|   " + student + " ");
             studentsTable(0, boards.get(i));
             System.out.print("        |");
-            out.print("          "); //10 spaces
+            space(); //10 spaces
         }
         out.println();
 
@@ -67,23 +73,29 @@ public class PrinterSchoolBoard {
                     student2 = assignColor(boards.get(j).getEntrance().get(studentPosition + 1), student2);
                 out.print("| " + student1 + " " + student2 + " ");
                 studentsTable(rows, boards.get(j));
-                countTowers[j] = Towers(boards.get(j).getTowersCount(), boards.get(j).getTowerColor(), countTowers[j]);
+                countTowers[j] = towersPrinter(boards.get(j).getTowersCount(), boards.get(j).getTowerColor(), countTowers[j]);
                 System.out.print("  |");
-                out.print("          "); //10 spaces
+                space(); //10 spaces
             }
             studentPosition = studentPosition + 2;
             out.println();
         }
-        out.print("|________________________________________|");
-        out.print("          ");
-        out.print("|________________________________________|");
+        out.print(BOTTOM);
+        space();
+        out.print(BOTTOM);
         if (boards.size() == 3) {
             out.print("         ");
-            out.print("|________________________________________|");
+            out.print(BOTTOM);
         }
     }
 
 
+    /**
+     *
+     * @param studentColor the PawnColor
+     * @param student contains the constant FULL_CIRCLE if there's a student, EMPTY circle if there's not
+     * @return a string corresponding to the constant to which the color is assigned
+     */
     private static String assignColor(PawnColor studentColor, String student) {
         String assignedColor;
         switch (studentColor) {
@@ -97,8 +109,13 @@ public class PrinterSchoolBoard {
         return assignedColor + student + ANSI_RESET;
     }
 
+    /**
+     *
+     * @param rows which row of the schoolBoard we have to print
+     * @param board the schoolboard
+     */
     private void studentsTable(int rows, SchoolBoardDto board) {
-        int i = 0;
+        int i ;
         String colorRow;
         PawnColor color;
         switch (rows) {
@@ -146,7 +163,14 @@ public class PrinterSchoolBoard {
 
     }
 
-    private int Towers(int towerOnBoard, Tower color, int countTowers) {
+    /**
+     *
+     * @param towerOnBoard the number of towers on that schoolBoard
+     * @param color the colors of the towers to print
+     * @param countTowers the number of towers already printed on that schoolBoard
+     * @return the updated countTowers
+     */
+    private int towersPrinter(int towerOnBoard, Tower color, int countTowers) {
         String towerColor;
         switch (color) {
             case BLACK -> towerColor = TOWER_BLACK;
@@ -166,6 +190,16 @@ public class PrinterSchoolBoard {
         }
         if (spaceCount == 2) System.out.print(" ");
         return countTowers;
+    }
+
+    /**
+     * Leaves 10 spaces on the left
+     */
+    private void space(){
+        int space = 10;
+        for(int i=0;i<space;i++){
+            System.out.print(" ");
+        }
     }
 
 

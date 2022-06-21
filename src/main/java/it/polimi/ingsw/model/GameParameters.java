@@ -21,6 +21,11 @@ public class GameParameters implements Serializable {
     private int studentsToDraw;
     private int studentsToMove;
 
+    /**
+     * instantiates a new GameParameters
+     * @param playersNumber the number of players
+     * @param gameMode the gameMode
+     */
     public GameParameters(PlayersNumber playersNumber, GameMode gameMode) {
         this.playersNumber = playersNumber;
         this.gameMode = gameMode;
@@ -54,10 +59,18 @@ public class GameParameters implements Serializable {
         return studentsToMove;
     }
 
+    /**
+     *
+     * @return the number of players
+     */
     public PlayersNumber getPlayersNumber() {
         return playersNumber;
     }
 
+    /**
+     *
+     * @return the Gamemode
+     */
     public GameMode getGameMode() {
         return gameMode;
     }

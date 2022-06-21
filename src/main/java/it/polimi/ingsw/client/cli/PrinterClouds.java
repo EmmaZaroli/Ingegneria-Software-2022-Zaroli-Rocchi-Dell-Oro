@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.List;
 
+/**
+ * Class for printing the CloudTiles
+ */
 public class PrinterClouds {
     public static final String FULL_CIRCLE = "●";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -15,6 +18,10 @@ public class PrinterClouds {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
+    /**
+     *
+     * @param clouds cloudTiles on the table
+     */
     public void printClouds(List<CloudTileDto> clouds) {
         int i;
         space(50);
@@ -37,7 +44,7 @@ public class PrinterClouds {
                 System.out.print("  ( ");
                 for(int j=0 ; j<clouds.get(i).getStudents().size() ; j++){
                     PawnColor student = (clouds.get(i)).getStudents().get(j);
-                    System.out.print(assignColor(student,FULL_CIRCLE));
+                    System.out.print(assignColor(student));
                 }
                 System.out.print(" )  ");
             }
@@ -54,7 +61,12 @@ public class PrinterClouds {
     }
 
 
-    private static String assignColor(PawnColor studentColor, String student) {
+    /**
+     *
+     * @param studentColor
+     * @return
+     */
+    private static String assignColor(PawnColor studentColor) {
         String assignedColor;
         switch (studentColor) {
             case RED -> assignedColor = ANSI_RED;
@@ -64,9 +76,13 @@ public class PrinterClouds {
             case PINK -> assignedColor = ANSI_PURPLE;
             default -> assignedColor = ANSI_WHITE;
         }
-        return assignedColor + student + ANSI_RESET;
+        return assignedColor + FULL_CIRCLE + ANSI_RESET;
     }
 
+    /**
+     *
+     * @param move
+     */
     private void space(int move) {
         for (int i = 0; i < move; i++) System.out.print(" ");
     }

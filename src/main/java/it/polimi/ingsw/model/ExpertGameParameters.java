@@ -15,6 +15,11 @@ public class ExpertGameParameters extends GameParameters {
     private PawnColor colorWithNoInfluence = PawnColor.NONE;
     private boolean alreadyActivateCharacterCard;
 
+    /**
+     * Instantiates a new Expert Game Parameters
+     * @param playersNumber the player's number
+     * @param gameMode the gameMode
+     */
     public ExpertGameParameters(PlayersNumber playersNumber, GameMode gameMode) {
         super(playersNumber, gameMode);
     }
@@ -106,6 +111,10 @@ public class ExpertGameParameters extends GameParameters {
         this.colorWithNoInfluence = colorWithNoInfluence;
     }
 
+    /**
+     *
+     * @param alreadyActivateCharacterCard is true if a card was activated, false otherwise
+     */
     public void setAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard) {
         this.alreadyActivateCharacterCard = alreadyActivateCharacterCard;
     }

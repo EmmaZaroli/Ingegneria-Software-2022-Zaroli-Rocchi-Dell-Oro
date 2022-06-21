@@ -1,17 +1,22 @@
 package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.client.modelview.ViewCharacterCard;
-import it.polimi.ingsw.dtos.CharacterCardDto;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.PawnColor;
 
 import java.util.List;
 import java.util.Optional;
 
-public class CliParsen {
+/**
+ * Parser for Cli inputs
+ */
+public class CliParser {
 
-    String character = "CHARACTER";
-
+    /**
+     *
+     * @param input the string read from input
+     * @return the corresponding PawnColor, NONE if it's not a valid input
+     */
     public static PawnColor checkIfStudent(String input) {
         switch (input.toUpperCase()) {
             case "YELLOW":
@@ -29,6 +34,12 @@ public class CliParsen {
         }
     }
 
+    /**
+     *
+     * @param card input string
+     * @param deck list of the character cards on the table
+     * @return the index of the character card, if present
+     */
     public Optional<Integer> indexCharacterCard(String card, List<ViewCharacterCard> deck){
         card = card.toUpperCase();
         Optional<Character> choice = fromStringToCard(card);
@@ -39,6 +50,11 @@ public class CliParsen {
         return Optional.empty();
     }
 
+    /**
+     *
+     * @param card input string
+     * @return the corresponding character card
+     */
     private Optional<Character> fromStringToCard(String card) {
         switch (card) {
             case "CHARACTER_1" -> {
@@ -72,12 +88,12 @@ public class CliParsen {
     }
 
     /**
-     * @param input
+     * @param input the input string
      * @param islandCount number of island still on the table
-     * @return 0-11 island index, 12 schoolboard, 13 invalid input
+     * @return 0-11 island index, 12 schoolBoard, 13 invalid input
      */
     public static int isIslandOrSchoolBoard(String input, int islandCount) {
-        if (input.toLowerCase().equals("schoolboard")) return 12;
+        if (input.equalsIgnoreCase("schoolboard")) return 12;
         int number;
         try {
             number = Integer.parseInt(input);
