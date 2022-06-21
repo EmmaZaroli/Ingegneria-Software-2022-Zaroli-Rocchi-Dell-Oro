@@ -542,6 +542,12 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
             }
 
+            for(Player p : game.getPlayers()) {
+                if (p.getNickname().equals(disconnectedPlayer))
+                    p.setCanPlayThisRound(false);
+            }
+
+
             if(disconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())){
                 //restore last saved state
                 try {
