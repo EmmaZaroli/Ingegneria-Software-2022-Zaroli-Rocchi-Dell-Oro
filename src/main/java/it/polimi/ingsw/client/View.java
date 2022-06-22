@@ -464,7 +464,7 @@ public abstract class View implements MessageListener, UserInterface {
         ExpertParametersDto newParameters = message.getExpertParameters();
         expertParameters = expertParameters.withHasAlreadyActivateCharacterCard(newParameters.hasAlreadyActivateCharacterCard());
         expertParameters = expertParameters.withIsTakeProfessorEvenIfSameStudents(newParameters.isTakeProfessorEvenIfSameStudents());
-        expertParameters = expertParameters.withmotherNatureExtraMovements(newParameters.getMotherNatureExtraMovements());
+        expertParameters = expertParameters.withMotherNatureExtraMovements(newParameters.getMotherNatureExtraMovements());
         expertParameters = expertParameters.withIsTowersCountInInfluence(newParameters.isTowersCountInInfluence());
         expertParameters = expertParameters.withExtraInfluence(newParameters.getExtraInfluence());
         expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());

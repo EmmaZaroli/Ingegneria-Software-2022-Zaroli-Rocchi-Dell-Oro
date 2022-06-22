@@ -1,9 +1,11 @@
 package it.polimi.ingsw.client.modelview;
 
 import it.polimi.ingsw.dtos.ExpertParametersDto;
-import it.polimi.ingsw.model.ExpertGameParameters;
 import it.polimi.ingsw.model.enums.PawnColor;
 
+/**
+ * Expert Parameters
+ */
 public class ExpertParameters {
     private boolean takeProfessorEvenIfSameStudents;
     private int motherNatureExtraMovements;
@@ -74,7 +76,7 @@ public class ExpertParameters {
         return retVal;
     }
 
-    public ExpertParameters withmotherNatureExtraMovements(int motherNatureExtraMovements) {
+    public ExpertParameters withMotherNatureExtraMovements(int motherNatureExtraMovements) {
         ExpertParameters retVal = this.deepClone();
         retVal.motherNatureExtraMovements = motherNatureExtraMovements;
         return retVal;
