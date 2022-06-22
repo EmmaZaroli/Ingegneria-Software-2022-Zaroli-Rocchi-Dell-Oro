@@ -7,6 +7,14 @@ import it.polimi.ingsw.model.enums.Tower;
 
 import java.util.List;
 
+/**
+ * Class for printing LinkedIslands
+ * We have chosen to print students only on the main islands
+ * Therefore, when an island is joined to another, the printing will be made only on the second one
+ * The towers will be printed on all islands regardless of their type
+ * the printing is done on the two sides of the islands
+ * in the first side, the first two spaces are reserved for the printing of the tower and possibly of mother nature
+ */
 public class PrinterIslands {
 
 
@@ -39,6 +47,10 @@ public class PrinterIslands {
     private boolean up0;
     private boolean up4;
 
+    /**
+     * Prints the LinkedIslands
+     * @param islands the linkedIslands on the table
+     */
     public void printIslands(List<LinkedIslands> islands) {
 
         //initializing
@@ -128,6 +140,9 @@ public class PrinterIslands {
         System.out.println();
     }
 
+    /**
+     * Prints the indexes for the first row of LinkedIslands
+     */
     private void firstRowNumbers(){
         centre();
         space(4);
@@ -138,6 +153,9 @@ public class PrinterIslands {
         System.out.println();
     }
 
+    /**
+     * Prints the indexes for the third row of LinkedIslands
+     */
     private void thirdRowNumbers(){
         System.out.println();
         centre();
@@ -148,6 +166,10 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the first row of linkedIslands
+     * @param islands the linkedIslands
+     */
     private void firstRow(List<LinkedIslands> islands) {
         //top
         centre();
@@ -169,6 +191,10 @@ public class PrinterIslands {
 
     }
 
+    /**
+     * Prints the top of the first row of islands
+     * @param islands the linkedIslands
+     */
     private void firstRowTop(List<LinkedIslands> islands) {
         //top
         System.out.print(" ");
@@ -181,6 +207,10 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the first side of the first row of islands
+     * @param islands the linked islands
+     */
     private void firstRowSideone(List<LinkedIslands> islands) {
         for (int i = 0; i < 5; i++) {
             if (islands.get(i).isConnectedWithNext() && i != 4) {
@@ -201,6 +231,10 @@ public class PrinterIslands {
 
     }
 
+    /**
+     * Prints the second side of the first row of islands
+     * @param islands the linked islands
+     */
     private void firstRowSidetwo(List<LinkedIslands> islands) {
         for (int i = 0; i < 5; i++) {
             if (islands.get(i).isConnectedWithNext() && i != 4) {
@@ -215,6 +249,10 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the bottoms of the islands of the first row
+     * @param islands the linked islands
+     */
     private void firstRowBottom(List<LinkedIslands> islands) {
         for (int i = 0; i < 4; i++) {
             upConnected = false;
@@ -245,6 +283,10 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the third row
+     * @param islands the linked islands
+     */
     private void thirdRow(List<LinkedIslands> islands) {
         int intermediate = (islands.get(10).getIsland().getStudents().size() - 11) / 2;
         size[10] = Math.max(intermediate, 0);
@@ -292,6 +334,10 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the tops of the third row of islands
+     * @param islands the linked islands
+     */
     private void thirdRowOtherTops(List<LinkedIslands> islands) {
         int intermediate;
         for (int i = 9; i > 6; i--) {
@@ -320,6 +366,10 @@ public class PrinterIslands {
 
     }
 
+    /**
+     * Prints the first side of the third row of islands
+     * @param islands the linked islands
+     */
     private void thirdRowSides(List<LinkedIslands> islands) {
         for (int i = 10; i > 5; i--) {
             if (islands.get(i - 1).isConnectedWithNext() && i != 6) {
@@ -339,6 +389,10 @@ public class PrinterIslands {
 
     }
 
+    /**
+     * Prints the second side of the third row of islands
+     * @param islands the linked islands
+     */
     private void thirdRowSideTwo(List<LinkedIslands> islands) {
         for (int i = 10; i > 5; i--) {
             if (islands.get(i - 1).isConnectedWithNext() && i != 6) {
@@ -354,12 +408,20 @@ public class PrinterIslands {
     }
 
 
+    /**
+     * Used only for the two centered islands (second row) if they are not considered as main islands
+     * @param connected is true if the island is connected with the upper one
+     */
     private void topWithConnection(boolean connected) {
         if (connected) System.out.print(SIDE);
         else top(false);
     }
 
-    //for print
+    /**
+     * Used only for the two centered islands (second row) if they are considered as main islands
+     * @param connected is true if the island is connected with the upper one
+     * @param extension additional space in case the space already present for the students' printing is not enough
+     */
     private void topWithConnection(boolean connected, int extension) {
         if (connected) {
             System.out.print("|       ");
@@ -370,6 +432,11 @@ public class PrinterIslands {
         } else top(false, extension);
     }
 
+    /**
+     * Prints the top of the island depending on whether the island is connected or not
+     * Called only if the island is not a main island
+     * @param connected is true if the island is connected to the next one
+     */
     private void top(boolean connected) {
 
         if (connected) {
@@ -381,7 +448,12 @@ public class PrinterIslands {
         }
     }
 
-    //for print
+    /**
+     * Prints the top of the island depending on whether the island is connected or not
+     * Called only if the island is a main island
+     * @param connected is true if the island is connected to the next one
+     * @param extension additional space in case the space already present for the students' printing is not enough
+     */
     private void top(boolean connected, int extension) {
 
         if (connected) {
@@ -399,6 +471,13 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the side of the island depending on whether the island is connected or not
+     * Called only if the island is not a main island
+     * @param connected is true if the island is connected with the next one
+     * @param middle is true if the island is connected with the previous one and the next one
+     * @param tower the color of the tower
+     */
     private void side(boolean connected, boolean middle, Tower tower) {
         if (!connected && !isnext) {
             System.out.print("| " + this.towersColor(tower) + "     |");
@@ -411,6 +490,15 @@ public class PrinterIslands {
         System.out.print("  ");
     }
 
+    /**
+     * Prints the side of the island depending on whether the island is connected or not
+     * Called only if the island is a main island
+     * @param connected is true if the island is connected with the next one
+     * @param middle is true if the island is connected with the previous one and the next one
+     * @param island the island to print
+     * @param indexIsland the index of the island to print
+     * @param maxSize is 5 if it's the first side, 7 if it's the second one. represents the number of students that can be printed on that line
+     */
     private void side(boolean connected, boolean middle, IslandCardDto island, int indexIsland, int maxSize) {
         if (!connected && !isnext) {
             System.out.print("|");
@@ -436,6 +524,14 @@ public class PrinterIslands {
         System.out.print("  ");
     }
 
+    /**
+     * Prints the content of the island
+     * If the max size is 5, it prints, in order, mother nature, the tower and max five students
+     * If the max size is 7, it prints the remaining students, if any
+     * @param island the island to print
+     * @param indexIsland the index of the island to print
+     * @param maxSize is 5 if it's the first side, 7 if it's the second one.
+     * */
     private void printIslandContent(IslandCardDto island, int indexIsland, int maxSize) {
         if (maxSize == 5) {
             if (island.isHasMotherNature()) System.out.print(MOTHER_NATURE);
@@ -460,6 +556,11 @@ public class PrinterIslands {
         }
     }
 
+    /**
+     * Prints the bottom of the island
+     * @param connected is true if the island is connected to the next one
+     * @param middle is true if the island is connected with the previous one and the next one
+     */
     private void bottom(boolean connected, boolean middle) {
         if (!connected && !isnext) {
             System.out.print(BOTTOM);
@@ -500,6 +601,11 @@ public class PrinterIslands {
 
     }
 
+    /**
+     *
+     * @param studentColor the pawnColor
+     * @return a string corresponding to the color of the pawnColor
+     */
     private static String assignColor(PawnColor studentColor) {
         String assignedColor;
         switch (studentColor) {
@@ -513,7 +619,11 @@ public class PrinterIslands {
         return assignedColor + FULL_CIRCLE + ANSI_RESET;
     }
 
-
+    /**
+     *
+     * @param color the Tower
+     * @return a string corresponding to the color of the Tower
+     */
     private String towersColor(Tower color) {
         String towerColor;
         switch (color) {
@@ -525,9 +635,17 @@ public class PrinterIslands {
         return towerColor;
     }
 
+    /**
+     * Used for centering the islands
+     */
     private void centre() {
         for (int i = 0; i < 40; i++) System.out.print(" ");
     }
+
+    /**
+     *
+     * @param space the number of spaces to leave of the left
+     */
     private void space(int space) {
         for(int i=0;i<space;i++) System.out.print(" ");
     }
