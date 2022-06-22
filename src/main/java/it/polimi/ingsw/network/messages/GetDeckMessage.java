@@ -7,9 +7,12 @@ import it.polimi.ingsw.network.MessageType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Message which contains the list of AssistantCard of a player
+ */
 public class GetDeckMessage extends Message {
 
-    private List<AssistantCard> deck = new ArrayList<>();
+    private final List<AssistantCard> deck = new ArrayList<>();
 
     public GetDeckMessage(String nickname, MessageType messageType, List<AssistantCard> assistants) {
         super(nickname, messageType);

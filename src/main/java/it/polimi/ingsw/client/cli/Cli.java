@@ -31,7 +31,7 @@ public class Cli extends View {
     private final PrinterIslands islandsPrinter = new PrinterIslands();
     private final PrinterCharacterCards characterCardPrinter = new PrinterCharacterCards();
     private final PrinterAssistantCards assistantCardsPrinter = new PrinterAssistantCards();
-    private CliParser cliParser = new CliParser();
+    private final CliParser cliParser = new CliParser();
 
     /**
      * Instantiates a new cli
@@ -57,7 +57,7 @@ public class Cli extends View {
                 "                      ██████████   ███    ███ █▀     ███    █▀   ▀█   █▀     ▄████▀    ▀█████▀   ▄████████▀  \n" +
                 "                                   ███    ███                                                                ");
 
-        out.println("");
+        out.println(" ");
         space(45);
         out.println("Welcome to Eriantys Board Game!");
     }
@@ -99,14 +99,21 @@ public class Cli extends View {
      * @return the string read from the input.
      */
     private String readLine() {
-        String input = null;
-        input = in.nextLine();
+        String input="";
+        boolean helpRequest = false;
+        while(!helpRequest) {
+            input = in.nextLine();
+            if(input.equals("-h") && isExpertGame()) {
+                helpMessage();
+            }
+            else helpRequest=true;
+        }
         return input;
     }
 
     //TODO move validation logic to shared layer
     public void askPlayerNickname() {
-        boolean valid = false;
+        boolean valid;
         String nickname;
         do {
             out.print("Enter your nickname: ");
@@ -156,7 +163,15 @@ public class Cli extends View {
     }
 
     public void helpMessage() {
-        //TODO
+        out.println("character_1: Take 1 student from this card and place it on an island of your choice. ");
+        out.println("character_2: During this turn, you take control of any number of professors,even if you have the same number of students as the player who currently controls them.");
+        out.println("character_4: You may move Mother Nature up to 2 additional steps.");
+        out.println("character_6: When resolving a Conquering on an Island, towers don't count towards influence.");
+        out.println("character_7: You may take up to 3 students from this card and replace them with the same number of students from you entrance.");
+        out.println("character_8: During the influence calculation this turn, you count as having 2 more influence.");
+        out.println("character_9: Choose a color of students, during the influence calculation this turn, that color adds no influence.");
+        out.println("character_11: Take one student from this card and place it in your dining room.");
+        out.print("Make your move:");
     }
 
     public void changePhase(GamePhase phase) {
@@ -180,10 +195,10 @@ public class Cli extends View {
             out.print("   _____     ");
         }
         out.println();
-        for (int i = 0; i < deck.size(); i++) {
-            if (deck.get(i).value() != 10)
-                out.print("  |" + deck.get(i).value() + "   " + deck.get(i).motherNatureMovement() + "|    ");
-            else out.print("  |" + deck.get(i).value() + "  " + deck.get(i).motherNatureMovement() + "|    ");
+        for (AssistantCard assistantCard : deck) {
+            if (assistantCard.value() != 10)
+                out.print("  |" + assistantCard.value() + "   " + assistantCard.motherNatureMovement() + "|    ");
+            else out.print("  |" + assistantCard.value() + "  " + assistantCard.motherNatureMovement() + "|    ");
         }
         out.println();
         for (int i = 0; i < deck.size(); i++) {
@@ -270,7 +285,7 @@ public class Cli extends View {
             if (isExpertGame() && !areCharacterActive()) out.print(" or choose character card to activate");
             out.print(": ");
             String input = readLine();
-            PawnColor student = CliParser.checkIfStudent(input);
+            PawnColor student = cliParser.checkIfStudent(input);
             if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
                     validDestination = false;
                     while (!validDestination) {
@@ -289,7 +304,7 @@ public class Cli extends View {
             // the input was not a color, checking if it's a character card
             else {
                 Optional<Integer> characterCard = cliParser.indexCharacterCard(input, getCharacterCards());
-                if (!characterCard.isEmpty() && canActivateCharacter(characterCard.get())) {
+                if (characterCard.isPresent() && canActivateCharacter(characterCard.get())) {
                     validObject = askCharacterCardParameters(characterCard.get());
                 }
                 if (!validObject && isExpertGame()) error("invalid student or invalid character card");
@@ -376,10 +391,9 @@ public class Cli extends View {
 
 
     private void printAssistantCardPlayed() {
-        List<PlayerInfo> players = new ArrayList();
+        List<PlayerInfo> players = new ArrayList<>();
         players.add(getMe());
-        for(PlayerInfo opponent : getOpponents())
-            players.add(opponent);
+        players.addAll(getOpponents());
         assistantCardsPrinter.print(players);
         out.println();
     }
@@ -422,7 +436,7 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose Island index: ");
-                    int islandIndex = cliParser.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
+                    int islandIndex = CliParser.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
                     if(islandIndex!=13 && islandIndex!=12) {
                         parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
                         valid = true;
@@ -439,11 +453,11 @@ public class Cli extends View {
         boolean valid = false;
         Object[] parameters = new Object[2];
         List<PawnColor> studentsFromCard = new ArrayList<>();
-        List<PawnColor> studentsFromEntrance = new ArrayList<>();
+        List<PawnColor> studentsFromEntrance;
         do{
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
-                studentsFromCard = Arrays.stream(readLine().split(",")).map(s -> cliParser.checkIfStudent(s)).collect(Collectors.toList());
+                studentsFromCard = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());
                 int size = (int) studentsFromCard.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromCard.size() == size) {
                     parameters[0] = studentsFromCard;
@@ -453,7 +467,7 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose student from entrance [max 3, separated by commas]: ");
-                studentsFromEntrance = Arrays.stream(readLine().split(",")).map(s -> cliParser.checkIfStudent(s)).collect(Collectors.toList());
+                studentsFromEntrance = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());
                 int size = (int) studentsFromEntrance.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromEntrance.size() == size && studentsFromEntrance.size() == studentsFromCard.size()) {
                     parameters[1] = studentsFromEntrance;

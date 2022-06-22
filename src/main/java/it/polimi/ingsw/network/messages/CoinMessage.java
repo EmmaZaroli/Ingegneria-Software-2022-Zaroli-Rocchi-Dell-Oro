@@ -3,15 +3,20 @@ package it.polimi.ingsw.network.messages;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message which contains the updated total number of coins on the table or of a player
+ */
 public class CoinMessage extends Message {
-
-    //TODO do we need isOnTable?
 
     private final int coins;
     private final boolean isOnTable;
-    //true: coin on table
-    //false: coin on player
 
+    /**
+     *
+     * @param nickname the nickname of the current player
+     * @param coins the total number of coins
+     * @param isOnTable true if the coins are on the table, false if they belong to a player
+     */
     public CoinMessage(String nickname, int coins, boolean isOnTable) {
         super(nickname, MessageType.UPDATE_COINS);
         this.coins = coins;

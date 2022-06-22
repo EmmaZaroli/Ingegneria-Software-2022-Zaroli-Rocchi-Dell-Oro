@@ -4,6 +4,9 @@ import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
+/**
+ * Message used by the server to confirm or discard a NicknameProposalMessage
+ */
 public class NicknameResponseMessage extends Message {
     private final NicknameStatus nicknameStatus;
 

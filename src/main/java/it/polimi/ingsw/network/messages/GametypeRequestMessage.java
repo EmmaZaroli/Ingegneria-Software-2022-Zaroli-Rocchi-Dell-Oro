@@ -5,6 +5,9 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message used by the view containing the number of players and the gameMode chose
+ */
 public class GametypeRequestMessage extends Message {
     private final GameMode gameMode;
     private final PlayersNumber playersNumber;

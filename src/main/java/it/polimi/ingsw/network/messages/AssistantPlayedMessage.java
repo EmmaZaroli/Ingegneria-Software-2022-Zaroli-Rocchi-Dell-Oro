@@ -4,8 +4,9 @@ import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
-import java.util.Optional;
-
+/**
+ *  Message which contains the assistantCard played
+ */
 public class AssistantPlayedMessage extends Message {
 
     private final AssistantCard assistantCard;

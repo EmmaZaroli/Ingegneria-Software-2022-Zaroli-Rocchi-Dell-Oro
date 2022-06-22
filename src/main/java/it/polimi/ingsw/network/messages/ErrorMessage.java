@@ -3,6 +3,9 @@ package it.polimi.ingsw.network.messages;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 
+/**
+ * Message which contains an error occurred on the server
+ */
 public class ErrorMessage extends Message {
 
     private final String error;
