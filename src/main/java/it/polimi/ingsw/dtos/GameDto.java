@@ -1,6 +1,5 @@
 package it.polimi.ingsw.dtos;
 
-import it.polimi.ingsw.client.modelview.ExpertParameters;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 
@@ -22,6 +21,7 @@ public class GameDto implements Serializable {
     private GamePhase gamePhase;
     private String currentPlayer;
     private ExpertParametersDto expertParameters;
+    private boolean enoughPlayersOnline;
 
     public GameDto(Game origin, String nickname) {
         this.isExpert = origin instanceof ExpertGame;
@@ -47,6 +47,7 @@ public class GameDto implements Serializable {
             this.gamePhase = origin.getGamePhase();
             this.currentPlayer = origin.getPlayer(origin.getCurrentPlayer()).getNickname();
         }
+        this.enoughPlayersOnline = origin.areEnoughPlayersOnline();
     }
 
     public PlayerDto getMe() {
@@ -95,5 +96,9 @@ public class GameDto implements Serializable {
 
     public List<CharacterCardDto> getCharacterCards() {
         return characterCards;
+    }
+
+    public boolean areEnoughPlayersOnline() {
+        return enoughPlayersOnline;
     }
 }

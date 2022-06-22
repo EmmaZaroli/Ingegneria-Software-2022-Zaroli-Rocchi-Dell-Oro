@@ -9,10 +9,8 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.observer.ModelObserver;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.persistency.GameNotFoundException;
-import it.polimi.ingsw.servercontroller.GameEndingListener;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -529,6 +527,56 @@ public class GameController implements DisconnectionListener, MessageListener {
     @Override
     public void onDisconnect(Object disconnected) {
         synchronized (game) {
+            String disconnectedPlayer = "";
+            for(VirtualView view : virtualViews){
+                if(view.getClientHandler().isPresent()){
+                    if(view.getClientHandler().get() == ((Endpoint) disconnected))
+                        disconnectedPlayer = view.getPlayerNickname();
+                }
+            }
+
+            //when one player disconnect, this will set every player to their status (online or offline)
+            //it is redundant but it should be ok
+            for (int i = 0; i < virtualViews.length; i++)
+                game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+
+            if (game.howManyPlayersOnline() < 2 && game.areEnoughPlayersOnline())
+                notEnoughOnline();
+
+            if(game.areEnoughPlayersOnline()) {
+                if (disconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())) {
+                    try {
+                        restoreLastSavedGame();
+                        for (int i = 0; i < virtualViews.length; i++)
+                            game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+                    } catch (GameNotFoundException e) {
+                        //TODO handle exception
+                        e.printStackTrace();
+                    }
+                }
+                for(Player p : game.getPlayers()) {
+                    if (p.getNickname().equals(disconnectedPlayer))
+                        p.setCanPlayThisRound(false);
+                }
+                if(disconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())) {
+                    for (VirtualView view : virtualViews)
+                        view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+                    if (game.getGamePhase() == PLANNING)
+                        playerHasEndedPlanning();
+                    else {
+                        game.setGamePhase(ACTION_END);
+                        playerHasEndedAction();
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            /*
             //when one player disconnect, this will set every player to their status (online or offline)
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
@@ -574,7 +622,7 @@ public class GameController implements DisconnectionListener, MessageListener {
 
             if (game.howManyPlayersOnline() < 2 && game.isEnoughPlayerOnline())
                 notEnoughOnline();
-
+*/
         }
     }
 
@@ -594,29 +642,61 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     //called only when, previously a disconnection, there are enough player online, and then there are not
     private void notEnoughOnline() {
-        game.setEnoughPlayerOnline(false);
+        game.setEnoughPlayersOnline(false);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                game.callGameOverFromDisconnection();
+                synchronized (game) {
+                    game.callGameOverFromDisconnection();
+                }
             }
-        }, 5000); //TODO parameterize this
+        }, 1000000); //TODO parameterize this
     }
 
-    public void onReconnect() {
+    public void onReconnect(String reconnectedPlayer) {
         synchronized (game) {
             //when one player reconnect, this will set every player to their status (online or offline)
             //it is redundant but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-            if (game.howManyPlayersOnline() >= 2 && !game.isEnoughPlayerOnline())
+
+            if(game.howManyPlayersOnline() >= 2) {
+                if (!reconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())
+                && !game.getPlayer(game.getCurrentPlayer()).isOnline()) {
+                    try {
+                        restoreLastSavedGame();
+                    } catch (GameNotFoundException e) {
+                        //TODO handle exception
+                        e.printStackTrace();
+                    }
+                }
+                for (int i = 0; i < virtualViews.length; i++)
+                    game.getPlayer(i).setOnline(virtualViews[i].isOnline());
+                for(Player p : game.getPlayers()) {
+                    if(!p.isOnline())
+                        p.setCanPlayThisRound(false);
+                }
+                if(!reconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())
+                && !game.getPlayer(game.getCurrentPlayer()).isOnline()) {
+                    for (VirtualView view : virtualViews)
+                        view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
+                    if (game.getGamePhase() == PLANNING)
+                        playerHasEndedPlanning();
+                    else {
+                        game.setGamePhase(ACTION_END);
+                        playerHasEndedAction();
+                    }
+                }
+            }
+
+            if (game.howManyPlayersOnline() >= 2 && !game.areEnoughPlayersOnline())
                 enoughOnline();
         }
     }
 
     //called only when, previously a reconnection, there weren't enough player online, and then there are
     private void enoughOnline() {
-        game.setEnoughPlayerOnline(true);
+        game.setEnoughPlayersOnline(true);
         timer.cancel();
         timer = new Timer();
     }

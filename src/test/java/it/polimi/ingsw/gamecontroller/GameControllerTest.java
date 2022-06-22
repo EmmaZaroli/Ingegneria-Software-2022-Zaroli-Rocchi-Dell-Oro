@@ -2,9 +2,6 @@ package it.polimi.ingsw.gamecontroller;
 
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
-import it.polimi.ingsw.gamecontroller.exceptions.IllegalActionException;
-import it.polimi.ingsw.gamecontroller.exceptions.IllegalAssistantException;
-import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -583,8 +580,8 @@ class GameControllerTest extends TestCase {
     class DisconnectionTestNest{
         @Test
         void allPlayersGoOffline(){
-            game.setEnoughPlayerOnline(true);
-            Assertions.assertTrue(game.isEnoughPlayerOnline());
+            game.setEnoughPlayersOnline(true);
+            Assertions.assertTrue(game.areEnoughPlayersOnline());
             Assertions.assertFalse(virtualViews[0].isOnline());
             Assertions.assertFalse(virtualViews[1].isOnline());
             Assertions.assertTrue(player1.isOnline());
@@ -592,7 +589,7 @@ class GameControllerTest extends TestCase {
             gameController.onDisconnect(this); //TODO fix this
             Assertions.assertFalse(player1.isOnline());
             Assertions.assertFalse(player2.isOnline());
-            Assertions.assertFalse(game.isEnoughPlayerOnline());
+            Assertions.assertFalse(game.areEnoughPlayersOnline());
             /*
             try {
                 wait(10000); //TODO this should be 4-5 seconds more than the disconnection timer duration
