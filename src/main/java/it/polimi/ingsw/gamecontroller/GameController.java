@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.persistency.GameNotFoundException;
+import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -19,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static it.polimi.ingsw.model.enums.GamePhase.*;
+import static it.polimi.ingsw.utils.ApplicationConstants.MINIMUM_ONLINE_PLAYER;
 
 
 public class GameController implements DisconnectionListener, MessageListener {
@@ -540,7 +542,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
-            if (game.howManyPlayersOnline() < 2 && game.areEnoughPlayersOnline())
+            if (game.howManyPlayersOnline() < MINIMUM_ONLINE_PLAYER && game.areEnoughPlayersOnline())
                 notEnoughOnline();
 
             if(game.areEnoughPlayersOnline()) {
@@ -569,60 +571,6 @@ public class GameController implements DisconnectionListener, MessageListener {
                     }
                 }
             }
-
-
-
-
-
-
-
-            /*
-            //when one player disconnect, this will set every player to their status (online or offline)
-            //it is redundant but it should be ok
-            for (int i = 0; i < virtualViews.length; i++)
-                game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-
-            String disconnectedPlayer = "";
-            for(VirtualView view : virtualViews){
-                if(view.getClientHandler().isPresent()){
-                    if(view.getClientHandler().get() == ((Endpoint) disconnected))
-                        disconnectedPlayer = view.getPlayerNickname();
-                }
-            }
-
-            for(Player p : game.getPlayers()) {
-                if (p.getNickname().equals(disconnectedPlayer))
-                    p.setCanPlayThisRound(false);
-            }
-
-
-            if(disconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())){
-                //restore last saved state
-                try {
-                    restoreLastSavedGame();
-                    for (int i = 0; i < virtualViews.length; i++)
-                        game.getPlayer(i).setOnline(virtualViews[i].isOnline());
-                    for (VirtualView view : virtualViews)
-                        view.getClientHandler().ifPresent(e -> e.sendMessage(new GameMessage(view.getPlayerNickname(), MessageType.GAME_RESTORING, this.game)));
-                    for(Player p : game.getPlayers()) {
-                        if (p.getNickname().equals(disconnectedPlayer))
-                            p.setCanPlayThisRound(false);
-                    }
-                    if(game.getGamePhase() == PLANNING)
-                        playerHasEndedPlanning();
-                    else {
-                        game.setGamePhase(ACTION_END);
-                        playerHasEndedAction();
-                    }
-                } catch (GameNotFoundException e) {
-                    //TODO handle exception
-                    e.printStackTrace();
-                }
-            }
-
-            if (game.howManyPlayersOnline() < 2 && game.isEnoughPlayerOnline())
-                notEnoughOnline();
-*/
         }
     }
 
@@ -650,7 +598,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                     game.callGameOverFromDisconnection();
                 }
             }
-        }, 1000000); //TODO parameterize this
+        }, ApplicationConstants.DISCONNECTION_TIMER_NOT_ENOUGH_PLAYER);
     }
 
     public void onReconnect(String reconnectedPlayer) {
@@ -660,7 +608,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
-            if(game.howManyPlayersOnline() >= 2) {
+            if(game.howManyPlayersOnline() >= MINIMUM_ONLINE_PLAYER) {
                 if (!reconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())
                 && !game.getPlayer(game.getCurrentPlayer()).isOnline()) {
                     try {
@@ -689,7 +637,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 }
             }
 
-            if (game.howManyPlayersOnline() >= 2 && !game.areEnoughPlayersOnline())
+            if (game.howManyPlayersOnline() >= MINIMUM_ONLINE_PLAYER && !game.areEnoughPlayersOnline())
                 enoughOnline();
         }
     }
