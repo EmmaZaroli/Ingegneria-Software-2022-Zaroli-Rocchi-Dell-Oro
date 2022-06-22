@@ -117,7 +117,7 @@ class TestView extends View{
     }
 
     @Override
-    public void gameOverFromDisconnection() {
+    public void printGameOverFromDisconnection() {
 
     }
 }

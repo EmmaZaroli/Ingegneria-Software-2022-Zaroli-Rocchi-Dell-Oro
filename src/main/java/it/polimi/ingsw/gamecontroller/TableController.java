@@ -6,9 +6,13 @@ import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
+import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.*;
+
+import static it.polimi.ingsw.utils.ApplicationConstants.CLOUDS_STUDENTS_2_PLAYERS;
+import static it.polimi.ingsw.utils.ApplicationConstants.CLOUDS_STUDENTS_3_PLAYERS;
 
 /**
  * A class wrapping the logic for the management of the game table
@@ -72,11 +76,11 @@ public class TableController {
         for (CloudTile cloud : table.getCloudTiles()) {
             if(cloud.getStudentsNumber() == 0){
                 if (table.getPlayersNumber() == PlayersNumber.TWO) {
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < CLOUDS_STUDENTS_2_PLAYERS; i++) {
                         studentsDrawn.add(table.getBag().drawStudent());
                     }
                 } else {
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < CLOUDS_STUDENTS_3_PLAYERS; i++) {
                         studentsDrawn.add(table.getBag().drawStudent());
                     }
                 }
