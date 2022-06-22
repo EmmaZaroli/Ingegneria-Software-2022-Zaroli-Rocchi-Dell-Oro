@@ -107,6 +107,7 @@ public class DataDumper {
         } catch (IOException | ClassNotFoundException e) {
             this.logger.log(Level.SEVERE, e.getMessage(), e);
         }
+        gameController.setGameEndingListeners(new LinkedList<>()); //TODO find a solution
         return gameController;
     }
 }

@@ -34,27 +34,30 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.game = game;
         this.tableController = tableController;
         this.virtualViews = virtualViews;
-        this.init(game.getPlayers());
     }
 
-    protected void init(Player[] players) {
+    public void init() {
+        Player[] players = game.getPlayers();
         fillClouds();
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
         }
-        this.game.changePlayer(0);
-        this.game.setGamePhase(PLANNING);
+
 
         //setting observers
+        setObservers();
+        DataDumper.getInstance().saveGame(game);
+    }
+
+    public void setObservers() {
         for (VirtualView virtualView : virtualViews) {
             game.addObserver(virtualView);
-            for (Player player : players) {
+            for (Player player : game.getPlayers()) {
                 player.addObserver(virtualView);
                 player.getBoard().addObserver(virtualView);
             }
             tableController.table.addObserver(virtualView);
         }
-        DataDumper.getInstance().saveGame(game);
     }
 
     private void checkMessage(Message message) throws WrongPlayerException {
@@ -609,6 +612,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
             if(game.howManyPlayersOnline() >= MINIMUM_ONLINE_PLAYER) {
+                boolean areEnoughPlayersOnline = game.areEnoughPlayersOnline();
                 if (!reconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())
                 && !game.getPlayer(game.getCurrentPlayer()).isOnline()) {
                     try {
@@ -618,6 +622,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         e.printStackTrace();
                     }
                 }
+                game.setEnoughPlayersOnline(areEnoughPlayersOnline);
                 for (int i = 0; i < virtualViews.length; i++)
                     game.getPlayer(i).setOnline(virtualViews[i].isOnline());
                 for(Player p : game.getPlayers()) {
@@ -639,6 +644,10 @@ public class GameController implements DisconnectionListener, MessageListener {
 
             if (game.howManyPlayersOnline() >= MINIMUM_ONLINE_PLAYER && !game.areEnoughPlayersOnline())
                 enoughOnline();
+
+            if (game.howManyPlayersOnline() < MINIMUM_ONLINE_PLAYER && !game.areEnoughPlayersOnline())
+                notEnoughOnline();
+
         }
     }
 

@@ -523,7 +523,6 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     private void enoughPlayers(boolean areEnoughPlayers) {
-        this.areEnoughPlayers = areEnoughPlayers;
         if (areEnoughPlayers) {
             print();
             if (currentPlayer.equals(getMe().getNickname())) {
@@ -535,8 +534,11 @@ public abstract class View implements MessageListener, UserInterface {
                 }
             }
         }
-        else
-            notEnoughPlayer();
+        else {
+            if(this.areEnoughPlayers)
+                notEnoughPlayer();
+        }
+        this.areEnoughPlayers = areEnoughPlayers;
     }
 
 

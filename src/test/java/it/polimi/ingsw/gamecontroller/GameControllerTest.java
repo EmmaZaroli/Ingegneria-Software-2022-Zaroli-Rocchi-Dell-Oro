@@ -33,6 +33,11 @@ class GameControllerTest extends TestCase {
 
     GameController gameController = new GameController(game, tableController, virtualViews);
 
+    @BeforeEach
+    void init(){
+        gameController.init();
+    }
+
     @Test
     void planningWithOnlyEqualsAssistants(){
         Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());

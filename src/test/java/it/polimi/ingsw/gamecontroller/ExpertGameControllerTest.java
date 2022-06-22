@@ -35,6 +35,11 @@ class ExpertGameControllerTest extends TestCase {
     VirtualView[] virtualViews = {virtualView1,virtualView2};
     ExpertGameController gameController = new ExpertGameController(game, tableController, virtualViews);
 
+    @BeforeEach
+    void init(){
+        gameController.init();
+    }
+
     @Test
     void planningWithOnlyEqualsAssistants(){
         Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());

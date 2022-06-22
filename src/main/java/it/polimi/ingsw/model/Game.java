@@ -48,6 +48,7 @@ public class Game extends ModelObservable implements Serializable {
         this.currentPlayer = 0;
         this.gamePhase = GamePhase.PLANNING;
         this.parameters = parameters;
+        this.gamePhase = GamePhase.PLANNING;
     }
 
     /**
@@ -368,5 +369,10 @@ public class Game extends ModelObservable implements Serializable {
         this.error = game.error;
 
         this.enoughPlayersOnline = game.enoughPlayersOnline;
+    }
+
+    //TODO should be eliminated
+    public void setGameEndingListeners(List<GameEndingListener> gameEndingListeners) {
+        this.gameEndingListeners = gameEndingListeners;
     }
 }
