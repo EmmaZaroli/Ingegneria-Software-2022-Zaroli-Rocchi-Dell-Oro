@@ -189,7 +189,8 @@ public abstract class View implements MessageListener, UserInterface {
     private void handleMessage(MoveStudentMessage message){
         if(message.getNickname().equals(getMe().getNickname())) {
             if(me.isCanPlayThisRound())
-                askAction();
+                if(areEnoughPlayers)
+                    askAction();
         }
     }
 
@@ -198,7 +199,8 @@ public abstract class View implements MessageListener, UserInterface {
             me = me.with(message.getDeck());
             this.currentPhase = GamePhase.PLANNING;
             if(me.isCanPlayThisRound())
-                this.askAssistantCard(message.getDeck());
+                if(areEnoughPlayers)
+                    this.askAssistantCard(message.getDeck());
         }
     }
 
@@ -233,17 +235,22 @@ public abstract class View implements MessageListener, UserInterface {
             checkCharacterCardActivable();
             this.currentPhase = game.getGamePhase();
             this.currentPlayer = game.getCurrentPlayer();
+            this.areEnoughPlayers = game.areEnoughPlayersOnline();
             print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
                 if(game.getGamePhase() == GamePhase.PLANNING) {
                     if(me.isCanPlayThisRound())
-                        askAssistantCard(getMe().getDeck());
+                        if(areEnoughPlayers)
+                            askAssistantCard(getMe().getDeck());
                 }
                 else {
                     if(me.isCanPlayThisRound())
-                        askAction();
+                        if(areEnoughPlayers)
+                            askAction();
                 }
             }
+            if (!areEnoughPlayers)
+                notEnoughPlayer();
 
     }
 
@@ -260,12 +267,14 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
         currentPhase = message.getNewPhase();
-        print();
+        if (areEnoughPlayers)
+            print();
 
         if (currentPlayer.equals(getMe().getNickname())
                 && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS)) {
             if(me.isCanPlayThisRound())
-                askAction();
+                if(areEnoughPlayers)
+                    askAction();
         }
         if(currentPhase.equals(GamePhase.ACTION_END)) resetCharacterCards();
     }
@@ -283,10 +292,12 @@ public abstract class View implements MessageListener, UserInterface {
 
     private void handleMessage(ChangedPlayerMessage message) {
         currentPlayer = message.getNickname();
-        print();
+        if (areEnoughPlayers)
+            print();
         if (currentPlayer.equals(getMe().getNickname())) {
             if(me.isCanPlayThisRound())
-                askAction();
+                if(areEnoughPlayers)
+                    askAction();
         }
     }
 
@@ -295,7 +306,8 @@ public abstract class View implements MessageListener, UserInterface {
             error = message.getError();
             error(message.getError());
             if(me.isCanPlayThisRound())
-                askAction();
+                if(areEnoughPlayers)
+                    askAction();;
         }
     }
 
@@ -329,7 +341,8 @@ public abstract class View implements MessageListener, UserInterface {
         if (cloudIndex.isPresent()) {
             clouds.remove((int) cloudIndex.get());
             clouds.add(cloudIndex.get(), message.getCloud());
-            print();
+            if (areEnoughPlayers)
+                print();
         }
     }
 
@@ -344,12 +357,14 @@ public abstract class View implements MessageListener, UserInterface {
                 opponents.add(opponentIndex.get(), opponent.with(message.getSchoolBoard()));
             }
         }
-        this.print();
+        if (areEnoughPlayers)
+            print();
     }
 
     private void handleMessage(IslandMessage message) {
         updateIsland(message.getIsland());
-        this.print();
+        if (areEnoughPlayers)
+            print();
     }
 
 
@@ -403,7 +418,8 @@ public abstract class View implements MessageListener, UserInterface {
         else{
             this.tableCoins = message.getCoins();
         }
-        this.print();
+        if (areEnoughPlayers)
+            print();
     }
 
     //for every character card, set if it can be activated or not
@@ -440,7 +456,8 @@ public abstract class View implements MessageListener, UserInterface {
             }
         }
         checkCharacterCardActivable();
-        print();
+        if (areEnoughPlayers)
+            print();
     }
 
     private void handleMessage(ExpertParametersMessage message) {
@@ -451,10 +468,12 @@ public abstract class View implements MessageListener, UserInterface {
         expertParameters = expertParameters.withIsTowersCountInInfluence(newParameters.isTowersCountInInfluence());
         expertParameters = expertParameters.withExtraInfluence(newParameters.getExtraInfluence());
         expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());
-        print();
+        if (areEnoughPlayers)
+            print();
         if (currentPlayer.equals(getMe().getNickname()) && currentPhase != GamePhase.ACTION_END) {
             if(me.isCanPlayThisRound())
-                askAction();
+                if(areEnoughPlayers)
+                    askAction();
         }
     }
 
@@ -498,14 +517,24 @@ public abstract class View implements MessageListener, UserInterface {
             PlayerInfo opponent = opponents.get(playerIndex.get());
             opponents.remove((int)playerIndex.get());
             opponents.add(playerIndex.get(), opponent.with(isOnline));
-            print();
+            if (areEnoughPlayers)
+                print();
         }
     }
 
     private void enoughPlayers(boolean areEnoughPlayers) {
         this.areEnoughPlayers = areEnoughPlayers;
-        if (areEnoughPlayers)
+        if (areEnoughPlayers) {
             print();
+            if (currentPlayer.equals(getMe().getNickname())) {
+                if(me.isCanPlayThisRound()){
+                    if(currentPhase == GamePhase.PLANNING)
+                        this.askAssistantCard(getDeck());
+                    else
+                        askAction();
+                }
+            }
+        }
         else
             notEnoughPlayer();
     }

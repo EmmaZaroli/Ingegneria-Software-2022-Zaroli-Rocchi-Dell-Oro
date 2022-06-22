@@ -2,6 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.network.messages.PingMessage;
 import it.polimi.ingsw.servercontroller.MessagesHelper;
+import it.polimi.ingsw.utils.ApplicationConstants;
 
 import java.io.*;
 import java.net.Socket;
@@ -122,7 +123,7 @@ public class Endpoint {
                 disconnect("TIMER SCADUTO");
                 notifyDisconnection();
             }
-        }, 30000); //TODO parameterize this
+        }, ApplicationConstants.DISCONNECTION_TIMER_PING);
     }
 
     private void startPinging() {
@@ -131,7 +132,7 @@ public class Endpoint {
             public void run() {
                 sendMessage(new PingMessage(MessageType.PING));
             }
-        }, 5000, 5000); //TODO parameterize this
+        }, ApplicationConstants.PING_PERIOD, ApplicationConstants.PING_PERIOD);
     }
 
     public void disconnect(String motivo) {

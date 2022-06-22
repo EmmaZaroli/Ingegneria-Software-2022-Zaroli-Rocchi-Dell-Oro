@@ -31,6 +31,7 @@ public class Bag implements Serializable {
                 this.pawnCount += PAWNS_PER_COLOR;
             }
         }
+
     }
     /**
      * Draws a student and removes it from the bag

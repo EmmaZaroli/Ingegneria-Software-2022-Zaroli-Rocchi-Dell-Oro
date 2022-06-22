@@ -32,7 +32,7 @@ public class Game extends ModelObservable implements Serializable {
 
     private Exception error;
 
-    private boolean enoughPlayerOnline;
+    private boolean enoughPlayersOnline = true;
 
     private transient List<GameEndingListener> gameEndingListeners = new LinkedList<>();
 
@@ -150,8 +150,8 @@ public class Game extends ModelObservable implements Serializable {
      *
      * @return true if there are enough players to play, false otherwise
      */
-    public boolean isEnoughPlayerOnline() {
-        return enoughPlayerOnline;
+    public boolean areEnoughPlayersOnline() {
+        return enoughPlayersOnline;
     }
 
     /**
@@ -256,11 +256,11 @@ public class Game extends ModelObservable implements Serializable {
 
     /**
      *
-     * @param enoughPlayerOnline true if there are enough players online
+     * @param enoughPlayersOnline true if there are enough players online
      */
-    public void setEnoughPlayerOnline(boolean enoughPlayerOnline) {
-        this.enoughPlayerOnline = enoughPlayerOnline;
-        notifyEnoughPlayerOnline(enoughPlayerOnline);
+    public void setEnoughPlayersOnline(boolean enoughPlayersOnline) {
+        this.enoughPlayersOnline = enoughPlayersOnline;
+        notifyEnoughPlayerOnline(enoughPlayersOnline);
         //TODO block all action if false
     }
 
@@ -367,6 +367,6 @@ public class Game extends ModelObservable implements Serializable {
 
         this.error = game.error;
 
-        this.enoughPlayerOnline = game.enoughPlayerOnline;
+        this.enoughPlayersOnline = game.enoughPlayersOnline;
     }
 }

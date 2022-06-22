@@ -68,7 +68,7 @@ public class GameHandler implements GameEndingListener {
                 users.get(i).sendMessage(new GameMessage(users.get(i).getNickname(), MessageType.GAME_STARTING, this.gameModel));
             }
         }
-        gameController.onReconnect();
+        gameController.onReconnect(nickname);
     }
 
     @Override
