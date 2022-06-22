@@ -4,12 +4,15 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Tower;
 import it.polimi.ingsw.model.enums.Wizzard;
 import it.polimi.ingsw.observer.ModelObservable;
+import it.polimi.ingsw.utils.ApplicationConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+
+import static it.polimi.ingsw.utils.ApplicationConstants.*;
 
 /**
  * Player
@@ -54,9 +57,9 @@ public class Player extends ModelObservable implements Serializable {
         this.discardPileHead = null;
 
         this.isPlayerTurn = isPlayerTurn;
-        this.schoolBoard = new SchoolBoard(numberOfPlayers == 2 ? 8 : 6, tower);
+        this.schoolBoard = new SchoolBoard(numberOfPlayers == 2 ? TOWER_2_PLAYERS : TOWER_3_PLAYERS, tower);
         this.assistantDeck = new LinkedList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < ASSISTANTS_IN_DECK; i++) {
             this.assistantDeck.add(new AssistantCard(i + 1, ((i / 2) + 1)));
         }
         this.isOnline = isOnline;
