@@ -534,9 +534,13 @@ public class Cli extends View {
      */
     public void errorAndExit(String error) {
         error(error);
+        exit();
+    }
+
+    public void exit(){
         out.println("Press ENTER for EXIT.");
         readLine();
-        System.exit(1);
+        //System.exit(1);
     }
 
     public void error(String error) {
@@ -552,11 +556,12 @@ public class Cli extends View {
     }
 
     @Override
-    public void gameOverFromDisconnection() {
+    public void printGameOverFromDisconnection() {
         out.println("TIMER OUT");
         out.println("it seems that you're the only player left...");
         out.println("congratulation, you won!");
-        errorAndExit("");
+        out.println("Press any key to continue");
+        readLine();
     }
 
     public void notEnoughPlayer() {

@@ -3,7 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface UserInterface {
@@ -52,5 +51,5 @@ public interface UserInterface {
 
     void notEnoughPlayer();
 
-    void gameOverFromDisconnection();
+    void printGameOverFromDisconnection();
 }

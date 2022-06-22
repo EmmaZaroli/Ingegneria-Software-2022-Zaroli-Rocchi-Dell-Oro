@@ -485,6 +485,7 @@ public abstract class View implements MessageListener, UserInterface {
                 draw(message.getWinners().stream().filter(w -> !w.equals(me.getNickname())).findFirst().get());
         } else
             lose(message.getWinners());
+        askGameSettings();
     }
 
     private void handleMessage(PlayerCanPlayMessage message) {
@@ -539,6 +540,11 @@ public abstract class View implements MessageListener, UserInterface {
                 notEnoughPlayer();
         }
         this.areEnoughPlayers = areEnoughPlayers;
+    }
+
+    private void gameOverFromDisconnection(){
+        printGameOverFromDisconnection();
+        askGameSettings();
     }
 
 
