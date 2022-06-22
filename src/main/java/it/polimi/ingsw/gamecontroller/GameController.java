@@ -612,6 +612,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
             if(game.howManyPlayersOnline() >= MINIMUM_ONLINE_PLAYER) {
+                boolean areEnoughPlayersOnline = game.areEnoughPlayersOnline();
                 if (!reconnectedPlayer.equals(game.getPlayer(game.getCurrentPlayer()).getNickname())
                 && !game.getPlayer(game.getCurrentPlayer()).isOnline()) {
                     try {
@@ -621,6 +622,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         e.printStackTrace();
                     }
                 }
+                game.setEnoughPlayersOnline(areEnoughPlayersOnline);
                 for (int i = 0; i < virtualViews.length; i++)
                     game.getPlayer(i).setOnline(virtualViews[i].isOnline());
                 for(Player p : game.getPlayers()) {
