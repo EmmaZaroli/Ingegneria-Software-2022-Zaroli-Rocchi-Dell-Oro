@@ -107,6 +107,7 @@ public class Server implements GameEndingListener{
                 game.getPlayer(i).setOnline(false);
                 users.add(new User(game.getPlayer(i).getNickname()));
             }
+            game.setEnoughPlayersOnline(false);
             GameParameters parameters = game.getParameters();
             try {
                 if (parameters.getGameMode() == GameMode.NORMAL_MODE) {
@@ -131,7 +132,8 @@ public class Server implements GameEndingListener{
             builder.player(users.get(i));
             addUser(users.get(i));
         }
-        GameHandler gameHandler = builder.build();
+        GameHandler gameHandler = builder.load(game);
+        gameHandler.addGameEndingListener(this);
         runningGames.add(gameHandler);
         gameHandler.start();
         builder.reset();
@@ -335,6 +337,7 @@ public class Server implements GameEndingListener{
     @Override
     public void onGameEnding(UUID uuid) {
         Optional<GameHandler> optionalGameHandler = getGame(uuid);
+        removeGame(uuid);
         if(optionalGameHandler.isPresent()){
             GameHandler gameHandler = optionalGameHandler.get();
             gameHandler.removeGameEndingListener(this);
@@ -349,7 +352,8 @@ public class Server implements GameEndingListener{
                     removeUser(user.getNickname());
                 }
             }
-            removeGame(uuid);
+
         }
+        DataDumper.getInstance().removeGameFromMemory(uuid);
     }
 }

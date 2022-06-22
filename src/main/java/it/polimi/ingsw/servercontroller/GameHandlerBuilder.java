@@ -57,6 +57,11 @@ public class GameHandlerBuilder {
         return buildGameHandler();
     }
 
+    public GameHandler load(Game game) throws InvalidPlayerNumberException {
+        checkPlayerNumberValidity();
+        return buildGameHandler(game);
+    }
+
     private void checkPlayerNumberValidity() throws InvalidPlayerNumberException {
         if (users.size() != playersNumber.getPlayersNumber())
             throw new InvalidPlayerNumberException((users.size() > playersNumber.getPlayersNumber()) ? InvalidPlayerNumberException.Reason.TOO_MANY_PLAYERS : InvalidPlayerNumberException.Reason.NOT_ENOUGH_PLAYERS);
@@ -66,8 +71,28 @@ public class GameHandlerBuilder {
         Game gameModel = buildGameModel();
         VirtualView[] virtualViews = buildVirtualViews(gameModel);
         GameController gameController = buildGameController(gameModel, virtualViews);
+        gameController.init();
+        setListeners(gameModel, gameController, virtualViews);
         notifyGameReady();
         return new GameHandler(new LinkedList<>(users), gameController, gameModel, virtualViews);
+    }
+
+    private GameHandler buildGameHandler(Game gameModel) {
+        VirtualView[] virtualViews = buildVirtualViews(gameModel);
+        GameController gameController = buildGameController(gameModel, virtualViews);
+        gameController.setObservers();
+        setListeners(gameModel, gameController, virtualViews);
+        notifyGameReady();
+        return new GameHandler(new LinkedList<>(users), gameController, gameModel, virtualViews);
+    }
+
+    private void setListeners(Game gameModel, GameController gameController, VirtualView[] virtualViews){
+        for (VirtualView virtualView : virtualViews) {
+            if (virtualView.getClientHandler().isPresent()) {
+                virtualView.getClientHandler().get().addDisconnectionListener(gameController);
+            }
+            virtualView.addListener(gameController);
+        }
     }
 
     private Game buildGameModel() {
@@ -108,14 +133,6 @@ public class GameHandlerBuilder {
             case NORMAL_MODE -> buildNormalGameController(gameModel, virtualViews);
             case EXPERT_MODE -> buildExpertGameController(gameModel, virtualViews);
         };
-        for (VirtualView virtualView : virtualViews) {
-
-            if (virtualView.getClientHandler().isPresent()) {
-                virtualView.getClientHandler().get().addDisconnectionListener(gameController);
-                virtualView.addListener(gameController);
-            }
-        }
-
         return gameController;
     }
 
