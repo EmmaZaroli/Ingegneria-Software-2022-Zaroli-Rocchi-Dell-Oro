@@ -2,16 +2,38 @@
 
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
-    <!-- TODO change image-->
-
-    <ImageView
-            fitWidth="486"
-            fitHeight="209">
-        <Image
-                url="/it.polimi.ingsw.client.gui/assets/schoolBoard-opponent.png"
-                backgroundLoading="true"
-        />
-    </ImageView>
+    <StackPane>
+        <ImageView
+                fitWidth="486"
+                fitHeight="209">
+            <Image
+                    url="/it.polimi.ingsw.client.gui/assets/schoolboard.png"
+                    backgroundLoading="true"
+            />
+        </ImageView>
+        <HBox>
+            <Pane prefWidth="17"/>
+            <VBox>
+                <Pane prefHeight="24"/>
+                <Pane prefWidth="25">
+                    <GridPane fx:id="entranceGrid">
+                    </GridPane>
+                </Pane>
+            </VBox>
+            <VBox>
+                <Pane prefHeight="27"></Pane>
+                <Pane prefWidth="225">
+                    <GridPane fx:id="board">
+                    </GridPane>
+                </Pane>
+            </VBox>
+            <VBox>
+                <Pane prefHeight="55"></Pane>
+                <GridPane fx:id="towers">
+                </GridPane>
+            </VBox>
+        </HBox>
+    </StackPane>
 </fx:root>

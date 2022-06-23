@@ -1,10 +1,7 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.client.gui.sceneControllers.Cloud;
-import it.polimi.ingsw.client.gui.sceneControllers.Island;
-import it.polimi.ingsw.client.gui.sceneControllers.SchoolBoard;
-import it.polimi.ingsw.client.gui.sceneControllers.SelectAssistant;
+import it.polimi.ingsw.client.gui.sceneControllers.*;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
@@ -25,7 +22,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +57,8 @@ public class Gui extends View implements Initializable {
     @FXML
     private ImageView discard2;
     @FXML
+    private ImageView discardMe;
+    @FXML
     private Island island0;
     @FXML
     private Island island1;
@@ -81,6 +82,12 @@ public class Gui extends View implements Initializable {
     private Island island10;
     @FXML
     private Island island11;
+    @FXML
+    private EditableSchoolBoard mySchoolBoard;
+    @FXML
+    private Label message;
+
+    private String currentPhase, currentPlayer;
 
     public Gui(Stage stage) {
         this.stage = stage;
@@ -165,12 +172,18 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void genericMessage(String message) {
-        //TODO
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, message);
+            sharedAlert.showAndWait();
+        });
     }
 
     @Override
     public void changePhase(GamePhase phase) {
-        //TODO
+        if (message != null) {
+            this.currentPhase = phase.name();
+            Platform.runLater(() -> message.setText("Current player: " + currentPlayer + " Phase: " + currentPhase));
+        }
     }
 
     @Override
@@ -183,7 +196,17 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askMotherNatureSteps() {
-        //TODO
+        Platform.runLater(() -> {
+            List<ButtonType> buttons = new LinkedList<>();
+            for (int i = 1; i <= getMe().getDiscardPileHead().get().motherNatureMovement(); i++) {
+                buttons.add(new ButtonType("+" + i, ButtonBar.ButtonData.OK_DONE));
+            }
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, "Move Mother Nature of... steps", buttons.toArray(new ButtonType[]{}));
+            Optional<ButtonType> response = sharedAlert.showAndWait();
+            if (response.isPresent()) {
+                //TODO
+            }
+        });
     }
 
     @Override
@@ -193,27 +216,65 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askCloud() {
-
+        if (message != null) {
+            Platform.runLater(() -> message.setText("Select a cloud"));
+        }
+        if (cloud1 != null) {
+            cloud1.setEnabled();
+        }
+        if (cloud2 != null) {
+            cloud2.setEnabled();
+        }
+        if (cloud3 != null) {
+            cloud3.setEnabled();
+        }
     }
 
     @Override
     public void updateCurrentPlayersTurn(String otherPlayer) {
-
+        if (message != null) {
+            this.currentPlayer = otherPlayer;
+            Platform.runLater(() -> message.setText("Current player: " + currentPlayer + " Phase: " + currentPhase));
+        }
     }
 
     @Override
     public void win() {
-
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You won the game");
+            sharedAlert.showAndWait();
+            sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
+                @Override
+                public void handle(DialogEvent dialogEvent) {
+                    start();
+                }
+            });
+        });
     }
 
     @Override
     public void lose(List<String> winners) {
-
+        String winnersString = "";
+        for (String w : winners) {
+            winnersString += w;
+            winnersString += " ";
+        }
+        final String finalWinnerString = winnersString;
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You lost. " + finalWinnerString + "won the game");
+            sharedAlert.showAndWait();
+            sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
+                @Override
+                public void handle(DialogEvent dialogEvent) {
+                    start();
+                }
+            });
+        });
     }
 
     @Override
     public void draw(String otherWinner) {
-
+        //TODO
     }
 
     @Override
@@ -273,6 +334,12 @@ public class Gui extends View implements Initializable {
                             + getOpponents().get(1).getDiscardPileHead().get().value() + ").png"));
                 }
             }
+            if (discardMe != null) {
+                if (getMe().getDiscardPileHead().isPresent()) {
+                    discardMe.setImage(new Image("/it.polimi.ingsw.client.gui/assets/Assistente ("
+                            + getMe().getDiscardPileHead().get().value() + ").png"));
+                }
+            }
             if (island0 != null) {
                 island0.setStudents(getIslands().get(0).getIsland().getStudents());
             }
@@ -308,6 +375,9 @@ public class Gui extends View implements Initializable {
             }
             if (island11 != null) {
                 island11.setStudents(getIslands().get(11).getIsland().getStudents());
+            }
+            if (mySchoolBoard != null) {
+                mySchoolBoard.setPlayer(getMe());
             }
         });
     }

@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class Island extends Pane {
-    private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY, startingX, startingY;
-
     @FXML
     private GridPane students;
 
@@ -80,28 +78,7 @@ public class Island extends Pane {
                 }
             });
 
-            imageView.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    orgSceneX = mouseEvent.getSceneX();
-                    orgSceneY = mouseEvent.getSceneY();
-                    orgTranslateX = imageView.getTranslateX();
-                    orgTranslateY = imageView.getTranslateY();
-                }
-            });
 
-            imageView.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    double offsetX = mouseEvent.getSceneX() - orgSceneX;
-                    double offsetY = mouseEvent.getSceneY() - orgSceneY;
-                    double newTranslateX = orgTranslateX + offsetX;
-                    double newTranslateY = orgTranslateY + offsetY;
-
-                    imageView.setTranslateX(newTranslateX);
-                    imageView.setTranslateY(newTranslateY);
-                }
-            });
         }
     }
 }

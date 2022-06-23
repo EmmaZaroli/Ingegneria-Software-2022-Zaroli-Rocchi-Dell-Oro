@@ -45,8 +45,7 @@
                             <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10"/>
                             <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11"/>
                             <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
-                                   style="-fx-font-size: 22"
-                                   text="Prova di messaggio da visualizzare all'utente con info su partita ecc..."/>
+                                   style="-fx-font-size: 22" fx:id="message"/>
                         </GridPane>
                         <!-- Bottom pane -->
                         <HBox>
@@ -64,7 +63,10 @@
                                        visible="${controller.isThreePlayers}"/>
                             </VBox>
                             <Pane prefWidth="90"/>
-                            <EditableSchoolboard/>
+                            <EditableSchoolBoard fx:id="mySchoolBoard"/>
+                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
+                                <ImageView fx:id="discardMe" fitWidth="82" fitHeight="126"/>
+                            </VBox>
                         </HBox>
                     </VBox>
                     <!-- Right panel -->
