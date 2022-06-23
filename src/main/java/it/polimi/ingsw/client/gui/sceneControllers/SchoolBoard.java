@@ -88,6 +88,10 @@ public class SchoolBoard extends Pane {
             imagePath = "/it.polimi.ingsw.client.gui/assets/white_tower.png";
         }
 
+        if (color == Tower.GREY) {
+            imagePath = "/it.polimi.ingsw.client.gui/assets/grey_tower.png";
+        }
+
         int row = 0;
         int column = 0;
         for (int i = 0; i < 7; i++) {

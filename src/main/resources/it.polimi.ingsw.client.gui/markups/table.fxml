@@ -32,20 +32,20 @@
                         </HBox>
                         <!-- Islands -->
                         <GridPane prefHeight="330" style="-fx-padding: 0 0 0 100;" hgap="12" vgap="-60">
-                            <Island GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="island0"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="island1"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="island2"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="island3"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="island4"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="island5"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island6"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island7"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island8"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island9"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10"/>
-                            <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11"/>
+                            <Island GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="island0" kind="0"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="island1" kind="1"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="island2" kind="2"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="island3" kind="0"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="island4" kind="1"/>
+                            <Island GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="island5" kind="2"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island6" kind="0"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island7" kind="1"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island8" kind="2"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island9" kind="0"/>
+                            <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10" kind="1"/>
+                            <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11" kind="2"/>
                             <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
-                                   style="-fx-font-size: 22" fx:id="message"/>
+                                   style="-fx-font-size: 18" fx:id="message"/>
                         </GridPane>
                         <!-- Bottom pane -->
                         <HBox>

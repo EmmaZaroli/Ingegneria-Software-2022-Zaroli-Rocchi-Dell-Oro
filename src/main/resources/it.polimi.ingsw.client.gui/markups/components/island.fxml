@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
@@ -9,13 +8,8 @@
     <StackPane>
         <ImageView
                 fitWidth="150"
-                fitHeight="150">
-            <Image
-                    url="/it.polimi.ingsw.client.gui/assets/island.png"
-                    backgroundLoading="true"
-            />
-        </ImageView>
-        <GridPane fx:id="students" style="-fx-padding: 24 24 24 24">
+                fitHeight="150" fx:id="image"/>
+        <GridPane fx:id="students" style="-fx-padding: 40 40 40 40">
         </GridPane>
     </StackPane>
 </fx:root>

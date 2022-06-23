@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -212,12 +211,15 @@ public class Gui extends View implements Initializable {
     @Override
     public void askStudents() {
         //TODO
+        sendStudentMoveOnBoard(getMe().getBoard().getEntrance().get(0));
+        sendStudentMoveOnBoard(getMe().getBoard().getEntrance().get(1));
+        sendStudentMoveOnBoard(getMe().getBoard().getEntrance().get(2));
     }
 
     @Override
     public void askCloud() {
         if (message != null) {
-            Platform.runLater(() -> message.setText("Select a cloud"));
+            message.setText("Select a cloud");
         }
         if (cloud1 != null) {
             cloud1.setEnabled();
@@ -234,7 +236,7 @@ public class Gui extends View implements Initializable {
     public void updateCurrentPlayersTurn(String otherPlayer) {
         if (message != null) {
             this.currentPlayer = otherPlayer;
-            Platform.runLater(() -> message.setText("Current player: " + currentPlayer + " Phase: " + currentPhase));
+            Platform.runLater(() -> message.setText("Current player: " + currentPlayer + " Current game phase: " + currentPhase));
         }
     }
 
@@ -305,6 +307,8 @@ public class Gui extends View implements Initializable {
     @Override
     public void print() {
         Platform.runLater(() -> {
+            changePhase(getCurrentPhase());
+            updateCurrentPlayersTurn(getCurrentPlayer());
             if (opponent1 != null) {
                 opponent1.setPlayer(getOpponents().get(0));
                 opponent1.setIsExpert(this.isExpertGame());
@@ -404,12 +408,12 @@ public class Gui extends View implements Initializable {
 
     private void enableDragAndDrop() {
         //TODO
-        cloud1.setOnDragDropped(new EventHandler<DragEvent>() {
+        /*cloud1.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
                 //TODO
             }
-        });
+        });*/
     }
 
     //TODO controls using already defined methods

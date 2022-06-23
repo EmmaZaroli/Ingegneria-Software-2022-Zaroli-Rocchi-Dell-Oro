@@ -1,12 +1,11 @@
 package it.polimi.ingsw.client.gui.sceneControllers;
 
 import it.polimi.ingsw.model.enums.PawnColor;
-import javafx.event.EventHandler;
+import javafx.beans.NamedArg;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -17,15 +16,38 @@ public class Island extends Pane {
     @FXML
     private GridPane students;
 
-    public Island() {
+    @FXML
+    private ImageView image;
+
+    private int kind;
+
+    public Island(@NamedArg("kind") int kind) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/island.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
+
+        this.kind = kind;
 
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
             throw new RuntimeException(exception);
+        }
+    }
+
+    @FXML
+    public void initialize() {
+        //if (getId().equals("island0") || getId().equals("island3") || getId().equals("island6") || getId().equals("island9")) {
+        if (kind == 0) {
+            image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island1.png"));
+        }
+        if (kind == 1) {
+            //if (getId().equals("island1") || getId().equals("island4") || getId().equals("island7") || getId().equals("island10")) {
+            image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island2.png"));
+        }
+        if (kind == 2) {
+            //if (getId().equals("island2") || getId().equals("island5") || getId().equals("island8") || getId().equals("island11")) {
+            image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island3.png"));
         }
     }
 
@@ -60,7 +82,7 @@ public class Island extends Pane {
                 column = 0;
             }
 
-            this.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            /*this.setOnMouseReleased(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (mouseEvent.getTarget().equals(this)) {
@@ -68,15 +90,15 @@ public class Island extends Pane {
 
                     }
                 }
-            });
+            });*/
 
             //TODO
-            imageView.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            /*imageView.setOnMouseReleased(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     System.out.println("Released");
                 }
-            });
+            });*/
 
 
         }
