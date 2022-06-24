@@ -35,24 +35,19 @@ public class Island extends Pane {
         }
     }
 
-    @FXML
     public void initialize() {
-        //if (getId().equals("island0") || getId().equals("island3") || getId().equals("island6") || getId().equals("island9")) {
         if (kind == 0) {
             image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island1.png"));
         }
         if (kind == 1) {
-            //if (getId().equals("island1") || getId().equals("island4") || getId().equals("island7") || getId().equals("island10")) {
             image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island2.png"));
         }
         if (kind == 2) {
-            //if (getId().equals("island2") || getId().equals("island5") || getId().equals("island8") || getId().equals("island11")) {
             image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island3.png"));
         }
     }
 
     public void setStudents(List<PawnColor> students) {
-        //TODO verify this
         this.students.getChildren().removeAll(this.students.getChildren());
 
         this.students.setHgap(4);
@@ -99,8 +94,6 @@ public class Island extends Pane {
                     System.out.println("Released");
                 }
             });*/
-
-
         }
     }
 }

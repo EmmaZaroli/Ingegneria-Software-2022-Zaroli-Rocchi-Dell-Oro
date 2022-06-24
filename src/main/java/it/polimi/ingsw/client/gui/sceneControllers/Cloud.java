@@ -17,8 +17,6 @@ public class Cloud extends Pane {
 
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY, startingX, startingY;
 
-    private boolean isEnabled = false;
-
     public Cloud() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/cloud.fxml"));
         fxmlLoader.setRoot(this);
@@ -61,13 +59,5 @@ public class Cloud extends Pane {
                 column = 0;
             }
         }
-    }
-
-    public void setEnabled() {
-        this.isEnabled = true;
-    }
-
-    public void setDisabled() {
-        this.isEnabled = false;
     }
 }

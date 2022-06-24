@@ -21,7 +21,6 @@ public class SchoolBoard extends Pane {
 
     @FXML
     private boolean isExpertGame;
-
     @FXML
     private Label name;
     @FXML
@@ -32,6 +31,16 @@ public class SchoolBoard extends Pane {
     private GridPane towers;
     @FXML
     private GridPane entranceGrid;
+    @FXML
+    private ImageView tRed;
+    @FXML
+    private ImageView tBlue;
+    @FXML
+    private ImageView tGreen;
+    @FXML
+    private ImageView tPink;
+    @FXML
+    private ImageView tYellow;
 
     public void setPlayer(PlayerInfo opponent) {
         this.name.setText(opponent.getNickname());
@@ -40,6 +49,11 @@ public class SchoolBoard extends Pane {
         this.updateEntrance(opponent.getBoard().getEntrance());
         this.updateTowers(opponent.getBoard().getTowers(), opponent.getBoard().getTowerColor());
         this.updateProfessors(opponent.getBoard().getProfessorTable());
+        tRed.setVisible(opponent.getBoard().isThereProfessor(PawnColor.RED));
+        tBlue.setVisible(opponent.getBoard().isThereProfessor(PawnColor.BLUE));
+        tGreen.setVisible(opponent.getBoard().isThereProfessor(PawnColor.GREEN));
+        tPink.setVisible(opponent.getBoard().isThereProfessor(PawnColor.PINK));
+        tYellow.setVisible(opponent.getBoard().isThereProfessor(PawnColor.YELLOW));
     }
 
     public void setIsExpert(boolean isExpert) {
@@ -51,7 +65,8 @@ public class SchoolBoard extends Pane {
     }
 
     private void updateEntrance(List<PawnColor> entrance) {
-        entranceGrid.setHgap(6);
+        entranceGrid.getChildren().removeAll(entranceGrid.getChildren());
+        entranceGrid.setHgap(7);
         entranceGrid.setVgap(13);
 
         int row = 0;
@@ -59,17 +74,16 @@ public class SchoolBoard extends Pane {
 
         for (int i = 0; i < entrance.size(); i++) {
             Image image = switch (entrance.get(i)) {
-                case RED -> new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
+                case RED, NONE -> new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
                 case BLUE -> new Image("/it.polimi.ingsw.client.gui/assets/student_blue.png");
                 case PINK -> new Image("/it.polimi.ingsw.client.gui/assets/student_pink.png");
                 case GREEN -> new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
                 case YELLOW -> new Image("/it.polimi.ingsw.client.gui/assets/student_yellow.png");
-                case NONE -> new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
             };
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, column, row);
+            entranceGrid.add(imageView, column, row);
             column++;
             if (column % 2 == 0) {
                 row++;
@@ -79,6 +93,7 @@ public class SchoolBoard extends Pane {
     }
 
     private void updateTowers(int count, Tower color) {
+        towers.getChildren().removeAll(towers.getChildren());
         towers.setVgap(5);
         towers.setHgap(5);
 
@@ -94,7 +109,7 @@ public class SchoolBoard extends Pane {
 
         int row = 0;
         int column = 0;
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < count; i++) {
             Image image = new Image(imagePath);
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(29);
@@ -108,10 +123,12 @@ public class SchoolBoard extends Pane {
     }
 
     private void updateDinningRoom(DiningRoomDto opponent) {
+        board.getChildren().removeAll(board.getChildren());
+
         int i;
 
         board.setHgap(5);
-        board.setVgap(13);
+        board.setVgap(15);
 
         for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.GREEN); i++) {
             Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
@@ -121,12 +138,30 @@ public class SchoolBoard extends Pane {
             board.add(imageView, 1 * i, 0);
         }
 
+        if (opponent.getStudentsInDiningRoom(PawnColor.GREEN) == 0) {
+            Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            imageView.setOpacity(0);
+            board.add(imageView, 0, 0);
+        }
+
         for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.RED); i++) {
             Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 1 * i, 1);
+            board.add(imageView, 0, 1);
+        }
+
+        if (opponent.getStudentsInDiningRoom(PawnColor.RED) == 0) {
+            Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            imageView.setOpacity(0);
+            board.add(imageView, 0, 1);
         }
 
         for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.YELLOW); i++) {
@@ -134,7 +169,16 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 1 * i, 2);
+            board.add(imageView, 0, 2);
+        }
+
+        if (opponent.getStudentsInDiningRoom(PawnColor.YELLOW) == 0) {
+            Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            imageView.setOpacity(0);
+            board.add(imageView, 0, 2);
         }
 
         for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.PINK); i++) {
@@ -142,7 +186,16 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 1 * i, 3);
+            board.add(imageView, 0, 3);
+        }
+
+        if (opponent.getStudentsInDiningRoom(PawnColor.PINK) == 0) {
+            Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            imageView.setOpacity(0);
+            board.add(imageView, 0, 3);
         }
 
         for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.BLUE); i++) {
@@ -150,7 +203,7 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 1 * i, 4);
+            board.add(imageView, 0, 4);
         }
     }
 

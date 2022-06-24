@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
     <StackPane>
@@ -17,17 +16,45 @@
             <Pane prefWidth="17"/>
             <VBox>
                 <Pane prefHeight="24"/>
-                <Pane prefWidth="25">
-                    <GridPane fx:id="entranceGrid">
+                <Pane>
+                    <HBox>
+                        <GridPane fx:id="entranceGrid"/>
+                    </HBox>
+                </Pane>
+            </VBox>
+            <Pane prefWidth="21"/>
+            <VBox>
+                <Pane prefHeight="27"></Pane>
+                <Pane prefWidth="225">
+                    <GridPane fx:id="diningRoom">
                     </GridPane>
                 </Pane>
             </VBox>
             <VBox>
-                <Pane prefHeight="27"></Pane>
-                <Pane prefWidth="225">
-                    <GridPane fx:id="board">
-                    </GridPane>
-                </Pane>
+                <Pane prefHeight="24"/>
+                <GridPane fx:id="professors" prefWidth="44" vgap="11" hgap="5">
+                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                               fx:id="tGreen">
+                        <Image url="/it.polimi.ingsw.client.gui/assets/teacher_green.png" backgroundLoading="true"/>
+                    </ImageView>
+                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                               fx:id="tRed">
+                        <Image url="/it.polimi.ingsw.client.gui/assets/teacher_red.png" backgroundLoading="true"/>
+                    </ImageView>
+                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                               fx:id="tYellow">
+                        <Image url="/it.polimi.ingsw.client.gui/assets/teacher_yellow.png"
+                               backgroundLoading="true"/>
+                    </ImageView>
+                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                               fx:id="tPink">
+                        <Image url="/it.polimi.ingsw.client.gui/assets/teacher_pink.png" backgroundLoading="true"/>
+                    </ImageView>
+                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                               fx:id="tBlue">
+                        <Image url="/it.polimi.ingsw.client.gui/assets/teacher_blue.png" backgroundLoading="true"/>
+                    </ImageView>
+                </GridPane>
             </VBox>
             <VBox>
                 <Pane prefHeight="55"></Pane>

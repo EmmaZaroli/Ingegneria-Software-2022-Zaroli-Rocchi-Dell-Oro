@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -38,6 +39,8 @@ public class Gui extends View implements Initializable {
 
     private Alert sharedAlert;
     private boolean gameHasStarted = false;
+
+    private boolean isChooseCloud = false;
 
     @FXML
     private SchoolBoard opponent1;
@@ -218,17 +221,42 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askCloud() {
+        this.isChooseCloud = true;
         if (message != null) {
             message.setText("Select a cloud");
         }
         if (cloud1 != null) {
-            cloud1.setEnabled();
+            cloud1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (isChooseCloud) {
+                        sendCloudChoice(0);
+                        isChooseCloud = false;
+                    }
+                }
+            });
         }
         if (cloud2 != null) {
-            cloud2.setEnabled();
+            cloud2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (isChooseCloud) {
+                        sendCloudChoice(1);
+                        isChooseCloud = false;
+                    }
+                }
+            });
         }
         if (cloud3 != null) {
-            cloud3.setEnabled();
+            cloud1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (isChooseCloud) {
+                        sendCloudChoice(2);
+                        isChooseCloud = true;
+                    }
+                }
+            });
         }
     }
 
