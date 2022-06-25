@@ -298,7 +298,7 @@ public class Cli extends View {
                             this.error("the destination selected is invalid, please retry");
                         }
                     }
-                    if (destination == 12) sendStudentMoveOnBoard(student);
+                    if (destination == 12) sendStudentMoveOnBoard(student);//TODO check if return false (schoolboard full)
                     else sendStudentMoveOnIsland(student, destination);
                 }
             // the input was not a color, checking if it's a character card
