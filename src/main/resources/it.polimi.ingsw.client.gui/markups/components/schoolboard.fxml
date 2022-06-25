@@ -53,7 +53,7 @@
                     </GridPane>
                 </VBox>
                 <VBox>
-                    <Pane prefHeight="55"></Pane>
+                    <Pane prefHeight="45"></Pane>
                     <GridPane fx:id="towers">
                     </GridPane>
                 </VBox>

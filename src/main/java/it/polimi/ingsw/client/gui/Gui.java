@@ -136,12 +136,6 @@ public class Gui extends View implements Initializable {
         }
         this.loadScene("/it.polimi.ingsw.client.gui/markups/table.fxml");
         this.gameHasStarted = true;
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                enableDragAndDrop();
-            }
-        });
     }
 
     @Override
@@ -213,10 +207,7 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askStudents() {
-        //TODO
-        sendStudentMoveOnBoard(getMe().getBoard().getEntrance().get(0));
-        sendStudentMoveOnBoard(getMe().getBoard().getEntrance().get(1));
-        sendStudentMoveOnBoard(getMe().getBoard().getEntrance().get(2));
+        mySchoolBoard.enableDragAndDrop();
     }
 
     @Override
@@ -410,6 +401,7 @@ public class Gui extends View implements Initializable {
             }
             if (mySchoolBoard != null) {
                 mySchoolBoard.setPlayer(getMe());
+                mySchoolBoard.setController(this);
             }
         });
     }
@@ -432,16 +424,6 @@ public class Gui extends View implements Initializable {
                 //TODO
             });
         });
-    }
-
-    private void enableDragAndDrop() {
-        //TODO
-        /*cloud1.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-                //TODO
-            }
-        });*/
     }
 
     //TODO controls using already defined methods

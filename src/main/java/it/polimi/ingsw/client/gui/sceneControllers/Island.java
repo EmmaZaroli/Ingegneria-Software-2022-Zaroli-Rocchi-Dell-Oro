@@ -76,24 +76,6 @@ public class Island extends Pane {
                 row++;
                 column = 0;
             }
-
-            /*this.setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.getTarget().equals(this)) {
-                        System.out.println("Mouse released");
-
-                    }
-                }
-            });*/
-
-            //TODO
-            /*imageView.setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    System.out.println("Released");
-                }
-            });*/
         }
     }
 }

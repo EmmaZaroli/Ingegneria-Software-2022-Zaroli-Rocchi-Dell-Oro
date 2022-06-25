@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.gui.sceneControllers;
 
+import it.polimi.ingsw.client.gui.Gui;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.dtos.DiningRoomDto;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class EditableSchoolBoard extends Pane {
+    private Gui gui;
+    private boolean isDragAndDropEnabled = false;
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY, startingX, startingY;
 
     @FXML
@@ -38,19 +41,13 @@ public class EditableSchoolBoard extends Pane {
         this.updateDinningRoom(me.getBoard().getDiningRoom());
         this.updateEntrance(me.getBoard().getEntrance());
         this.updateTowers(me.getBoard().getTowers(), me.getBoard().getTowerColor());
-        /*tRed.setVisible(me.getBoard().isThereProfessor(PawnColor.RED));
+        tRed.setVisible(me.getBoard().isThereProfessor(PawnColor.RED));
         tBlue.setVisible(me.getBoard().isThereProfessor(PawnColor.BLUE));
         tGreen.setVisible(me.getBoard().isThereProfessor(PawnColor.GREEN));
         tPink.setVisible(me.getBoard().isThereProfessor(PawnColor.PINK));
-        tYellow.setVisible(me.getBoard().isThereProfessor(PawnColor.YELLOW));*/
-        tRed.setVisible(true);
-        tBlue.setVisible(true);
-        tGreen.setVisible(me.getBoard().isThereProfessor(PawnColor.GREEN));
-        tPink.setVisible(me.getBoard().isThereProfessor(PawnColor.PINK));
-        tYellow.setVisible(true);
+        tYellow.setVisible(me.getBoard().isThereProfessor(PawnColor.YELLOW));
     }
 
-    //TODO fix
     private void updateEntrance(List<PawnColor> entrance) {
         entranceGrid.getChildren().removeAll(entranceGrid.getChildren());
 
@@ -67,20 +64,85 @@ public class EditableSchoolBoard extends Pane {
             imageView.setFitWidth(20);
 
             imageView.setOnMousePressed(mouseEvent -> {
-                orgSceneX = mouseEvent.getSceneX();
-                orgSceneY = mouseEvent.getSceneY();
-                orgTranslateX = imageView.getTranslateX();
-                orgTranslateY = imageView.getTranslateY();
+                if (/*isDragAndDropEnabled*/ true) {
+                    orgSceneX = mouseEvent.getSceneX();
+                    orgSceneY = mouseEvent.getSceneY();
+                    orgTranslateX = imageView.getTranslateX();
+                    orgTranslateY = imageView.getTranslateY();
+                }
+            });
+
+            imageView.setOnMouseReleased(mouseEvent -> {
+                if (/*isDragAndDropEnabled*/ true) {
+                    double x = mouseEvent.getScreenX();
+                    double y = mouseEvent.getScreenY();
+                    if (isInRange(x, y, 158, 404)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 324, 317)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 482, 316)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 648, 319)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 814, 318)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 971, 324)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 323, 492)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 483, 491)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 640, 493)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 808, 493)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 973, 494)) {
+                        //TODO move
+                        return;
+                    }
+                    if (isInRange(x, y, 1132, 408)) {
+                        //TODO move
+                        return;
+                    }
+                    if (x > 647 && y > 630 && x < 893 && y < 810) {
+                        //TODO move
+                        return;
+                    }
+                    //TODO take element back
+                    gui.print();
+                }
             });
 
             imageView.setOnMouseDragged(mouseEvent -> {
-                double offsetX = mouseEvent.getSceneX() - orgSceneX;
-                double offsetY = mouseEvent.getSceneY() - orgSceneY;
-                double newTranslateX = orgTranslateX + offsetX;
-                double newTranslateY = orgTranslateY + offsetY;
+                if (/*isDragAndDropEnabled*/ true) {
+                    double offsetX = mouseEvent.getSceneX() - orgSceneX;
+                    double offsetY = mouseEvent.getSceneY() - orgSceneY;
+                    double newTranslateX = orgTranslateX + offsetX;
+                    double newTranslateY = orgTranslateY + offsetY;
 
-                imageView.setTranslateX(newTranslateX);
-                imageView.setTranslateY(newTranslateY);
+                    imageView.setTranslateX(newTranslateX);
+                    imageView.setTranslateY(newTranslateY);
+                }
             });
 
             entranceGrid.add(imageView, column, row);
@@ -128,10 +190,10 @@ public class EditableSchoolBoard extends Pane {
 
         int i;
 
-        diningRoom.setHgap(5);
+        diningRoom.setHgap(4);
         diningRoom.setVgap(14);
 
-        for (i = 0; i < /*opponent.getStudentsInDiningRoom(PawnColor.GREEN)*/4; i++) {
+        for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.GREEN); i++) {
             Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
@@ -199,7 +261,7 @@ public class EditableSchoolBoard extends Pane {
             diningRoom.add(imageView, 0, 3);
         }
 
-        for (i = 0; i < /*opponent.getStudentsInDiningRoom(PawnColor.BLUE)*/6; i++) {
+        for (i = 0; i < opponent.getStudentsInDiningRoom(PawnColor.BLUE); i++) {
             Image image = new Image("/it.polimi.ingsw.client.gui/assets/student_blue.png");
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
@@ -216,6 +278,22 @@ public class EditableSchoolBoard extends Pane {
             case GREEN -> new Image("/it.polimi.ingsw.client.gui/assets/student_green.png");
             case YELLOW -> new Image("/it.polimi.ingsw.client.gui/assets/student_yellow.png");
         };
+    }
+
+    public void enableDragAndDrop() {
+        this.isDragAndDropEnabled = true;
+    }
+
+    public void disableDragAndDrop() {
+        this.isDragAndDropEnabled = false;
+    }
+
+    public void setController(Gui gui) {
+        this.gui = gui;
+    }
+
+    private boolean isInRange(double x, double y, int startX, int startY) {
+        return x > startX && x < (startX + 150) && y > startY && y < (startY + 150);
     }
 
     public EditableSchoolBoard() {

@@ -22,10 +22,10 @@
                     </HBox>
                 </Pane>
             </VBox>
-            <Pane prefWidth="21"/>
+            <Pane prefWidth="23"/>
             <VBox>
-                <Pane prefHeight="27"></Pane>
-                <Pane prefWidth="225">
+                <Pane prefHeight="26"></Pane>
+                <Pane prefWidth="255">
                     <GridPane fx:id="diningRoom">
                     </GridPane>
                 </Pane>
@@ -33,24 +33,24 @@
             <VBox>
                 <Pane prefHeight="24"/>
                 <GridPane fx:id="professors" prefWidth="44" vgap="11" hgap="5">
-                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                    <ImageView fitWidth="22" fitHeight="22" GridPane.rowIndex="0" GridPane.columnIndex="0"
                                fx:id="tGreen">
                         <Image url="/it.polimi.ingsw.client.gui/assets/teacher_green.png" backgroundLoading="true"/>
                     </ImageView>
-                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                    <ImageView fitWidth="22" fitHeight="22" GridPane.rowIndex="1" GridPane.columnIndex="0"
                                fx:id="tRed">
                         <Image url="/it.polimi.ingsw.client.gui/assets/teacher_red.png" backgroundLoading="true"/>
                     </ImageView>
-                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                    <ImageView fitWidth="22" fitHeight="22" GridPane.rowIndex="2" GridPane.columnIndex="0"
                                fx:id="tYellow">
                         <Image url="/it.polimi.ingsw.client.gui/assets/teacher_yellow.png"
                                backgroundLoading="true"/>
                     </ImageView>
-                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                    <ImageView fitWidth="22" fitHeight="22" GridPane.rowIndex="3" GridPane.columnIndex="0"
                                fx:id="tPink">
                         <Image url="/it.polimi.ingsw.client.gui/assets/teacher_pink.png" backgroundLoading="true"/>
                     </ImageView>
-                    <ImageView fitWidth="20" fitHeight="20" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                    <ImageView fitWidth="22" fitHeight="22" GridPane.rowIndex="4" GridPane.columnIndex="0"
                                fx:id="tBlue">
                         <Image url="/it.polimi.ingsw.client.gui/assets/teacher_blue.png" backgroundLoading="true"/>
                     </ImageView>
