@@ -31,22 +31,41 @@
                             </VBox>
                         </HBox>
                         <!-- Islands -->
-                        <GridPane prefHeight="330" style="-fx-padding: 0 0 0 100;" hgap="12" vgap="-60">
-                            <Island GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="island0" kind="0"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="island1" kind="1"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="island2" kind="2"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="island3" kind="0"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="island4" kind="1"/>
-                            <Island GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="island5" kind="2"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island6" kind="0"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island7" kind="1"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island8" kind="2"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island9" kind="0"/>
-                            <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10" kind="1"/>
-                            <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11" kind="2"/>
-                            <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
-                                   style="-fx-font-size: 18" fx:id="message"/>
-                        </GridPane>
+                        <StackPane>
+                            <GridPane prefHeight="330" style="-fx-padding: 0 0 0 100;" hgap="12" vgap="-60">
+                                <Island GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="island0" kind="0"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="island1" kind="1"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="island2" kind="2"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="island3" kind="0"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="island4" kind="1"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="island5" kind="2"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island6" kind="0"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island7" kind="1"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island8" kind="2"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island9" kind="0"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10" kind="1"/>
+                                <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11" kind="2"/>
+                                <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
+                                       style="-fx-font-size: 18" fx:id="message"/>
+                            </GridPane>
+                            <GridPane prefHeight="330" style="-fx-padding: 50 0 0 180;" hgap="60" vgap="45">
+                                <BigBridge GridPane.rowIndex="0" GridPane.columnIndex="0" fx:id="bridge01"
+                                           rotate="330"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="bridge12" rotate="0"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="bridge23" rotate="0"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="bridge34" rotate="0"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="bridge45" rotate="0"/>
+                                <BigBridge GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="bridge56" rotate="45"/>
+                                <BigBridge GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="bridge67"
+                                           rotate="160"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="bridge78" rotate="0"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="bridge89" rotate="0"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="bridge910" rotate="0"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="bridge1011" rotate="0"/>
+                                <BigBridge GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="bridge110"
+                                           rotate="230"/>
+                            </GridPane>
+                        </StackPane>
                         <!-- Bottom pane -->
                         <HBox>
                             <VBox>

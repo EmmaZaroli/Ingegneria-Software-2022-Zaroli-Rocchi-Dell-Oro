@@ -18,7 +18,7 @@ import java.util.List;
 public class EditableSchoolBoard extends Pane {
     private Gui gui;
     private boolean isDragAndDropEnabled = false;
-    private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY, startingX, startingY;
+    private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
 
     @FXML
     private GridPane diningRoom;
@@ -64,7 +64,7 @@ public class EditableSchoolBoard extends Pane {
             imageView.setFitWidth(20);
 
             imageView.setOnMousePressed(mouseEvent -> {
-                if (/*isDragAndDropEnabled*/ true) {
+                if (isDragAndDropEnabled) {
                     orgSceneX = mouseEvent.getSceneX();
                     orgSceneY = mouseEvent.getSceneY();
                     orgTranslateX = imageView.getTranslateX();
@@ -72,69 +72,71 @@ public class EditableSchoolBoard extends Pane {
                 }
             });
 
+            final int j = i;
+
             imageView.setOnMouseReleased(mouseEvent -> {
-                if (/*isDragAndDropEnabled*/ true) {
+                if (isDragAndDropEnabled) {
                     double x = mouseEvent.getScreenX();
                     double y = mouseEvent.getScreenY();
                     if (isInRange(x, y, 158, 404)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 0);
                         return;
                     }
                     if (isInRange(x, y, 324, 317)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 1);
                         return;
                     }
                     if (isInRange(x, y, 482, 316)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 2);
                         return;
                     }
                     if (isInRange(x, y, 648, 319)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 3);
                         return;
                     }
                     if (isInRange(x, y, 814, 318)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 4);
                         return;
                     }
                     if (isInRange(x, y, 971, 324)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 5);
                         return;
                     }
                     if (isInRange(x, y, 323, 492)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 6);
                         return;
                     }
                     if (isInRange(x, y, 483, 491)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 7);
                         return;
                     }
                     if (isInRange(x, y, 640, 493)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 8);
                         return;
                     }
                     if (isInRange(x, y, 808, 493)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 9);
                         return;
                     }
                     if (isInRange(x, y, 973, 494)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 10);
                         return;
                     }
                     if (isInRange(x, y, 1132, 408)) {
-                        //TODO move
+                        gui.sendToIsland(entrance.get(j), 11);
                         return;
                     }
                     if (x > 647 && y > 630 && x < 893 && y < 810) {
-                        //TODO move
+                        //TODO check if posible
+                        gui.sendToBoard(entrance.get(j));
                         return;
                     }
-                    //TODO take element back
                     gui.print();
                 }
             });
 
             imageView.setOnMouseDragged(mouseEvent -> {
-                if (/*isDragAndDropEnabled*/ true) {
+                if (isDragAndDropEnabled) {
                     double offsetX = mouseEvent.getSceneX() - orgSceneX;
                     double offsetY = mouseEvent.getSceneY() - orgSceneY;
                     double newTranslateX = orgTranslateX + offsetX;

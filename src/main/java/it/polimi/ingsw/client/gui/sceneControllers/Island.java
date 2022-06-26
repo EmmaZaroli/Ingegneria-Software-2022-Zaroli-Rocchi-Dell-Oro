@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client.gui.sceneControllers;
 
+import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.model.enums.Tower;
 import javafx.beans.NamedArg;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,14 +49,39 @@ public class Island extends Pane {
         }
     }
 
-    public void setStudents(List<PawnColor> students) {
+    public void setCloud(LinkedIslands island) {
         this.students.getChildren().removeAll(this.students.getChildren());
+
+        List<PawnColor> students = island.getIsland().getStudents();
 
         this.students.setHgap(4);
         this.students.setVgap(4);
 
-        int row = 1;
+        int row = 0;
         int column = 0;
+
+        if (island.getIsland().isHasMotherNature()) {
+            Image image = new Image("/it.polimi.ingsw.client.gui/assets/mother_nature.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(40);
+            imageView.setFitWidth(35);
+            this.students.add(imageView, column, row);
+            column++;
+        }
+
+        Tower tower = island.getIsland().getTower();
+        if (tower != Tower.NONE) {
+            Image image = switch (tower) {
+                case GREY -> new Image("/it.polimi.ingsw.client.gui/assets/grey_tower.png");
+                case BLACK -> new Image("/it.polimi.ingsw.client.gui/assets/black_tower.png");
+                default -> new Image("/it.polimi.ingsw.client.gui/assets/white _tower.png");
+            };
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(29);
+            imageView.setFitWidth(14);
+            this.students.add(imageView, column, row);
+            column++;
+        }
 
         for (int i = 0; i < students.size(); i++) {
             String basePath = "/it.polimi.ingsw.client.gui/assets/student_";
@@ -72,7 +99,7 @@ public class Island extends Pane {
             imageView.setFitWidth(25);
             this.students.add(imageView, column, row);
             column++;
-            if (column == 5) {
+            if (column == 4) {
                 row++;
                 column = 0;
             }

@@ -6,6 +6,7 @@ import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.PawnColor;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -89,6 +90,31 @@ public class Gui extends View implements Initializable {
     @FXML
     private Label message;
 
+    @FXML
+    private BigBridge bridge01;
+    @FXML
+    private Bridge bridge12;
+    @FXML
+    private Bridge bridge23;
+    @FXML
+    private Bridge bridge34;
+    @FXML
+    private Bridge bridge45;
+    @FXML
+    private BigBridge bridge56;
+    @FXML
+    private BigBridge bridge67;
+    @FXML
+    private Bridge bridge78;
+    @FXML
+    private Bridge bridge89;
+    @FXML
+    private Bridge bridge910;
+    @FXML
+    private Bridge bridge1011;
+    @FXML
+    private BigBridge bridge110;
+
     private String currentPhase, currentPlayer;
 
     public Gui(Stage stage) {
@@ -154,6 +180,8 @@ public class Gui extends View implements Initializable {
             if (playerReconnected) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "You've been reconnected to your previous game", ButtonType.OK);
                 alert.showAndWait();
+                this.loadScene("/it.polimi.ingsw.client.gui/markups/table.fxml");
+                this.gameHasStarted = true;
             } else if (!nicknameAccepted) {
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Your nickname is not available, please, select another nickname", ButtonType.OK);
                 alert.showAndWait();
@@ -192,6 +220,7 @@ public class Gui extends View implements Initializable {
 
     @Override
     public void askMotherNatureSteps() {
+        mySchoolBoard.disableDragAndDrop();
         Platform.runLater(() -> {
             List<ButtonType> buttons = new LinkedList<>();
             for (int i = 1; i <= getMe().getDiscardPileHead().get().motherNatureMovement(); i++) {
@@ -200,13 +229,18 @@ public class Gui extends View implements Initializable {
             sharedAlert = new Alert(Alert.AlertType.INFORMATION, "Move Mother Nature of... steps", buttons.toArray(new ButtonType[]{}));
             Optional<ButtonType> response = sharedAlert.showAndWait();
             if (response.isPresent()) {
-                //TODO
+                sendMotherNatureSteps(Integer.parseInt((response.get().getText()).substring(1)));
             }
         });
     }
 
     @Override
     public void askStudents() {
+        Platform.runLater(() -> {
+            if (message != null) {
+                message.setText("Move a student from your entrance");
+            }
+        });
         mySchoolBoard.enableDragAndDrop();
     }
 
@@ -214,7 +248,12 @@ public class Gui extends View implements Initializable {
     public void askCloud() {
         this.isChooseCloud = true;
         if (message != null) {
-            message.setText("Select a cloud");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    message.setText("Select a cloud");
+                }
+            });
         }
         if (cloud1 != null) {
             cloud1.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -239,7 +278,7 @@ public class Gui extends View implements Initializable {
             });
         }
         if (cloud3 != null) {
-            cloud1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            cloud3.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (isChooseCloud) {
@@ -328,6 +367,7 @@ public class Gui extends View implements Initializable {
         Platform.runLater(() -> {
             changePhase(getCurrentPhase());
             updateCurrentPlayersTurn(getCurrentPlayer());
+            updateBridges();
             if (opponent1 != null) {
                 opponent1.setPlayer(getOpponents().get(0));
                 opponent1.setIsExpert(this.isExpertGame());
@@ -364,46 +404,85 @@ public class Gui extends View implements Initializable {
                 }
             }
             if (island0 != null) {
-                island0.setStudents(getIslands().get(0).getIsland().getStudents());
+                island0.setCloud(getIslands().get(0));
             }
             if (island1 != null) {
-                island1.setStudents(getIslands().get(1).getIsland().getStudents());
+                island1.setCloud(getIslands().get(1));
             }
             if (island2 != null) {
-                island2.setStudents(getIslands().get(2).getIsland().getStudents());
+                island2.setCloud(getIslands().get(2));
             }
             if (island3 != null) {
-                island3.setStudents(getIslands().get(3).getIsland().getStudents());
+                island3.setCloud(getIslands().get(3));
             }
             if (island4 != null) {
-                island4.setStudents(getIslands().get(4).getIsland().getStudents());
+                island4.setCloud(getIslands().get(4));
             }
             if (island5 != null) {
-                island5.setStudents(getIslands().get(5).getIsland().getStudents());
+                island5.setCloud(getIslands().get(5));
             }
             if (island6 != null) {
-                island6.setStudents(getIslands().get(6).getIsland().getStudents());
+                island6.setCloud(getIslands().get(6));
             }
             if (island7 != null) {
-                island7.setStudents(getIslands().get(7).getIsland().getStudents());
+                island7.setCloud(getIslands().get(7));
             }
             if (island8 != null) {
-                island8.setStudents(getIslands().get(8).getIsland().getStudents());
+                island8.setCloud(getIslands().get(8));
             }
             if (island9 != null) {
-                island9.setStudents(getIslands().get(9).getIsland().getStudents());
+                island9.setCloud(getIslands().get(9));
             }
             if (island10 != null) {
-                island10.setStudents(getIslands().get(10).getIsland().getStudents());
+                island10.setCloud(getIslands().get(10));
             }
             if (island11 != null) {
-                island11.setStudents(getIslands().get(11).getIsland().getStudents());
+                island11.setCloud(getIslands().get(11));
             }
             if (mySchoolBoard != null) {
                 mySchoolBoard.setPlayer(getMe());
                 mySchoolBoard.setController(this);
             }
         });
+    }
+
+    private void updateBridges() {
+        if (bridge01 != null) {
+            bridge01.setVisible(getIslands().get(0).isConnectedWithNext());
+        }
+        if (bridge12 != null) {
+            bridge12.setVisible(getIslands().get(1).isConnectedWithNext());
+        }
+        if (bridge23 != null) {
+            bridge23.setVisible(getIslands().get(2).isConnectedWithNext());
+        }
+        if (bridge34 != null) {
+            bridge34.setVisible(getIslands().get(3).isConnectedWithNext());
+        }
+        if (bridge45 != null) {
+            bridge45.setVisible(getIslands().get(4).isConnectedWithNext());
+        }
+        if (bridge56 != null) {
+            bridge56.setVisible(getIslands().get(5).isConnectedWithNext());
+        }
+        if (bridge67 != null) {
+            bridge67.setVisible(getIslands().get(6).isConnectedWithNext());
+        }
+        if (bridge78 != null) {
+            bridge78.setVisible(getIslands().get(7).isConnectedWithNext());
+        }
+        if (bridge89 != null) {
+            bridge89.setVisible(getIslands().get(8).isConnectedWithNext());
+        }
+        if (bridge910 != null) {
+            bridge910.setVisible(getIslands().get(9).isConnectedWithNext());
+        }
+        if (bridge1011 != null) {
+            bridge1011.setVisible(getIslands().get(10).isConnectedWithNext());
+        }
+        if (bridge110 != null) {
+            bridge110.setVisible(getIslands().get(11).isConnectedWithNext());
+        }
     }
 
     @Override
@@ -449,6 +528,14 @@ public class Gui extends View implements Initializable {
             GameMode mode = standard.isSelected() ? GameMode.NORMAL_MODE : GameMode.EXPERT_MODE;
             this.sendGameSettings(playersNumber, mode);
         }
+    }
+
+    public void sendToBoard(PawnColor c) {
+        sendStudentMoveOnBoard(c);
+    }
+
+    public void sendToIsland(PawnColor c, int index) {
+        sendStudentMoveOnIsland(c, index);
     }
 
     //<editor-fold desc="Bindings">

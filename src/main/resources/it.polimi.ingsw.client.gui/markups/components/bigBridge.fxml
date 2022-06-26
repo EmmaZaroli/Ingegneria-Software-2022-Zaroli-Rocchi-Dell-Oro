@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
+
+    <ImageView
+            fx:id="image"
+            fitWidth="144"
+            fitHeight="60">
+        <Image
+                url="/it.polimi.ingsw.client.gui/assets/bridge.png"
+                backgroundLoading="true"
+        />
+    </ImageView>
+</fx:root>
