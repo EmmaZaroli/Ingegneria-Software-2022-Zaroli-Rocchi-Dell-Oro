@@ -10,6 +10,7 @@ import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.CharacterCardMessage;
 import it.polimi.ingsw.persistency.DataDumper;
+import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.RandomHelper;
 import it.polimi.ingsw.view.VirtualView;
@@ -93,9 +94,12 @@ public class ExpertGameController extends GameController {
     }
 
     @Override
-    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
+    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException, DiningRoomFullException {
         if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {
             throw new IllegalActionException();
+        }
+        if(this.game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(pawn) >= ApplicationConstants.STUDENTS_IN_DININGROOM){
+            throw new DiningRoomFullException();
         }
         if (this.game.getCurrentPlayerBoard().moveStudentFromEntranceToDiningRoom(pawn)) {
             try {
