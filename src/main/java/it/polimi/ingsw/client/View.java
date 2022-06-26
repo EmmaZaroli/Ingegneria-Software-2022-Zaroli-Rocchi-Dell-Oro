@@ -628,6 +628,7 @@ public abstract class View implements MessageListener, UserInterface {
             return false;
         Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         endpoint.sendMessage(message);
+        return true;
     }
 
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
@@ -636,6 +637,7 @@ public abstract class View implements MessageListener, UserInterface {
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, student);
         message.setIslandCard(getIslands().get(getMainIsland(islandIndex)).getIsland());
         endpoint.sendMessage(message);
+        return true;
     }
 
     //TODO check if this works

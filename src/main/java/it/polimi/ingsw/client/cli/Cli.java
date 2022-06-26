@@ -329,8 +329,8 @@ public class Cli extends View {
                             this.error("the destination selected is invalid, please retry");
                         }
                     }
-                    if (destination == 12) sendStudentMoveOnBoard(student);//TODO check if return false (schoolboard full)
-                    else sendStudentMoveOnIsland(student, destination);
+                    if (destination == 12) validObject=sendStudentMoveOnBoard(student);
+                    else validObject=sendStudentMoveOnIsland(student, destination);
                 }
             // the input was not a color, checking if it's a character card
             else {
@@ -338,9 +338,9 @@ public class Cli extends View {
                 if (characterCard.isPresent() && canActivateCharacter(characterCard.get())) {
                     validObject = askCharacterCardParameters(characterCard.get());
                 }
-                if (!validObject && isExpertGame()) error("invalid student or invalid character card");
-                else if(!validObject && !isExpertGame())error("invalid student");
             }
+            if (!validObject && isExpertGame()) error("invalid student or invalid character card");
+            else if(!validObject && !isExpertGame())error("invalid student or move");
         }
     }
 
