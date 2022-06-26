@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 
 /**
  * Expert player.
@@ -13,11 +13,11 @@ public class ExpertPlayer extends Player {
      * Instantiates a new Expert player.
      *
      * @param nickname the player's nickname
-     * @param wizzard  the wizzard
+     * @param wizard  the wizard
      * @param tower    the tower's color
      */
-    public ExpertPlayer(String nickname, Wizzard wizzard, Tower tower, int numberOfPlayers) {
-        super(nickname, wizzard, tower, numberOfPlayers);
+    public ExpertPlayer(String nickname, Wizard wizard, Tower tower, int numberOfPlayers) {
+        super(nickname, wizard, tower, numberOfPlayers);
         this.coins = 1;
     }
 

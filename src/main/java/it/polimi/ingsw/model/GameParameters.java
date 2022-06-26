@@ -69,7 +69,7 @@ public class GameParameters implements Serializable {
 
     /**
      *
-     * @return the Gamemode
+     * @return the GameMode
      */
     public GameMode getGameMode() {
         return gameMode;

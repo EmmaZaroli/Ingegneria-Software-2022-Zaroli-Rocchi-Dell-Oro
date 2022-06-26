@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.CloudMessage;
@@ -24,8 +24,8 @@ import java.util.*;
 
 class GameControllerTest extends TestCase {
 
-    Player player1 = new Player("player1", Wizzard.BLUE, Tower.BLACK, 2);
-    Player player2 = new Player("player2", Wizzard.GREEN, Tower.WHITE, 2);
+    Player player1 = new Player("player1", Wizard.BLUE, Tower.BLACK, 2);
+    Player player2 = new Player("player2", Wizard.GREEN, Tower.WHITE, 2);
     Player[] players = {player1, player2};
     Game game = new Game(players, new Table(PlayersNumber.TWO), new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
     TableController tableController = new TableController(game.getTable(), game.getParameters());

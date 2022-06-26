@@ -42,14 +42,18 @@ public class ExpertParameters {
         this.alreadyActivateCharacterCard = alreadyActivateCharacterCard;
     }
 
-    public boolean isTakeProfessorEvenIfSameStudents() {
-        return takeProfessorEvenIfSameStudents;
-    }
 
+
+    /**
+     *
+     * @return the number of mother nature extra steps
+     */
     public int getMotherNatureExtraMovements() {
         return motherNatureExtraMovements;
     }
 
+
+    //TODO remove
     public boolean isTowersCountInInfluence() {
         return towersCountInInfluence;
     }
@@ -62,44 +66,86 @@ public class ExpertParameters {
         return colorWithNoInfluence;
     }
 
+    public boolean isTakeProfessorEvenIfSameStudents() {
+        return takeProfessorEvenIfSameStudents;
+    }
+
+    /**
+     *
+     * @return true if there's already an active card
+     */
     public boolean isAlreadyActivateCharacterCard() {
         return alreadyActivateCharacterCard;
     }
 
+    /**
+     *
+     * @return a clone of this instance
+     */
     private ExpertParameters deepClone(){
         return new ExpertParameters(this.takeProfessorEvenIfSameStudents, this.motherNatureExtraMovements, this.towersCountInInfluence, this.extraInfluence, this.colorWithNoInfluence, this.alreadyActivateCharacterCard);
     }
 
+    /**
+     *
+     * @param takeProfessorEvenIfSameStudents true if the player can take control of any number of professors,even if another player has the same number of students as the player who currently controls them
+     * @return the updated clone of the ExpertParameters
+     */
     public ExpertParameters withIsTakeProfessorEvenIfSameStudents(boolean takeProfessorEvenIfSameStudents) {
         ExpertParameters retVal = this.deepClone();
         retVal.takeProfessorEvenIfSameStudents = takeProfessorEvenIfSameStudents;
         return retVal;
     }
 
+    /**
+     *
+     * @param motherNatureExtraMovements number of mother nature's extra steps
+     * @return the updated clone of the ExpertParameters
+     */
     public ExpertParameters withMotherNatureExtraMovements(int motherNatureExtraMovements) {
         ExpertParameters retVal = this.deepClone();
         retVal.motherNatureExtraMovements = motherNatureExtraMovements;
         return retVal;
     }
 
+    /**
+     *
+     * @param towersCountInInfluence true if the towers count in influence, false otherwise
+     * @return the updated clone of the ExpertParameters
+     */
     public ExpertParameters withIsTowersCountInInfluence(boolean towersCountInInfluence) {
         ExpertParameters retVal = this.deepClone();
         retVal.towersCountInInfluence = towersCountInInfluence;
         return retVal;
     }
 
+    /**
+     *
+     * @param extraInfluence the extra influence
+     * @return the updated clone of the ExpertParameters
+     */
     public ExpertParameters withExtraInfluence(int extraInfluence) {
         ExpertParameters retVal = this.deepClone();
         retVal.extraInfluence = extraInfluence;
         return retVal;
     }
 
+    /**
+     *
+     * @param colorWithNoInfluence the PawnColor with no influence
+     * @return the updated clone of the ExpertParameters
+     */
     public ExpertParameters withColorWithNoInfluence(PawnColor colorWithNoInfluence) {
         ExpertParameters retVal = this.deepClone();
         retVal.colorWithNoInfluence = colorWithNoInfluence;
         return retVal;
     }
 
+    /**
+     *
+     * @param alreadyActivateCharacterCard true if a CharacterCard is active
+     * @return the updated clone of the ExpertParameters
+     */
     public ExpertParameters withHasAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard) {
         ExpertParameters retVal = this.deepClone();
         retVal.alreadyActivateCharacterCard = alreadyActivateCharacterCard;

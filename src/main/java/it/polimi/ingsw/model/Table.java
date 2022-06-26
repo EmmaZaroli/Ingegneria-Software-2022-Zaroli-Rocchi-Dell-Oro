@@ -28,7 +28,7 @@ public class Table extends ModelObservable implements Serializable {
 
     /**
      * Instantiates a new table
-     * @param playersNumber
+     * @param playersNumber the number of players
      */
     public Table(PlayersNumber playersNumber) {
         this.playersNumber = playersNumber;

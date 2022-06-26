@@ -48,12 +48,11 @@ public class Game extends ModelObservable implements Serializable {
         this.currentPlayer = 0;
         this.gamePhase = GamePhase.PLANNING;
         this.parameters = parameters;
-        this.gamePhase = GamePhase.PLANNING;
     }
 
     /**
      *
-     * @return the current player's schoolboard
+     * @return the current player's schoolBoard
      */
     public SchoolBoard getCurrentPlayerSchoolBoard() {
         return this.players[this.currentPlayer].getBoard();

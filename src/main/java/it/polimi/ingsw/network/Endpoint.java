@@ -10,12 +10,15 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * EndPoint
+ */
 public class Endpoint {
     private final Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
 
-    private ReciverThread receiverThread;
+    private ReceiverThread receiverThread;
 
     private final List<MessageListener> messageListeners;
     private final List<DisconnectionListener> disconnectionListeners;
@@ -25,7 +28,7 @@ public class Endpoint {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     private Timer disconnectionTimer = new Timer();
-    private Timer pingTimer = new Timer();
+    private final Timer pingTimer = new Timer();
 
     public Endpoint(Socket socket, boolean serverSide) throws IOException {
         this.messageListeners = new LinkedList<>();
@@ -54,24 +57,33 @@ public class Endpoint {
         return isOnline;
     }
 
+    /**
+     *
+     * @param message the message to send
+     */
     public void sendMessage(Message message) {
         if(isOnline){
             try {
                 out.writeObject(message);
                 out.flush();
             } catch (Exception e) {
-                disconnect("SCRITTURA");
+                disconnect("WRITING");
                 this.notifyDisconnection();
             }
         }
     }
 
+    /**
+     * Instantiates a new thread to read incoming messages
+     */
     public void startReceiving() {
-        this.receiverThread = new ReciverThread();
-
+        this.receiverThread = new ReceiverThread();
         receiverThread.startThread();
     }
 
+    /**
+     * Close the thread previously instantiated to read incoming messages
+     */
     private void stopReceiving() {
         this.receiverThread.stopThread();
     }
@@ -96,6 +108,9 @@ public class Endpoint {
         return message;
     }*/
 
+    /**
+     * Reads the incoming message and notify the registered messageListeners with the message
+     */
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
@@ -114,18 +129,24 @@ public class Endpoint {
         }
     }
 
+    /**
+     * Resets the disconnection timer
+     */
     private void resetDisconnectionTimer() {
         this.disconnectionTimer.cancel();
         this.disconnectionTimer = new Timer();
         this.disconnectionTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                disconnect("TIMER SCADUTO");
+                disconnect("TIMER EXPIRED");
                 notifyDisconnection();
             }
         }, ApplicationConstants.DISCONNECTION_TIMER_PING);
     }
 
+    /**
+     * Sends at fixed periods a PingMessage to the player, checking if he's still online
+     */
     private void startPinging() {
         this.pingTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -135,8 +156,12 @@ public class Endpoint {
         }, ApplicationConstants.PING_PERIOD, ApplicationConstants.PING_PERIOD);
     }
 
-    public void disconnect(String motivo) {
-        System.out.println("DISCONNESSIONE " + motivo);
+    /**
+     * Called when the player is disconnected
+     * @param reason the reason for the disconnection
+     */
+    public void disconnect(String reason) {
+        System.out.println("DISCONNECTION " + reason);
         isOnline = false;
         try {
             this.receiverThread.stopThread();
@@ -148,33 +173,55 @@ public class Endpoint {
 
     }
 
+    /**
+     * Notify the disconnection to all the disconnectionListeners
+     */
     public void notifyDisconnection() {
         for (DisconnectionListener d : this.disconnectionListeners) {
             d.onDisconnect(this);
         }
     }
 
+    /**
+     * Adds a messageListener
+     * @param l the messageListener
+     */
     public void addMessageListener(MessageListener l) {
         this.messageListeners.add(l);
     }
 
+    /**
+     * Remove a messageListener
+     * @param l the messageListener
+     */
     public void removeMessageListener(MessageListener l) {
         this.messageListeners.remove(l);
     }
 
+    /**
+     * Adds a disconnectionListener
+     * @param l the disconnectionListener
+     */
     public void addDisconnectionListener(DisconnectionListener l) {
         this.disconnectionListeners.add(l);
     }
 
+    /**
+     * Remove a disconnectionListener
+     * @param l the disconnectionListener
+     */
     public void removeDisconnectionListener(DisconnectionListener l) {
         this.disconnectionListeners.remove(l);
     }
 
-    private class ReciverThread {
-        private Thread thread;
+    /**
+     * Class used for handling incoming messages asynchronously from the rest of the Endpoint class
+     */
+    private class ReceiverThread {
+        private final Thread thread;
         private boolean stopFlag;
 
-        public ReciverThread() {
+        public ReceiverThread() {
             this.thread = new Thread(() -> {
                 while (!stopFlag) {
                     handleIncomingMessage();

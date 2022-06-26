@@ -2,15 +2,13 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 import it.polimi.ingsw.observer.ModelObservable;
-import it.polimi.ingsw.utils.ApplicationConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import static it.polimi.ingsw.utils.ApplicationConstants.*;
 
@@ -22,7 +20,7 @@ public class Player extends ModelObservable implements Serializable {
     private static final long serialVersionUID = 9L;
 
     private final String nickname;
-    private final Wizzard wizzard;
+    private final Wizard wizard;
     private final SchoolBoard schoolBoard;
     private final LinkedList<AssistantCard> assistantDeck;
     private AssistantCard discardPileHead;
@@ -35,25 +33,25 @@ public class Player extends ModelObservable implements Serializable {
      * Instantiates a new Player, sets by default isPlayerTurn to false
      *
      * @param nickname the nickname of the player
-     * @param wizzard  the wizzard's type
+     * @param wizard  the wizzard's type
      * @param tower    the tower's color
      */
-    public Player(String nickname, Wizzard wizzard, Tower tower, int numberOfPlayers) {
-        this(nickname, wizzard, tower, false, numberOfPlayers, true);
+    public Player(String nickname, Wizard wizard, Tower tower, int numberOfPlayers) {
+        this(nickname, wizard, tower, false, numberOfPlayers, true);
     }
 
     /**
      * Instantiates a new Player, creating the Assistant's deck and the school board
      *
      * @param nickname        the nickname
-     * @param wizzard         the wizzard
+     * @param wizard         the wizzard
      * @param tower           the tower
      * @param numberOfPlayers the number of players of the game this player will be added to
      * @param isPlayerTurn true if it's the player's turn
      */
-    public Player(String nickname, Wizzard wizzard, Tower tower, boolean isPlayerTurn, int numberOfPlayers, boolean isOnline) {
+    public Player(String nickname, Wizard wizard, Tower tower, boolean isPlayerTurn, int numberOfPlayers, boolean isOnline) {
         this.nickname = nickname;
-        this.wizzard = wizzard;
+        this.wizard = wizard;
         this.discardPileHead = null;
 
         this.isPlayerTurn = isPlayerTurn;
@@ -116,8 +114,8 @@ public class Player extends ModelObservable implements Serializable {
      *
      * @return the wizzard's type
      */
-    public Wizzard getWizzard() {
-        return this.wizzard;
+    public Wizard getWizzard() {
+        return this.wizard;
     }
 
     /**

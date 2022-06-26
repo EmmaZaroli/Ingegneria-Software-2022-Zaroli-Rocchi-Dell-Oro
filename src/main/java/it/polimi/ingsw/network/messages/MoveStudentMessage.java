@@ -19,6 +19,10 @@ public class MoveStudentMessage extends Message {
         this.studentColor = color;
     }
 
+    /**
+     *
+     * @param island the islandCardDto
+     */
     public void setIslandCard(IslandCardDto island) {
         this.islandCard = island;
     }
@@ -28,10 +32,18 @@ public class MoveStudentMessage extends Message {
         this.islandCard = new IslandCardDto(island);
     }
 
+    /**
+     *
+     * @return the PawnColor
+     */
     public PawnColor getStudentColor() {
         return this.studentColor;
     }
 
+    /**
+     *
+     * @return the islandCardDto
+     */
     public IslandCardDto getIslandCard() {
         return this.islandCard;
     }

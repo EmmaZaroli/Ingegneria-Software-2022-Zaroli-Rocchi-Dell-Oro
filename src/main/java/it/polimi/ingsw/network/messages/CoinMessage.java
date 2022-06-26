@@ -23,10 +23,18 @@ public class CoinMessage extends Message {
         this.isOnTable = isOnTable;
     }
 
+    /**
+     *
+     * @return the number of coins
+     */
     public int getCoins() {
         return this.coins;
     }
 
+    /**
+     *
+     * @return true if the coins are on the table, false if they belong to a player
+     */
     public boolean isOnTable() {
         return isOnTable;
     }

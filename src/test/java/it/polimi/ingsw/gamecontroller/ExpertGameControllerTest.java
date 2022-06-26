@@ -2,15 +2,12 @@ package it.polimi.ingsw.gamecontroller;
 
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
-import it.polimi.ingsw.gamecontroller.exceptions.IllegalActionException;
-import it.polimi.ingsw.gamecontroller.exceptions.IllegalAssistantException;
-import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Character;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.servercontroller.User;
@@ -25,8 +22,8 @@ import java.util.*;
 
 class ExpertGameControllerTest extends TestCase {
 
-    ExpertPlayer player1 = new ExpertPlayer("player1", Wizzard.BLUE, Tower.BLACK, 2);
-    ExpertPlayer player2 = new ExpertPlayer("player2", Wizzard.GREEN, Tower.WHITE, 2);
+    ExpertPlayer player1 = new ExpertPlayer("player1", Wizard.BLUE, Tower.BLACK, 2);
+    ExpertPlayer player2 = new ExpertPlayer("player2", Wizard.GREEN, Tower.WHITE, 2);
     ExpertPlayer[] players = {player1, player2};
     ExpertGame game = new ExpertGame(players, new ExpertTable(PlayersNumber.TWO), new ExpertGameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
     ExpertTableController tableController = new ExpertTableController(game.getTable(), game.getParameters());

@@ -8,11 +8,18 @@ import it.polimi.ingsw.model.enums.Tower;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * ExpertTableController
+ */
 public class ExpertTableController extends TableController {
     public ExpertTableController(ExpertTable table, ExpertGameParameters parameters) {
         super(table, parameters);
     }
 
+    /**
+     *
+     * @throws NoCoinsAvailableException if there aren't coins on the table
+     */
     public void takeCoin() throws NoCoinsAvailableException {
         if (((ExpertTable) table).getCoins() == 0) {
             throw new NoCoinsAvailableException();
@@ -20,6 +27,10 @@ public class ExpertTableController extends TableController {
         ((ExpertTable) table).takeCoin();
     }
 
+    /**
+     *
+     * @param coins the coins to adds on the table
+     */
     public void depositCoins(int coins) {
         ((ExpertTable) table).depositCoins(coins);
     }

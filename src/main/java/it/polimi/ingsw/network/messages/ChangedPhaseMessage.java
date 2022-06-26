@@ -17,6 +17,10 @@ public class ChangedPhaseMessage extends Message {
         this.newPhase = newPhase;
     }
 
+    /**
+     *
+     * @return the new GamePhase
+     */
     public GamePhase getNewPhase() {
         return newPhase;
     }

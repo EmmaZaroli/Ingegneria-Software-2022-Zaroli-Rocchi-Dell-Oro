@@ -22,7 +22,7 @@ public interface UserInterface {
 
     void genericMessage(String Message);
 
-    //TODO is this ok or it's already incorporated in print() ?
+    //TODO remove this
     void changePhase(GamePhase phase);
 
     void askAssistantCard(List<AssistantCard> deck);

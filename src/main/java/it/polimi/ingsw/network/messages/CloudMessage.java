@@ -22,6 +22,10 @@ public class CloudMessage extends Message {
         this.cloud = cloud;
     }
 
+    /**
+     *
+     * @return the CloudTile
+     */
     public CloudTileDto getCloud() {
         return this.cloud;
     }

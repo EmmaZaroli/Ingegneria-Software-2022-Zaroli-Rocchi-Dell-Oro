@@ -10,7 +10,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
@@ -60,8 +60,8 @@ class ViewTest{
     void gameStartingMessage(){
         gametypeResponseMessageOk();
 
-        Player player1 = new Player(nickname, Wizzard.BLUE, Tower.BLACK, 2);
-        Player player2 = new Player("Player2", Wizzard.GREEN, Tower.WHITE, 2);
+        Player player1 = new Player(nickname, Wizard.BLUE, Tower.BLACK, 2);
+        Player player2 = new Player("Player2", Wizard.GREEN, Tower.WHITE, 2);
         Player[] players = {player1, player2};
         Game game = new Game(players, new Table(PlayersNumber.TWO), new GameParameters(PlayersNumber.TWO, GameMode.NORMAL_MODE));
         GameMessage message = new GameMessage(nickname, MessageType.GAME_STARTING, game);

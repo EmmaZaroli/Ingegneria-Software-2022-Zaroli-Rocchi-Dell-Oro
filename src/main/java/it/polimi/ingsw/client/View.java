@@ -26,7 +26,7 @@ import java.util.List;
  */
 public abstract class View implements MessageListener, UserInterface {
     private boolean isExpertGame;
-    private List<PlayerInfo> opponents = new ArrayList<>();
+    private List<PlayerInfo> opponents;
     private PlayerInfo me;
     private ArrayList<CloudTileDto> clouds;
     private int tableCoins;
@@ -239,13 +239,11 @@ public abstract class View implements MessageListener, UserInterface {
             print();
             if (game.getCurrentPlayer().equals(getMe().getNickname())) {
                 if(game.getGamePhase() == GamePhase.PLANNING) {
-                    if(me.isCanPlayThisRound())
-                        if(areEnoughPlayers)
+                    if(me.isCanPlayThisRound() && areEnoughPlayers)
                             askAssistantCard(getMe().getDeck());
                 }
                 else {
-                    if(me.isCanPlayThisRound())
-                        if(areEnoughPlayers)
+                    if(me.isCanPlayThisRound() && areEnoughPlayers)
                             askAction();
                 }
             }
@@ -271,9 +269,8 @@ public abstract class View implements MessageListener, UserInterface {
             print();
 
         if (currentPlayer.equals(getMe().getNickname())
-                && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS)) {
-            if(me.isCanPlayThisRound())
-                if(areEnoughPlayers)
+                && !message.getNewPhase().equals(GamePhase.ACTION_MOVE_STUDENTS)
+                && me.isCanPlayThisRound() && areEnoughPlayers) {
                     askAction();
         }
         if(currentPhase.equals(GamePhase.ACTION_END)) resetCharacterCards();
@@ -294,9 +291,7 @@ public abstract class View implements MessageListener, UserInterface {
         currentPlayer = message.getNickname();
         if (areEnoughPlayers)
             print();
-        if (currentPlayer.equals(getMe().getNickname())) {
-            if(me.isCanPlayThisRound())
-                if(areEnoughPlayers)
+        if (currentPlayer.equals(getMe().getNickname()) && me.isCanPlayThisRound() && areEnoughPlayers) {
                     askAction();
         }
     }
@@ -305,9 +300,8 @@ public abstract class View implements MessageListener, UserInterface {
         if (message.getNickname().equals(getMe().getNickname())) {
             error = message.getError();
             error(message.getError());
-            if(me.isCanPlayThisRound())
-                if(areEnoughPlayers)
-                    askAction();;
+            if(me.isCanPlayThisRound() && areEnoughPlayers)
+                    askAction();
         }
     }
 
@@ -470,9 +464,7 @@ public abstract class View implements MessageListener, UserInterface {
         expertParameters = expertParameters.withColorWithNoInfluence(newParameters.getColorWithNoInfluence());
         if (areEnoughPlayers)
             print();
-        if (currentPlayer.equals(getMe().getNickname()) && currentPhase != GamePhase.ACTION_END) {
-            if(me.isCanPlayThisRound())
-                if(areEnoughPlayers)
+        if (currentPlayer.equals(getMe().getNickname()) && currentPhase != GamePhase.ACTION_END && me.isCanPlayThisRound() && areEnoughPlayers) {
                     askAction();
         }
     }
@@ -526,13 +518,11 @@ public abstract class View implements MessageListener, UserInterface {
     private void enoughPlayers(boolean areEnoughPlayers) {
         if (areEnoughPlayers) {
             print();
-            if (currentPlayer.equals(getMe().getNickname())) {
-                if(me.isCanPlayThisRound()){
+            if (currentPlayer.equals(getMe().getNickname()) && me.isCanPlayThisRound()) {
                     if(currentPhase == GamePhase.PLANNING)
                         this.askAssistantCard(getDeck());
                     else
                         askAction();
-                }
             }
         }
         else {
@@ -569,19 +559,17 @@ public abstract class View implements MessageListener, UserInterface {
         }
     }
 
-    public final boolean sendPlayerNickname(String nickname) {
+    public final void sendPlayerNickname(String nickname) {
         Message message = new NicknameProposalMessage(nickname);
         endpoint.sendMessage(message);
-        return true;
     }
 
-    protected final boolean sendGameSettings(PlayersNumber playersNumber, GameMode gameMode) {
+    protected final void sendGameSettings(PlayersNumber playersNumber, GameMode gameMode) {
         Message message = new GametypeRequestMessage(
                 me.getNickname(),
                 gameMode, playersNumber);
         endpoint.sendMessage(message);
         this.isExpertGame = (gameMode == GameMode.EXPERT_MODE);
-        return true;
     }
 
     protected final boolean sendMotherNatureSteps(int steps) {
@@ -633,17 +621,15 @@ public abstract class View implements MessageListener, UserInterface {
         return true;
     }
 
-    protected final boolean sendStudentMoveOnBoard(PawnColor student) {
+    protected final void sendStudentMoveOnBoard(PawnColor student) {
         Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         endpoint.sendMessage(message);
-        return true;
     }
 
-    protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
+    protected final void sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, student);
         message.setIslandCard(getIslands().get(getMainIsland(islandIndex)).getIsland());
         endpoint.sendMessage(message);
-        return true;
     }
 
     //TODO check if this works
@@ -669,12 +655,12 @@ public abstract class View implements MessageListener, UserInterface {
         return true;
     }
 
-    /*  parameters:
+    /**  parameters:
      *   CHARACTER_ONE:      {PawnColor colorFromCard, island UUID}
      *   CHARACTER_SEVEN:    {List<PawnColor> colorsFromCard, List<PawnColor> colorsFromEntrance}
      *   CHARACTER_NINE:     {PawnColor}
      *   CHARACTER_ELEVEN:   {PawnColor colorFromCard}
-     *   NB parameters.lenght must be exactly the size required for the specific character
+     *   NB parameters length must be exactly the size required for the specific character
      * */
     protected final boolean sendCharacterCard(int characterIndex, Object[] parameters) {
         if (characterIndex < 0 || characterIndex >= characterCards.size())
@@ -701,23 +687,19 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     protected boolean areCharacterActive(){
-        if (expertParameters.isAlreadyActivateCharacterCard())
-            return true;
-        return false;
+        return expertParameters.isAlreadyActivateCharacterCard();
     }
 
     protected boolean canActivateCharacter(ViewCharacterCard characterCard){
         if (expertParameters.isAlreadyActivateCharacterCard())
             return false;
-        if(me.getCoins() < characterCard.getPrice())
-            return false;
-        return true;
+        return me.getCoins() >= characterCard.getPrice();
     }
 
-    protected boolean canActivateCharacter(int characterInedx){
-        if(characterInedx < 0 || characterInedx >= getCharacterCards().size())
+    protected boolean canActivateCharacter(int characterIndex){
+        if(characterIndex < 0 || characterIndex >= getCharacterCards().size())
             return false;
-        return canActivateCharacter(getCharacterCards().get(characterInedx));
+        return canActivateCharacter(getCharacterCards().get(characterIndex));
     }
     //</editor-fold>
 }

@@ -16,6 +16,10 @@ public class AssistantPlayedMessage extends Message {
         this.assistantCard = played;
     }
 
+    /**
+     *
+     * @return the AssistantCard
+     */
     public AssistantCard getAssistantCard() {
         return this.assistantCard;
     }

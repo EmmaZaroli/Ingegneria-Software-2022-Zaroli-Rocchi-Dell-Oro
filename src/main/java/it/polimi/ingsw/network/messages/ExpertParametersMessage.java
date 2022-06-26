@@ -17,6 +17,10 @@ public class ExpertParametersMessage extends Message {
         this.expertParameters = new ExpertParametersDto(parameters);
     }
 
+    /**
+     *
+     * @return the ExpertGameParameters
+     */
     public ExpertParametersDto getExpertParameters() {
         return expertParameters;
     }

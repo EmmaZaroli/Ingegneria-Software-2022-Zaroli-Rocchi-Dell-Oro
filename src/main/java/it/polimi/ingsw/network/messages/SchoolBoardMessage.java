@@ -17,6 +17,10 @@ public class SchoolBoardMessage extends Message {
         this.schoolBoard = new SchoolBoardDto(schoolBoard);
     }
 
+    /**
+     *
+     * @return the SchoolBoardDto
+     */
     public SchoolBoardDto getSchoolBoard() {
         return this.schoolBoard;
     }

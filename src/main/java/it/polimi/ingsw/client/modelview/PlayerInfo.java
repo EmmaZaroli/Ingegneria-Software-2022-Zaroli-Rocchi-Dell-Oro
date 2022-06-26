@@ -3,7 +3,7 @@ package it.polimi.ingsw.client.modelview;
 import it.polimi.ingsw.dtos.PlayerDto;
 import it.polimi.ingsw.dtos.SchoolBoardDto;
 import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public class PlayerInfo {
     private String nickname;
-    private Wizzard wizzard;
+    private Wizard wizard;
     private SchoolBoardDto schoolBoard;
     private Optional<AssistantCard> discardPileHead;
     private boolean isFromActualTurn = false;
@@ -32,7 +32,7 @@ public class PlayerInfo {
 
     public PlayerInfo(PlayerDto origin) {
         this.nickname = origin.getNickname();
-        this.wizzard = origin.getWizzard();
+        this.wizard = origin.getWizzard();
         this.schoolBoard = origin.getSchoolBoard();
         this.discardPileHead = Optional.ofNullable(origin.getDiscardPileHead());
         this.isFromActualTurn = origin.isFromActualTurn();
@@ -42,9 +42,9 @@ public class PlayerInfo {
         this.coins = origin.getCoins();
     }
 
-    private PlayerInfo(String nickname, Wizzard wizzard, SchoolBoardDto schoolBoard, Optional<AssistantCard> discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline, boolean canPlayThisRound, boolean isFromActualTurn) {
+    private PlayerInfo(String nickname, Wizard wizard, SchoolBoardDto schoolBoard, Optional<AssistantCard> discardPileHead, int coins, List<AssistantCard> deck, boolean isOnline, boolean canPlayThisRound, boolean isFromActualTurn) {
         this.nickname = nickname;
-        this.wizzard = wizzard;
+        this.wizard = wizard;
         this.schoolBoard = schoolBoard;
         this.discardPileHead = discardPileHead;
         this.deck = deck;
@@ -75,12 +75,12 @@ public class PlayerInfo {
     }
 
     /**
-     * @param wizzard the Wizzard of the player
+     * @param wizard the Wizzard of the player
      * @return the updated clone of the playerInfo
      */
-    public PlayerInfo with(Wizzard wizzard) {
+    public PlayerInfo with(Wizard wizard) {
         PlayerInfo retVal = this.deepClone();
-        retVal.wizzard = wizzard;
+        retVal.wizard = wizard;
         return retVal;
     }
 
@@ -156,8 +156,8 @@ public class PlayerInfo {
      *
      * @return the wizzard
      */
-    public Wizzard getWizzard() {
-        return wizzard;
+    public Wizard getWizzard() {
+        return wizard;
     }
 
     /**
@@ -222,6 +222,6 @@ public class PlayerInfo {
      */
     public PlayerInfo deepClone() {
         //TODO dtos if we have time
-        return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.canPlayThisRound, this.isFromActualTurn);
+        return new PlayerInfo(this.nickname, this.wizard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.canPlayThisRound, this.isFromActualTurn);
     }
 }

@@ -20,7 +20,7 @@ public class SchoolBoard extends ModelObservable implements Serializable {
     private final DiningRoom diningRoom;
     private final HashSet<PawnColor> professorTable;
     private int towers;
-    private UUID uuid;
+    private final UUID uuid;
 
     /**
      * Instantiates a new School board.

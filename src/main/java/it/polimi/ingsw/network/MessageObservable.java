@@ -1,14 +1,11 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.SchoolBoard;
-import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.observer.ModelObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Message Observable
+ */
 public class MessageObservable {
 
     private final List<MessageListener> listeners = new ArrayList<>();

@@ -18,10 +18,18 @@ public class GametypeRequestMessage extends Message {
         this.playersNumber = playersNumber;
     }
 
+    /**
+     *
+     * @return the Game Mode
+     */
     public GameMode getGameMode() {
         return gameMode;
     }
 
+    /**
+     *
+     * @return the number of players
+     */
     public PlayersNumber getPlayersNumber() {
         return playersNumber;
     }
