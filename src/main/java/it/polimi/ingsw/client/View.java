@@ -634,12 +634,18 @@ public abstract class View implements MessageListener, UserInterface {
     }
 
     protected final boolean sendStudentMoveOnBoard(PawnColor student) {
+        if(me.getBoard().getStudentsInEntrance(student) < 1)
+            return false;
+        if(me.getBoard().getDiningRoom().getStudentsInDiningRoom(student) > 9)
+            return false;
         Message message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_BOARD, student);
         endpoint.sendMessage(message);
         return true;
     }
 
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
+        if(me.getBoard().getStudentsInEntrance(student) < 1)
+            return false;
         MoveStudentMessage message = new MoveStudentMessage(me.getNickname(), MessageType.ACTION_MOVE_STUDENTS_ON_ISLAND, student);
         message.setIslandCard(getIslands().get(getMainIsland(islandIndex)).getIsland());
         endpoint.sendMessage(message);

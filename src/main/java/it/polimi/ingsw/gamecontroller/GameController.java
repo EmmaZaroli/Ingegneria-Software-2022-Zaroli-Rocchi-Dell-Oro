@@ -204,6 +204,8 @@ public class GameController implements DisconnectionListener, MessageListener {
                     moveStudentToDiningRoom(((MoveStudentMessage) message).getStudentColor());
                 } catch (IllegalActionException e) {
                     logger.log(Level.WARNING,"",e);
+                }catch (DiningRoomFullException e){
+                    logger.log(Level.WARNING,"",e);
                 }
                 break;
             default:
@@ -211,9 +213,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException {
+    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException, DiningRoomFullException {
         if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {
             throw new IllegalActionException();
+        }
+        if(this.game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(pawn) >= ApplicationConstants.STUDENTS_IN_DININGROOM){
+            throw new DiningRoomFullException();
         }
         this.game.getCurrentPlayerBoard().moveStudentFromEntranceToDiningRoom(pawn);
         this.checkProfessorsStatus(pawn);

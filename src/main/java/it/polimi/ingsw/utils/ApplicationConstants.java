@@ -11,4 +11,5 @@ public class ApplicationConstants {
     public static final int TOWER_3_PLAYERS = 6; //number of towers per player in 3 players game
     public static final int CLOUDS_STUDENTS_2_PLAYERS = 3; //number of students per clouds in 2 players game
     public static final int CLOUDS_STUDENTS_3_PLAYERS = 4; //number of students per clouds in 3 players game
+    public static final int STUDENTS_IN_DININGROOM = 10; //number of students in diningroom, per color
 }
