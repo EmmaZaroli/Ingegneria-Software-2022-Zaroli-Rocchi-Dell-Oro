@@ -495,7 +495,7 @@ public class Gui extends View implements Initializable {
     }
 
     @Override
-    public void gameOverFromDisconnection() {
+    public void printGameOverFromDisconnection() {
         Platform.runLater(() -> {
             sharedAlert = new Alert(Alert.AlertType.CONFIRMATION, "You're opponents are offline. You won the game!");
             sharedAlert.showAndWait();
