@@ -5,9 +5,10 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
-public class Card extends Pane {
-    public Card() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/card.fxml"));
+public class BigBridge extends Pane {
+
+    public BigBridge() {
+        var fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/bigBridge.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

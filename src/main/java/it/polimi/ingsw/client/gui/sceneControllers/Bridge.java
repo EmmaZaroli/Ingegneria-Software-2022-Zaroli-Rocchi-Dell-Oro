@@ -5,9 +5,9 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
-public class EditableSchoolboard extends Pane {
-    public EditableSchoolboard() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/editable-schoolboard.fxml"));
+public class Bridge extends Pane {
+    public Bridge() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/bridge.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

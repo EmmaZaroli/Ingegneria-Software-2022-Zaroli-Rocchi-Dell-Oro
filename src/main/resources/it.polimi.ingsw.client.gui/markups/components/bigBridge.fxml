@@ -6,10 +6,11 @@
 <fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
 
     <ImageView
-            fitWidth="82"
-            fitHeight="126">
+            fx:id="image"
+            fitWidth="144"
+            fitHeight="60">
         <Image
-                url="/it.polimi.ingsw.client.gui/assets/TEMP_character.jpg"
+                url="/it.polimi.ingsw.client.gui/assets/bridge.png"
                 backgroundLoading="true"
         />
     </ImageView>

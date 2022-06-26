@@ -2,7 +2,7 @@ package it.polimi.ingsw.applications;
 
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.cli.Cli;
-import it.polimi.ingsw.client.gui.Gui;
+import it.polimi.ingsw.client.gui.GuiLauncher;
 
 public class Client {
 
@@ -10,7 +10,7 @@ public class Client {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            Gui.main(args);
+            GuiLauncher.main(args);
         } else {
             if (args[0].equals("--cli")) {
                 new Client(new Cli());

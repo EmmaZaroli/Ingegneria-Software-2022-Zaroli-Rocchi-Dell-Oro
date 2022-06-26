@@ -4,8 +4,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<StackPane prefHeight="590.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="it.polimi.ingsw.client.gui.sceneControllers.StartConnection">
+<StackPane prefHeight="590.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <ImageView>
         <Image
                 url="/it.polimi.ingsw.client.gui/assets/opening.jpg"
@@ -27,6 +26,7 @@
                         GridPane.columnIndex="1"
                         GridPane.rowIndex="0"
                         fx:id="ip"
+                        text="127.0.0.1"
                         style="-fx-margin: 50 00 50 00;"/>
                 <Label
                         GridPane.columnIndex="0"
@@ -37,7 +37,8 @@
                 <TextField
                         fx:id="port"
                         GridPane.columnIndex="1"
-                        GridPane.rowIndex="1"/>
+                        GridPane.rowIndex="1"
+                        text="24000"/>
                 <Label GridPane.rowIndex="2"/>
                 <Button
                         GridPane.rowIndex="3"

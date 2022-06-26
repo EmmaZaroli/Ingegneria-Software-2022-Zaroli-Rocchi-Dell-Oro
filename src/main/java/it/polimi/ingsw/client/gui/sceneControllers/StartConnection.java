@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.gui.sceneControllers;
 
-import it.polimi.ingsw.client.gui.GuiManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -12,7 +11,7 @@ public class StartConnection {
     private TextField port;
 
     public void tryConnect(ActionEvent event) {
-        GuiManager manager = GuiManager.tryGetInstance();
-        manager.startConnection(ip.getText(), Integer.parseInt(port.getText()));
+        //GuiManager manager = GuiManager.tryGetInstance();
+        //manager.startConnection(ip.getText(), Integer.parseInt(port.getText()));
     }
 }

@@ -4,10 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="it.polimi.ingsw.client.gui.sceneControllers.Table"
-           prefHeight="400.0" prefWidth="600.0">
+<StackPane xmlns:fx="http://javafx.com/javafx" prefHeight="400.0" prefWidth="600.0">
 
     <ImageView opacity="0.90">
         <Image url="/it.polimi.ingsw.client.gui/assets/background.jpg" backgroundLoading="true"/>
@@ -21,76 +18,90 @@
                     <!-- Left panel -->
                     <VBox>
                         <!-- Opponents -->
-                        <!-- TODO opponents coins -->
                         <HBox style="-fx-background-color: rgba(255,255,255,0.75); -fx-background-radius: 10; -fx-padding: 10 10 0 10;"
                               VBox.vgrow="ALWAYS">
-                            <SchoolBoard style="-fx-padding: 10 10 0 0;"/>
+                            <SchoolBoard style="-fx-padding: 10 10 0 0;" fx:id="opponent1"/>
                             <VBox VBox.vgrow="ALWAYS" alignment="CENTER" style="-fx-padding: 0 10 0 0;">
-                                <Card/>
+                                <ImageView fx:id="discard1" fitWidth="82" fitHeight="126"/>
                             </VBox>
-                            <SchoolBoard style="-fx-padding: 10 0 0 10;"/>
-                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
-                                <Card/>
+                            <SchoolBoard style="-fx-padding: 10 0 0 10;" fx:id="opponent2"
+                                         visible="${controller.isThreePlayers}"/>
+                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER" visible="${controller.isThreePlayers}">
+                                <ImageView fx:id="discard2" fitWidth="82" fitHeight="126"/>
                             </VBox>
                         </HBox>
                         <!-- Islands -->
-                        <VBox prefHeight="330" style="-fx-padding: 0 0 0 200;">
-                            <HBox>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                            </HBox>
-                            <Pane prefHeight="60"/>
-                            <HBox>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                                <Island/>
-                            </HBox>
-                        </VBox>
+                        <StackPane>
+                            <GridPane prefHeight="330" style="-fx-padding: 0 0 0 100;" hgap="12" vgap="-60">
+                                <Island GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="island0" kind="0"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="island1" kind="1"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="island2" kind="2"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="island3" kind="0"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="island4" kind="1"/>
+                                <Island GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="island5" kind="2"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island6" kind="0"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island7" kind="1"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island8" kind="2"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island9" kind="0"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10" kind="1"/>
+                                <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11" kind="2"/>
+                                <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
+                                       style="-fx-font-size: 18" fx:id="message"/>
+                            </GridPane>
+                            <GridPane prefHeight="330" style="-fx-padding: 50 0 0 180;" hgap="60" vgap="45">
+                                <BigBridge GridPane.rowIndex="0" GridPane.columnIndex="0" fx:id="bridge01"
+                                           rotate="330"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="bridge12" rotate="0"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="bridge23" rotate="0"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="bridge34" rotate="0"/>
+                                <Bridge GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="bridge45" rotate="0"/>
+                                <BigBridge GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="bridge56" rotate="45"/>
+                                <BigBridge GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="bridge67"
+                                           rotate="160"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="bridge78" rotate="0"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="bridge89" rotate="0"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="bridge910" rotate="0"/>
+                                <Bridge GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="bridge1011" rotate="0"/>
+                                <BigBridge GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="bridge110"
+                                           rotate="230"/>
+                            </GridPane>
+                        </StackPane>
                         <!-- Bottom pane -->
                         <HBox>
                             <VBox>
                                 <Pane prefHeight="35"/>
-                                <Cloud style="-fx-padding: 0 10 0 10;"/>
+                                <Cloud style="-fx-padding: 0 10 0 10;" fx:id="cloud1"/>
                             </VBox>
                             <VBox>
                                 <Pane prefHeight="35"/>
-                                <Cloud style="-fx-padding: 0 10 0 10;"/>
+                                <Cloud style="-fx-padding: 0 10 0 10;" fx:id="cloud2"/>
                             </VBox>
                             <VBox>
                                 <Pane prefHeight="35"/>
-                                <Cloud style="-fx-padding: 0 10 0 10;"/>
+                                <Cloud style="-fx-padding: 0 10 0 10;" fx:id="cloud3"
+                                       visible="${controller.isThreePlayers}"/>
                             </VBox>
                             <Pane prefWidth="90"/>
-                            <EditableSchoolboard/>
+                            <EditableSchoolBoard fx:id="mySchoolBoard"/>
+                            <VBox VBox.vgrow="ALWAYS" alignment="CENTER">
+                                <ImageView fx:id="discardMe" fitWidth="82" fitHeight="126"/>
+                            </VBox>
                         </HBox>
                     </VBox>
                     <!-- Right panel -->
                     <VBox HBox.hgrow="ALWAYS" style="-fx-padding: 0 0 0 20;">
                         <!-- Character cards -->
-                        <GridPane hgap="35" alignment="CENTER">
+                        <GridPane hgap="35" alignment="CENTER" visible="${controller.isExpertGame}">
                             <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"/>
                             <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS"/>
                         </GridPane>
                         <Pane prefHeight="15"/>
                         <HBox>
                             <Pane prefWidth="99"/>
-                            <CharacterCard HBox.hgrow="ALWAYS"/>
+                            <CharacterCard HBox.hgrow="ALWAYS" visible="${controller.isExpertGame}"/>
                         </HBox>
                         <!-- Deck and coins -->
-                        <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;">
-                            <ImageView>
-                                <Image
-                                        url="/it.polimi.ingsw.client.gui/assets/deck.png"
-                                        backgroundLoading="true"
-                                />
-                            </ImageView>
+                        <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;" visible="${controller.isExpertGame}">
                             <Pane prefWidth="15"/>
                             <HBox style="-fx-padding: 50 0 0 0;">
                                 <VBox HBox.hgrow="ALWAYS">
@@ -110,7 +121,7 @@
                                     <Label style="-fx-padding: 10 0 0 0; -fx-font-size: 16; -fx-text-fill: red;"
                                            text="Your coins:"/>
                                     <Label style="-fx-padding: 0 0 10 30; -fx-font-size: 24; -fx-text-fill: red;"
-                                           text="3"/>
+                                           text="${controller.myCoins}"/>
 
                                     <Label style="-fx-padding: 20 0 0 0; -fx-font-size: 16; -fx-text-fill: blue;"
                                            text="Coins available"/>

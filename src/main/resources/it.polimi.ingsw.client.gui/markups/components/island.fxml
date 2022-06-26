@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
-
-    <ImageView
-            fitWidth="125"
-            fitHeight="125">
-        <Image
-                url="/it.polimi.ingsw.client.gui/assets/island.png"
-                backgroundLoading="true"
-        />
-    </ImageView>
+    <StackPane>
+        <ImageView
+                fitWidth="150"
+                fitHeight="150" fx:id="image"/>
+        <GridPane fx:id="students" style="-fx-padding: 40 40 40 40">
+        </GridPane>
+    </StackPane>
 </fx:root>

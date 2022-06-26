@@ -67,7 +67,7 @@ public class Cli extends View {
         System.out.println("You've been added to the players queue.\nPlease, wait for a game to start");
     }
 
-    @Override
+    //@Override
     public void printGameStartingMessage() {
         System.out.println("Game starting!");
     }
@@ -99,14 +99,13 @@ public class Cli extends View {
      * @return the string read from the input.
      */
     private String readLine() {
-        String input="";
+        String input = "";
         boolean helpRequest = false;
-        while(!helpRequest) {
+        while (!helpRequest) {
             input = in.nextLine();
-            if(input.equals("-h") && isExpertGame()) {
+            if (input.equals("-h") && isExpertGame()) {
                 helpMessage();
-            }
-            else helpRequest=true;
+            } else helpRequest = true;
         }
         return input;
     }
@@ -128,8 +127,7 @@ public class Cli extends View {
     }
 
     /**
-     *
-     * @param nicknameAccepted is true if the server accepted the nickname
+     * @param nicknameAccepted  is true if the server accepted the nickname
      * @param playerReconnected if the nickname was of a player previously disconnected
      */
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
@@ -162,7 +160,7 @@ public class Cli extends View {
             try {
                 playersNumber = Integer.parseInt(readLine());
                 valid = (playersNumber == 2 || playersNumber == 3);
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 error("not a number");
             }
         }
@@ -191,6 +189,7 @@ public class Cli extends View {
 
     /**
      * Prints the new game phase
+     *
      * @param phase the new GamePhase
      */
     public void changePhase(GamePhase phase) {
@@ -264,11 +263,11 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                if(canActivateCharacter(characterCard.get()))
+                if (canActivateCharacter(characterCard.get()))
                     valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid number of steps or invalid character card");
-            else if(!valid) error("invalid number of steps");
+            else if (!valid) error("invalid number of steps");
         }
     }
 
@@ -292,11 +291,11 @@ public class Cli extends View {
                     valid = false;
                 }
             } else {
-                if(canActivateCharacter(characterCard.get()))
+                if (canActivateCharacter(characterCard.get()))
                     valid = askCharacterCardParameters(characterCard.get());
             }
             if (!valid && isExpertGame()) error("invalid cloud or invalid character card");
-            else if(!valid) error("invalid cloud");
+            else if (!valid) error("invalid cloud");
         }
 
     }
@@ -306,7 +305,7 @@ public class Cli extends View {
      * Asks the student to move and the destination
      * In the expert mode is given the chance to choose a character card to play
      */
-    public void askStudents(){
+    public void askStudents() {
 
         boolean validObject = false;
         boolean validDestination;
@@ -318,20 +317,20 @@ public class Cli extends View {
             String input = readLine();
             PawnColor student = cliParser.checkIfStudent(input);
             if (student != PawnColor.NONE && getMe().getBoard().getEntrance().contains(student)) {
-                    validDestination = false;
-                    while (!validDestination) {
-                        out.print("Choose location (island's index/schoolboard) : ");
-                        destination = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
-                        if (destination != 13) {
-                            validObject = true;
-                            validDestination = true;
-                        } else {
-                            this.error("the destination selected is invalid, please retry");
-                        }
+                validDestination = false;
+                while (!validDestination) {
+                    out.print("Choose location (island's index/schoolboard) : ");
+                    destination = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
+                    if (destination != 13) {
+                        validObject = true;
+                        validDestination = true;
+                    } else {
+                        this.error("the destination selected is invalid, please retry");
                     }
-                    if (destination == 12) validObject=sendStudentMoveOnBoard(student);
-                    else validObject=sendStudentMoveOnIsland(student, destination);
                 }
+                if (destination == 12) validObject = sendStudentMoveOnBoard(student);
+                else validObject = sendStudentMoveOnIsland(student, destination);
+            }
             // the input was not a color, checking if it's a character card
             else {
                 Optional<Integer> characterCard = cliParser.indexCharacterCard(input, getCharacterCards());
@@ -340,7 +339,7 @@ public class Cli extends View {
                 }
             }
             if (!validObject && isExpertGame()) error("invalid student or invalid character card");
-            else if(!validObject && !isExpertGame())error("invalid student or move");
+            else if (!validObject && !isExpertGame()) error("invalid student or move");
         }
     }
 
@@ -353,7 +352,6 @@ public class Cli extends View {
     }
 
     /**
-     *
      * @param otherPlayer the new current player
      */
     public void updateCurrentPlayersTurn(String otherPlayer) {
@@ -369,7 +367,7 @@ public class Cli extends View {
         changePhase(getCurrentPhase());
         printCloud();
         printIslands();
-        if (isExpertGame()){
+        if (isExpertGame()) {
             printTableCoins();
             printCharacterCards();
         }
@@ -410,9 +408,9 @@ public class Cli extends View {
     /**
      * Prints the coins on the table
      */
-    private void printTableCoins(){
+    private void printTableCoins() {
         space(56);
-        out.println("COINS ON TABLE: "+getCoins()+" "+COIN);
+        out.println("COINS ON TABLE: " + getCoins() + " " + COIN);
     }
 
     /**
@@ -462,13 +460,12 @@ public class Cli extends View {
 
 
     /**
-     *
      * @param index the index of the chosen character card
      * @return true if all the parameters are correct
      */
     private boolean askCharacterCardParameters(int index) {
         Character character = getCharacterCards().get(index).getCharacter();
-        switch (character){
+        switch (character) {
             case CHARACTER_ONE -> {
                 return askCharacterOneParameters(index);
             }
@@ -482,20 +479,21 @@ public class Cli extends View {
                 return askCharacterElevenParameters(index);
             }
             default -> {
-                return sendCharacterCard(index,null);
+                return sendCharacterCard(index, null);
             }
         }
     }
 
     /**
      * Asks the parameters for the character one
+     *
      * @param index the index of the chosen character card
      * @return true if all the parameters are correct
      */
-    private boolean askCharacterOneParameters(int index){
+    private boolean askCharacterOneParameters(int index) {
         boolean validSend = false;
         Object[] parameters = new Object[2];
-        while(!validSend){
+        while (!validSend) {
             boolean valid = false;
             while (!valid) {
                 System.out.println("Choose student from card 1 to move: ");
@@ -508,30 +506,31 @@ public class Cli extends View {
             valid = false;
             while (!valid) {
                 System.out.println("Choose Island index: ");
-                    int islandIndex = CliParser.isIslandOrSchoolBoard(readLine(),getNumberOfIslandOnTable());
-                    if(islandIndex!=13 && islandIndex!=12) {
-                        parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
-                        valid = true;
-                    }
-                    if(!valid) error("invalid Island index selected!");
+                int islandIndex = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
+                if (islandIndex != 13 && islandIndex != 12) {
+                    parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
+                    valid = true;
+                }
+                if (!valid) error("invalid Island index selected!");
             }
-            validSend = sendCharacterCard(index,parameters);
-            if(!validSend) error("Some parameters are incorrect!");
+            validSend = sendCharacterCard(index, parameters);
+            if (!validSend) error("Some parameters are incorrect!");
         }
         return true;
     }
 
     /**
      * Asks the parameters for the character seven
+     *
      * @param index the index of the chosen character card
      * @return true if all the parameters are correct
      */
-    private boolean askCharacterSevenParameters(int index){
+    private boolean askCharacterSevenParameters(int index) {
         boolean valid = false;
         Object[] parameters = new Object[2];
         List<PawnColor> studentsFromCard = new ArrayList<>();
         List<PawnColor> studentsFromEntrance;
-        do{
+        do {
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
                 studentsFromCard = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());
@@ -549,19 +548,19 @@ public class Cli extends View {
                 if (studentsFromEntrance.size() == size && studentsFromEntrance.size() == studentsFromCard.size()) {
                     parameters[1] = studentsFromEntrance;
                     valid = true;
-                }
-                else error("invalid students selected!");
+                } else error("invalid students selected!");
             }
-        } while (!sendCharacterCard(index,parameters));
+        } while (!sendCharacterCard(index, parameters));
         return true;
     }
 
     /**
      * Asks the parameters for the character nine
+     *
      * @param index the index of the chosen character card
      * @return true if all the parameters are correct
      */
-    private boolean askCharacterNineParameters(int index){
+    private boolean askCharacterNineParameters(int index) {
         Object[] parameters = new Object[1];
         boolean valid = false;
         while (!valid) {
@@ -569,19 +568,20 @@ public class Cli extends View {
             PawnColor student = cliParser.checkIfStudent(readLine());
             if (student != PawnColor.NONE) {
                 parameters[0] = student;
-                valid = sendCharacterCard(index,parameters);
+                valid = sendCharacterCard(index, parameters);
             }
-            if(!valid) error("invalid student selected!");
+            if (!valid) error("invalid student selected!");
         }
         return true;
     }
 
     /**
      * Asks the parameters for the character eleven
+     *
      * @param index the index of the chosen character card
      * @return true if all the parameters are correct
      */
-    private boolean askCharacterElevenParameters(int index){
+    private boolean askCharacterElevenParameters(int index) {
         boolean valid = false;
         Object[] parameters = new Object[1];
         while (!valid) {
@@ -589,9 +589,9 @@ public class Cli extends View {
             PawnColor student = cliParser.checkIfStudent(readLine());
             if (student != PawnColor.NONE) {
                 parameters[0] = student;
-                valid = sendCharacterCard(index,parameters);
+                valid = sendCharacterCard(index, parameters);
             }
-            if(!valid) error("invalid student selected!");
+            if (!valid) error("invalid student selected!");
         }
         return true;
     }
@@ -615,11 +615,12 @@ public class Cli extends View {
 
     /**
      * Called when the game is over and had ended in a tie
+     *
      * @param otherWinner the nickname of the other winner
      */
     public void draw(String otherWinner) {
         out.println("The game ended in a tie! ");
-        out.println("The winners are you and "+otherWinner);
+        out.println("The winners are you and " + otherWinner);
         pressAnyKeyToContinue();
     }
 
@@ -634,14 +635,13 @@ public class Cli extends View {
     /**
      * Close the game
      */
-    public void exit(){
+    public void exit() {
         out.println("Press ANY KEY for EXIT.");
         readLine();
         System.exit(1);
     }
 
     /**
-     *
      * @param error the error
      */
     public void error(String error) {
@@ -649,7 +649,6 @@ public class Cli extends View {
     }
 
     /**
-     *
      * @param space the number of spaces to leave on the left
      */
     private void space(int space) {
@@ -684,7 +683,7 @@ public class Cli extends View {
     /**
      * Press any key to continue
      */
-    private void pressAnyKeyToContinue(){
+    private void pressAnyKeyToContinue() {
         out.println("Press any key to continue");
         readLine();
     }
