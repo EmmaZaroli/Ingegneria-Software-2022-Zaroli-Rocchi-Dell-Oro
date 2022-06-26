@@ -15,6 +15,10 @@ public class MoveMotherNatureMessage extends Message {
         this.steps = steps;
     }
 
+    /**
+     *
+     * @return mother nature's steps
+     */
     public int getSteps() {
         return this.steps;
     }

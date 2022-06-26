@@ -112,6 +112,10 @@ public class Cli extends View {
     }
 
     //TODO move validation logic to shared layer
+
+    /**
+     * Asks the player a nickname
+     */
     public void askPlayerNickname() {
         boolean valid;
         String nickname;
@@ -123,6 +127,11 @@ public class Cli extends View {
         this.sendPlayerNickname(nickname);
     }
 
+    /**
+     *
+     * @param nicknameAccepted is true if the server accepted the nickname
+     * @param playerReconnected if the nickname was of a player previously disconnected
+     */
     public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
         if (playerReconnected) {
             out.println("You've been reconnected to your previous game");
@@ -135,6 +144,9 @@ public class Cli extends View {
         }
     }
 
+    /**
+     * Asks the player the gameMode and the number of players to play with
+     */
     public void askGameSettings() {
         int playersNumber = 0;
         String gameMode = null;
@@ -162,6 +174,9 @@ public class Cli extends View {
         out.println(message);
     }
 
+    /**
+     * Used in the expert game mode, prints the effects of each character card
+     */
     public void helpMessage() {
         out.println("character_1: Take 1 student from this card and place it on an island of your choice. ");
         out.println("character_2: During this turn, you take control of any number of professors,even if you have the same number of students as the player who currently controls them.");
@@ -174,6 +189,10 @@ public class Cli extends View {
         out.print("Make your move:");
     }
 
+    /**
+     * Prints the new game phase
+     * @param phase the new GamePhase
+     */
     public void changePhase(GamePhase phase) {
         space(57);
         out.println(ANSI_YELLOW + "Phase: " + phase + ANSI_RESET);
@@ -224,6 +243,10 @@ public class Cli extends View {
         }
     }
 
+    /**
+     * Asks the number of mother nature steps
+     * In the expert mode is given the chance to choose a character card to play
+     */
     public void askMotherNatureSteps() {
         boolean valid = false;
         while (!valid) {
@@ -249,6 +272,10 @@ public class Cli extends View {
         }
     }
 
+    /**
+     * Asks the index of the cloud
+     * In the expert mode is given the chance to choose a character card to play
+     */
     public void askCloud() {
         boolean valid = false;
         while (!valid) {
@@ -275,6 +302,10 @@ public class Cli extends View {
     }
 
 
+    /**
+     * Asks the student to move and the destination
+     * In the expert mode is given the chance to choose a character card to play
+     */
     public void askStudents(){
 
         boolean validObject = false;
@@ -298,8 +329,8 @@ public class Cli extends View {
                             this.error("the destination selected is invalid, please retry");
                         }
                     }
-                    if (destination == 12) sendStudentMoveOnBoard(student);//TODO check if return false (schoolboard full)
-                    else sendStudentMoveOnIsland(student, destination);
+                    if (destination == 12) validObject=sendStudentMoveOnBoard(student);
+                    else validObject=sendStudentMoveOnIsland(student, destination);
                 }
             // the input was not a color, checking if it's a character card
             else {
@@ -307,21 +338,31 @@ public class Cli extends View {
                 if (characterCard.isPresent() && canActivateCharacter(characterCard.get())) {
                     validObject = askCharacterCardParameters(characterCard.get());
                 }
-                if (!validObject && isExpertGame()) error("invalid student or invalid character card");
-                else if(!validObject && !isExpertGame())error("invalid student");
             }
+            if (!validObject && isExpertGame()) error("invalid student or invalid character card");
+            else if(!validObject && !isExpertGame())error("invalid student or move");
         }
     }
 
 
+    /**
+     * Called at the beginning of the game
+     */
     public void printGameStarting() {
         out.println("The game is starting!");
     }
 
+    /**
+     *
+     * @param otherPlayer the new current player
+     */
     public void updateCurrentPlayersTurn(String otherPlayer) {
         out.println("It's " + otherPlayer.toUpperCase() + "'s turn");
     }
 
+    /**
+     * Prints the table
+     */
     @Override
     public void print() {
         clearCli();
@@ -336,6 +377,9 @@ public class Cli extends View {
         updateCurrentPlayersTurn(getCurrentPlayer());
     }
 
+    /**
+     * Prints the players' coins
+     */
     public void printCoins() {
         //me
         for (int i = 0; i < getMe().getCoins(); i++) {
@@ -356,23 +400,38 @@ public class Cli extends View {
         out.println();
     }
 
+    /**
+     * Prints the character cards on the table
+     */
     private void printCharacterCards() {
         characterCardPrinter.print(getCharacterCards());
     }
 
+    /**
+     * Prints the coins on the table
+     */
     private void printTableCoins(){
         space(56);
         out.println("COINS ON TABLE: "+getCoins()+" "+COIN);
     }
 
+    /**
+     * Prints the clouds
+     */
     private void printCloud() {
         cloudPrinter.printClouds(getClouds());
     }
 
+    /**
+     * Prints the islands
+     */
     private void printIslands() {
         islandsPrinter.printIslands(getIslands());
     }
 
+    /**
+     * Prints the players' schoolBoards
+     */
     public void printSchoolBoard() {
         out.print(getMe().getNickname() + "'s" + " board:");
         space(39);
@@ -390,6 +449,9 @@ public class Cli extends View {
     }
 
 
+    /**
+     * Prints the players' assistant cards
+     */
     private void printAssistantCardPlayed() {
         List<PlayerInfo> players = new ArrayList<>();
         players.add(getMe());
@@ -399,6 +461,11 @@ public class Cli extends View {
     }
 
 
+    /**
+     *
+     * @param index the index of the chosen character card
+     * @return true if all the parameters are correct
+     */
     private boolean askCharacterCardParameters(int index) {
         Character character = getCharacterCards().get(index).getCharacter();
         switch (character){
@@ -420,6 +487,11 @@ public class Cli extends View {
         }
     }
 
+    /**
+     * Asks the parameters for the character one
+     * @param index the index of the chosen character card
+     * @return true if all the parameters are correct
+     */
     private boolean askCharacterOneParameters(int index){
         boolean validSend = false;
         Object[] parameters = new Object[2];
@@ -449,6 +521,11 @@ public class Cli extends View {
         return true;
     }
 
+    /**
+     * Asks the parameters for the character seven
+     * @param index the index of the chosen character card
+     * @return true if all the parameters are correct
+     */
     private boolean askCharacterSevenParameters(int index){
         boolean valid = false;
         Object[] parameters = new Object[2];
@@ -479,6 +556,11 @@ public class Cli extends View {
         return true;
     }
 
+    /**
+     * Asks the parameters for the character nine
+     * @param index the index of the chosen character card
+     * @return true if all the parameters are correct
+     */
     private boolean askCharacterNineParameters(int index){
         Object[] parameters = new Object[1];
         boolean valid = false;
@@ -494,6 +576,11 @@ public class Cli extends View {
         return true;
     }
 
+    /**
+     * Asks the parameters for the character eleven
+     * @param index the index of the chosen character card
+     * @return true if all the parameters are correct
+     */
     private boolean askCharacterElevenParameters(int index){
         boolean valid = false;
         Object[] parameters = new Object[1];
@@ -510,23 +597,30 @@ public class Cli extends View {
     }
 
 
+    /**
+     * Called when the game is over and the player is the winner
+     */
     public void win() {
         out.println("Well done, you won the game!");
-        out.println("Press any key to continue");
-        readLine();
+        pressAnyKeyToContinue();
     }
 
+    /**
+     * Called when the game is over and the player is the loser
+     */
     public void lose(List<String> winners) {
         out.println("Game ended, you lost!");
-        out.println("Press any key to continue");
-        readLine();
+        pressAnyKeyToContinue();
     }
 
-    //TODO maybe send who tied
+    /**
+     * Called when the game is over and had ended in a tie
+     * @param otherWinner the nickname of the other winner
+     */
     public void draw(String otherWinner) {
         out.println("The game ended in a tie! ");
-        out.println("Press any key to continue");
-        readLine();
+        out.println("The winners are you and "+otherWinner);
+        pressAnyKeyToContinue();
     }
 
     /**
@@ -537,34 +631,61 @@ public class Cli extends View {
         exit();
     }
 
+    /**
+     * Close the game
+     */
     public void exit(){
-        out.println("Press ENTER for EXIT.");
+        out.println("Press ANY KEY for EXIT.");
         readLine();
-        //System.exit(1);
+        System.exit(1);
     }
 
+    /**
+     *
+     * @param error the error
+     */
     public void error(String error) {
         out.println("\nERROR: " + ANSI_RED + error.toUpperCase() + ANSI_RESET);
     }
 
+    /**
+     *
+     * @param space the number of spaces to leave on the left
+     */
     private void space(int space) {
         for (int i = 0; i < space; i++) out.print(" ");
     }
 
+    /**
+     * Clears the cli
+     */
     private void clearCli() {
         for (int i = 0; i < 20; i++) out.println();
     }
 
+    /**
+     * Game over from disconnection
+     */
     @Override
     public void printGameOverFromDisconnection() {
         out.println("TIMER OUT");
         out.println("it seems that you're the only player left...");
         out.println("congratulation, you won!");
-        out.println("Press any key to continue");
-        readLine();
+        pressAnyKeyToContinue();
     }
 
+    /**
+     * There aren't enough player online to continue playing
+     */
     public void notEnoughPlayer() {
         out.println("your opponent has disconnected, please wait...");
+    }
+
+    /**
+     * Press any key to continue
+     */
+    private void pressAnyKeyToContinue(){
+        out.println("Press any key to continue");
+        readLine();
     }
 }

@@ -26,10 +26,18 @@ public class CharacterCardMessage extends Message {
         this.parameters = parameters;
     }
 
+    /**
+     *
+     * @return the CharacterCardDto
+     */
     public CharacterCardDto getCharacterCard() {
         return this.characterCard;
     }
 
+    /**
+     *
+     * @return the Parameters
+     */
     public Object[] getParameters() {
         return parameters;
     }

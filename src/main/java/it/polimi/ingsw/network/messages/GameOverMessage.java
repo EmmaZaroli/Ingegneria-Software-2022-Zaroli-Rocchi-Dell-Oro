@@ -17,6 +17,10 @@ public class GameOverMessage extends Message {
         this.winners = winners;
     }
 
+    /**
+     *
+     * @return the list of winners
+     */
     public List<String> getWinners() {
         return winners;
     }

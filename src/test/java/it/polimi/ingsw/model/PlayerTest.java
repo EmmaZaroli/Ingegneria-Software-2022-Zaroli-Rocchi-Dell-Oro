@@ -1,21 +1,19 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 class PlayerTest extends TestCase {
-    Player player = new Player("nickname", Wizzard.BLUE, Tower.BLACK, 2);
-    ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizzard.BLUE, Tower.WHITE, 3);
+    Player player = new Player("nickname", Wizard.BLUE, Tower.BLACK, 2);
+    ExpertPlayer expertPlayer = new ExpertPlayer("expert", Wizard.BLUE, Tower.WHITE, 3);
 
     @Test
     void createStandardPlayer() {
         Assertions.assertEquals("nickname", player.getNickname());
-        Assertions.assertEquals(Wizzard.BLUE, player.getWizzard());
+        Assertions.assertEquals(Wizard.BLUE, player.getWizzard());
         player.togglePlayerTurn();
         Assertions.assertTrue(player.isPlayerTurn());
         player.setPlayerTurn(false);

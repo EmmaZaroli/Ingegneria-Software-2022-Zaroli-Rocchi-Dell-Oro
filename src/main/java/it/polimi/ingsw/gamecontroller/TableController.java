@@ -127,7 +127,7 @@ public class TableController {
     /**
      * Calculates the influence on a given island
      *
-     * @param playerProfessors The professors on the player's schoolboard
+     * @param playerProfessors The professors on the player's schoolBoard
      * @param towerColor       The color of the towers of the current player
      * @return The calculated influence
      */
@@ -213,20 +213,32 @@ public class TableController {
     /**
      * Returns the bag associated to the current game
      *
-     * @return The bag
+     * @return The Bag
      */
     public Bag getBag() {
         return this.table.getBag();
     }
 
+    /**
+     *
+     * @return the Table
+     */
     public Table getTable() {
         return table;
     }
 
+    /**
+     *
+     * @return the GameParameters
+     */
     public GameParameters getParameters() {
         return parameters;
     }
 
+    /**
+     *
+     * @param table the Table
+     */
     public void setTable(Table table) {
         this.table = table;
     }

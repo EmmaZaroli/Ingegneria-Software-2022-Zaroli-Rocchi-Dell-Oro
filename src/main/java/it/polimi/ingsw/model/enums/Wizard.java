@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model.enums;
 
-public enum Wizzard {
+/**
+ * The Wizards
+ */
+public enum Wizard {
     PURPLE,
     BLUE,
     GREEN,

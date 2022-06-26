@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.enums;
 
+/**
+ * This enum contains all possible CharacterCards
+ */
 public enum Character {
     CHARACTER_ONE(1),
     CHARACTER_TWO(2),
@@ -10,12 +13,20 @@ public enum Character {
     CHARACTER_NINE(3),
     CHARACTER_ELEVEN(2);
 
-    private int initialPrice;
+    private final int initialPrice;
 
+    /**
+     *
+     * @return the character card's initial price
+     */
     public int getInitialPrice() {
         return initialPrice;
     }
 
+    /**
+     *
+     * @param initialPrice the character card's initial price
+     */
     Character(int initialPrice) {
         this.initialPrice = initialPrice;
     }

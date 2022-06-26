@@ -15,6 +15,10 @@ public class NicknameResponseMessage extends Message {
         this.nicknameStatus = nicknameStatus;
     }
 
+    /**
+     *
+     * @return the NicknameStatus
+     */
     public NicknameStatus getNicknameStatus() {
         return this.nicknameStatus;
     }

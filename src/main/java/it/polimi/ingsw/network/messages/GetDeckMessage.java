@@ -19,6 +19,10 @@ public class GetDeckMessage extends Message {
         deck.addAll(assistants);
     }
 
+    /**
+     *
+     * @return the list of AssistantCards
+     */
     public List<AssistantCard> getDeck() {
         return deck;
     }

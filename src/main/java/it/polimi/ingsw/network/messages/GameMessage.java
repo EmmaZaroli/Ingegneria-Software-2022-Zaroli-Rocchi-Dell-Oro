@@ -18,6 +18,10 @@ public class GameMessage extends Message {
         this.game = new GameDto(game, nickname);
     }
 
+    /**
+     *
+     * @return the Game
+     */
     public GameDto getGame() {
         return game;
     }

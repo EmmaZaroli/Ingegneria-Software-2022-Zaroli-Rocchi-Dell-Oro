@@ -9,7 +9,7 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.model.enums.Wizzard;
+import it.polimi.ingsw.model.enums.Wizard;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.LinkedList;
@@ -105,7 +105,7 @@ public class GameHandlerBuilder {
     private Game buildNormalGameModel() {
         Player[] players = new Player[playersNumber.getPlayersNumber()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new Player(users.get(i).getNickname(), Wizzard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());
+            players[i] = new Player(users.get(i).getNickname(), Wizard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());
         }
 
         Table table = new Table(playersNumber);
@@ -118,7 +118,7 @@ public class GameHandlerBuilder {
     private Game buildExpertGameModel() {
         ExpertPlayer[] players = new ExpertPlayer[playersNumber.getPlayersNumber()];
         for (int i = 0; i < players.length; i++) {
-            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizzard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());
+            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());
         }
 
         ExpertTable table = new ExpertTable(playersNumber);

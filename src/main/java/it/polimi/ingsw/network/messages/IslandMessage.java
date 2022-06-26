@@ -17,6 +17,10 @@ public class IslandMessage extends Message {
         this.island = new IslandCardDto(island);
     }
 
+    /**
+     *
+     * @return the IslandCardDto
+     */
     public IslandCardDto getIsland() {
         return this.island;
     }
