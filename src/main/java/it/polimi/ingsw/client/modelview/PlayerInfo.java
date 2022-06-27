@@ -221,7 +221,7 @@ public class PlayerInfo {
      * @return a copy of the playerInfo instance
      */
     public PlayerInfo deepClone() {
-        //TODO dtos if we have time
         return new PlayerInfo(this.nickname, this.wizard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.canPlayThisRound, this.isFromActualTurn);
+
     }
 }

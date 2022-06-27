@@ -20,7 +20,6 @@ public interface UserInterface {
 
     void genericMessage(String message);
 
-    //TODO remove this
     void changePhase(GamePhase phase);
 
     void askAssistantCard(List<AssistantCard> deck);

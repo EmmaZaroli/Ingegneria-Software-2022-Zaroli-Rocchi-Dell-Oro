@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.persistency.GameNotFoundException;
+import it.polimi.ingsw.servercontroller.MessagesHelper;
 import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.view.VirtualView;
@@ -106,7 +107,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         break;
 
                     case GAME_OVER:
-                        //TODO do we want to throw an exception or just ignore it?
+                        logger.log(Level.WARNING, "Game is over");
                         break;
                 }
             } catch (WrongPlayerException e) {
@@ -560,8 +561,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                         for (int i = 0; i < virtualViews.length; i++)
                             game.getPlayer(i).setOnline(virtualViews[i].isOnline());
                     } catch (GameNotFoundException e) {
-                        //TODO handle exception
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, MessagesHelper.ERROR_SAVE_NOT_FOUND, e);
                     }
                 }
                 for(Player p : game.getPlayers()) {
@@ -623,8 +623,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                     try {
                         restoreLastSavedGame();
                     } catch (GameNotFoundException e) {
-                        //TODO handle exception
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, MessagesHelper.ERROR_SAVE_NOT_FOUND, e);
                     }
                 }
                 game.setEnoughPlayersOnline(areEnoughPlayersOnline);

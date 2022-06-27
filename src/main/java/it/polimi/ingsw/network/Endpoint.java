@@ -39,7 +39,6 @@ public class Endpoint {
         OutputStream output = this.socket.getOutputStream();
         output.flush();
 
-        //TODO check if needed
         if (serverSide) {
             this.in = new ObjectInputStream(input);
             this.out = new ObjectOutputStream(output);

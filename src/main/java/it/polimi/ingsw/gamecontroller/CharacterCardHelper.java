@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
 import it.polimi.ingsw.model.ExpertPlayer;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
+import it.polimi.ingsw.utils.ApplicationConstants;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class CharacterCardHelper {
     }
 
     //check server side
-    public static boolean areParametersOkCharacter11(CharacterCardDto messageCard, CharacterCard serverCard, Object[] parameters){
+    public static boolean areParametersOkCharacter11(CharacterCardDto messageCard, CharacterCard serverCard, Object[] parameters, ExpertPlayer player){
         if(parameters.length != 1)
             return false;
         if (!(parameters[0] instanceof PawnColor))
@@ -77,6 +78,10 @@ public class CharacterCardHelper {
             return false;
         if(!(serverCard instanceof CharacterCardWithSetUpAction))
             return false;
-        return ((CharacterCardWithSetUpAction)serverCard).getStudents().contains(parameters[0]);
+        if(!((CharacterCardWithSetUpAction)serverCard).getStudents().contains(parameters[0]))
+            return false;
+        if(player.getBoard().getStudentsInDiningRoom((PawnColor) parameters[0]) >= ApplicationConstants.STUDENTS_IN_DININGROOM)
+            return false;
+        return true;
     }
 }
