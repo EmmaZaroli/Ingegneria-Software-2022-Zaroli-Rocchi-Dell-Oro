@@ -23,7 +23,9 @@ import java.util.logging.Logger;
 import static it.polimi.ingsw.model.enums.GamePhase.*;
 import static it.polimi.ingsw.utils.ApplicationConstants.MINIMUM_ONLINE_PLAYER;
 
-
+/**
+ * GameController
+ */
 public class GameController implements DisconnectionListener, MessageListener {
     protected Game game;
     protected TableController tableController;
@@ -37,19 +39,22 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.virtualViews = virtualViews;
     }
 
+    /**
+     *
+     */
     public void init() {
-        Player[] players = game.getPlayers();
         fillClouds();
         for (Player player : game.getPlayers()) {
             player.getBoard().addStudentsToEntrance(tableController.drawStudents());
         }
-
-
         //setting observers
         setObservers();
         DataDumper.getInstance().saveGame(game);
     }
 
+    /**
+     * Add the observers
+     */
     public void setObservers() {
         for (VirtualView virtualView : virtualViews) {
             game.addObserver(virtualView);
@@ -61,12 +66,21 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Check if the message is from the current player
+     * @param message the incoming message
+     * @throws WrongPlayerException if the message is not from the current player
+     */
     private void checkMessage(Message message) throws WrongPlayerException {
         if (!message.getNickname().equals(game.getPlayers()[game.getCurrentPlayer()].getNickname())) {
             throw new WrongPlayerException();
         }
     }
 
+    /**
+     * Try to move mother nature
+     * @param message the incoming message
+     */
     private void tryMoveMotherNature(MoveMotherNatureMessage message) {
         try {
             moveMotherNature(message.getSteps());
@@ -90,7 +104,7 @@ public class GameController implements DisconnectionListener, MessageListener {
                     case ACTION_MOVE_MOTHER_NATURE:
                         if (message.getType().equals(MessageType.ACTION_MOVE_MOTHER_NATURE)) {
                             tryMoveMotherNature((MoveMotherNatureMessage) message);
-                        } else  logger.log(Level.WARNING,"Illegal Action");;
+                        } else  logger.log(Level.WARNING,"Illegal Action");
                         break;
                     case ACTION_CHOOSE_CLOUD:
                         if (message.getType().equals(MessageType.ACTION_CHOOSE_CLOUD)) {
@@ -117,6 +131,10 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     }
 
+    /**
+     * The message arrives during the Planning phase, contains the assistantCard to play
+     * @param message the incoming message
+     */
     private void planning(Message message) {
         if (message.getType().equals(MessageType.ACTION_PLAY_ASSISTANT)) {
             try {
@@ -129,6 +147,11 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Fill the cloudTiles on the table
+     * If one or more than one cloudTiles have still students on them, an error is notified to
+     * the players and the game will be closed
+     */
     protected void fillClouds() {
         try {
             this.tableController.fillClouds();
@@ -138,6 +161,13 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Gets the assistantCard index in the deck
+     * @param assistantCard the assistantCard to play
+     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+     * @throws IllegalAssistantException if the assistantCard is equal to another played assistantCard
+     * and the player has at least another assistantCard in the deck
+     */
     private void playAssistant(AssistantCard assistantCard) throws IllegalActionException, IllegalAssistantException{
         int index;
 
@@ -149,6 +179,13 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Plays the assistantCard
+     * @param assistantIndex the assistantCard's index in the deck
+     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+     * @throws IllegalAssistantException if the assistantCard is equal to another played assistantCard
+     *  and the player has at least another assistantCard in the deck
+     */
     private void playAssistant(int assistantIndex) throws IllegalActionException, IllegalAssistantException {
         if (this.game.getGamePhase() != PLANNING) {
             throw new IllegalActionException();
@@ -164,6 +201,11 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.playerHasEndedPlanning();
     }
 
+    /**
+     *
+     * @param assistant the assistantCard
+     * @return true if the player can play the assistantCard
+     */
     private boolean canPlayAssistant(AssistantCard assistant) {
         //If assistant is different from every other played assistantCard
         if (isAssistantDifferentFromOthers(assistant)) return true;
@@ -176,21 +218,27 @@ public class GameController implements DisconnectionListener, MessageListener {
         return true;
     }
 
+    /**
+     * Called when a player's assistantCard has been successfully played
+     * If all the players have played an assistantCard, the game phase is changed
+     */
     protected void playerHasEndedPlanning() {
         do{
             this.game.setPlayedCount(game.getPlayedCount() + 1);
-            if (!this.isRoundComplete()) {
-                changePlayer();
-            } else {
+            if (this.isRoundComplete()) {
                 this.game.setPlayedCount(0);
                 this.game.setGamePhase(pickNextPhase());
-                changePlayer();
             }
+            changePlayer();
         }
         while (!game.getPlayer(game.getCurrentPlayer()).canPlayThisRound());
         DataDumper.getInstance().saveGame(game);
     }
 
+    /**
+     * Moves students on the schoolBoard or on the Island
+     * @param message the incoming message
+     */
     private void moveStudent(Message message) {
         switch (message.getType()) {
             case ACTION_MOVE_STUDENTS_ON_ISLAND:
@@ -203,9 +251,7 @@ public class GameController implements DisconnectionListener, MessageListener {
             case ACTION_MOVE_STUDENTS_ON_BOARD:
                 try {
                     moveStudentToDiningRoom(((MoveStudentMessage) message).getStudentColor());
-                } catch (IllegalActionException e) {
-                    logger.log(Level.WARNING,"",e);
-                }catch (DiningRoomFullException e){
+                } catch (IllegalActionException| DiningRoomFullException e) {
                     logger.log(Level.WARNING,"",e);
                 }
                 break;
@@ -214,6 +260,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Moves the PawnColor to the diningRoom
+     * @param pawn the PawnColor to move
+     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+     * @throws DiningRoomFullException if the diningRoom for that PawnColor is full
+     */
     public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException, DiningRoomFullException {
         if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {
             throw new IllegalActionException();
@@ -226,6 +278,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.movedPawn();
     }
 
+    /**
+     * Checks if the current player has more PawnColor than the other player
+     * If so, the professor of that color is added to the schoolBoard of the current player
+     * @param color the PawnColor just moved
+     * @param player the other player
+     */
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
                 player.getBoard().isThereProfessor(color) &&
@@ -236,12 +294,25 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Moves the PawnColor to the islandCard with the same uuid as the one in the message
+     * @param pawn the PawnColor to move
+     * @param uuid the islandCard's uuid
+     * @throws WrongUUIDException if on the table there aren't islandCards with that uuid
+     */
     public void moveStudentOnIsland(PawnColor pawn, UUID uuid) throws WrongUUIDException {
         this.tableController.movePawnOnIsland(pawn, uuid);
         this.game.getCurrentPlayerSchoolBoard().removeStudentFromEntrance(pawn);
         this.movedPawn();
     }
 
+    /**
+     * Move mother nature
+     * After that checks the influence on the islandCard where it landed
+     * @param steps motherNature's steps
+     * @throws NotAllowedMotherNatureMovementException if the number of motherNature steps isn't valid
+     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+     */
     public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
             throw new IllegalActionException();
@@ -258,6 +329,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.playerHasEndedAction();
     }
 
+    /**
+     * Checks the influence on the islandCard with motherNature
+     * If every player has zero influence, no tower is built
+     * If one player has more influence than the others, his tower is built
+     * If two players have the same influence, and it's the max influence, no tower is built
+     */
     protected void checkInfluence() {
         int maxInfluence = 0;
         int currentInfluence;
@@ -280,6 +357,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         if (maxInfluence != 0) this.buildTowers(maxInfluencePlayer);
     }
 
+    /**
+     * Checks if two players have the same max influence
+     * @param player the player
+     * @param influence the max influence
+     * @return true if two players have the same max influence
+     */
     private boolean isInfluenceDraw(Player player, int influence) {
         for (Player p : game.getPlayers()) {
             if (!p.equals(player) && influence == tableController
@@ -290,7 +373,10 @@ public class GameController implements DisconnectionListener, MessageListener {
         return false;
     }
 
-    //Builds the tower of the player with max influence
+    /**
+     * Builds the tower of the payer with max influence
+     * @param player the player with max influence
+     */
     private void buildTowers(Player player) {
         if (this.tableController.canBuildTower(player.getBoard().getTowerColor())) {
             Pair<Tower, Integer> result = this.tableController.buildTower(player.getBoard().getTowerColor());
@@ -306,6 +392,13 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Takes the students from the cloudTile and adds them to the entrance of the current player's schoolBoard
+     * @param uuid the cloudTile's uuid
+     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+     * @throws EmptyCloudException if the cloudTile is empty
+     * @throws WrongUUIDException if on the table there aren't cloudTiles with the same uuid as the one passed as a parameter
+     */
     public void pickStudentsFromCloud(UUID uuid) throws IllegalActionException, EmptyCloudException, WrongUUIDException {
         if (this.game.getGamePhase() != GamePhase.ACTION_CHOOSE_CLOUD) {
             throw new IllegalActionException();
@@ -318,8 +411,11 @@ public class GameController implements DisconnectionListener, MessageListener {
         this.playerHasEndedAction();
     }
 
-    //Checks if the current player has the highest number of students of the given color in his dining room
-    //If so, proceeds to move the professor to the player's professor table
+    /**
+     * Checks if the current player has the highest number of students of the given color in his dining room
+     * If so, proceeds to move the professor to the player's professor table
+     * @param color the PawnColor just moved
+     */
     void checkProfessorsStatus(PawnColor color) {
         //first try to check if it's still available on the table, if so it's useless to do the second check
         if (this.tableController.takeProfessor(color)) {
@@ -332,20 +428,32 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //Returns true if assistant is different from every other assistants already played in this turn
+    //
+
+    /**
+     *
+     * @param assistant the assistantCard
+     * @return true if the assistant is different from every other assistants already played in this turn
+     */
     private boolean isAssistantDifferentFromOthers(AssistantCard assistant) {
         for (Player p : game.getPlayers()) {
-            if(p.getDiscardPileHead() != null && p.isFromActualTurn())
-                if (p.getDiscardPileHead().equals(assistant))
+            if(p.getDiscardPileHead() != null && p.isFromActualTurn() && p.getDiscardPileHead().equals(assistant))
                     return false;
         }
         return true;
     }
 
+    /**
+     *
+     * @return true if every player has finished the actionPhase
+     */
     protected boolean isRoundComplete() {
         return this.game.getPlayedCount() == this.game.getPlayersCount();
     }
 
+    /**
+     * Sets that the current player has moved a PawnColor
+     */
     void movedPawn() {
         if((game.getMovedPawns() + 1 ) != (game.getPlayersCount() + 1))
             game.movePawn();
@@ -355,6 +463,10 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     *
+     * @return the new gamePhase
+     */
     protected GamePhase pickNextPhase() {
         return switch (this.game.getGamePhase()) {
             case PLANNING -> ACTION_MOVE_STUDENTS;
@@ -365,6 +477,9 @@ public class GameController implements DisconnectionListener, MessageListener {
         };
     }
 
+    /**
+     * Change the current player
+     */
     protected void changePlayer() {
         int nextPlayer = pickNextPlayer();
         game.changePlayer(nextPlayer);
@@ -397,6 +512,11 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * If it's the planning phase, the new player is the next in the list of players
+     * If it's another phase, the next player is determined by the score on the assistantCard played during the planning phase
+     * @return the index of the next current player
+     */
     private int pickNextPlayer() {
         switch (game.getGamePhase()) {
             case PLANNING:
@@ -417,6 +537,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         return game.getCurrentPlayer();
     }
 
+    /**
+     * Called when a player has finished the action phase
+     * If there's still at least one player that has to play the action phase, the game phase
+     * is set to ACTION_MOVE_STUDENTS and a new current player is picked
+     * If every player has played, the endOfRound method is called
+     */
     protected void playerHasEndedAction() {
         this.game.setGamePhase(this.pickNextPhase());
         if (this.game.getGamePhase() == GamePhase.ACTION_END) {
@@ -438,6 +564,9 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Ends of the round
+     */
     public void endOfRound(){
         if(!game.isGameOver())
             checkRoundGameOver();
@@ -467,6 +596,10 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Checks if any player has build his last tower or
+     * if only three islands group are left on the table
+     */
     public void checkImmediateGameOver() {
 
         //check if any player has build his last tower
@@ -484,6 +617,9 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     }
 
+    /**
+     * Checks if the bag is empty or if any player has run out of assistantCard
+     */
     public void checkRoundGameOver() {
         //check if bag is empty
         if (tableController.getBag().isEmpty())
@@ -500,6 +636,12 @@ public class GameController implements DisconnectionListener, MessageListener {
 
     }
 
+    /**
+     * If a player has fewer towers than the other players, wins
+     * If two players have the same number of towers, but one has more professors, wins
+     * If two players have the same number of towers and professors, they tied
+     * @return the nickname of the winner/winners
+     */
     private List<String> whoIsWinning() {
         List<String> winners = new ArrayList<>();
 
@@ -541,13 +683,13 @@ public class GameController implements DisconnectionListener, MessageListener {
             String disconnectedPlayer = "";
             for(VirtualView view : virtualViews){
                 if(view.getClientHandler().isPresent()){
-                    if(view.getClientHandler().get() == ((Endpoint) disconnected))
+                    if(view.getClientHandler().get() == (disconnected))
                         disconnectedPlayer = view.getPlayerNickname();
                 }
             }
 
             //when one player disconnect, this will set every player to their status (online or offline)
-            //it is redundant but it should be ok
+            //it is redundant, but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
@@ -582,6 +724,10 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
+    /**
+     * Restore the last game
+     * @throws GameNotFoundException if the game wasn't found
+     */
     private void restoreLastSavedGame() throws GameNotFoundException {
         Game savedGame = DataDumper.getInstance().getGame(game.getGameId());
         this.game.copyStatusFrom(savedGame);
@@ -596,7 +742,9 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //called only when, previously a disconnection, there are enough player online, and then there are not
+    /**
+     * called only when, previously a disconnection, there are enough player online, and then there are not
+     */
     private void notEnoughOnline() {
         game.setEnoughPlayersOnline(false);
         timer.schedule(new TimerTask() {
@@ -609,10 +757,14 @@ public class GameController implements DisconnectionListener, MessageListener {
         }, ApplicationConstants.DISCONNECTION_TIMER_NOT_ENOUGH_PLAYER);
     }
 
+    /**
+     *
+     * @param reconnectedPlayer the nickname of the reconnected player
+     */
     public void onReconnect(String reconnectedPlayer) {
         synchronized (game) {
             //when one player reconnect, this will set every player to their status (online or offline)
-            //it is redundant but it should be ok
+            //it is redundant, but it should be ok
             for (int i = 0; i < virtualViews.length; i++)
                 game.getPlayer(i).setOnline(virtualViews[i].isOnline());
 
@@ -655,7 +807,9 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
     }
 
-    //called only when, previously a reconnection, there weren't enough player online, and then there are
+    /**
+     * called only when, previously a reconnection, there weren't enough player online, and then there are
+     */
     private void enoughOnline() {
         game.setEnoughPlayersOnline(true);
         timer.cancel();
