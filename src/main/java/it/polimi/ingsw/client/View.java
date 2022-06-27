@@ -10,10 +10,7 @@ import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
-import it.polimi.ingsw.network.Endpoint;
-import it.polimi.ingsw.network.Message;
-import it.polimi.ingsw.network.MessageListener;
-import it.polimi.ingsw.network.MessageType;
+import it.polimi.ingsw.network.*;
 import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
@@ -24,7 +21,7 @@ import java.util.List;
 /**
  * View class contains a small representation of the game model
  */
-public abstract class View implements MessageListener, UserInterface {
+public abstract class View implements MessageListener, UserInterface, DisconnectionListener {
     private boolean isExpertGame;
     private List<PlayerInfo> opponents;
     private PlayerInfo me;
@@ -552,6 +549,7 @@ public abstract class View implements MessageListener, UserInterface {
 
             this.endpoint = new Endpoint(s, false);
             this.endpoint.addMessageListener(this);
+            this.endpoint.addDisconnectionListener(this);
             this.endpoint.startReceiving();
             this.askPlayerNickname();
         } catch (IOException e) {
@@ -710,4 +708,9 @@ public abstract class View implements MessageListener, UserInterface {
         return canActivateCharacter(getCharacterCards().get(characterIndex));
     }
     //</editor-fold>
+
+    @Override
+    public void onDisconnect(Object disconnected){
+        this.errorAndExit(ErrorMessages.DISCONNECTION);
+    }
 }
