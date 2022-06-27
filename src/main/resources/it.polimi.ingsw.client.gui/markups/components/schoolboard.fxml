@@ -7,7 +7,7 @@
     <VBox>
         <HBox>
             <Label style="-fx-font-size: 12; -fx-font-weight: bold;" fx:id="name"/>
-            <Label style="-fx-font-size: 12;" fx:id="coins" visible="${controller.isExpertGame}"/>
+            <Label style="-fx-font-size: 12;" fx:id="coins"/>
         </HBox>
         <StackPane>
             <ImageView fitWidth="450" fitHeight="193">

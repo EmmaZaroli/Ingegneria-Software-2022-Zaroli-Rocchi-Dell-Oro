@@ -58,6 +58,7 @@ public class SchoolBoard extends Pane {
 
     public void setIsExpert(boolean isExpert) {
         this.isExpertGame = isExpert;
+        coins.setVisible(isExpert);
     }
 
     private void updateProfessors(Set<PawnColor> professors) {

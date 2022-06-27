@@ -89,6 +89,10 @@ public class Gui extends View implements Initializable {
     private EditableSchoolBoard mySchoolBoard;
     @FXML
     private Label message;
+    @FXML
+    private Label myCoins;
+    @FXML
+    private Label coinsOnTable;
 
     @FXML
     private BigBridge bridge01;
@@ -114,6 +118,12 @@ public class Gui extends View implements Initializable {
     private Bridge bridge1011;
     @FXML
     private BigBridge bridge110;
+    @FXML
+    private CharacterCard character1;
+    @FXML
+    private CharacterCard character2;
+    @FXML
+    private CharacterCard character3;
 
     private String currentPhase, currentPlayer;
 
@@ -210,10 +220,17 @@ public class Gui extends View implements Initializable {
         }
     }
 
+    public void sendAssistantCardProxy(int index) {
+        if (!sendAssistantCard(index)) {
+            error("The selected assistant card is not valid");
+            askAssistantCard(getMe().getDeck());
+        }
+    }
+
     @Override
     public void askAssistantCard(List<AssistantCard> deck) {
         Platform.runLater(() -> {
-            Dialog dialog = new SelectAssistant(stage, getDeck(), this::sendAssistantCard);
+            Dialog dialog = new SelectAssistant(stage, getDeck(), this::sendAssistantCardProxy);
             dialog.showAndWait();
         });
     }
@@ -260,8 +277,15 @@ public class Gui extends View implements Initializable {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (isChooseCloud) {
-                        sendCloudChoice(0);
-                        isChooseCloud = false;
+                        if (getClouds().size() < 1 || getClouds().get(0).getStudents().size() < 0) {
+                            error("You cannot select an empty island");
+                        } else {
+                            if (!sendCloudChoice(0)) {
+                                error("Error while selecting the island");
+                            } else {
+                                isChooseCloud = false;
+                            }
+                        }
                     }
                 }
             });
@@ -271,8 +295,15 @@ public class Gui extends View implements Initializable {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (isChooseCloud) {
-                        sendCloudChoice(1);
-                        isChooseCloud = false;
+                        if (getClouds().size() < 2 || getClouds().get(1).getStudents().size() < 0) {
+                            error("You cannot select an empty island");
+                        } else {
+                            if (!sendCloudChoice(1)) {
+                                error("Error while selecting the island");
+                            } else {
+                                isChooseCloud = false;
+                            }
+                        }
                     }
                 }
             });
@@ -282,8 +313,15 @@ public class Gui extends View implements Initializable {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if (isChooseCloud) {
-                        sendCloudChoice(2);
-                        isChooseCloud = true;
+                        if (getClouds().size() < 3 || getClouds().get(2).getStudents().size() < 0) {
+                            error("You cannot select an empty island");
+                        } else {
+                            if (!sendCloudChoice(2)) {
+                                error("Error while selecting the island");
+                            } else {
+                                isChooseCloud = false;
+                            }
+                        }
                     }
                 }
             });
@@ -443,6 +481,48 @@ public class Gui extends View implements Initializable {
                 mySchoolBoard.setPlayer(getMe());
                 mySchoolBoard.setController(this);
             }
+            if (character1 != null && getCharacterCards() != null && getCharacterCards().size() > 2 && isExpertGame()) {
+                character1.setCard(getCharacterCards().get(0));
+                character1.setController(this);
+                character1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        if (canActivateCharacter(0)) {
+                            //TODO
+                        } else {
+                            error("You cannot activate this character now");
+                        }
+                    }
+                });
+            }
+            if (character2 != null && getCharacterCards() != null && getCharacterCards().size() > 2 && isExpertGame()) {
+                character2.setCard(getCharacterCards().get(1));
+                character2.setController(this);
+                character2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        if (canActivateCharacter(1)) {
+                            //TODO
+                        } else {
+                            error("You cannot activate this character now");
+                        }
+                    }
+                });
+            }
+            if (character3 != null && getCharacterCards() != null && getCharacterCards().size() > 2 && isExpertGame()) {
+                character3.setCard(getCharacterCards().get(2));
+                character3.setController(this);
+                character3.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        if (canActivateCharacter(2)) {
+                            //TODO
+                        } else {
+                            error("You cannot activate this character now");
+                        }
+                    }
+                });
+            }
         });
     }
 
@@ -483,6 +563,12 @@ public class Gui extends View implements Initializable {
         if (bridge110 != null) {
             bridge110.setVisible(getIslands().get(11).isConnectedWithNext());
         }
+        if (myCoins != null && isExpertGame()) {
+            myCoins.setText(getMe().getCoins() + "");
+        }
+        if (coinsOnTable != null && isExpertGame()) {
+            coinsOnTable.setText(getCoins() + "");
+        }
     }
 
     @Override
@@ -514,7 +600,9 @@ public class Gui extends View implements Initializable {
 
     public void sendNickname(ActionEvent actionEvent) {
         TextField nickname = (TextField) stage.getScene().lookup("#nickname");
-        this.sendPlayerNickname(nickname.getText());
+        if (!nickname.equals("")) {
+            this.sendPlayerNickname(nickname.getText());
+        }
     }
 
     public void sendSettings(ActionEvent event) {
@@ -531,11 +619,15 @@ public class Gui extends View implements Initializable {
     }
 
     public void sendToBoard(PawnColor c) {
-        sendStudentMoveOnBoard(c);
+        if (!sendStudentMoveOnBoard(c)) {
+            error("Error while moving the student");
+        }
     }
 
     public void sendToIsland(PawnColor c, int index) {
-        sendStudentMoveOnIsland(c, index);
+        if (!sendStudentMoveOnIsland(c, index)) {
+            error("Error while moving student");
+        }
     }
 
     //<editor-fold desc="Bindings">
@@ -545,10 +637,6 @@ public class Gui extends View implements Initializable {
 
     public boolean getIsExpertGame() {
         return isExpertGame();
-    }
-
-    public int getMyCoins() {
-        return 46;
     }
     //</editor-fold>
 }
