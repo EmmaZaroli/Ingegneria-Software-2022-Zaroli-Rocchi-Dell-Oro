@@ -231,7 +231,7 @@ public abstract class View implements MessageListener, UserInterface {
             this.tableCoins = game.getTableCoins();
             this.characterCards = new ArrayList<>();
             for(CharacterCardDto messageCard: game.getCharacterCards())
-                this.characterCards.add(new ViewCharacterCard(messageCard, true, false)); //TODO check this
+                this.characterCards.add(new ViewCharacterCard(messageCard, true, false));
             checkCharacterCardActivable();
             this.currentPhase = game.getGamePhase();
             this.currentPlayer = game.getCurrentPlayer();
@@ -701,7 +701,7 @@ public abstract class View implements MessageListener, UserInterface {
             case CHARACTER_ONE -> CharacterCardHelper.areParametersOkCharacter1(characterCard, parameters, getIslands());
             case CHARACTER_SEVEN -> CharacterCardHelper.areParametersOkCharacter7(characterCard, parameters, me);
             case CHARACTER_NINE -> CharacterCardHelper.areParametersOkCharacter9(parameters);
-            case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(characterCard, parameters);
+            case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(characterCard, parameters, me);
             default -> true;
         };
     }

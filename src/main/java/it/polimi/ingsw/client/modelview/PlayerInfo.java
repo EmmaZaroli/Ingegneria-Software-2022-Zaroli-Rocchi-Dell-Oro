@@ -141,7 +141,6 @@ public class PlayerInfo {
     }
 
     public PlayerInfo deepClone() {
-        //TODO dtos if we have time
         return new PlayerInfo(this.nickname, this.wizzard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.canPlayThisRound, this.isFromActualTurn);
     }
 }

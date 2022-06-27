@@ -522,7 +522,7 @@ public class Cli extends View {
         readLine();
     }
 
-    //TODO maybe send who tied
+    //TODO maybe print who tied
     public void draw(String otherWinner) {
         out.println("The game ended in a tie! ");
         out.println("Press any key to continue");

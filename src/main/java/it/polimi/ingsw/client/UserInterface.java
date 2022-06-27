@@ -22,7 +22,6 @@ public interface UserInterface {
 
     void genericMessage(String Message);
 
-    //TODO is this ok or it's already incorporated in print() ?
     void changePhase(GamePhase phase);
 
     void askAssistantCard(List<AssistantCard> deck);

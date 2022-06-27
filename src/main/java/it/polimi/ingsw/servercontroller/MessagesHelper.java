@@ -10,5 +10,6 @@ public class MessagesHelper {
     public static final String ERROR_STARTING_SERVER = "Errore nell'avvio del server:";
     public static final String ERROR_CLOSING_ENDPOINT = "Errore nella chiusura dell'endpoint";
     public static final String ERROR_CREATING_GAME = "Errore nella creazione della partita";
+    public static final String ERROR_SAVE_NOT_FOUND = "Salvataggio per ripristinare lo stato della partita non trovato";
 
 }
