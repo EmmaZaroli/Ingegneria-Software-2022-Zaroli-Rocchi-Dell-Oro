@@ -37,5 +37,7 @@ class CharacterCardTest {
             i--;
         }
         Assertions.assertEquals(0, i);
+        c.removeAllStudents();
+        Assertions.assertEquals(0, c.getStudentsNumber());
     }
 }

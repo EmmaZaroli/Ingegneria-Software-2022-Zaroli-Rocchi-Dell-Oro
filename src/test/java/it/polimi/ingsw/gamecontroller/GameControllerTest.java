@@ -2,6 +2,7 @@ package it.polimi.ingsw.gamecontroller;
 
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PawnColor;
@@ -40,6 +41,8 @@ class GameControllerTest extends TestCase {
 
     @Test
     void planningWithOnlyEqualsAssistants(){
+        Assertions.assertEquals(game.getParameters().getGameMode(),GameMode.NORMAL_MODE);
+
         Assertions.assertEquals(7, player1.getBoard().countStudentsInEntrance());
         Assertions.assertEquals(7, player2.getBoard().countStudentsInEntrance());
 
@@ -327,7 +330,7 @@ class GameControllerTest extends TestCase {
             table.unifyIslands(0, 1);
             table.unifyIslands(0, 1);
 
-            //move 5 red students on player1 diningroom and add red professor
+            //move 5 red students on player1 diningRoom and add red professor
             List<PawnColor> list = new LinkedList<>();
             for(int i = 0; i < 5; i++)
                 list.add(PawnColor.RED);
@@ -383,9 +386,9 @@ class GameControllerTest extends TestCase {
 
             Table table = tableController.getTable();
 
-            //island 0 to 4 unifyed and controlled by player1
+            //island 0 to 4 unified and controlled by player1
             //island 5 not controlled
-            //island 6 to 10 unifyed and controlled by player2
+            //island 6 to 10 unified and controlled by player2
             //island 11 not controlled
             //total of 4 islands controlled by (in order) player1, free, player2, free
 
@@ -439,7 +442,7 @@ class GameControllerTest extends TestCase {
 
             Assertions.assertEquals(0, table.getIslandWithMotherNature());
 
-            //move 5 red students on player1 diningroom and add red professor
+            //move 5 red students on player1 diningRoom and add red professor
             List<PawnColor> list = new LinkedList<>();
             for(int i = 0; i < 5; i++)
                 list.add(PawnColor.RED);
