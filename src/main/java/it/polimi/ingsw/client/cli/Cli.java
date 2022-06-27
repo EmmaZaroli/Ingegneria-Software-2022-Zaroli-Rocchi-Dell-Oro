@@ -613,7 +613,6 @@ public class Cli extends View {
         pressAnyKeyToContinue();
     }
 
-
     /**
      * Called when the game is over and had ended in a tie
      *

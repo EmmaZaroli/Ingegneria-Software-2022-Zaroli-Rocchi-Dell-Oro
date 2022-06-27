@@ -19,7 +19,7 @@ public interface UserInterface {
     void askGameSettings();
 
     void genericMessage(String message);
-    
+
     void changePhase(GamePhase phase);
 
     void askAssistantCard(List<AssistantCard> deck);

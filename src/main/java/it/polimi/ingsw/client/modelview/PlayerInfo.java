@@ -222,5 +222,6 @@ public class PlayerInfo {
      */
     public PlayerInfo deepClone() {
         return new PlayerInfo(this.nickname, this.wizard, this.schoolBoard, this.discardPileHead, this.coins, this.deck, this.isOnline, this.canPlayThisRound, this.isFromActualTurn);
+
     }
 }
