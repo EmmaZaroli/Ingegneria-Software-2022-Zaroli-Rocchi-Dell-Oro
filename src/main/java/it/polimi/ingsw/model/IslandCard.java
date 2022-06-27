@@ -153,11 +153,6 @@ public class IslandCard implements Serializable {
         return indices;
     }
 
-    //TODO remove
-    public void addIndex(int index){
-        this.indices.add(index);
-    }
-
     /**
      *
      * @param indices the list of indices to add

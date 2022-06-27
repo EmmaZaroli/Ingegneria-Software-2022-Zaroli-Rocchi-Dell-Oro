@@ -110,7 +110,6 @@ public class Cli extends View {
         return input;
     }
 
-    //TODO move validation logic to shared layer
 
     /**
      * Asks the player a nickname
