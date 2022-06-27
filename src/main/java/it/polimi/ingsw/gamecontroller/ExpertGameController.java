@@ -58,8 +58,8 @@ public class ExpertGameController extends GameController {
         }
 
         //TODO only for test
-        cards[0] = CharacterCardFactory.getCharacterCard(Character.CHARACTER_FOUR);
-        newEffects[0] = EffectFactory.getEffect(Character.CHARACTER_FOUR);
+        cards[0] = CharacterCardFactory.getCharacterCard(Character.CHARACTER_ELEVEN);
+        newEffects[0] = EffectFactory.getEffect(Character.CHARACTER_ELEVEN);
         getGame().setCharacterCards(cards);
         addEffects(newEffects);
     }
@@ -88,7 +88,7 @@ public class ExpertGameController extends GameController {
             case CHARACTER_ONE -> CharacterCardHelper.areParametersOkCharacter1(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getTable().getIslands());
             case CHARACTER_SEVEN -> CharacterCardHelper.areParametersOkCharacter7(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);
             case CHARACTER_NINE -> CharacterCardHelper.areParametersOkCharacter9(message.getParameters());
-            case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters());
+            case CHARACTER_ELEVEN -> CharacterCardHelper.areParametersOkCharacter11(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);
             default -> true;
         };
     }

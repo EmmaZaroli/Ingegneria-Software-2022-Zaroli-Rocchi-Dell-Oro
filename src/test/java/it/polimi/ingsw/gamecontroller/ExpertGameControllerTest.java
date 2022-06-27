@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.enums.Wizard;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.servercontroller.User;
+import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
@@ -951,7 +952,6 @@ class ExpertGameControllerTest extends TestCase {
 
         @Test
         void actionActivateEffectCharacterEleven() {
-            //TODO
             CharacterCard[] characterCards = new CharacterCard[3];
             Effect[] effects = new Effect[3];
 
@@ -972,10 +972,9 @@ class ExpertGameControllerTest extends TestCase {
 
             //wrong message, player has not enough coins
             Object[] parameters = new Object[2];
-            CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[2], parameters);
+            CharacterCardMessage message = new CharacterCardMessage("player1", MessageType.ACTION_USE_CHARACTER, characterCards[1], parameters);
             gameController.onMessageReceived(message);
             Assertions.assertEquals(1, game.getPlayers()[0].getCoins());
-            Assertions.assertEquals(0, game.getParameters().getExtraInfluence());
 
             //correct message
             game.getPlayers()[0].addCoin();
