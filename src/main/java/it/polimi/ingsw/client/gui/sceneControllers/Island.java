@@ -74,7 +74,7 @@ public class Island extends Pane {
             Image image = switch (tower) {
                 case GREY -> new Image("/it.polimi.ingsw.client.gui/assets/grey_tower.png");
                 case BLACK -> new Image("/it.polimi.ingsw.client.gui/assets/black_tower.png");
-                default -> new Image("/it.polimi.ingsw.client.gui/assets/white _tower.png");
+                default -> new Image("/it.polimi.ingsw.client.gui/assets/white_tower.png");
             };
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(29);
