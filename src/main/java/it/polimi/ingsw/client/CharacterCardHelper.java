@@ -3,12 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.modelview.LinkedIslands;
 import it.polimi.ingsw.client.modelview.PlayerInfo;
 import it.polimi.ingsw.client.modelview.ViewCharacterCard;
-import it.polimi.ingsw.dtos.CharacterCardDto;
-import it.polimi.ingsw.dtos.IslandCardDto;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
-import it.polimi.ingsw.model.ExpertPlayer;
-import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.utils.ApplicationConstants;
 
