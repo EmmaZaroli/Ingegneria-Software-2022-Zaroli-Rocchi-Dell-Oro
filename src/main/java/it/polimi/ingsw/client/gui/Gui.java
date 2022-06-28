@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.gui.sceneControllers.*;
+import it.polimi.ingsw.client.modelview.ViewCharacterCard;
 import it.polimi.ingsw.gamecontroller.enums.GameMode;
 import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
 import it.polimi.ingsw.model.AssistantCard;
@@ -249,6 +250,10 @@ public class Gui extends View implements Initializable {
                 sendMotherNatureSteps(Integer.parseInt((response.get().getText()).substring(1)));
             }
         });
+    }
+
+    public boolean canActivateCharacterProxy(ViewCharacterCard card) {
+        return canActivateCharacter(card);
     }
 
     @Override
@@ -628,6 +633,10 @@ public class Gui extends View implements Initializable {
         if (!sendStudentMoveOnIsland(c, index)) {
             error("Error while moving student");
         }
+    }
+
+    public boolean activateCharacter(int card, Object... params) {
+        return sendCharacterCard(card, params);
     }
 
     //<editor-fold desc="Bindings">

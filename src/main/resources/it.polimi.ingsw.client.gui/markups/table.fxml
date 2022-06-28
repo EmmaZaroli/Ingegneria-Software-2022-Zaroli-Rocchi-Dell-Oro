@@ -94,14 +94,15 @@
                         <!-- Character cards -->
                         <GridPane hgap="35" alignment="CENTER" visible="${controller.isExpertGame}">
                             <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS"
-                                           fx:id="character1"/>
+                                           fx:id="character1" index="0"/>
                             <CharacterCard GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS"
-                                           fx:id="character2"/>
+                                           fx:id="character2" index="1"/>
                         </GridPane>
                         <Pane prefHeight="15"/>
                         <HBox>
                             <Pane prefWidth="99"/>
-                            <CharacterCard HBox.hgrow="ALWAYS" visible="${controller.isExpertGame}" fx:id="character3"/>
+                            <CharacterCard HBox.hgrow="ALWAYS" visible="${controller.isExpertGame}" fx:id="character3"
+                                           index="2"/>
                         </HBox>
                         <!-- Deck and coins -->
                         <HBox VBox.vgrow="ALWAYS" style="-fx-padding: 80 0 0 0;" visible="${controller.isExpertGame}">
