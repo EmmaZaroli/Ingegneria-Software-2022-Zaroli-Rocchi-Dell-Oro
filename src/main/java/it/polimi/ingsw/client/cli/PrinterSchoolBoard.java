@@ -28,13 +28,14 @@ public class PrinterSchoolBoard {
     public static final String TOWER_WHITE = "█";
     public static final String TOWER_BLACK = ANSI_BLACK + TOWER_WHITE + ANSI_RESET;
     public static final String TOWER_GREY = ANSI_WHITE + TOWER_WHITE + ANSI_RESET;
-    public static final String BOTTOM = "|________________________________________|";
+    public static final String BOTTOM = "|____________________________________|";
 
     /**
      * Prints the schoolBoards on the table
      * @param boards the schoolBoards
      */
     public void printBoard(List<SchoolBoardDto> boards) {
+
         PrintStream out = System.out;
 
         int[] actualEntranceSize = {0, 0, 0};
@@ -45,7 +46,7 @@ public class PrinterSchoolBoard {
         }
 
         for (int i = 0; i < boards.size(); i++) {
-            out.print(" _______________________________________");
+            out.print(" ____________________________________");
             out.print("            "); //12 spaces
         }
         out.println();
