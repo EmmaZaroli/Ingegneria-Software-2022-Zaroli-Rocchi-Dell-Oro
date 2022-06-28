@@ -6,7 +6,6 @@ import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
-import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.utils.Pair;
 
 import java.util.*;
@@ -19,7 +18,7 @@ import static it.polimi.ingsw.utils.ApplicationConstants.CLOUDS_STUDENTS_3_PLAYE
  */
 public class TableController {
     protected Table table;
-    private GameParameters parameters;
+    private final GameParameters parameters;
 
     /**
      * Creates a new controller for the given table
@@ -69,24 +68,16 @@ public class TableController {
      */
     public void fillClouds() throws FullCloudException {
         List<PawnColor> studentsDrawn = new LinkedList<>();
-        /*
+        int numberOfPlayers = table.getPlayersNumber() == PlayersNumber.TWO ? CLOUDS_STUDENTS_2_PLAYERS : CLOUDS_STUDENTS_3_PLAYERS;
         for (CloudTile cloudTile : table.getCloudTiles()) {
             if (!table.takeStudentsFromCloud(cloudTile).isEmpty()) throw new FullCloudException();
-        }*/
+        }
         for (CloudTile cloud : table.getCloudTiles()) {
-            if(cloud.getStudentsNumber() == 0){
-                if (table.getPlayersNumber() == PlayersNumber.TWO) {
-                    for (int i = 0; i < CLOUDS_STUDENTS_2_PLAYERS; i++) {
-                        studentsDrawn.add(table.getBag().drawStudent());
-                    }
-                } else {
-                    for (int i = 0; i < CLOUDS_STUDENTS_3_PLAYERS; i++) {
-                        studentsDrawn.add(table.getBag().drawStudent());
-                    }
-                }
-                table.addStudents(cloud, studentsDrawn);
-                studentsDrawn.clear();
+            for (int i = 0; i < numberOfPlayers; i++) {
+                studentsDrawn.add(table.getBag().drawStudent());
             }
+            table.addStudents(cloud, studentsDrawn);
+            studentsDrawn.clear();
         }
     }
 

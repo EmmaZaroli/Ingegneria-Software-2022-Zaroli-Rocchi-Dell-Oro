@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class Server implements GameEndingListener{
     private final int port;
 
-    private static Logger logger = Logger.getLogger(Server.class.getName());
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
 
     private final GameHandlerBuilder normal2PlayersBuilder = new GameHandlerBuilder();
     private final GameHandlerBuilder normal3PlayersBuilder = new GameHandlerBuilder();
@@ -128,9 +128,9 @@ public class Server implements GameEndingListener{
     }
 
     private void loadGame(Game game, List<User> users, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
-        for (int i = 0; i < users.size(); i++) {
-            builder.player(users.get(i));
-            addUser(users.get(i));
+        for (User user : users) {
+            builder.player(user);
+            addUser(user);
         }
         GameHandler gameHandler = builder.load(game);
         gameHandler.addGameEndingListener(this);
@@ -305,7 +305,7 @@ public class Server implements GameEndingListener{
 
     //try to remove a user
     //user must not be in an active game
-    //return true if the removal is succesfull, false if not (user does not exist or is in an active game)
+    //return true if the removal is successfull, false if not (user does not exist or is in an active game)
     public synchronized boolean removeUser(String nickname) {
         Optional<User> user = getUser(nickname);
         if (user.isEmpty() || getGameByPlayer(nickname).isPresent())
