@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
 /**
- * Error Messages
+ * Error Messages Constants used by the View
  */
 public class ErrorMessages {
     public static final String NO_NETWORK = "Error while trying to establish a connection with the server";

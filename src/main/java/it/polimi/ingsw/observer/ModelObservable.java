@@ -5,15 +5,10 @@ import it.polimi.ingsw.model.enums.GamePhase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ModelObservable {
 
     private final List<ModelObserver> observers = new ArrayList<>();
-
-    public List<ModelObserver> getObservers() {
-        return observers;
-    }
 
     /**
      * Adds an observer.

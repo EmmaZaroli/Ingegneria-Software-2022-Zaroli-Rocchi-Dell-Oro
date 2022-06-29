@@ -17,10 +17,17 @@ public abstract class Message implements Serializable {
         this.messageType = messageType;
     }
 
+    /**
+     * @return the player's nickname
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     *
+     * @return the type of message
+     */
     public MessageType getType() {
         return messageType;
     }

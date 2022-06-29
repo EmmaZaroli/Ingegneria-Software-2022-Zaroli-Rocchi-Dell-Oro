@@ -139,15 +139,6 @@ public class CharacterCardDto implements Serializable {
         return students.size();
     }
 
-    //TODO remove
-    public Map<PawnColor, Integer> getStudentsCardinality(){
-        Map<PawnColor, Integer> res = new HashMap<>();
-        for(PawnColor color: PawnColor.values()){
-            res.put(color, getStudentsNumber(color));
-        }
-        return res;
-    }
-
     /**
      *
      * @return true if the card has a coin, false otherwise

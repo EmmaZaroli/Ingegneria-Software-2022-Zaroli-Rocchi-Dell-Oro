@@ -15,7 +15,4 @@ public class InvalidPlayerNumberException extends Exception {
         this.reason = reason;
     }
 
-    public Reason getExceptionType() {
-        return reason;
-    }
 }

@@ -32,6 +32,10 @@ public class MessageObservable {
         }
     }
 
+    /**
+     * Notify the incoming message
+     * @param message the message
+     */
     public void notifyMessage(Message message){
         synchronized (listeners){
             List<MessageListener> temporaryCopy = new ArrayList<>(listeners);

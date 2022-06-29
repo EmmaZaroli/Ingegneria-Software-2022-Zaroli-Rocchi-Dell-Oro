@@ -2,6 +2,10 @@ package it.polimi.ingsw.utils;
 
 import java.util.Random;
 
+/**
+ * Random Helper
+ * Singleton used for generate casual numbers
+ */
 public final class RandomHelper {
     private static RandomHelper instance;
     private final Random random;
@@ -17,6 +21,10 @@ public final class RandomHelper {
         return instance;
     }
 
+    /**
+     * @param upperBound the max value
+     * @return an int between 0 and the upperBound
+     */
     public int getInt(int upperBound) {
         return this.random.nextInt(upperBound);
     }

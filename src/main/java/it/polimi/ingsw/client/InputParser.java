@@ -11,7 +11,6 @@ public class InputParser {
      * @return true if the username is not null
      */
     public boolean checkUsername(String username) {
-        if (username.isEmpty()) return false;
-        return true;
+        return !username.isEmpty();
     }
 }

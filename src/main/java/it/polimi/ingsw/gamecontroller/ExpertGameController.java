@@ -321,6 +321,12 @@ public class ExpertGameController extends GameController {
         return (ExpertGame) this.game;
     }
 
+    /**
+     * Overrides the gameController method
+     * Checks if the effect of an active characterCard affects the move
+     * @param color the PawnColor just moved
+     * @param player the other player
+     */
     @Override
     public void tryStealProfessor(PawnColor color, Player player) {
         if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &&
@@ -341,6 +347,13 @@ public class ExpertGameController extends GameController {
         }
     }
 
+    /**
+     * Overrides the gameController method
+     * Checks if the effect of an active characterCard affects the move
+     * @param steps motherNature's steps
+     * @throws NotAllowedMotherNatureMovementException if the number of motherNature steps isn't valid
+     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+     */
     @Override
     public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
         if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {
