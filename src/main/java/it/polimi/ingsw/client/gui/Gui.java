@@ -44,6 +44,8 @@ public class Gui extends View implements Initializable {
 
     private boolean isChooseCloud = false;
 
+    private int additionalMotherNatureMovement = 0;
+
     @FXML
     private SchoolBoard opponent1;
     @FXML
@@ -221,6 +223,10 @@ public class Gui extends View implements Initializable {
         }
     }
 
+    public void setAdditionalMotherNatureMovement(int value) {
+        this.additionalMotherNatureMovement = 2;
+    }
+
     public void sendAssistantCardProxy(int index) {
         if (!sendAssistantCard(index)) {
             error("The selected assistant card is not valid");
@@ -241,7 +247,7 @@ public class Gui extends View implements Initializable {
         mySchoolBoard.disableDragAndDrop();
         Platform.runLater(() -> {
             List<ButtonType> buttons = new LinkedList<>();
-            for (int i = 1; i <= getMe().getDiscardPileHead().get().motherNatureMovement(); i++) {
+            for (int i = 1; i <= getMe().getDiscardPileHead().get().motherNatureMovement() + additionalMotherNatureMovement; i++) {
                 buttons.add(new ButtonType("+" + i, ButtonBar.ButtonData.OK_DONE));
             }
             sharedAlert = new Alert(Alert.AlertType.INFORMATION, "Move Mother Nature of... steps", buttons.toArray(new ButtonType[]{}));
@@ -336,6 +342,7 @@ public class Gui extends View implements Initializable {
     @Override
     public void updateCurrentPlayersTurn(String otherPlayer) {
         if (message != null) {
+            additionalMotherNatureMovement = 0;
             this.currentPlayer = otherPlayer;
             Platform.runLater(() -> message.setText("Current player: " + currentPlayer + " Current game phase: " + currentPhase));
         }

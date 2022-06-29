@@ -91,16 +91,21 @@ public class CharacterCard extends Pane {
             imageView.setFitWidth(25);
 
             imageView.setOnMouseClicked(mouseEvent -> {
-                if(gui.canActivateCharacterProxy(card)) {
-                    switch(characterCard.getCharacter()) {
-                        case CHARACTER_ONE ->
-                                gui.genericMessage("You activated the Character.\nMove a student from the CharacterCard to an island");
-                        isDragAndDropEnabled = true;
-                        case CHARACTER_TWO, CHARACTER_SIX, CHARACTER_EIGHT ->
-                                gui.genericMessage("You activated the Character.");
-                        gui.activateCharacter(cardIndex);
-                        case CHARACTER_FOUR -> ;
-                        case CHARACTER_SEVEN -> ;
+                if (gui.canActivateCharacterProxy(card)) {
+                    switch (characterCard.getCharacter()) {
+                        case CHARACTER_ONE -> {
+                            gui.genericMessage("You activated the Character.\nMove a student from the CharacterCard to an island");
+                            isDragAndDropEnabled = true;
+                        }
+                        case CHARACTER_TWO, CHARACTER_SIX, CHARACTER_EIGHT -> {
+                            gui.genericMessage("You activated the Character.");
+                            gui.activateCharacter(cardIndex);
+                        }
+                        case CHARACTER_FOUR -> {
+                            gui.setAdditionalMotherNatureMovement(2);
+                            gui.genericMessage("You activated the Character");
+                        }
+                        case CHARACTER_SEVEN -> handleEffectSeven();
                         case CHARACTER_NINE -> handleEffectNine();
                         case CHARACTER_ELEVEN -> handleEffectEleven();
                     }
@@ -155,7 +160,7 @@ public class CharacterCard extends Pane {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Chose a color to invalidate", buttons.toArray(new ButtonType[]{}));
             Optional<ButtonType> response = alert.showAndWait();
             if (response.isPresent()) {
-                PawnColor color = switch(response.get().getText()) {
+                PawnColor color = switch (response.get().getText()) {
                     case "Red" -> PawnColor.RED;
                     case "Green" -> PawnColor.GREEN;
                     case "Blue" -> PawnColor.BLUE;
@@ -163,7 +168,7 @@ public class CharacterCard extends Pane {
                     case "Yellow" -> PawnColor.YELLOW;
                     default -> PawnColor.NONE;
                 };
-                if(!gui.activateCharacter(cardIndex, color)) {
+                if (!gui.activateCharacter(cardIndex, color)) {
                     gui.error("Error while activating the effect");
                 }
             } else {
@@ -194,7 +199,7 @@ public class CharacterCard extends Pane {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Chose a student to place in your dinning room", buttons.toArray(new ButtonType[]{}));
             Optional<ButtonType> response = alert.showAndWait();
             if (response.isPresent()) {
-                PawnColor color = switch(response.get().getText()) {
+                PawnColor color = switch (response.get().getText()) {
                     case "Red" -> PawnColor.RED;
                     case "Green" -> PawnColor.GREEN;
                     case "Blue" -> PawnColor.BLUE;
@@ -202,7 +207,7 @@ public class CharacterCard extends Pane {
                     case "Yellow" -> PawnColor.YELLOW;
                     default -> PawnColor.NONE;
                 };
-                if(!gui.activateCharacter(cardIndex, color)) {
+                if (!gui.activateCharacter(cardIndex, color)) {
                     gui.error("Error while activating the effect");
                 }
             } else {
@@ -212,7 +217,6 @@ public class CharacterCard extends Pane {
     }
 
     private EventHandler<MouseEvent> getReleasedCallback(Character character, int j, PawnColor color) {
-        return null;
         return switch (character) {
             case CHARACTER_ONE -> new EventHandler<MouseEvent>() {
                 @Override
@@ -222,73 +226,73 @@ public class CharacterCard extends Pane {
                         double y = mouseEvent.getScreenY();
                         isDragAndDropEnabled = false;
                         if (isInRange(x, y, 158, 404)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(0).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(0).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 324, 317)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(1).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(1).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 482, 316)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(2).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(2).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 648, 319)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(3).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(3).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 814, 318)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(4).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(4).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 971, 324)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(5).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(5).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 323, 492)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(6).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(6).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 483, 491)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(7).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(7).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 640, 493)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(8).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(8).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 808, 493)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(9).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(9).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 973, 494)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(10).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(10).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 1132, 408)) {
-                            if(!gui.activateCharacter(cardIndex, color, gui.getIslands().get(11).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(11).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
@@ -298,7 +302,70 @@ public class CharacterCard extends Pane {
                     }
                 }
             };
+            default -> new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+
+                }
+            };
         };
+    }
+
+    private void handleEffectSeven() {
+        int i = 0;
+        boolean shouldContinue = true;
+        while (i < 3 && shouldContinue) {
+            Platform.runLater(() -> {
+                List<ButtonType> buttons = new LinkedList<>();
+                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(0)), ButtonBar.ButtonData.OK_DONE));
+                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(1)), ButtonBar.ButtonData.OK_DONE));
+                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(2)), ButtonBar.ButtonData.OK_DONE));
+                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(3)), ButtonBar.ButtonData.OK_DONE));
+                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(4)), ButtonBar.ButtonData.OK_DONE));
+                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(5)), ButtonBar.ButtonData.OK_DONE));
+
+                buttons.add(new ButtonType("End effect", ButtonBar.ButtonData.CANCEL_CLOSE));
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Chose a student to place in your entrance", buttons.toArray(new ButtonType[]{}));
+                Optional<ButtonType> response = alert.showAndWait();
+                if (response.isPresent()) {
+                    if (!response.get().getButtonData().isCancelButton()) {
+                        PawnColor fromCard = switch (response.get().getText()) {
+                            case "Red" -> PawnColor.RED;
+                            case "Green" -> PawnColor.GREEN;
+                            case "Blue" -> PawnColor.BLUE;
+                            case "Pink" -> PawnColor.PINK;
+                            case "Yellow" -> PawnColor.YELLOW;
+                            default -> PawnColor.NONE;
+                        };
+
+                        List<ButtonType> buttons2 = new LinkedList<>();
+                        for (int ii = 0; ii < gui.getMe().getBoard().getEntrance().size(); ii++) {
+                            buttons.add(new ButtonType(resolveColorString(gui.getMe().getBoard().getEntrance().get(ii)), ButtonBar.ButtonData.OK_DONE));
+                        }
+
+                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Chose a student to remove from your entrance", buttons2.toArray(new ButtonType[]{}));
+                        Optional<ButtonType> response2 = alert2.showAndWait();
+                        if (response2.isPresent()) {
+                            PawnColor fromEntrance = switch (response.get().getText()) {
+                                case "Red" -> PawnColor.RED;
+                                case "Green" -> PawnColor.GREEN;
+                                case "Blue" -> PawnColor.BLUE;
+                                case "Pink" -> PawnColor.PINK;
+                                case "Yellow" -> PawnColor.YELLOW;
+                                default -> PawnColor.NONE;
+                            };
+
+                            if (!gui.activateCharacter(cardIndex, fromCard, fromEntrance)) {
+                                gui.error("Error while activating the effect");
+                            }
+                        }
+                    }
+                } else {
+                    handleEffectSeven();
+                }
+            });
+        }
     }
 
     private boolean isInRange(double x, double y, int startX, int startY) {
