@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.enums.Wizard;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerDto implements Serializable {
     @Serial
@@ -39,7 +40,7 @@ public class PlayerDto implements Serializable {
         return nickname;
     }
 
-    public Wizard getWizzard() {
+    public Wizard getWizard() {
         return wizard;
     }
 
@@ -55,7 +56,7 @@ public class PlayerDto implements Serializable {
         return isFromActualTurn;
     }
 
-    public ArrayList<AssistantCard> getDeck() {
+    public List<AssistantCard> getDeck() {
         return deck;
     }
 

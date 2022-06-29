@@ -32,7 +32,7 @@ public class PlayerInfo {
 
     public PlayerInfo(PlayerDto origin) {
         this.nickname = origin.getNickname();
-        this.wizard = origin.getWizzard();
+        this.wizard = origin.getWizard();
         this.schoolBoard = origin.getSchoolBoard();
         this.discardPileHead = Optional.ofNullable(origin.getDiscardPileHead());
         this.isFromActualTurn = origin.isFromActualTurn();

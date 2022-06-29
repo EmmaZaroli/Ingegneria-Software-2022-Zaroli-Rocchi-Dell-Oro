@@ -1,7 +1,5 @@
 package it.polimi.ingsw.dtos;
 
-import it.polimi.ingsw.client.modelview.PlayerInfo;
-import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.IslandCard;
 import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.model.enums.Tower;
@@ -11,6 +9,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class IslandCardDto implements Serializable {
+    @Serial
     private static final long serialVersionUID = 106L;
     private UUID uuid;
     private List<PawnColor> students;
@@ -100,13 +99,7 @@ public class IslandCardDto implements Serializable {
         return retVal;
     }
 
-    public IslandCardDto withIndeces(List<Integer> indeces) {
-        IslandCardDto retVal = this.deepClone();
-        retVal.indices = indeces;
-        return retVal;
-    }
-
-    public IslandCardDto withIndeces(Integer index) {
+    public IslandCardDto withIndexes(Integer index) {
         IslandCardDto retVal = this.deepClone();
         retVal.indices = new LinkedList<>();
         retVal.indices.add(index);

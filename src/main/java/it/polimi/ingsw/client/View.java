@@ -42,7 +42,7 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         this.clouds = new ArrayList<>();
         this.islands = new ArrayList<>();
         for (int i = 0; i < 12; i++)
-            this.islands.add(new LinkedIslands((new IslandCardDto()).withIndeces(i)));
+            this.islands.add(new LinkedIslands((new IslandCardDto()).withIndexes(i)));
         this.tableCoins = 0;
         this.characterCards = new ArrayList<>();
         this.areEnoughPlayers = true;
