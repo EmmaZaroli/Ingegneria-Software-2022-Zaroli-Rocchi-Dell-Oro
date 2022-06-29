@@ -48,8 +48,8 @@ public class Endpoint {
         }
 
         this.isOnline = true;
-        //resetDisconnectionTimer();
-        //startPinging();
+        resetDisconnectionTimer();
+        startPinging();
     }
 
     public boolean isOnline() {
@@ -113,7 +113,7 @@ public class Endpoint {
     private void handleIncomingMessage() {
         try {
             Message m = (Message) in.readObject();
-            //resetDisconnectionTimer();
+            resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
                 synchronized (messageListeners){
                     List<MessageListener> temporaryList = new ArrayList<>(messageListeners);

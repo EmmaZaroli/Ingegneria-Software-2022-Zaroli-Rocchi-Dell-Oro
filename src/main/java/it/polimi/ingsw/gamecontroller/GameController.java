@@ -778,7 +778,8 @@ public class GameController implements DisconnectionListener, MessageListener {
                         logger.log(Level.SEVERE, MessagesHelper.ERROR_SAVE_NOT_FOUND, e);
                     }
                 }
-                game.setEnoughPlayersOnline(areEnoughPlayersOnline);
+                if(game.areEnoughPlayersOnline() != areEnoughPlayersOnline)
+                    game.setEnoughPlayersOnline(areEnoughPlayersOnline);
                 for (int i = 0; i < virtualViews.length; i++)
                     game.getPlayer(i).setOnline(virtualViews[i].isOnline());
                 for(Player p : game.getPlayers()) {

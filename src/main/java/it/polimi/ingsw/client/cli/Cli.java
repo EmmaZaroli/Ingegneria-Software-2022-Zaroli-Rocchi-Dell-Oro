@@ -87,7 +87,7 @@ public class Cli extends View {
         port = Integer.parseInt(readLine());
 
          */
-        ip = "127.0.0.1";
+        ip = "10.169.157.155";
         port = 24000;
 
         this.startConnection(ip, port);
