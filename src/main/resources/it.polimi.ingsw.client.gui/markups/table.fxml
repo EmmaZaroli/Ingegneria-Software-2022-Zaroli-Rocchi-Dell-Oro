@@ -39,12 +39,12 @@
                                 <Island GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="island3" kind="0"/>
                                 <Island GridPane.rowIndex="0" GridPane.columnIndex="4" fx:id="island4" kind="1"/>
                                 <Island GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="island5" kind="2"/>
-                                <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island6" kind="0"/>
-                                <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island7" kind="1"/>
-                                <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island8" kind="2"/>
-                                <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island9" kind="0"/>
-                                <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island10" kind="1"/>
-                                <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island11" kind="2"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="island11" kind="0"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="island10" kind="1"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="3" fx:id="island9" kind="2"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="4" fx:id="island8" kind="0"/>
+                                <Island GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="island7" kind="1"/>
+                                <Island GridPane.rowIndex="1" GridPane.columnIndex="6" fx:id="island6" kind="2"/>
                                 <Label GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="5"
                                        style="-fx-font-size: 18" fx:id="message"/>
                             </GridPane>

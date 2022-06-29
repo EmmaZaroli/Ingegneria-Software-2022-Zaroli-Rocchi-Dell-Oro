@@ -8,6 +8,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * IslandCard Dto
+ */
 public class IslandCardDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 106L;
@@ -41,18 +44,34 @@ public class IslandCardDto implements Serializable {
         this.indices = new ArrayList<>();
     }
 
+    /**
+     *
+     * @return the uuid
+     */
     public UUID getUuid() {
         return this.uuid;
     }
 
+    /**
+     *
+     * @return the list of pawnColors on the islandCardDto
+     */
     public List<PawnColor> getStudents() {
         return this.students;
     }
 
+    /**
+     *
+     * @return the Tower
+     */
     public Tower getTower() {
         return tower;
     }
 
+    /**
+     *
+     * @return the number of island to witch it's connected to
+     */
     public int getSize() {
         return indices.size();
     }

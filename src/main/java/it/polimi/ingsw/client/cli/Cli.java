@@ -80,15 +80,15 @@ public class Cli extends View {
         String ip;
         int port;
 
-        /*
+
         out.print("Please, insert the Server's ip address: ");
         ip = readLine();
         out.print("Select the Server's port number: ");
         port = Integer.parseInt(readLine());
 
-         */
-        ip = "10.169.157.155";
-        port = 24000;
+
+        //ip = "127.0.0.1";
+        //port = 24000;
 
         this.startConnection(ip, port);
     }
