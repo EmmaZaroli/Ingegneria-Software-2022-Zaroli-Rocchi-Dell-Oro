@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public class SchoolBoard extends Pane {
     private PlayerInfo player;
@@ -48,7 +47,6 @@ public class SchoolBoard extends Pane {
         this.updateDinningRoom(opponent.getBoard().getDiningRoom());
         this.updateEntrance(opponent.getBoard().getEntrance());
         this.updateTowers(opponent.getBoard().getTowers(), opponent.getBoard().getTowerColor());
-        this.updateProfessors(opponent.getBoard().getProfessorTable());
         tRed.setVisible(opponent.getBoard().isThereProfessor(PawnColor.RED));
         tBlue.setVisible(opponent.getBoard().isThereProfessor(PawnColor.BLUE));
         tGreen.setVisible(opponent.getBoard().isThereProfessor(PawnColor.GREEN));
@@ -59,10 +57,6 @@ public class SchoolBoard extends Pane {
     public void setIsExpert(boolean isExpert) {
         this.isExpertGame = isExpert;
         coins.setVisible(isExpert);
-    }
-
-    private void updateProfessors(Set<PawnColor> professors) {
-        //TODO
     }
 
     private void updateEntrance(List<PawnColor> entrance) {
@@ -136,7 +130,7 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 1 * i, 0);
+            board.add(imageView, i, 0);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.GREEN) == 0) {
@@ -153,7 +147,7 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 0, 1);
+            board.add(imageView, i, 1);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.RED) == 0) {
@@ -170,7 +164,7 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 0, 2);
+            board.add(imageView, i, 2);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.YELLOW) == 0) {
@@ -187,7 +181,7 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 0, 3);
+            board.add(imageView, i, 3);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.PINK) == 0) {
@@ -204,7 +198,7 @@ public class SchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(16);
             imageView.setFitWidth(16);
-            board.add(imageView, 0, 4);
+            board.add(imageView, i, 4);
         }
     }
 

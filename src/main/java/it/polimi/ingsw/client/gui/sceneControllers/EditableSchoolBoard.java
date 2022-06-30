@@ -200,7 +200,7 @@ public class EditableSchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
             imageView.setFitWidth(20);
-            diningRoom.add(imageView, 1 * i, 0);
+            diningRoom.add(imageView, i, 0);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.GREEN) == 0) {
@@ -217,7 +217,7 @@ public class EditableSchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
             imageView.setFitWidth(20);
-            diningRoom.add(imageView, 0, 1);
+            diningRoom.add(imageView, i, 1);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.RED) == 0) {
@@ -234,7 +234,7 @@ public class EditableSchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
             imageView.setFitWidth(20);
-            diningRoom.add(imageView, 0, 2);
+            diningRoom.add(imageView, i, 2);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.YELLOW) == 0) {
@@ -251,7 +251,7 @@ public class EditableSchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
             imageView.setFitWidth(20);
-            diningRoom.add(imageView, 0, 3);
+            diningRoom.add(imageView, i, 3);
         }
 
         if (opponent.getStudentsInDiningRoom(PawnColor.PINK) == 0) {
@@ -268,7 +268,7 @@ public class EditableSchoolBoard extends Pane {
             ImageView imageView = new ImageView(image);
             imageView.setFitHeight(20);
             imageView.setFitWidth(20);
-            diningRoom.add(imageView, 0, 4);
+            diningRoom.add(imageView, i, 4);
         }
     }
 
