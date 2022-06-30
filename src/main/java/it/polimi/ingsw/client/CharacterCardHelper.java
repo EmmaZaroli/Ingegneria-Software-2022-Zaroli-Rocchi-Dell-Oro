@@ -16,8 +16,6 @@ import java.util.UUID;
  */
 public class CharacterCardHelper {
 
-    //check client side
-
     /**
      * Checking if the parameters of character_1 are valid
      * @param card the viewCharacterCard
@@ -41,8 +39,6 @@ public class CharacterCardHelper {
         }
         return false;
     }
-
-    //check client side
 
     /**
      * Checking if the parameters of character_7 are valid
@@ -73,8 +69,6 @@ public class CharacterCardHelper {
         return true;
     }
 
-    //check client and server side
-
     /**
      * Checking if the parameters of character_9 are valid
      * @param parameters the parameters
@@ -84,7 +78,6 @@ public class CharacterCardHelper {
         return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
     }
 
-    //check client side
 
     /**
      * Checking if the parameters of character_11 are valid

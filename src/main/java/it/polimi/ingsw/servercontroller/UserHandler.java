@@ -14,11 +14,14 @@ import it.polimi.ingsw.servercontroller.enums.NicknameStatus;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * User Handler
+ * This class is used to manage the user from the moment he connects to the server until the game starts
+ */
 public class UserHandler implements /*Runnable,*/ DisconnectionListener, MessageListener, GameReadyListener {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final Endpoint endpoint;
@@ -47,14 +50,13 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         this.gameReady = false;
     }
 
-    public LoginPhase getLoginPhase() {
-        return loginPhase;
-    }
-
     private void setLoginPhase(LoginPhase loginPhase) {
         this.loginPhase = loginPhase;
     }
 
+    /**
+     * Starts accepting messages from the endpoint
+     */
     public void start(){
         endpoint.startReceiving();
     }
@@ -68,6 +70,10 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         finish();
     }
 
+    /**
+     * Since this class is used only for the initial part, it expects to receive only the messages related to the login phase
+     * @param message the incoming message
+     */
     @Override
     public void onMessageReceived(Message message) {
         switch (loginPhase){
@@ -86,6 +92,11 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         }
     }
 
+    /**
+     * Checks if the nickname sent belongs already to another player or if it belongs to a disconnected player
+     * The result is then sent to the endpoint
+     * @param message the incoming message
+     */
     private void waitingForNickname(NicknameProposalMessage message){
         String nickname = message.getNickname();
         synchronized (server) {
@@ -109,6 +120,10 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
         }
     }
 
+    /**
+     * Enqueue the user in the correct lobby, depending on the gameMode and the number of players selected
+     * @param message the incoming message
+     */
     private void waitingForGametype(GametypeRequestMessage message){
         GameMode selectedGameMode = message.getGameMode();
         PlayersNumber selectedPlayersNumber = message.getPlayersNumber();
@@ -124,61 +139,37 @@ public class UserHandler implements /*Runnable,*/ DisconnectionListener, Message
             setLoginPhase(LoginPhase.WAITING_FOR_GAMEREADY);
     }
 
-    /*
-    @Override
-    public void run() {
-        String nickname = "";
-        NicknameStatus nicknameStatus;
-        do {
-            nickname = ((NicknameProposalMessage) endpoint.synchronizedReceive(NicknameProposalMessage.class)).getNickname();
-            synchronized (server) {
-                nicknameStatus = server.checkNicknameStatus(nickname);
-                switch (nicknameStatus) {
-                    case FREE -> {
-                        endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FREE));
-                        logUser(nickname);
-                    }
-                    case FROM_DISCONNECTED_PLAYER -> {
-                        endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_DISCONNECTED_PLAYER));
-                        reconnectUser(nickname);
-                    }
-                    case FROM_CONNECTED_PLAYER -> {
-                        endpoint.sendMessage(new NicknameResponseMessage(nickname, MessageType.NICKNAME_RESPONSE, NicknameStatus.FROM_CONNECTED_PLAYER));
-                    }
-                }
-            }
-        } while (nicknameStatus == NicknameStatus.FROM_CONNECTED_PLAYER);
-
-        if (nicknameStatus == NicknameStatus.FREE) {
-            GametypeRequestMessage gametypeRequestMessage = (GametypeRequestMessage) endpoint.synchronizedReceive(GametypeRequestMessage.class);
-            GameMode selectedGameMode = gametypeRequestMessage.getGameMode();
-            PlayersNumber selectedPlayersNumber = gametypeRequestMessage.getPlayersNumber();
-            synchronized (server) {
-                try {
-                    enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
-                    endpoint.sendMessage(new GametypeResponseMessage(nickname, MessageType.GAME_TYPE_RESPONSE, true));
-                } catch (InvalidPlayerNumberException e) {
-                    logger.log(Level.SEVERE, MessagesHelper.ERROR_CREATING_GAME, e);
-                }
-            }
-        }
-    }*/
-
+    /**
+     * Enqueues the user
+     */
     private void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
         server.enqueueUser(nickname, selectedGameMode, selectedPlayersNumber, this);
     }
 
-    private void reconnectUser(String nickname /*or maybe User*/) {
+    /**
+     * Reconnects the user to his previous game
+     * @param nickname the user's nickname
+     */
+    private void reconnectUser(String nickname) {
         server.reconnectUser(nickname, endpoint);
         onGameReady();
     }
 
+    /**
+     * Creates a new user that then is added to the list of users on the server
+     * @param nickname the user's nickname
+     */
     private void logUser(String nickname) {
         this.nickname = Optional.of(nickname);
         User user = new User(nickname, endpoint);
         server.addUser(user);
     }
 
+    /**
+     * Called if the game is starting
+     * Removes this instance from the list of userHandlers on the server
+     * It's removed from the list of gameStartingListener, messageListener and disconnectionListener
+     */
     private void finish() {
         endpoint.removeDisconnectionListener(this);
         endpoint.removeMessageListener(this);

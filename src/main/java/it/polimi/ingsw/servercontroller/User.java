@@ -5,6 +5,10 @@ import it.polimi.ingsw.network.Message;
 
 import java.util.Optional;
 
+/**
+ * User
+ * Represents the individual users
+ */
 public class User {
     private final String nickname;
     private Optional<Endpoint> endpoint;

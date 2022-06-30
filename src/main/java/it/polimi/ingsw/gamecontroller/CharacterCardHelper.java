@@ -12,9 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Character Card Helper
+ * Classed used server-side for checking the validity of the parameters of each characterCard played by the player
+ */
 public class CharacterCardHelper {
 
-    //check server side
+    /**
+     * Checking if the parameters of character_1 are valid
+     * @param messageCard the CharacterCardDto
+     * @param parameters  the parameters
+     * @param islands the islandCards
+     * @return true if the parameters are valid, false otherwise
+     */
     public static boolean areParametersOkCharacter1(CharacterCardDto messageCard, CharacterCard serverCard, Object[] parameters, List<IslandCard> islands){
         if(parameters.length != 2)
             return false;
@@ -35,7 +45,14 @@ public class CharacterCardHelper {
         return false;
     }
 
-    //check server side
+    /**
+     * Checking if the parameters of character_7 are valid
+     * @param messageCard the CharacterCardDto
+     * @param parameters the parameters
+     * @param serverCard the characterCard
+     * @param player the expertPlayer
+     * @return true if the parameters are valid, false otherwise
+     */
     public static boolean areParametersOkCharacter7(CharacterCardDto messageCard, CharacterCard serverCard, Object[] parameters, ExpertPlayer player){
         if(parameters.length != 2)
             return false;
@@ -60,12 +77,23 @@ public class CharacterCardHelper {
         return true;
     }
 
-    //check client and server side
+    /**
+     * Checking if the parameters of character_9 are valid
+     * @param parameters the parameters
+     * @return true if the parameters are valid, false otherwise
+     */
     public static boolean areParametersOkCharacter9(Object[] parameters) {
         return (parameters.length == 1) && (parameters[0] instanceof PawnColor);
     }
 
-    //check server side
+    /**
+     * Checking if the parameters of character_11 are valid
+     * @param messageCard the characterCardDto
+     * @param serverCard the characterCard
+     * @param parameters the parameters
+     * @param player the expertPlayer
+     * @return true if the parameters are valid, false otherwise
+     */
     public static boolean areParametersOkCharacter11(CharacterCardDto messageCard, CharacterCard serverCard, Object[] parameters, ExpertPlayer player){
         if(parameters.length != 1)
             return false;
@@ -77,8 +105,6 @@ public class CharacterCardHelper {
             return false;
         if(!((CharacterCardWithSetUpAction)serverCard).getStudents().contains(parameters[0]))
             return false;
-        if(player.getBoard().getStudentsInDiningRoom((PawnColor) parameters[0]) >= ApplicationConstants.STUDENTS_IN_DININGROOM)
-            return false;
-        return true;
+        return player.getBoard().getStudentsInDiningRoom((PawnColor) parameters[0]) < ApplicationConstants.STUDENTS_IN_DININGROOM;
     }
 }

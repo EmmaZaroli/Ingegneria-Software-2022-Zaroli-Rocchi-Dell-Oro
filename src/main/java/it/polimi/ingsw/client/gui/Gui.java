@@ -208,14 +208,6 @@ public class Gui extends View implements Initializable {
     }
 
     @Override
-    public void genericMessage(String message) {
-        Platform.runLater(() -> {
-            sharedAlert = new Alert(Alert.AlertType.INFORMATION, message);
-            sharedAlert.showAndWait();
-        });
-    }
-
-    @Override
     public void changePhase(GamePhase phase) {
         if (message != null) {
             this.currentPhase = phase.name();

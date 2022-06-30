@@ -30,6 +30,12 @@ public class Endpoint {
     private Timer disconnectionTimer = new Timer();
     private final Timer pingTimer = new Timer();
 
+    /**
+     * Default constructor
+     * @param socket the socket
+     * @param serverSide true if the endpoint is for the server, false if it's for the client
+     * @throws IOException signals that an I/O exception of some sort has occurred
+     */
     public Endpoint(Socket socket, boolean serverSide) throws IOException {
         this.messageListeners = new LinkedList<>();
         this.disconnectionListeners = new LinkedList<>();
@@ -53,6 +59,10 @@ public class Endpoint {
         startPinging();
     }
 
+    /**
+     *
+     * @return true if the endpoint is online, false otherwise
+     */
     public boolean isOnline() {
         return isOnline;
     }

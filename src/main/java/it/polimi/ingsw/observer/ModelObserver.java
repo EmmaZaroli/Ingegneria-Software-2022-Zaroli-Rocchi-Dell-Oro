@@ -6,7 +6,8 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import java.util.List;
 
 /**
- * generic interface, supports the update method
+ * Generic interface, supports the update method
+ * This interface is implemented by the virtualView
  */
 public interface ModelObserver{
     void updateCharacterCard(CharacterCard message, Object[] parameters);

@@ -19,6 +19,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Main server class
+ */
 public class Server implements GameEndingListener{
     private final int port;
 
@@ -38,6 +41,11 @@ public class Server implements GameEndingListener{
 
     private final Map<String, User> allUsers = new HashMap<>();
 
+    /**
+     * Default constructor
+     * Checks if the port passed as parameter is valid. If it is, it starts the server
+     * @param args the port on which to run the server
+     */
     public static void main(String[] args) {
         if (args.length < 1 || !args[0].equals("--port") || !isNumeric(args[1])) {
             logger.log(Level.SEVERE, MessagesHelper.NO_PORT);
@@ -53,10 +61,20 @@ public class Server implements GameEndingListener{
         }
     }
 
+    /**
+     * Check if the string passed as a parameter is a number
+     * @param str the string
+     * @return true if the string is a number
+     */
     private static boolean isNumeric(String str) {
         return str.matches("\\d+");
     }
 
+    /**
+     * Server constructor
+     * Loads the previously saved games
+     * @param port the port on which to run the server
+     */
     public Server(int port) {
         this.port = port;
         this.normal2PlayersBuilder.gameMode(GameMode.NORMAL_MODE);
@@ -71,6 +89,12 @@ public class Server implements GameEndingListener{
         this.loadSavedGames();
     }
 
+    /**
+     * Starts the server
+     * Creates a server socket, bound to the specified port
+     * For every connection accepted, it creates a new UserHandler to which it passes the accepted socket and a reference to this instance
+     * @throws IOException signals that an I/O exception of some sort has occurred
+     */
     public void startServer() throws IOException {
         //It creates threads when necessary, otherwise it re-uses existing one when possible
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -98,6 +122,9 @@ public class Server implements GameEndingListener{
         serverSocket.close();
     }
 
+    /**
+     * Loads previously saved games
+     */
     private void loadSavedGames() {
         DataDumper dd = DataDumper.getInstance();
         List<Game> games = dd.getAllGames();
@@ -127,6 +154,9 @@ public class Server implements GameEndingListener{
         }
     }
 
+    /**
+     * Creates a gameHandler to which it passes the previous game
+     */
     private void loadGame(Game game, List<User> users, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
         for (User user : users) {
             builder.player(user);
@@ -161,12 +191,27 @@ public class Server implements GameEndingListener{
     }
 
     //User must be already present in allUser list
+
+    /**
+     * @param nickname the user's nickname
+     * @param selectedGameMode the chosen gameMode
+     * @param selectedPlayersNumber the selected number of players
+     * @param l the gameReadyListener
+     * @throws InvalidPlayerNumberException Signals that in GameControllerBuilder the specified PlayerCount does not match the actual number of player passed to the builder
+     */
     public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber, GameReadyListener l) throws InvalidPlayerNumberException {
         addGameStartingListener(l, selectedGameMode, selectedPlayersNumber);
         enqueueUser(nickname, selectedGameMode, selectedPlayersNumber);
     }
 
-    //User must be already present in allUser list
+    /**
+     * Enqueue the user to the lobby corresponding to the gameMode and number of players previously selected
+     * The user must be already present in the allUser list
+     * @param nickname the player's nickname
+     * @param selectedGameMode the selected gameMode
+     * @param selectedPlayersNumber the selected playersNumber
+     * @throws InvalidPlayerNumberException Signals that in GameControllerBuilder the specified PlayerCount does not match the actual number of player passed to the builder
+     */
     public synchronized void enqueueUser(String nickname, GameMode selectedGameMode, PlayersNumber selectedPlayersNumber) throws InvalidPlayerNumberException {
         Optional<User> optionalUser = getUser(nickname);
         if (optionalUser.isPresent()) {
@@ -185,6 +230,14 @@ public class Server implements GameEndingListener{
         }
     }
 
+    /**
+     * Adds the player to the lobby corresponding to the gameMode and number of players previously selected
+     * If the lobby is full, a new gameHandler is created and added to the list of running games. The lobby then is emptied
+     * @param user the user
+     * @param builder the gameHandlerBuilder corresponding to the gameMode and number of players previously selected
+     * @param runningGames the list of running games
+     * @throws InvalidPlayerNumberException Signals that in GameControllerBuilder the specified PlayerCount does not match the actual number of player passed to the builder
+     */
     private void enqueueUser(User user, GameHandlerBuilder builder, List<GameHandler> runningGames) throws InvalidPlayerNumberException {
         synchronized (builder) {
             synchronized (runningGames) {
@@ -201,6 +254,11 @@ public class Server implements GameEndingListener{
         }
     }
 
+    /**
+     * Checks if the chosen nickname is already used or if belongs to a previously disconnected player
+     * @param nickname the chosen nickname
+     * @return the nicknameStatus
+     */
     public NicknameStatus checkNicknameStatus(String nickname) {
         Optional<User> optionalUser = getUser(nickname);
         if (optionalUser.isEmpty())
@@ -212,6 +270,11 @@ public class Server implements GameEndingListener{
         }
     }
 
+    /**
+     * Returns the gameHandler in which appears the player with the wanted nickname
+     * @param nickname the player's nickname
+     * @return Optional<GameHandler>
+     */
     private Optional<GameHandler> getGameByPlayer(String nickname) {
         for (GameHandler gameHandler : normal2PlayersRunningGames) {
             if (gameHandler.containsUser(nickname))
@@ -232,6 +295,11 @@ public class Server implements GameEndingListener{
         return Optional.empty();
     }
 
+    /**
+     * Return the gameHandler associated with the game having the seek uuid
+     * @param uuid the uuid
+     * @return Optional<GameHandler>
+     */
     private Optional<GameHandler> getGame(UUID uuid) {
         synchronized (normal2PlayersRunningGames){
             for (GameHandler gameHandler : normal2PlayersRunningGames) {
@@ -260,8 +328,11 @@ public class Server implements GameEndingListener{
         return Optional.empty();
     }
 
-    //remove GameHandler specified by uuid
-    //if uuid is not present, it does nothing
+    /**
+     * Remove the gameHandler associated with the game that has the uuid passed as parameter
+     * If the uuid is not present, it does nothing
+     * @param uuid the game uuid
+     */
     private void removeGame(UUID uuid){
         synchronized (normal2PlayersRunningGames){
             normal2PlayersRunningGames.removeIf(gameHandler -> gameHandler.getGameId().equals(uuid));
@@ -285,27 +356,33 @@ public class Server implements GameEndingListener{
         }
     }
 
+    /**
+     * Adds a user to the map containing the players
+     * @param user the user to add
+     */
     public synchronized void addUser(User user) {
         synchronized (allUsers) {
             allUsers.put(user.getNickname(), user);
         }
     }
 
+    /**
+     * Check if a chosen nickname belongs already to another user
+     * @param nickname the nickname to verify
+     * @return Optional<User> if the nickname chosen belongs already to another user
+     */
     public Optional<User> getUser(String nickname) {
         synchronized (allUsers) {
             return Optional.ofNullable(allUsers.get(nickname));
         }
     }
 
-    public boolean containUser(String nickname) {
-        synchronized (allUsers) {
-            return allUsers.containsKey(nickname);
-        }
-    }
-
-    //try to remove a user
-    //user must not be in an active game
-    //return true if the removal is successfull, false if not (user does not exist or is in an active game)
+    /**
+     * Tries to remove a user
+     * The user must not be in an active game
+     * @param nickname the user's nickname
+     * @return true if the removal is successful, false if not (user does not exist or is in an active game)
+     */
     public synchronized boolean removeUser(String nickname) {
         Optional<User> user = getUser(nickname);
         if (user.isEmpty() || getGameByPlayer(nickname).isPresent())
@@ -328,12 +405,23 @@ public class Server implements GameEndingListener{
         return true;
     }
 
+    /**
+     * Removes from the userHandlers list the userHandler
+     * @param userHandler the userHandler to remove
+     */
     public void removeUserHandler(UserHandler userHandler) {
         synchronized (userHandlers){
             userHandlers.remove(userHandler);
         }
     }
 
+    /**
+     * If a game has ended, the corresponding gameHandler is remove from the list of running games
+     * If the users are still online, they are added to a new userHandler.
+     * If they are not, they are removed from the list of players.
+     * Finally, the game is removed from the saved games
+     * @param uuid the game uuid
+     */
     @Override
     public void onGameEnding(UUID uuid) {
         Optional<GameHandler> optionalGameHandler = getGame(uuid);
