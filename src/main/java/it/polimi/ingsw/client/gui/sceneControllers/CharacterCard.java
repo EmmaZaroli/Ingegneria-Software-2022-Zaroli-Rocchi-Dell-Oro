@@ -28,7 +28,8 @@ public class CharacterCard extends Pane {
 
     private Gui gui;
 
-    int cardIndex;
+    @FXML
+    private int index;
 
     private boolean isDragAndDropEnabled = false;
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
@@ -41,7 +42,7 @@ public class CharacterCard extends Pane {
     private GridPane students;
 
     public CharacterCard(@NamedArg("index") int index) {
-        this.cardIndex = index;
+        this.index = index;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/character-card.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -99,7 +100,7 @@ public class CharacterCard extends Pane {
                         }
                         case CHARACTER_TWO, CHARACTER_SIX, CHARACTER_EIGHT -> {
                             gui.genericMessage("You activated the Character.");
-                            gui.activateCharacter(cardIndex);
+                            gui.activateCharacter(index);
                         }
                         case CHARACTER_FOUR -> {
                             gui.setAdditionalMotherNatureMovement(2);
@@ -168,7 +169,7 @@ public class CharacterCard extends Pane {
                     case "Yellow" -> PawnColor.YELLOW;
                     default -> PawnColor.NONE;
                 };
-                if (!gui.activateCharacter(cardIndex, color)) {
+                if (!gui.activateCharacter(index, color)) {
                     gui.error("Error while activating the effect");
                 }
             } else {
@@ -207,7 +208,7 @@ public class CharacterCard extends Pane {
                     case "Yellow" -> PawnColor.YELLOW;
                     default -> PawnColor.NONE;
                 };
-                if (!gui.activateCharacter(cardIndex, color)) {
+                if (!gui.activateCharacter(index, color)) {
                     gui.error("Error while activating the effect");
                 }
             } else {
@@ -226,73 +227,73 @@ public class CharacterCard extends Pane {
                         double y = mouseEvent.getScreenY();
                         isDragAndDropEnabled = false;
                         if (isInRange(x, y, 158, 404)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(0).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(0).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 324, 317)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(1).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(1).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 482, 316)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(2).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(2).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 648, 319)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(3).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(3).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 814, 318)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(4).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(4).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 971, 324)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(5).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(5).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 323, 492)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(6).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(6).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 483, 491)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(7).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(7).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 640, 493)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(8).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(8).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 808, 493)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(9).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(9).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 973, 494)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(10).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(10).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 1132, 408)) {
-                            if (!gui.activateCharacter(cardIndex, color, gui.getIslands().get(11).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(11).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
@@ -356,7 +357,7 @@ public class CharacterCard extends Pane {
                                 default -> PawnColor.NONE;
                             };
 
-                            if (!gui.activateCharacter(cardIndex, fromCard, fromEntrance)) {
+                            if (!gui.activateCharacter(index, fromCard, fromEntrance)) {
                                 gui.error("Error while activating the effect");
                             }
                         }
