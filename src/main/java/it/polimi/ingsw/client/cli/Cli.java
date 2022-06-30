@@ -80,15 +80,13 @@ public class Cli extends View {
         String ip;
         int port;
 
-/*
         out.print("Please, insert the Server's ip address: ");
         ip = readLine();
         out.print("Select the Server's port number: ");
         port = Integer.parseInt(readLine());
-*/
 
-        ip = "127.0.0.1";
-        port = 24000;
+        //ip = "127.0.0.1";
+        //port = 24000;
 
 
         this.startConnection(ip, port);
@@ -258,7 +256,11 @@ public class Cli extends View {
             if (characterCard.isEmpty()) {
                 try {
                     int steps = Integer.parseInt(input);
-                    valid = this.sendMotherNatureSteps(steps);
+                    if (steps <= getMe().getDiscardPileHead().get().motherNatureMovement()) {
+                        valid = this.sendMotherNatureSteps(steps);
+                    } else {
+                        valid = false;
+                    }
                 } catch (NumberFormatException e) {
                     valid = false;
                 }
