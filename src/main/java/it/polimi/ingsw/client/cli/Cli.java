@@ -90,6 +90,7 @@ public class Cli extends View {
         //ip = "127.0.0.1";
         //port = 24000;
 
+
         this.startConnection(ip, port);
     }
 

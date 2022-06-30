@@ -7,6 +7,9 @@ import it.polimi.ingsw.utils.ApplicationConstants;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +32,8 @@ public class Endpoint {
 
     private Timer disconnectionTimer = new Timer();
     private final Timer pingTimer = new Timer();
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+
 
     /**
      * Default constructor
@@ -126,12 +131,15 @@ public class Endpoint {
             Message m = (Message) in.readObject();
             resetDisconnectionTimer();
             if (m.getType() != MessageType.PING) {
-                synchronized (messageListeners){
+                executor.submit(() -> {
                     List<MessageListener> temporaryList = new ArrayList<>(messageListeners);
                     for(MessageListener l : temporaryList){
                         l.onMessageReceived(m);
                     }
-                }
+                });
+            }
+            else{
+                //System.out.println("RECIVED PING");
             }
         } catch (Exception e) {
             disconnect(e.getMessage());
@@ -162,8 +170,13 @@ public class Endpoint {
             @Override
             public void run() {
                 sendMessage(new PingMessage(MessageType.PING));
+                //System.out.println("SEND PING");
             }
         }, ApplicationConstants.PING_PERIOD, ApplicationConstants.PING_PERIOD);
+    }
+
+    private void stopPinging(){
+        this.pingTimer.cancel();
     }
 
     /**
@@ -174,13 +187,12 @@ public class Endpoint {
         System.out.println("DISCONNECTION " + reason);
         isOnline = false;
         try {
+            this.stopPinging();
             this.receiverThread.stopThread();
             this.socket.close();
         } catch (IOException e) {
             logger.log(Level.SEVERE, MessagesHelper.ERROR_CLOSING_ENDPOINT, e);
         }
-
-
     }
 
     /**
