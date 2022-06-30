@@ -23,6 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A class representing a Caracter card
+ */
 public class CharacterCard extends Pane {
     private ViewCharacterCard characterCard;
 
@@ -41,6 +44,11 @@ public class CharacterCard extends Pane {
     @FXML
     private GridPane students;
 
+    /**
+     * Creates a card
+     *
+     * @param index the index of the card in the deck
+     */
     public CharacterCard(@NamedArg("index") int index) {
         this.index = index;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/character-card.fxml"));
@@ -54,10 +62,20 @@ public class CharacterCard extends Pane {
         }
     }
 
+    /**
+     * Sets a reference to the main application controller
+     *
+     * @param gui A reference to the main application controller
+     */
     public void setController(Gui gui) {
         this.gui = gui;
     }
 
+    /**
+     * Selects the image to load based on the card
+     *
+     * @param card The character to use when loading the image
+     */
     public void setCard(ViewCharacterCard card) {
         this.characterCard = card;
         Image image = switch (characterCard.getCharacter()) {
@@ -149,6 +167,9 @@ public class CharacterCard extends Pane {
         coin.setVisible(card.hasCoin());
     }
 
+    /**
+     * handles the effect card nine
+     */
     private void handleEffectNine() {
         Platform.runLater(() -> {
             List<ButtonType> buttons = new LinkedList<>();
@@ -178,6 +199,12 @@ public class CharacterCard extends Pane {
         });
     }
 
+    /**
+     * Returns a string with the name of the given color
+     *
+     * @param color The color to translate
+     * @return A string representing the color
+     */
     private String resolveColorString(PawnColor color) {
         return switch (color) {
             case RED -> "Red";
@@ -189,6 +216,9 @@ public class CharacterCard extends Pane {
         };
     }
 
+    /**
+     * Handles the effect linked to the character 11
+     */
     private void handleEffectEleven() {
         Platform.runLater(() -> {
             List<ButtonType> buttons = new LinkedList<>();
@@ -217,6 +247,14 @@ public class CharacterCard extends Pane {
         });
     }
 
+    /**
+     * Returns an eventHandler for the card ant position j
+     *
+     * @param character The character of the given card
+     * @param j         The index of the card in the deck
+     * @param color     The color of the selected pawn
+     * @return The eventHandler for the card
+     */
     private EventHandler<MouseEvent> getReleasedCallback(Character character, int j, PawnColor color) {
         return switch (character) {
             case CHARACTER_ONE -> new EventHandler<MouseEvent>() {
@@ -312,6 +350,9 @@ public class CharacterCard extends Pane {
         };
     }
 
+    /**
+     * Handles the effect of the character 7
+     */
     private void handleEffectSeven() {
         int i = 0;
         boolean shouldContinue = true;
@@ -369,6 +410,11 @@ public class CharacterCard extends Pane {
         }
     }
 
+    /**
+     * Checks if a point x, y is included in the square of edge 150 starting at startX, startY
+     *
+     * @return true if the point is included
+     */
     private boolean isInRange(double x, double y, int startX, int startY) {
         return x > startX && x < (startX + 150) && y > startY && y < (startY + 150);
     }

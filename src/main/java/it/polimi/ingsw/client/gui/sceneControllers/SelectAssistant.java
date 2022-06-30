@@ -21,6 +21,13 @@ public class SelectAssistant extends Dialog {
     @FXML
     private GridPane assistants;
 
+    /**
+     * Creates a modal to ask the user to select the assistantcard
+     *
+     * @param owner   The main window of the application
+     * @param deck    The deck of the player
+     * @param handler An handler to handle the return valueA
+     */
     public SelectAssistant(Window owner, List<AssistantCard> deck, AssistantCardEventHandler handler) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/it.polimi.ingsw.client.gui/markups/select-assistant.fxml"));

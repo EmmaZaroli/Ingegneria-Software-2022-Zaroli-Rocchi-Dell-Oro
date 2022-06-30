@@ -15,6 +15,9 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * a class to represent a schoolboard that supports drag and drop
+ */
 public class EditableSchoolBoard extends Pane {
     private Gui gui;
     private boolean isDragAndDropEnabled = false;
@@ -37,6 +40,11 @@ public class EditableSchoolBoard extends Pane {
     @FXML
     private ImageView tYellow;
 
+    /**
+     * Sets the player
+     *
+     * @param me The player owner of the schoolboard
+     */
     public void setPlayer(PlayerInfo me) {
         this.updateDinningRoom(me.getBoard().getDiningRoom());
         this.updateEntrance(me.getBoard().getEntrance());
@@ -48,6 +56,11 @@ public class EditableSchoolBoard extends Pane {
         tYellow.setVisible(me.getBoard().isThereProfessor(PawnColor.YELLOW));
     }
 
+    /**
+     * Updates the displayed entrance
+     *
+     * @param entrance Students to place in the entrance
+     */
     private void updateEntrance(List<PawnColor> entrance) {
         entranceGrid.getChildren().removeAll(entranceGrid.getChildren());
 
@@ -157,6 +170,12 @@ public class EditableSchoolBoard extends Pane {
         }
     }
 
+    /**
+     * Updates the displayed towers
+     *
+     * @param count Number of towers to display
+     * @param color Color of the towers
+     */
     private void updateTowers(int count, Tower color) {
         towers.setVgap(5);
         towers.setHgap(5);
@@ -272,6 +291,9 @@ public class EditableSchoolBoard extends Pane {
         }
     }
 
+    /**
+     * Returns the image of a pawn given its color
+     */
     private Image resolveImage(PawnColor p) {
         return switch (p) {
             case RED, NONE -> new Image("/it.polimi.ingsw.client.gui/assets/student_red.png");
@@ -282,22 +304,41 @@ public class EditableSchoolBoard extends Pane {
         };
     }
 
+    /**
+     * Enables the drag and drop
+     */
     public void enableDragAndDrop() {
         this.isDragAndDropEnabled = true;
     }
 
+    /**
+     * Disables the drag and drop
+     */
     public void disableDragAndDrop() {
         this.isDragAndDropEnabled = false;
     }
 
+    /**
+     * Sets a reference to the controller of the main application
+     *
+     * @param gui
+     */
     public void setController(Gui gui) {
         this.gui = gui;
     }
 
+    /**
+     * Checks if a point x, y is included in the square of edge 150 starting at startX, startY
+     *
+     * @return true if the point is included
+     */
     private boolean isInRange(double x, double y, int startX, int startY) {
         return x > startX && x < (startX + 150) && y > startY && y < (startY + 150);
     }
 
+    /**
+     * Creates an EditableSchoolBoard
+     */
     public EditableSchoolBoard() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/editable-schoolboard.fxml"));
         fxmlLoader.setRoot(this);
