@@ -69,15 +69,17 @@ public class TableController {
     public void fillClouds() throws FullCloudException {
         List<PawnColor> studentsDrawn = new LinkedList<>();
         int numberOfPlayers = table.getPlayersNumber() == PlayersNumber.TWO ? CLOUDS_STUDENTS_2_PLAYERS : CLOUDS_STUDENTS_3_PLAYERS;
-        for (CloudTile cloudTile : table.getCloudTiles()) {
+        /*for (CloudTile cloudTile : table.getCloudTiles()) {
             if (!table.takeStudentsFromCloud(cloudTile).isEmpty()) throw new FullCloudException();
-        }
+        }*/
         for (CloudTile cloud : table.getCloudTiles()) {
-            for (int i = 0; i < numberOfPlayers; i++) {
-                studentsDrawn.add(table.getBag().drawStudent());
+            if(cloud.getStudentsNumber() == 0) {
+                for (int i = 0; i < numberOfPlayers; i++) {
+                    studentsDrawn.add(table.getBag().drawStudent());
+                }
+                table.addStudents(cloud, studentsDrawn);
+                studentsDrawn.clear();
             }
-            table.addStudents(cloud, studentsDrawn);
-            studentsDrawn.clear();
         }
     }
 

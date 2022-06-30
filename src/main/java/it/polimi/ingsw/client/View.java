@@ -546,7 +546,7 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     public final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
-
+            System.out.println("PORT: "+s.getPort());
             this.endpoint = new Endpoint(s, false);
             this.endpoint.addMessageListener(this);
             this.endpoint.addDisconnectionListener(this);

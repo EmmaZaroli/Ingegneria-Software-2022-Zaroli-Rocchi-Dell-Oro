@@ -110,6 +110,7 @@ public class Server implements GameEndingListener{
             try {
                 Socket socket = serverSocket.accept();
                 //executor.submit(new UserHandler(socket, this));
+                System.out.println("New socket on port: " + socket.getPort());
                 UserHandler userHandler = new UserHandler(socket, this);
                 userHandlers.add(userHandler);
                 userHandler.start();
