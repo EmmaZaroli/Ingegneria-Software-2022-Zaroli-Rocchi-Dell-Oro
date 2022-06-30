@@ -83,6 +83,10 @@ public class GameHandler implements GameEndingListener {
     @Override
     public void onGameEnding(UUID uuid) {
         gameModel.removeGameEndingListener(this);
+        for(VirtualView view : virtualViews){
+            view.getClientHandler().ifPresent(e -> e.removeMessageListener(view));
+            view.getClientHandler().ifPresent(e -> e.removeDisconnectionListener(gameController));
+        }
         notifyGameEnding();
     }
 
