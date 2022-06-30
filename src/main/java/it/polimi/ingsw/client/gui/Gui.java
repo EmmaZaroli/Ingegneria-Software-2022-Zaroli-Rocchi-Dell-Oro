@@ -207,6 +207,13 @@ public class Gui extends View implements Initializable {
         this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
     }
 
+    public void genericMessage(String message) {
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, message);
+            sharedAlert.showAndWait();
+        });
+    }
+
     @Override
     public void changePhase(GamePhase phase) {
         if (message != null) {

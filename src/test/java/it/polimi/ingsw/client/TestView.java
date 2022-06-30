@@ -37,11 +37,6 @@ class TestView extends View {
     }
 
     @Override
-    public void genericMessage(String message) {
-
-    }
-
-    @Override
     public void changePhase(GamePhase phase) {
 
     }
