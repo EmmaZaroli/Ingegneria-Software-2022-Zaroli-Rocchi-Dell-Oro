@@ -70,9 +70,6 @@ public class ExpertGameController extends GameController {
             characters.remove(characters.get(numberCard));
         }
 
-        //TODO only for test
-        cards[0] = CharacterCardFactory.getCharacterCard(Character.CHARACTER_ELEVEN);
-        newEffects[0] = EffectFactory.getEffect(Character.CHARACTER_ELEVEN);
         getGame().setCharacterCards(cards);
         addEffects(newEffects);
     }
