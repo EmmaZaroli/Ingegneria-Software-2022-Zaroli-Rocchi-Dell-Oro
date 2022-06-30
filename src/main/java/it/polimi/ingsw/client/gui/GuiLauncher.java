@@ -12,6 +12,11 @@ public class GuiLauncher extends Application {
         launch(args);
     }
 
+    /**
+     * Starts the GUI
+     *
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         View view = new Gui(stage);

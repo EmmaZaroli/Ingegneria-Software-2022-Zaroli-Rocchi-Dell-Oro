@@ -11,12 +11,18 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A class representing a Cloud in the GUI
+ */
 public class Cloud extends Pane {
     @FXML
     private GridPane students;
 
     private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY, startingX, startingY;
 
+    /**
+     * Creates a Cloud
+     */
     public Cloud() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/cloud.fxml"));
         fxmlLoader.setRoot(this);
@@ -29,6 +35,11 @@ public class Cloud extends Pane {
         }
     }
 
+    /**
+     * Sets the students on the cloud
+     *
+     * @param students
+     */
     public void setStudents(List<PawnColor> students) {
         this.students.getChildren().removeAll(this.students.getChildren());
 

@@ -23,6 +23,11 @@ public class Island extends Pane {
 
     private int kind;
 
+    /**
+     * Creates an island
+     *
+     * @param kind
+     */
     public Island(@NamedArg("kind") int kind) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/island.fxml"));
         fxmlLoader.setRoot(this);
@@ -37,6 +42,9 @@ public class Island extends Pane {
         }
     }
 
+    /**
+     * Callback method to load an image based on the selected kind
+     */
     public void initialize() {
         if (kind == 0) {
             image.setImage(new Image("/it.polimi.ingsw.client.gui/assets/island1.png"));
@@ -49,6 +57,9 @@ public class Island extends Pane {
         }
     }
 
+    /**
+     * Sets the infos about this cloud
+     */
     public void setCloud(LinkedIslands island) {
         this.students.getChildren().removeAll(this.students.getChildren());
 

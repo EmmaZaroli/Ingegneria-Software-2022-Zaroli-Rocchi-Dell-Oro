@@ -130,10 +130,18 @@ public class Gui extends View implements Initializable {
 
     private String currentPhase, currentPlayer;
 
+    /**
+     * Creates a GUI with the given stage
+     */
     public Gui(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Loads a scene into the stage
+     *
+     * @param resourceName The name of the scene to load
+     */
     private void loadScene(String resourceName) {
         Platform.runLater(() -> {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
@@ -149,6 +157,9 @@ public class Gui extends View implements Initializable {
         });
     }
 
+    /**
+     * Callback methods to start the application
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         print();
@@ -207,6 +218,11 @@ public class Gui extends View implements Initializable {
         this.loadScene("/it.polimi.ingsw.client.gui/markups/ask-game-settings.fxml");
     }
 
+    /**
+     * Shows an alert with a generic message
+     *
+     * @param message
+     */
     public void genericMessage(String message) {
         Platform.runLater(() -> {
             sharedAlert = new Alert(Alert.AlertType.INFORMATION, message);
@@ -222,6 +238,9 @@ public class Gui extends View implements Initializable {
         }
     }
 
+    /**
+     * Sets the additional steps mother nature can do after an effect has been activated
+     */
     public void setAdditionalMotherNatureMovement(int value) {
         this.additionalMotherNatureMovement = 2;
     }
@@ -257,6 +276,9 @@ public class Gui extends View implements Initializable {
         });
     }
 
+    /**
+     * Proxy method to View's canActivateCharacterCard
+     */
     public boolean canActivateCharacterProxy(ViewCharacterCard card) {
         return canActivateCharacter(card);
     }
@@ -537,6 +559,9 @@ public class Gui extends View implements Initializable {
         });
     }
 
+    /**
+     * Displays the bridges based on the current game status
+     */
     private void updateBridges() {
         if (bridge01 != null) {
             bridge01.setVisible(getIslands().get(0).isConnectedWithNext());
@@ -602,13 +627,22 @@ public class Gui extends View implements Initializable {
         });
     }
 
-    //TODO controls using already defined methods
+    /**
+     * Tries to estabilsh a connection with the server
+     *
+     * @param event The user-generated event
+     */
     public void tryConnect(ActionEvent event) {
         TextField ip = (TextField) stage.getScene().lookup("#ip");
         TextField port = (TextField) stage.getScene().lookup("#port");
         startConnection(ip.getText(), Integer.parseInt(port.getText()));
     }
 
+    /**
+     * Sends the nickname to the server
+     *
+     * @param actionEvent The user-generated event
+     */
     public void sendNickname(ActionEvent actionEvent) {
         TextField nickname = (TextField) stage.getScene().lookup("#nickname");
         if (!nickname.equals("")) {
@@ -616,6 +650,11 @@ public class Gui extends View implements Initializable {
         }
     }
 
+    /**
+     * Sends game settings
+     *
+     * @param event The user-generated event
+     */
     public void sendSettings(ActionEvent event) {
         RadioButton twoPlayers = (RadioButton) stage.getScene().lookup("#twoPlayers");
         RadioButton threePlayers = (RadioButton) stage.getScene().lookup("#threePlayers");
@@ -629,29 +668,44 @@ public class Gui extends View implements Initializable {
         }
     }
 
+    /**
+     * Moves a pawn to the schoolboard
+     */
     public void sendToBoard(PawnColor c) {
         if (!sendStudentMoveOnBoard(c)) {
             error("Error while moving the student");
         }
     }
 
+    /**
+     * Moves a pawn to the island of index index
+     */
     public void sendToIsland(PawnColor c, int index) {
         if (!sendStudentMoveOnIsland(c, index)) {
             error("Error while moving student");
         }
     }
 
+    /**
+     * Activates the effect of the card of given index
+     *
+     * @return true if the activation has been done
+     */
     public boolean activateCharacter(int card, Object... params) {
         return sendCharacterCard(card, params);
     }
 
-    //<editor-fold desc="Bindings">
+    /**
+     * @return true if the game is for three players
+     */
     public boolean getIsThreePlayers() {
         return this.getOpponents().size() == 2;
     }
 
+    /**
+     * @return true if the game is in expert mode
+     */
     public boolean getIsExpertGame() {
         return isExpertGame();
     }
-    //</editor-fold>
 }

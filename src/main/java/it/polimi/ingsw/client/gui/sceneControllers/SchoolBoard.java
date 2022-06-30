@@ -41,6 +41,11 @@ public class SchoolBoard extends Pane {
     @FXML
     private ImageView tYellow;
 
+    /**
+     * Sets the player
+     *
+     * @param opponent The player owner of the schoolboard
+     */
     public void setPlayer(PlayerInfo opponent) {
         this.name.setText(opponent.getNickname());
         this.coins.setText("                                                                                              coins: " + opponent.getCoins());
@@ -54,11 +59,19 @@ public class SchoolBoard extends Pane {
         tYellow.setVisible(opponent.getBoard().isThereProfessor(PawnColor.YELLOW));
     }
 
+    /**
+     * Sets whether the game is in expert mode
+     *
+     * @param isExpert
+     */
     public void setIsExpert(boolean isExpert) {
         this.isExpertGame = isExpert;
         coins.setVisible(isExpert);
     }
 
+    /**
+     * Updates the displayed entrance
+     */
     private void updateEntrance(List<PawnColor> entrance) {
         entranceGrid.getChildren().removeAll(entranceGrid.getChildren());
         entranceGrid.setHgap(7);
@@ -87,6 +100,9 @@ public class SchoolBoard extends Pane {
         }
     }
 
+    /**
+     * Updates the displayed towers
+     */
     private void updateTowers(int count, Tower color) {
         towers.getChildren().removeAll(towers.getChildren());
         towers.setVgap(5);
@@ -117,6 +133,9 @@ public class SchoolBoard extends Pane {
         }
     }
 
+    /**
+     * Updates the displayed dinning room
+     */
     private void updateDinningRoom(DiningRoomDto opponent) {
         board.getChildren().removeAll(board.getChildren());
 
@@ -202,6 +221,9 @@ public class SchoolBoard extends Pane {
         }
     }
 
+    /**
+     * Creates a new schoolboard
+     */
     public SchoolBoard() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/it.polimi.ingsw.client.gui/markups/components/schoolboard.fxml"));
         fxmlLoader.setRoot(this);
