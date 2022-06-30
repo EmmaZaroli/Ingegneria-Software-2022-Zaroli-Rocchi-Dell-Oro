@@ -2,9 +2,7 @@
 
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
     <StackPane>
         <ImageView
@@ -12,12 +10,14 @@
                 fitHeight="189"
                 fx:id="imageView">
         </ImageView>
-        <ImageView
-                fitWidth="25"
-                fitHeight="25"
-                fx:id="coin">
-            <Image url="/it.polimi.ingsw.client.gui/assets/coin.png"/>
-        </ImageView>
+        <VBox>
+            <ImageView
+                    fitWidth="25"
+                    fitHeight="25"
+                    fx:id="coin">
+                <Image url="/it.polimi.ingsw.client.gui/assets/coin.png"/>
+            </ImageView>
+        </VBox>
         <GridPane fx:id="students" style="-fx-padding: 40 40 40 40" hgap="5" vgap="5"/>
     </StackPane>
 </fx:root>

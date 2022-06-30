@@ -177,6 +177,7 @@ public class EditableSchoolBoard extends Pane {
      * @param color Color of the towers
      */
     private void updateTowers(int count, Tower color) {
+        towers.getChildren().removeAll(towers.getChildren());
         towers.setVgap(5);
         towers.setHgap(5);
 
