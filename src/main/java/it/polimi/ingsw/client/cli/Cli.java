@@ -80,12 +80,13 @@ public class Cli extends View {
         String ip;
         int port;
 
-/*
+        /*
         out.print("Please, insert the Server's ip address: ");
         ip = readLine();
         out.print("Select the Server's port number: ");
         port = Integer.parseInt(readLine());
-*/
+
+         */
 
         ip = "127.0.0.1";
         port = 24000;
@@ -508,7 +509,7 @@ public class Cli extends View {
                 System.out.println("Choose Island index: ");
                 int islandIndex = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());
                 if (islandIndex != 13 && islandIndex != 12) {
-                    parameters[1] = getIslands().get((islandIndex - 1) % 12).getIsland().getUuid();
+                    parameters[1] = getIslands().get(getMainIsland(islandIndex)).getIsland().getUuid();
                     valid = true;
                 }
                 if (!valid) error("invalid Island index selected!");

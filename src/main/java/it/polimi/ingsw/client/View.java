@@ -639,7 +639,7 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     }
 
     //TODO check if this works
-    private int getMainIsland(int index){
+    protected int getMainIsland(int index){
         int count=0;
         int i=0;
         while(index!=count){
