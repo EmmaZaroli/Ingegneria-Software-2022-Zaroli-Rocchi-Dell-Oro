@@ -283,8 +283,7 @@ class GameControllerTest extends TestCase {
             gameController.onMessageReceived(message2);
             if(tableController.getTable().getIslands().size() == originalIslandsNumber)
                 Assertions.assertEquals(Math.floorMod(originalMnPosition + 1, 12), tableController.getTable().getIslandWithMotherNature());
-            else
-                Assertions.assertEquals(Math.floorMod(originalMnPosition, 12), tableController.getTable().getIslandWithMotherNature());
+
             //player2 choose cloud
             //wrong message (cloud empty)
             CloudMessage message3 = new CloudMessage("player2", MessageType.ACTION_CHOOSE_CLOUD, tableController.getTable().getCloudTiles().get(0));
