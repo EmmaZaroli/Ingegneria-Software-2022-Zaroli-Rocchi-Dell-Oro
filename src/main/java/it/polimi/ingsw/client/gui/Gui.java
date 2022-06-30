@@ -306,10 +306,10 @@ public class Gui extends View implements Initializable {
                 public void handle(MouseEvent mouseEvent) {
                     if (isChooseCloud) {
                         if (getClouds().size() < 2 || getClouds().get(1).getStudents().size() < 0) {
-                            error("You cannot select an empty island");
+                            error("You cannot select an empty cloud");
                         } else {
                             if (!sendCloudChoice(1)) {
-                                error("Error while selecting the island");
+                                error("Error while selecting the cloud");
                             } else {
                                 isChooseCloud = false;
                             }
@@ -324,10 +324,10 @@ public class Gui extends View implements Initializable {
                 public void handle(MouseEvent mouseEvent) {
                     if (isChooseCloud) {
                         if (getClouds().size() < 3 || getClouds().get(2).getStudents().size() < 0) {
-                            error("You cannot select an empty island");
+                            error("You cannot select an empty cloud");
                         } else {
                             if (!sendCloudChoice(2)) {
-                                error("Error while selecting the island");
+                                error("Error while selecting the cloud");
                             } else {
                                 isChooseCloud = false;
                             }

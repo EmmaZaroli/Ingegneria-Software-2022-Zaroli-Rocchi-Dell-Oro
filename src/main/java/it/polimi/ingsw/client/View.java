@@ -27,7 +27,7 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     private PlayerInfo me;
     private ArrayList<CloudTileDto> clouds;
     private int tableCoins;
-    private List<LinkedIslands> islands;
+    private final List<LinkedIslands> islands;
     private String currentPlayer;
     private List<ViewCharacterCard> characterCards;
     private ExpertParameters expertParameters;
@@ -36,6 +36,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     private String error;
     private Endpoint endpoint;
 
+    /**
+     * Default Constructor
+     */
     protected View() {
         this.opponents = new LinkedList<>();
         this.me = new PlayerInfo();
@@ -142,6 +145,11 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
 
     //</editor-fold>
 
+    /**
+     * Calls the method corresponding to the type of message arrived
+     * The nickname within the message is of the current player
+     * @param message the incoming message
+     */
     @Override
     public void onMessageReceived(Message message) {
         if (message instanceof NicknameResponseMessage nicknameResponseMessage) handleMessage(nicknameResponseMessage);
@@ -165,6 +173,10 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     }
 
     //<editor-fold desc="Message handlers">
+
+    /**
+     * Notify the player the nickname's result
+     */
     private void handleMessage(NicknameResponseMessage message) {
         switch (message.getNicknameStatus()) {
             case FREE -> {
@@ -183,24 +195,31 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Notifies the player that the server is waiting for a move
+     */
     private void handleMessage(MoveStudentMessage message){
         if(message.getNickname().equals(getMe().getNickname())) {
-            if(me.isCanPlayThisRound())
-                if(areEnoughPlayers)
-                    askAction();
+            if(me.isCanPlayThisRound() && areEnoughPlayers)
+                askAction();
         }
     }
 
+    /**
+     * Asks the player which assistantCard to play
+     */
     private void handleMessage(GetDeckMessage message) {
         if (message.getNickname().equals(getMe().getNickname())) {
             me = me.with(message.getDeck());
             this.currentPhase = GamePhase.PLANNING;
-            if(me.isCanPlayThisRound())
-                if(areEnoughPlayers)
-                    this.askAssistantCard(message.getDeck());
+            if(me.isCanPlayThisRound() && areEnoughPlayers)
+                this.askAssistantCard(message.getDeck());
         }
     }
 
+    /**
+     * Prints the result of the login
+     */
     private void handleMessage(GametypeResponseMessage message) {
         if (message.isOk()) {
             this.printEnqueuedMessage();
@@ -211,6 +230,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Assigns the gameMessage attributes to this instance's attributes
+     */
     private void handleMessage(GameMessage message) {
             GameDto game = message.getGame();
             if(message.getType() == MessageType.GAME_STARTING)
@@ -249,6 +271,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
 
     }
 
+    /**
+     * Modify the gamePhase
+     */
     private void handleMessage(ChangedPhaseMessage message) {
         if((currentPhase == GamePhase.ACTION_END
                 && message.getNewPhase() == GamePhase.PLANNING)
@@ -273,6 +298,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         if(currentPhase.equals(GamePhase.ACTION_END)) resetCharacterCards();
     }
 
+    /**
+     * In the Action_End gamePhase, the characterCards on the table are set as not active
+     */
     private void resetCharacterCards(){
         for(int i=0;i<getCharacterCards().size();i++){
             if(getCharacterCards().get(i).isActive()){
@@ -284,6 +312,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Changed player
+     */
     private void handleMessage(ChangedPlayerMessage message) {
         currentPlayer = message.getNickname();
         if (areEnoughPlayers)
@@ -293,6 +324,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Error message is printed
+     */
     private void handleMessage(ErrorMessage message) {
         if (message.getNickname().equals(getMe().getNickname())) {
             error = message.getError();
@@ -302,6 +336,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Depending on the gamePhase, asks the player to perform a determined action
+     */
     private void askAction() {
         if (currentPhase.equals(GamePhase.ACTION_MOVE_STUDENTS)) askStudents();
         if (currentPhase.equals(GamePhase.ACTION_MOVE_MOTHER_NATURE)) askMotherNatureSteps();
@@ -309,6 +346,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     }
 
 
+    /**
+     * The assistantCard played is removed from the deck of the currentPlayer
+     */
     private void handleMessage(AssistantPlayedMessage message) {
         if (message.getNickname().equals(me.getNickname())) {
             this.me = this.me.with(Optional.of(message.getAssistantCard()));
@@ -327,6 +367,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * The cloudTile corresponding to the modified cloudTile in the message is updated
+     */
     private void handleMessage(CloudMessage message) {
         Optional<Integer> cloudIndex = getCloudIndex(message.getCloud().getUuid());
         if (cloudIndex.isPresent()) {
@@ -337,6 +380,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * The schoolBoard corresponding to the modified schoolBoard in the message is updated
+     */
     private void handleMessage(SchoolBoardMessage message) {
         if(message.getSchoolBoard().getUuid().equals(getMe().getBoard().getUuid()))
             this.me = this.me.with(message.getSchoolBoard());
@@ -352,6 +398,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
             print();
     }
 
+    /**
+     * The islandCard corresponding to the modified islandCard in the message is updated
+     */
     private void handleMessage(IslandMessage message) {
         updateIsland(message.getIsland());
         if (areEnoughPlayers)
@@ -392,6 +441,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return res;
     }
 
+    /**
+     * Updates the number of coins belonging to the table or to the player (based on the content of the message)
+     */
     private void handleMessage(CoinMessage message) {
         if(!message.isOnTable()){
             if (message.getNickname().equals(me.getNickname())) {
@@ -413,7 +465,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
             print();
     }
 
-    //for every character card, set if it can be activated or not
+    /**
+     * for every character card, set if it can be activated or not
+     */
     private void checkCharacterCardActivable(){
         if(expertParameters.isAlreadyActivateCharacterCard()){
             for(int i = 0; i < characterCards.size(); i++){
@@ -433,6 +487,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Updates the characterCard corresponding to the one within the message
+     */
     private void handleMessage(CharacterCardMessage message) {
         CharacterCardDto newCharacterCard = message.getCharacterCard();
         for (int i = 0; i < characterCards.size(); i++) {
@@ -451,6 +508,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
             print();
     }
 
+    /**
+     * Updates ExpertParameters
+     */
     private void handleMessage(ExpertParametersMessage message) {
         ExpertParametersDto newParameters = message.getExpertParameters();
         expertParameters = expertParameters.withHasAlreadyActivateCharacterCard(newParameters.hasAlreadyActivateCharacterCard());
@@ -466,6 +526,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Prints win,lose or draw based on the content of the message
+     */
     private void handleMessage(GameOverMessage message) {
         if (message.getWinners().contains(me.getNickname())) {
             if (message.getWinners().size() == 1)
@@ -491,6 +554,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Update the connection state
+     */
     private void handleMessage(ConnectionMessage message) {
         switch (message.getType()) {
             case IS_ONLINE -> playerOnline(message.getNickname(), true);
@@ -501,6 +567,9 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Update the connection state of a player
+     */
     private void playerOnline(String nickname, boolean isOnline) {
         Optional<Integer> playerIndex = getOpponentIndex(nickname);
         if (playerIndex.isPresent()) {
@@ -538,11 +607,15 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
     //</editor-fold>
 
     //<editor-fold desc="Presentation logic">
+
     public void start() {
         this.printWelcomeMessage();
         this.askServerInfo();
     }
 
+    /**
+     * Creates a new socket bound to the chosen ip and port
+     */
     public final void startConnection(String ipAddress, int port) {
         try {
             Socket s = new Socket(ipAddress, port);
@@ -557,11 +630,17 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         }
     }
 
+    /**
+     * Sends the server the chosen nickname
+     */
     public final void sendPlayerNickname(String nickname) {
         Message message = new NicknameProposalMessage(nickname);
         endpoint.sendMessage(message);
     }
 
+    /**
+     * Sends the server the gameMode and player's Number chosen by the player
+     */
     protected final void sendGameSettings(PlayersNumber playersNumber, GameMode gameMode) {
         Message message = new GametypeRequestMessage(
                 me.getNickname(),
@@ -570,6 +649,12 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         this.isExpertGame = (gameMode == GameMode.EXPERT_MODE);
     }
 
+    /**
+     * Checks if the number of motherNature steps is valid
+     * If it is, then it sends the server the number of motherNature steps
+     * @param steps mother nature steps
+     * @return false if the number is not valid, true otherwise
+     */
     protected final boolean sendMotherNatureSteps(int steps) {
         if(steps<=0) return false;
         if ((steps > getMe().getDiscardPileHead().get().motherNatureMovement() + expertParameters.getMotherNatureExtraMovements()) && !isExpertGame)
@@ -580,15 +665,14 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return true;
     }
 
+    /**
+     * Checks if the characterCard's index is valid and if it was not played by another player
+     * If everything is ok, its sent to the server
+     */
     protected final boolean sendAssistantCard(int cardIndex) {
         if (cardIndex < 0 || cardIndex >= me.getDeck().size()) {
             return false;
         }
-        /*
-        for(PlayerInfo opponent : getOpponents()){
-            if(opponent.getDiscardPileHead().isPresent() && opponent.isFromActualTurn() && opponent.getDiscardPileHead().get().value() == getMe().getDeck().get(cardIndex).value() && getMe().getDeck().size()!=1)
-                return false;
-        }*/
         if(!canPlayAssistant(getMe().getDeck().get(cardIndex)))
             return false;
         AssistantCard assistantCard = me.getDeck().get(cardIndex);
@@ -597,6 +681,10 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return true;
     }
 
+    /**
+     *
+     * @return true if the assistant played was not played by another player
+     */
     private boolean canPlayAssistant(AssistantCard assistant) {
         //If assistant is different from every other played assistantCard
         if (isAssistantDifferentFromOthers(assistant)) return true;
@@ -619,6 +707,10 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return true;
     }
 
+    /**
+     * Sends the student to move on the schoolBoard to the server
+     * @return true if the pawnColor selected is in the entrance and its dining row is not full
+     */
     protected final boolean sendStudentMoveOnBoard(PawnColor student) {
         if(me.getBoard().getStudentsInEntrance(student) < 1)
             return false;
@@ -629,6 +721,10 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return true;
     }
 
+    /**
+     * Sends the student and the islandCard
+     * @return true if the parameters are valid
+     */
     protected final boolean sendStudentMoveOnIsland(PawnColor student, int islandIndex) {
         if(me.getBoard().getStudentsInEntrance(student) < 1)
             return false;
@@ -638,7 +734,10 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return true;
     }
 
-    //TODO check if this works
+    /**
+     * @param index the index chose by the player
+     * @return the correct index of an island, excluding the one who are connected
+     */
     protected int getMainIsland(int index){
         int count=0;
         int i=0;
@@ -650,6 +749,10 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         return i;
     }
 
+    /**
+     * Sends the cloudTile
+     * @return true if the cloudIndex is valid and the chosen cloudTile is not already empty
+     */
     protected final boolean sendCloudChoice(int cloudIndex) {
         if (cloudIndex < 0 || cloudIndex >= getClouds().size())
             return false;
