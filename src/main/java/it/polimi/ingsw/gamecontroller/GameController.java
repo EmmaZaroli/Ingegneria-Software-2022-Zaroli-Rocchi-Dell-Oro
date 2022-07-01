@@ -73,7 +73,7 @@ public class GameController implements DisconnectionListener, MessageListener {
      * @param message the incoming message
      * @throws WrongPlayerException if the message is not from the current player
      */
-    private void checkMessage(Message message) throws WrongPlayerException {
+    protected void checkMessage(Message message) throws WrongPlayerException {
         if (!message.getNickname().equals(game.getPlayers()[game.getCurrentPlayer()].getNickname())) {
             throw new WrongPlayerException();
         }

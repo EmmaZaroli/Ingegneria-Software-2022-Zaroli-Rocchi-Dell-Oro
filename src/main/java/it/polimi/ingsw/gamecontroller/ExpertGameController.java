@@ -9,6 +9,8 @@ import it.polimi.ingsw.model.enums.PawnColor;
 import it.polimi.ingsw.network.Message;
 import it.polimi.ingsw.network.MessageType;
 import it.polimi.ingsw.network.messages.CharacterCardMessage;
+import it.polimi.ingsw.network.messages.CloudMessage;
+import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.persistency.DataDumper;
 import it.polimi.ingsw.utils.ApplicationConstants;
 import it.polimi.ingsw.utils.RandomHelper;
@@ -81,22 +83,29 @@ public class ExpertGameController extends GameController {
      */
     @Override
     public void onMessageReceived(Message message) {
-        if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
-            CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
-            Optional<Integer> cardIndex = isCardOnTable(card);
-            if(cardIndex.isPresent()) {
-                int index = cardIndex.get();
-                if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message, index)) {
-                    activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
+        synchronized (game){
+            try {
+                checkMessage(message);
+                if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {
+                    CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();
+                    Optional<Integer> cardIndex = isCardOnTable(card);
+                    if(cardIndex.isPresent()) {
+                        int index = cardIndex.get();
+                        if (canActivateCharacterAbility(index) && areParametersOk((CharacterCardMessage) message, index)) {
+                            activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());
+                        } else {
+                            logger.log(Level.WARNING, "Incorrect Character Card parameters");
+                        }
+                    }
+                    else{
+                        logger.log(Level.WARNING,"Character Card not found");
+                    }
                 } else {
-                    logger.log(Level.WARNING, "Incorrect Character Card parameters");
+                    super.onMessageReceived(message);
                 }
+            } catch (WrongPlayerException e) {
+                logger.log(Level.WARNING,"",e);
             }
-            else{
-                logger.log(Level.WARNING,"Character Card not found");
-            }
-        } else {
-            super.onMessageReceived(message);
         }
     }
 
