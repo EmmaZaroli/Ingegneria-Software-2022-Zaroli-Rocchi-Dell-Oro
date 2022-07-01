@@ -37,7 +37,7 @@ java -jar Server.jar --port <port>
 java -jar Client.jar [--cli]
 ```
 
-Omitting the argument --cli will start the GUI version of the client.
+Omitting the argument --cli will start the GUI version of the client.  
 Please, note that the cli supports Linux and MacOS only.
 
 ## Tests coverage report
