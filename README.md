@@ -12,36 +12,46 @@ Number: GC10
 
 ## Development status
 
-| Feature        | Status |
-| -------------- | ------ |
-| Basic rules    | :x:    |
-| Complete rules | :x:    |
-| CLI            | :x:    |
-| GUI            | :x:    |
-| Socket         | :x:    |
-| Multiple games | :x:    |
-| Persistence    | :x:    |
-| Disconnections | :x:    |
+| Feature        | Status             |
+| -------------- | ------------------ |
+| Basic rules    | :white_check_mark: |
+| Complete rules | :white_check_mark: |
+| CLI            | :white_check_mark: |
+| GUI            | :white_check_mark: |
+| Socket         | :white_check_mark: |
+| Multiple games | :white_check_mark: |
+| Persistence    | :white_check_mark: |
+| Disconnections | :white_check_mark: |
+
+## Running the Applications
+
+### Server
+
+'''
+java -jar Server.jar --port <\port\>
+'''
+
+### Client
+
+'''
+java -jar Client.jar [--cli]
+'''
+
+Omitting the argument --cli will start the GUI version of the client
+
+## Tests coverage report
+
+For a complete report, please refer to the [full data](Deliverables/Final/Testing%20Report) in the deliverables folder
+
+![](Deliverables/Final/High%20level%20coverage%20data.png)
 
 ## Design documents
 
-### UML class diagrams
+Design documents are stored in the [Deliverables](Deliverables) folder. JavaDoc documents are also available.
 
-[Model - Initial UML](Deliverables/UML/20220315%20-%20Model%20initial.png) First lab revision  
-[Model - UML rev 2](Deliverables/UML/20220322%20-%20Model%20rev%202.png) Second lab revision  
-[Model and controller draft](Deliverables/UML/20220328%20-%20Model%20for%20peer%20review.png) Submitted for peer review  
-[Server](Deliverables/UML/20220502%20-%20Server%20for%20peer%20review.png) Submitted for peer review
+## Additional tools used
 
-### Protocol
-
-[Protocol design specification](Deliverables/Protocol_design_specifications.pdf) Submitted for peer review
-
-### Tests coverage report
-
-Tests are automatically run by a GitHub action  
-[Test coverage report](Deliverables/Report%20Test) Last update: april 3rd
-
-## Peer reviews
-
-[GC20's class diagram review](Deliverables/Peer%20Review/First-Peer-Review.docx)  
-[GC20's network protocol review](Deliverables/Peer%20Review/Second-peer-review.pdf)
+- **SonarLint** To increase code quality and identify code smells
+- **SaveActions** To format and beautify our code in a standardized manner
+- **Metrics reloaded** To calculate code metrics and identify hard-to-maintain code
+- **GitHub Actions** To automatically run unit tests at every push
