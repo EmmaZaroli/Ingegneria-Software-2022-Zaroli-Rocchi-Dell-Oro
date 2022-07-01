@@ -14,6 +14,8 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * a class to represent a schoolboard that supports drag and drop
@@ -348,8 +350,7 @@ public class EditableSchoolBoard extends Pane {
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
-            exception.printStackTrace();
-            throw new RuntimeException(exception);
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, "Error in EditableSchoolBoard", exception);
         }
     }
 }

@@ -14,6 +14,8 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SchoolBoard extends Pane {
     private PlayerInfo player;
@@ -232,8 +234,7 @@ public class SchoolBoard extends Pane {
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
-            exception.printStackTrace();
-            throw new RuntimeException(exception);
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, "Error in Schoolboard", exception);
         }
     }
 }

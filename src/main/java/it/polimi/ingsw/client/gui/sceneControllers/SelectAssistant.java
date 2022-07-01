@@ -16,6 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Window;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SelectAssistant extends Dialog {
     @FXML
@@ -41,8 +43,7 @@ public class SelectAssistant extends Dialog {
             DialogPane pane = loader.load();
             setDialogPane(pane);
         } catch (Exception e) {
-            //TODO
-            e.printStackTrace();
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, "Error in SelectAssistant", e);
         }
 
         int row = 0;
