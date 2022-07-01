@@ -89,10 +89,10 @@ public class CharacterCard extends Pane {
             case CHARACTER_ELEVEN -> new Image("/it.polimi.ingsw.client.gui/assets/character11.jpg");
         };
 
-        students.getChildren().removeAll(students.getChildren());
-
         int column = 0;
         int row = 1;
+
+        this.students.getChildren().removeAll(this.students.getChildren());
 
         for (int i = 0; i < card.getStudents().size(); i++) {
             String basePath = "/it.polimi.ingsw.client.gui/assets/student_";
@@ -105,11 +105,11 @@ public class CharacterCard extends Pane {
                 case NONE -> "none.png";
             };
             Image img = new Image(basePath + path);
-            ImageView imageView = new ImageView(img);
-            imageView.setFitHeight(25);
-            imageView.setFitWidth(25);
+            ImageView iv = new ImageView(img);
+            iv.setFitHeight(25);
+            iv.setFitWidth(25);
 
-            imageView.setOnMousePressed(mouseEvent -> {
+            iv.setOnMousePressed(mouseEvent -> {
                 if (isDragAndDropEnabled) {
                     orgSceneX = mouseEvent.getSceneX();
                     orgSceneY = mouseEvent.getSceneY();
@@ -120,20 +120,20 @@ public class CharacterCard extends Pane {
 
             final int j = i;
 
-            imageView.setOnMouseDragged(mouseEvent -> {
+            iv.setOnMouseDragged(mouseEvent -> {
                 if (isDragAndDropEnabled) {
                     double offsetX = mouseEvent.getSceneX() - orgSceneX;
                     double offsetY = mouseEvent.getSceneY() - orgSceneY;
                     double newTranslateX = orgTranslateX + offsetX;
                     double newTranslateY = orgTranslateY + offsetY;
 
-                    imageView.setTranslateX(newTranslateX);
-                    imageView.setTranslateY(newTranslateY);
+                    iv.setTranslateX(newTranslateX);
+                    iv.setTranslateY(newTranslateY);
                 }
             });
 
-            imageView.setOnMouseReleased(getReleasedCallback(card.getCharacter(), i, card.getStudents().get(i)));
-            this.students.add(imageView, column, row);
+            iv.setOnMouseReleased(getReleasedCallback(card.getCharacter(), i, card.getStudents().get(i)));
+            this.students.add(iv, column, row);
             column++;
             if (column == 2) {
                 row++;
