@@ -47,10 +47,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    72,7%
+    73,3%
   </span>
   <span class="absValue">
-    (229/315)
+    (231/315)
   </span>
 </td>
 </tr>
@@ -123,10 +123,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    71,8%
+    72,4%
   </span>
   <span class="absValue">
-    (245/341)
+    (247/341)
   </span>
 </td>
 </tr>
@@ -212,7 +212,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">73</i>&nbsp;     * @param message the incoming message
 <i class="no-highlight">74</i>&nbsp;     * @throws WrongPlayerException if the message is not from the current player
 <i class="no-highlight">75</i>&nbsp;     */
-<i class="no-highlight">76</i>&nbsp;    private void checkMessage(Message message) throws WrongPlayerException {
+<i class="no-highlight">76</i>&nbsp;    protected void checkMessage(Message message) throws WrongPlayerException {
 <b class="fc"><i class="no-highlight">77</i>&nbsp;        if (!message.getNickname().equals(game.getPlayers()[game.getCurrentPlayer()].getNickname())) {</b>
 <b class="fc"><i class="no-highlight">78</i>&nbsp;            throw new WrongPlayerException();</b>
 <i class="no-highlight">79</i>&nbsp;        }
@@ -430,8 +430,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <b class="fc"><i class="no-highlight">291</i>&nbsp;                player.getBoard().isThereProfessor(color) &amp;&amp;</b>
 <b class="fc"><i class="no-highlight">292</i>&nbsp;                game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)</b>
 <b class="fc"><i class="no-highlight">293</i>&nbsp;                        &gt; player.getBoard().getStudentsInDiningRoom(color)) {</b>
-<b class="nc"><i class="no-highlight">294</i>&nbsp;            player.getBoard().removeProfessor(color);</b>
-<b class="nc"><i class="no-highlight">295</i>&nbsp;            game.getCurrentPlayerSchoolBoard().addProfessor(color);</b>
+<b class="fc"><i class="no-highlight">294</i>&nbsp;            player.getBoard().removeProfessor(color);</b>
+<b class="fc"><i class="no-highlight">295</i>&nbsp;            game.getCurrentPlayerSchoolBoard().addProfessor(color);</b>
 <i class="no-highlight">296</i>&nbsp;        }
 <i class="no-highlight">297</i>&nbsp;    }
 <i class="no-highlight">298</i>&nbsp;
@@ -991,7 +991,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-07-01 21:06</div>
+    <div style="float:right;">generated on 2022-07-01 21:53</div>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
-  <title>Coverage Report > MessagesHelper</title>
+  <title>Coverage Report > GameReadyListener</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/highlight-idea.css";
@@ -20,14 +20,14 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">it.polimi.ingsw.servercontroller</a>
 </div>
 
-<h1>Coverage Summary for Class: MessagesHelper (it.polimi.ingsw.servercontroller)</h1>
+<h1>Coverage Summary for Class: GameReadyListener (it.polimi.ingsw.servercontroller)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">MessagesHelper</td>
+  <td class="name">GameReadyListener</td>
 </tr>
 
 </table>
@@ -40,21 +40,12 @@ Current scope:     <a href="../../index.html">all classes</a>
 <div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.servercontroller;
 <i class="no-highlight">2</i>&nbsp;
 <i class="no-highlight">3</i>&nbsp;/**
-<i class="no-highlight">4</i>&nbsp; * Message Helper
-<i class="no-highlight">5</i>&nbsp; */
-<i class="no-highlight">6</i>&nbsp;public class MessagesHelper {
-<i class="no-highlight">7</i>&nbsp;    private MessagesHelper() {
-<i class="no-highlight">8</i>&nbsp;    }
-<i class="no-highlight">9</i>&nbsp;
-<i class="no-highlight">10</i>&nbsp;    public static final String NO_PORT = &quot;Failed to start server: Specify port number with --port &lt;port&gt; command&quot;;
-<i class="no-highlight">11</i>&nbsp;    public static final String PORT_NOT_AVAILABLE = &quot;The selected port is already in use. Try again with a different port&quot;;
-<i class="no-highlight">12</i>&nbsp;    public static final String SERVER_STARTED = &quot;Server is ready&quot;;
-<i class="no-highlight">13</i>&nbsp;    public static final String ERROR_STARTING_SERVER = &quot;Error starting server:&quot;;
-<i class="no-highlight">14</i>&nbsp;    public static final String ERROR_CLOSING_ENDPOINT = &quot;Error closing endpoint&quot;;
-<i class="no-highlight">15</i>&nbsp;    public static final String ERROR_CREATING_GAME = &quot;Game creation error&quot;;
-<i class="no-highlight">16</i>&nbsp;    public static final String ERROR_SAVE_NOT_FOUND = &quot;Previous saved game to restore game state not found&quot;;
-<i class="no-highlight">17</i>&nbsp;
-<i class="no-highlight">18</i>&nbsp;}
+<i class="no-highlight">4</i>&nbsp; * notify that the game is starting
+<i class="no-highlight">5</i>&nbsp; * Implemented by the UserHandler class
+<i class="no-highlight">6</i>&nbsp; */
+<i class="no-highlight">7</i>&nbsp;public interface GameReadyListener {
+<i class="no-highlight">8</i>&nbsp;    void onGameReady();
+<i class="no-highlight">9</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -81,7 +72,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-07-01 21:06</div>
+    <div style="float:right;">generated on 2022-07-01 21:53</div>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
-  <title>Coverage Report > SetupEffect</title>
+  <title>Coverage Report > StandardEffect</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/highlight-idea.css";
@@ -20,14 +20,14 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">it.polimi.ingsw.gamecontroller</a>
 </div>
 
-<h1>Coverage Summary for Class: SetupEffect (it.polimi.ingsw.gamecontroller)</h1>
+<h1>Coverage Summary for Class: StandardEffect (it.polimi.ingsw.gamecontroller)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">SetupEffect</td>
+  <td class="name">StandardEffect</td>
 </tr>
 
 </table>
@@ -39,22 +39,28 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.gamecontroller;
 <i class="no-highlight">2</i>&nbsp;
-<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.model.CharacterCardWithSetUpAction;
-<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.model.ExpertGame;
-<i class="no-highlight">5</i>&nbsp;
-<i class="no-highlight">6</i>&nbsp;/**
-<i class="no-highlight">7</i>&nbsp; * An effect actionable during the set-up phase
-<i class="no-highlight">8</i>&nbsp; */
-<i class="no-highlight">9</i>&nbsp;public interface SetupEffect extends Effect {
-<i class="no-highlight">10</i>&nbsp;    /**
-<i class="no-highlight">11</i>&nbsp;     * Activates the effect
-<i class="no-highlight">12</i>&nbsp;     *
-<i class="no-highlight">13</i>&nbsp;     * @param game      The current game
-<i class="no-highlight">14</i>&nbsp;     * @param table     The current table controller
-<i class="no-highlight">15</i>&nbsp;     * @param character The character related to this effect
-<i class="no-highlight">16</i>&nbsp;     */
-<i class="no-highlight">17</i>&nbsp;    void setupEffect(ExpertGame game, TableController table, CharacterCardWithSetUpAction character);
-<i class="no-highlight">18</i>&nbsp;}
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.model.ExpertGameParameters;
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;/**
+<i class="no-highlight">6</i>&nbsp; * An effect actionable by a player
+<i class="no-highlight">7</i>&nbsp; */
+<i class="no-highlight">8</i>&nbsp;public interface StandardEffect extends Effect {
+<i class="no-highlight">9</i>&nbsp;    /**
+<i class="no-highlight">10</i>&nbsp;     * Activates the effect
+<i class="no-highlight">11</i>&nbsp;     *
+<i class="no-highlight">12</i>&nbsp;     * @param parameters The current game parameters
+<i class="no-highlight">13</i>&nbsp;     * @param args       Additional parameters to set
+<i class="no-highlight">14</i>&nbsp;     */
+<i class="no-highlight">15</i>&nbsp;    void activateEffect(ExpertGameParameters parameters, Object... args);
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;    /**
+<i class="no-highlight">18</i>&nbsp;     * Deactivates the effect
+<i class="no-highlight">19</i>&nbsp;     *
+<i class="no-highlight">20</i>&nbsp;     * @param parameters The current game parameters
+<i class="no-highlight">21</i>&nbsp;     * @param args       Additional parameters to set
+<i class="no-highlight">22</i>&nbsp;     */
+<i class="no-highlight">23</i>&nbsp;    void reverseEffect(ExpertGameParameters parameters, Object... args);
+<i class="no-highlight">24</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -81,7 +87,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-07-01 21:06</div>
+    <div style="float:right;">generated on 2022-07-01 21:53</div>
 </div>
 </body>
 </html>

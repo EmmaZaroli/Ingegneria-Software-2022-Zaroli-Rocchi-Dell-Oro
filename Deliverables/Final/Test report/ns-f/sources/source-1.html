@@ -50,18 +50,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    85%
+    95%
   </span>
   <span class="absValue">
-    (17/20)
+    (19/20)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    87,3%
+    98,2%
   </span>
   <span class="absValue">
-    (48/55)
+    (54/55)
   </span>
 </td>
 </tr>
@@ -210,9 +210,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">135</i>&nbsp;     * @param message the exception to be passed to the observers.
 <i class="no-highlight">136</i>&nbsp;     */
 <i class="no-highlight">137</i>&nbsp;    public void notifyException(Exception message){
-<b class="nc"><i class="no-highlight">138</i>&nbsp;        for (ModelObserver observer : observers) {</b>
-<b class="nc"><i class="no-highlight">139</i>&nbsp;            observer.updateException(message);</b>
-<b class="nc"><i class="no-highlight">140</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">138</i>&nbsp;        for (ModelObserver observer : observers) {</b>
+<b class="fc"><i class="no-highlight">139</i>&nbsp;            observer.updateException(message);</b>
+<b class="fc"><i class="no-highlight">140</i>&nbsp;        }</b>
 <i class="no-highlight">141</i>&nbsp;    }
 <i class="no-highlight">142</i>&nbsp;
 <i class="no-highlight">143</i>&nbsp;    /**
@@ -220,9 +220,9 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">145</i>&nbsp;     * didn&#39;t reconnect in time for the game, so the only player left is proclaimed winner
 <i class="no-highlight">146</i>&nbsp;     */
 <i class="no-highlight">147</i>&nbsp;    public void notifyGameOverFromDisconnection(){
-<b class="nc"><i class="no-highlight">148</i>&nbsp;        for (ModelObserver observer : observers) {</b>
-<b class="nc"><i class="no-highlight">149</i>&nbsp;            observer.updateGameOverFromDisconnection();</b>
-<b class="nc"><i class="no-highlight">150</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">148</i>&nbsp;        for (ModelObserver observer : observers) {</b>
+<b class="fc"><i class="no-highlight">149</i>&nbsp;            observer.updateGameOverFromDisconnection();</b>
+<b class="fc"><i class="no-highlight">150</i>&nbsp;        }</b>
 <i class="no-highlight">151</i>&nbsp;    }
 <i class="no-highlight">152</i>&nbsp;
 <i class="no-highlight">153</i>&nbsp;    /**
@@ -317,7 +317,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-07-01 21:06</div>
+    <div style="float:right;">generated on 2022-07-01 21:53</div>
 </div>
 </body>
 </html>
