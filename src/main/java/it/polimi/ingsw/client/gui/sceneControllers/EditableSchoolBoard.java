@@ -116,27 +116,27 @@ public class EditableSchoolBoard extends Pane {
                         return;
                     }
                     if (isInRange(x, y, 323, 492)) {
-                        gui.sendToIsland(entrance.get(j), 6);
+                        gui.sendToIsland(entrance.get(j), 11);
                         return;
                     }
                     if (isInRange(x, y, 483, 491)) {
-                        gui.sendToIsland(entrance.get(j), 7);
-                        return;
-                    }
-                    if (isInRange(x, y, 640, 493)) {
-                        gui.sendToIsland(entrance.get(j), 8);
-                        return;
-                    }
-                    if (isInRange(x, y, 808, 493)) {
-                        gui.sendToIsland(entrance.get(j), 9);
-                        return;
-                    }
-                    if (isInRange(x, y, 973, 494)) {
                         gui.sendToIsland(entrance.get(j), 10);
                         return;
                     }
+                    if (isInRange(x, y, 640, 493)) {
+                        gui.sendToIsland(entrance.get(j), 9);
+                        return;
+                    }
+                    if (isInRange(x, y, 808, 493)) {
+                        gui.sendToIsland(entrance.get(j), 8);
+                        return;
+                    }
+                    if (isInRange(x, y, 973, 494)) {
+                        gui.sendToIsland(entrance.get(j), 7);
+                        return;
+                    }
                     if (isInRange(x, y, 1132, 408)) {
-                        gui.sendToIsland(entrance.get(j), 11);
+                        gui.sendToIsland(entrance.get(j), 6);
                         return;
                     }
                     if (x > 647 && y > 630 && x < 893 && y < 810) {

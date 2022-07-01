@@ -302,37 +302,37 @@ public class CharacterCard extends Pane {
                             return;
                         }
                         if (isInRange(x, y, 323, 492)) {
-                            if (!gui.activateCharacter(index, color, gui.getIslands().get(6).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(11).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
                         if (isInRange(x, y, 483, 491)) {
-                            if (!gui.activateCharacter(index, color, gui.getIslands().get(7).getIsland().getUuid())) {
-                                gui.error("Error while activating the effect");
-                            }
-                            return;
-                        }
-                        if (isInRange(x, y, 640, 493)) {
-                            if (!gui.activateCharacter(index, color, gui.getIslands().get(8).getIsland().getUuid())) {
-                                gui.error("Error while activating the effect");
-                            }
-                            return;
-                        }
-                        if (isInRange(x, y, 808, 493)) {
-                            if (!gui.activateCharacter(index, color, gui.getIslands().get(9).getIsland().getUuid())) {
-                                gui.error("Error while activating the effect");
-                            }
-                            return;
-                        }
-                        if (isInRange(x, y, 973, 494)) {
                             if (!gui.activateCharacter(index, color, gui.getIslands().get(10).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
                         }
+                        if (isInRange(x, y, 640, 493)) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(9).getIsland().getUuid())) {
+                                gui.error("Error while activating the effect");
+                            }
+                            return;
+                        }
+                        if (isInRange(x, y, 808, 493)) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(8).getIsland().getUuid())) {
+                                gui.error("Error while activating the effect");
+                            }
+                            return;
+                        }
+                        if (isInRange(x, y, 973, 494)) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(7).getIsland().getUuid())) {
+                                gui.error("Error while activating the effect");
+                            }
+                            return;
+                        }
                         if (isInRange(x, y, 1132, 408)) {
-                            if (!gui.activateCharacter(index, color, gui.getIslands().get(11).getIsland().getUuid())) {
+                            if (!gui.activateCharacter(index, color, gui.getIslands().get(6).getIsland().getUuid())) {
                                 gui.error("Error while activating the effect");
                             }
                             return;
