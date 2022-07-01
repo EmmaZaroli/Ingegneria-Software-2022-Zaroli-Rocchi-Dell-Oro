@@ -371,7 +371,6 @@ public class Game extends ModelObservable implements Serializable {
         this.enoughPlayersOnline = game.enoughPlayersOnline;
     }
 
-    //TODO should be eliminated
     public void setGameEndingListeners(List<GameEndingListener> gameEndingListeners) {
         this.gameEndingListeners = gameEndingListeners;
     }
