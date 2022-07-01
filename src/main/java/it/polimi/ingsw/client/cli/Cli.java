@@ -424,6 +424,7 @@ public class Cli extends View {
      */
     private void printCloud() {
         cloudPrinter.printClouds(getClouds());
+        System.out.println();
     }
 
     /**
@@ -532,12 +533,13 @@ public class Cli extends View {
      * @return true if all the parameters are correct
      */
     private boolean askCharacterSevenParameters(int index) {
-        boolean valid = false;
+        boolean valid;
         boolean validSend = false;
         Object[] parameters = new Object[2];
         List<PawnColor> studentsFromCard = new ArrayList<>();
         List<PawnColor> studentsFromEntrance;
         while(!validSend){
+            valid = false;
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas, no spaces]: ");
                 studentsFromCard = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());

@@ -56,6 +56,12 @@ public class CharacterCardHelper {
             return false;
         List<PawnColor> colorsFromCard = (List<PawnColor>) parameters[0];
         List<PawnColor> colorsFromEntrance = (List<PawnColor>) parameters[1];
+        if(colorsFromCard.size() > 3)
+            return false;
+        if(colorsFromEntrance.size() > 3)
+            return false;
+        if(colorsFromCard.size() != colorsFromEntrance.size())
+            return false;
         Map<PawnColor, Integer> cardinalityCard = card.getStudentsCardinality();
         Map<PawnColor, Integer> cardinalityEntrance = playerInfo.getBoard().getStudentsInEntranceCardinality();
         for (PawnColor color : PawnColor.values()) {

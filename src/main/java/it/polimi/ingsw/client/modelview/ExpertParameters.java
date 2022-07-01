@@ -52,24 +52,6 @@ public class ExpertParameters {
         return motherNatureExtraMovements;
     }
 
-
-    //TODO remove
-    public boolean isTowersCountInInfluence() {
-        return towersCountInInfluence;
-    }
-
-    public int getExtraInfluence() {
-        return extraInfluence;
-    }
-
-    public PawnColor getColorWithNoInfluence() {
-        return colorWithNoInfluence;
-    }
-
-    public boolean isTakeProfessorEvenIfSameStudents() {
-        return takeProfessorEvenIfSameStudents;
-    }
-
     /**
      *
      * @return true if there's already an active card
