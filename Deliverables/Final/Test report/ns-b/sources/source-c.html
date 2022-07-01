@@ -50,18 +50,18 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    79,5%
+    100%
   </span>
   <span class="absValue">
-    (31/39)
+    (39/39)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    67,5%
+    98,7%
   </span>
   <span class="absValue">
-    (52/77)
+    (76/77)
   </span>
 </td>
 </tr>
@@ -314,10 +314,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">239</i>&nbsp;     * Calls gameOver
 <i class="no-highlight">240</i>&nbsp;     */
 <i class="no-highlight">241</i>&nbsp;    public void callGameOverFromDisconnection() {
-<b class="nc"><i class="no-highlight">242</i>&nbsp;        this.gameOver = true;</b>
-<b class="nc"><i class="no-highlight">243</i>&nbsp;        this.setGamePhase(GamePhase.GAME_OVER);</b>
-<b class="nc"><i class="no-highlight">244</i>&nbsp;        notifyGameOverFromDisconnection();</b>
-<b class="nc"><i class="no-highlight">245</i>&nbsp;        notifyGameEnding();</b>
+<b class="fc"><i class="no-highlight">242</i>&nbsp;        this.gameOver = true;</b>
+<b class="fc"><i class="no-highlight">243</i>&nbsp;        this.setGamePhase(GamePhase.GAME_OVER);</b>
+<b class="fc"><i class="no-highlight">244</i>&nbsp;        notifyGameOverFromDisconnection();</b>
+<b class="fc"><i class="no-highlight">245</i>&nbsp;        notifyGameEnding();</b>
 <i class="no-highlight">246</i>&nbsp;    }
 <i class="no-highlight">247</i>&nbsp;
 <i class="no-highlight">248</i>&nbsp;    /**
@@ -325,8 +325,8 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">250</i>&nbsp;     * @param e the exception
 <i class="no-highlight">251</i>&nbsp;     */
 <i class="no-highlight">252</i>&nbsp;    public void throwException(Exception e) {
-<b class="nc"><i class="no-highlight">253</i>&nbsp;        this.error = e;</b>
-<b class="nc"><i class="no-highlight">254</i>&nbsp;        notifyException(e);</b>
+<b class="fc"><i class="no-highlight">253</i>&nbsp;        this.error = e;</b>
+<b class="fc"><i class="no-highlight">254</i>&nbsp;        notifyException(e);</b>
 <i class="no-highlight">255</i>&nbsp;    }
 <i class="no-highlight">256</i>&nbsp;
 <i class="no-highlight">257</i>&nbsp;    /**
@@ -336,120 +336,121 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">261</i>&nbsp;    public void setEnoughPlayersOnline(boolean enoughPlayersOnline) {
 <b class="fc"><i class="no-highlight">262</i>&nbsp;        this.enoughPlayersOnline = enoughPlayersOnline;</b>
 <b class="fc"><i class="no-highlight">263</i>&nbsp;        notifyEnoughPlayerOnline(enoughPlayersOnline);</b>
-<i class="no-highlight">264</i>&nbsp;        //TODO block all action if false
-<i class="no-highlight">265</i>&nbsp;    }
-<i class="no-highlight">266</i>&nbsp;
-<i class="no-highlight">267</i>&nbsp;    /**
-<i class="no-highlight">268</i>&nbsp;     *
-<i class="no-highlight">269</i>&nbsp;     * @return true if the game has ended, false otherwise
-<i class="no-highlight">270</i>&nbsp;     */
-<i class="no-highlight">271</i>&nbsp;    public boolean isGameOver() {
-<b class="fc"><i class="no-highlight">272</i>&nbsp;        return this.gameOver;</b>
-<i class="no-highlight">273</i>&nbsp;    }
-<i class="no-highlight">274</i>&nbsp;
-<i class="no-highlight">275</i>&nbsp;    /**
-<i class="no-highlight">276</i>&nbsp;     *
-<i class="no-highlight">277</i>&nbsp;     * @param playerIndex the new player&#39;s index
-<i class="no-highlight">278</i>&nbsp;     */
-<i class="no-highlight">279</i>&nbsp;    public void changePlayer(int playerIndex) {
-<b class="fc"><i class="no-highlight">280</i>&nbsp;        setCurrentPlayer(playerIndex);</b>
-<b class="fc"><i class="no-highlight">281</i>&nbsp;        setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());</b>
-<i class="no-highlight">282</i>&nbsp;    }
-<i class="no-highlight">283</i>&nbsp;
-<i class="no-highlight">284</i>&nbsp;    /**
-<i class="no-highlight">285</i>&nbsp;     *
-<i class="no-highlight">286</i>&nbsp;     * @return the last exception thrown
-<i class="no-highlight">287</i>&nbsp;     */
-<i class="no-highlight">288</i>&nbsp;    public Exception getLastError() {
-<b class="nc"><i class="no-highlight">289</i>&nbsp;        return this.error;</b>
-<i class="no-highlight">290</i>&nbsp;    }
-<i class="no-highlight">291</i>&nbsp;
-<i class="no-highlight">292</i>&nbsp;    /**
-<i class="no-highlight">293</i>&nbsp;     *
-<i class="no-highlight">294</i>&nbsp;     * @param playerIndex the player&#39;s index
-<i class="no-highlight">295</i>&nbsp;     * @return the Player
-<i class="no-highlight">296</i>&nbsp;     */
-<i class="no-highlight">297</i>&nbsp;    public Player getPlayer(int playerIndex) {
-<b class="fc"><i class="no-highlight">298</i>&nbsp;        return players[playerIndex];</b>
-<i class="no-highlight">299</i>&nbsp;    }
-<i class="no-highlight">300</i>&nbsp;
-<i class="no-highlight">301</i>&nbsp;    /**
-<i class="no-highlight">302</i>&nbsp;     *
-<i class="no-highlight">303</i>&nbsp;     * @return the list of winners
-<i class="no-highlight">304</i>&nbsp;     */
-<i class="no-highlight">305</i>&nbsp;    public List&lt;String&gt; getWinners() {
-<b class="fc"><i class="no-highlight">306</i>&nbsp;        return winners;</b>
-<i class="no-highlight">307</i>&nbsp;    }
-<i class="no-highlight">308</i>&nbsp;
-<i class="no-highlight">309</i>&nbsp;    /**
-<i class="no-highlight">310</i>&nbsp;     * Notify the views the list of winners
-<i class="no-highlight">311</i>&nbsp;     * @param winners the list of the winner&#39;s nicknames
-<i class="no-highlight">312</i>&nbsp;     */
-<i class="no-highlight">313</i>&nbsp;    public void setWinners(List&lt;String&gt; winners) {
-<b class="fc"><i class="no-highlight">314</i>&nbsp;        this.winners = winners;</b>
-<b class="fc"><i class="no-highlight">315</i>&nbsp;        notifyWinners(this.winners);</b>
-<i class="no-highlight">316</i>&nbsp;    }
-<i class="no-highlight">317</i>&nbsp;
-<i class="no-highlight">318</i>&nbsp;    /**
-<i class="no-highlight">319</i>&nbsp;     *
-<i class="no-highlight">320</i>&nbsp;     * @return the number of players online
-<i class="no-highlight">321</i>&nbsp;     */
-<i class="no-highlight">322</i>&nbsp;    public int howManyPlayersOnline() {
-<b class="fc"><i class="no-highlight">323</i>&nbsp;        return (int) Arrays.stream(players).filter(Player::isOnline).count();</b>
-<i class="no-highlight">324</i>&nbsp;    }
-<i class="no-highlight">325</i>&nbsp;
-<i class="no-highlight">326</i>&nbsp;    /**
-<i class="no-highlight">327</i>&nbsp;     *
-<i class="no-highlight">328</i>&nbsp;     * @param l the Game ending listener to add
-<i class="no-highlight">329</i>&nbsp;     */
-<i class="no-highlight">330</i>&nbsp;    public void addGameEndingListener(GameEndingListener l) {
-<b class="nc"><i class="no-highlight">331</i>&nbsp;        this.gameEndingListeners.add(l);</b>
-<i class="no-highlight">332</i>&nbsp;    }
-<i class="no-highlight">333</i>&nbsp;
-<i class="no-highlight">334</i>&nbsp;    /**
-<i class="no-highlight">335</i>&nbsp;     *
-<i class="no-highlight">336</i>&nbsp;     * @param l the game ending listener to remove
-<i class="no-highlight">337</i>&nbsp;     */
-<i class="no-highlight">338</i>&nbsp;    public void removeGameEndingListener(GameEndingListener l) {
-<b class="nc"><i class="no-highlight">339</i>&nbsp;        this.gameEndingListeners.remove(l);</b>
-<i class="no-highlight">340</i>&nbsp;    }
-<i class="no-highlight">341</i>&nbsp;
-<i class="no-highlight">342</i>&nbsp;    // TODO remove if not needed
-<i class="no-highlight">343</i>&nbsp;    public List&lt;GameEndingListener&gt; getGameEndingListeners(){
-<b class="nc"><i class="no-highlight">344</i>&nbsp;        return gameEndingListeners;</b>
-<i class="no-highlight">345</i>&nbsp;    }
-<i class="no-highlight">346</i>&nbsp;
-<i class="no-highlight">347</i>&nbsp;    /**
-<i class="no-highlight">348</i>&nbsp;     * Notify every game ending listeners that the game has ended
-<i class="no-highlight">349</i>&nbsp;     */
-<i class="no-highlight">350</i>&nbsp;    private void notifyGameEnding() {
-<b class="fc"><i class="no-highlight">351</i>&nbsp;        for(GameEndingListener l : gameEndingListeners)</b>
-<b class="nc"><i class="no-highlight">352</i>&nbsp;            l.onGameEnding(getGameId());</b>
-<i class="no-highlight">353</i>&nbsp;    }
-<i class="no-highlight">354</i>&nbsp;
-<i class="no-highlight">355</i>&nbsp;    public void copyStatusFrom(Game game){
-<b class="nc"><i class="no-highlight">356</i>&nbsp;        this.players = game.players;</b>
-<b class="nc"><i class="no-highlight">357</i>&nbsp;        this.table = game.table;</b>
-<b class="nc"><i class="no-highlight">358</i>&nbsp;        this.gamePhase = game.gamePhase;</b>
-<b class="nc"><i class="no-highlight">359</i>&nbsp;        this.playedCount = game.playedCount;</b>
-<b class="nc"><i class="no-highlight">360</i>&nbsp;        this.parameters = game.parameters;</b>
-<i class="no-highlight">361</i>&nbsp;
-<b class="nc"><i class="no-highlight">362</i>&nbsp;        this.currentPlayer = game.currentPlayer;</b>
-<b class="nc"><i class="no-highlight">363</i>&nbsp;        this.firstPlayerInPlanning = game.firstPlayerInPlanning;</b>
-<b class="nc"><i class="no-highlight">364</i>&nbsp;        this.currentPlayerBoard = game.currentPlayerBoard;</b>
-<b class="nc"><i class="no-highlight">365</i>&nbsp;        this.movedPawns = game.movedPawns;</b>
-<b class="nc"><i class="no-highlight">366</i>&nbsp;        this.gameOver = game.gameOver;</b>
-<b class="nc"><i class="no-highlight">367</i>&nbsp;        this.winners = game.winners;</b>
-<i class="no-highlight">368</i>&nbsp;
-<b class="nc"><i class="no-highlight">369</i>&nbsp;        this.error = game.error;</b>
-<i class="no-highlight">370</i>&nbsp;
-<b class="nc"><i class="no-highlight">371</i>&nbsp;        this.enoughPlayersOnline = game.enoughPlayersOnline;</b>
-<i class="no-highlight">372</i>&nbsp;    }
-<i class="no-highlight">373</i>&nbsp;
-<i class="no-highlight">374</i>&nbsp;    public void setGameEndingListeners(List&lt;GameEndingListener&gt; gameEndingListeners) {
-<b class="nc"><i class="no-highlight">375</i>&nbsp;        this.gameEndingListeners = gameEndingListeners;</b>
-<i class="no-highlight">376</i>&nbsp;    }
-<i class="no-highlight">377</i>&nbsp;}
+<i class="no-highlight">264</i>&nbsp;    }
+<i class="no-highlight">265</i>&nbsp;
+<i class="no-highlight">266</i>&nbsp;    /**
+<i class="no-highlight">267</i>&nbsp;     *
+<i class="no-highlight">268</i>&nbsp;     * @return true if the game has ended, false otherwise
+<i class="no-highlight">269</i>&nbsp;     */
+<i class="no-highlight">270</i>&nbsp;    public boolean isGameOver() {
+<b class="fc"><i class="no-highlight">271</i>&nbsp;        return this.gameOver;</b>
+<i class="no-highlight">272</i>&nbsp;    }
+<i class="no-highlight">273</i>&nbsp;
+<i class="no-highlight">274</i>&nbsp;    /**
+<i class="no-highlight">275</i>&nbsp;     *
+<i class="no-highlight">276</i>&nbsp;     * @param playerIndex the new player&#39;s index
+<i class="no-highlight">277</i>&nbsp;     */
+<i class="no-highlight">278</i>&nbsp;    public void changePlayer(int playerIndex) {
+<b class="fc"><i class="no-highlight">279</i>&nbsp;        setCurrentPlayer(playerIndex);</b>
+<b class="fc"><i class="no-highlight">280</i>&nbsp;        setCurrentPlayerBoard(getCurrentPlayerSchoolBoard());</b>
+<i class="no-highlight">281</i>&nbsp;    }
+<i class="no-highlight">282</i>&nbsp;
+<i class="no-highlight">283</i>&nbsp;    /**
+<i class="no-highlight">284</i>&nbsp;     *
+<i class="no-highlight">285</i>&nbsp;     * @return the last exception thrown
+<i class="no-highlight">286</i>&nbsp;     */
+<i class="no-highlight">287</i>&nbsp;    public Exception getLastError() {
+<b class="fc"><i class="no-highlight">288</i>&nbsp;        return this.error;</b>
+<i class="no-highlight">289</i>&nbsp;    }
+<i class="no-highlight">290</i>&nbsp;
+<i class="no-highlight">291</i>&nbsp;    /**
+<i class="no-highlight">292</i>&nbsp;     *
+<i class="no-highlight">293</i>&nbsp;     * @param playerIndex the player&#39;s index
+<i class="no-highlight">294</i>&nbsp;     * @return the Player
+<i class="no-highlight">295</i>&nbsp;     */
+<i class="no-highlight">296</i>&nbsp;    public Player getPlayer(int playerIndex) {
+<b class="fc"><i class="no-highlight">297</i>&nbsp;        return players[playerIndex];</b>
+<i class="no-highlight">298</i>&nbsp;    }
+<i class="no-highlight">299</i>&nbsp;
+<i class="no-highlight">300</i>&nbsp;    /**
+<i class="no-highlight">301</i>&nbsp;     *
+<i class="no-highlight">302</i>&nbsp;     * @return the list of winners
+<i class="no-highlight">303</i>&nbsp;     */
+<i class="no-highlight">304</i>&nbsp;    public List&lt;String&gt; getWinners() {
+<b class="fc"><i class="no-highlight">305</i>&nbsp;        return winners;</b>
+<i class="no-highlight">306</i>&nbsp;    }
+<i class="no-highlight">307</i>&nbsp;
+<i class="no-highlight">308</i>&nbsp;    /**
+<i class="no-highlight">309</i>&nbsp;     * Notify the views the list of winners
+<i class="no-highlight">310</i>&nbsp;     * @param winners the list of the winner&#39;s nicknames
+<i class="no-highlight">311</i>&nbsp;     */
+<i class="no-highlight">312</i>&nbsp;    public void setWinners(List&lt;String&gt; winners) {
+<b class="fc"><i class="no-highlight">313</i>&nbsp;        this.winners = winners;</b>
+<b class="fc"><i class="no-highlight">314</i>&nbsp;        notifyWinners(this.winners);</b>
+<i class="no-highlight">315</i>&nbsp;    }
+<i class="no-highlight">316</i>&nbsp;
+<i class="no-highlight">317</i>&nbsp;    /**
+<i class="no-highlight">318</i>&nbsp;     *
+<i class="no-highlight">319</i>&nbsp;     * @return the number of players online
+<i class="no-highlight">320</i>&nbsp;     */
+<i class="no-highlight">321</i>&nbsp;    public int howManyPlayersOnline() {
+<b class="fc"><i class="no-highlight">322</i>&nbsp;        return (int) Arrays.stream(players).filter(Player::isOnline).count();</b>
+<i class="no-highlight">323</i>&nbsp;    }
+<i class="no-highlight">324</i>&nbsp;
+<i class="no-highlight">325</i>&nbsp;    /**
+<i class="no-highlight">326</i>&nbsp;     *
+<i class="no-highlight">327</i>&nbsp;     * @param l the Game ending listener to add
+<i class="no-highlight">328</i>&nbsp;     */
+<i class="no-highlight">329</i>&nbsp;    public void addGameEndingListener(GameEndingListener l) {
+<b class="fc"><i class="no-highlight">330</i>&nbsp;        this.gameEndingListeners.add(l);</b>
+<i class="no-highlight">331</i>&nbsp;    }
+<i class="no-highlight">332</i>&nbsp;
+<i class="no-highlight">333</i>&nbsp;    /**
+<i class="no-highlight">334</i>&nbsp;     *
+<i class="no-highlight">335</i>&nbsp;     * @param l the game ending listener to remove
+<i class="no-highlight">336</i>&nbsp;     */
+<i class="no-highlight">337</i>&nbsp;    public void removeGameEndingListener(GameEndingListener l) {
+<b class="fc"><i class="no-highlight">338</i>&nbsp;        this.gameEndingListeners.remove(l);</b>
+<i class="no-highlight">339</i>&nbsp;    }
+<i class="no-highlight">340</i>&nbsp;
+<i class="no-highlight">341</i>&nbsp;    /**
+<i class="no-highlight">342</i>&nbsp;     * Get GameEndingListener list
+<i class="no-highlight">343</i>&nbsp;     */
+<i class="no-highlight">344</i>&nbsp;    public List&lt;GameEndingListener&gt; getGameEndingListeners(){
+<b class="fc"><i class="no-highlight">345</i>&nbsp;        return gameEndingListeners;</b>
+<i class="no-highlight">346</i>&nbsp;    }
+<i class="no-highlight">347</i>&nbsp;
+<i class="no-highlight">348</i>&nbsp;    /**
+<i class="no-highlight">349</i>&nbsp;     * Notify every game ending listeners that the game has ended
+<i class="no-highlight">350</i>&nbsp;     */
+<i class="no-highlight">351</i>&nbsp;    private void notifyGameEnding() {
+<b class="fc"><i class="no-highlight">352</i>&nbsp;        for(GameEndingListener l : gameEndingListeners)</b>
+<b class="nc"><i class="no-highlight">353</i>&nbsp;            l.onGameEnding(getGameId());</b>
+<i class="no-highlight">354</i>&nbsp;    }
+<i class="no-highlight">355</i>&nbsp;
+<i class="no-highlight">356</i>&nbsp;    public void copyStatusFrom(Game game){
+<b class="fc"><i class="no-highlight">357</i>&nbsp;        this.players = game.players;</b>
+<b class="fc"><i class="no-highlight">358</i>&nbsp;        this.table = game.table;</b>
+<b class="fc"><i class="no-highlight">359</i>&nbsp;        this.gamePhase = game.gamePhase;</b>
+<b class="fc"><i class="no-highlight">360</i>&nbsp;        this.playedCount = game.playedCount;</b>
+<b class="fc"><i class="no-highlight">361</i>&nbsp;        this.parameters = game.parameters;</b>
+<i class="no-highlight">362</i>&nbsp;
+<b class="fc"><i class="no-highlight">363</i>&nbsp;        this.currentPlayer = game.currentPlayer;</b>
+<b class="fc"><i class="no-highlight">364</i>&nbsp;        this.firstPlayerInPlanning = game.firstPlayerInPlanning;</b>
+<b class="fc"><i class="no-highlight">365</i>&nbsp;        this.currentPlayerBoard = game.currentPlayerBoard;</b>
+<b class="fc"><i class="no-highlight">366</i>&nbsp;        this.movedPawns = game.movedPawns;</b>
+<b class="fc"><i class="no-highlight">367</i>&nbsp;        this.gameOver = game.gameOver;</b>
+<b class="fc"><i class="no-highlight">368</i>&nbsp;        this.winners = game.winners;</b>
+<i class="no-highlight">369</i>&nbsp;
+<b class="fc"><i class="no-highlight">370</i>&nbsp;        this.error = game.error;</b>
+<i class="no-highlight">371</i>&nbsp;
+<b class="fc"><i class="no-highlight">372</i>&nbsp;        this.enoughPlayersOnline = game.enoughPlayersOnline;</b>
+<i class="no-highlight">373</i>&nbsp;    }
+<i class="no-highlight">374</i>&nbsp;
+<i class="no-highlight">375</i>&nbsp;    public void setGameEndingListeners(List&lt;GameEndingListener&gt; gameEndingListeners) {
+<b class="fc"><i class="no-highlight">376</i>&nbsp;        this.gameEndingListeners = gameEndingListeners;</b>
+<i class="no-highlight">377</i>&nbsp;    }
+<i class="no-highlight">378</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -476,7 +477,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-07-01 21:06</div>
+    <div style="float:right;">generated on 2022-07-01 21:53</div>
 </div>
 </body>
 </html>

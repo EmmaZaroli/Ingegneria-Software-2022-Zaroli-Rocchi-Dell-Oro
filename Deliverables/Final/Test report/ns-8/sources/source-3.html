@@ -47,10 +47,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    85,4%
+    84,6%
   </span>
   <span class="absValue">
-    (111/130)
+    (115/136)
   </span>
 </td>
 </tr>
@@ -85,10 +85,10 @@ Current scope:     <a href="../../index.html">all classes</a>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    85,5%
+    84,7%
   </span>
   <span class="absValue">
-    (112/131)
+    (116/137)
   </span>
 </td>
 </tr>
@@ -110,363 +110,372 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">9</i>&nbsp;import it.polimi.ingsw.network.Message;
 <i class="no-highlight">10</i>&nbsp;import it.polimi.ingsw.network.MessageType;
 <i class="no-highlight">11</i>&nbsp;import it.polimi.ingsw.network.messages.CharacterCardMessage;
-<i class="no-highlight">12</i>&nbsp;import it.polimi.ingsw.persistency.DataDumper;
-<i class="no-highlight">13</i>&nbsp;import it.polimi.ingsw.utils.ApplicationConstants;
-<i class="no-highlight">14</i>&nbsp;import it.polimi.ingsw.utils.RandomHelper;
-<i class="no-highlight">15</i>&nbsp;import it.polimi.ingsw.view.VirtualView;
-<i class="no-highlight">16</i>&nbsp;
-<i class="no-highlight">17</i>&nbsp;import java.util.*;
-<i class="no-highlight">18</i>&nbsp;import java.util.logging.Level;
-<i class="no-highlight">19</i>&nbsp;import java.util.logging.Logger;
-<i class="no-highlight">20</i>&nbsp;
-<i class="no-highlight">21</i>&nbsp;import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
-<i class="no-highlight">22</i>&nbsp;import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
-<i class="no-highlight">23</i>&nbsp;
-<i class="no-highlight">24</i>&nbsp;/**
-<i class="no-highlight">25</i>&nbsp; * Expert Game Controller
-<i class="no-highlight">26</i>&nbsp; */
-<i class="no-highlight">27</i>&nbsp;public class ExpertGameController extends GameController {
-<i class="no-highlight">28</i>&nbsp;    private Effect[] effects;
-<b class="fc"><i class="no-highlight">29</i>&nbsp;    private final Logger logger = Logger.getLogger(getClass().getName());</b>
-<i class="no-highlight">30</i>&nbsp;
-<i class="no-highlight">31</i>&nbsp;    public ExpertGameController(ExpertGame game, ExpertTableController tableController, VirtualView[] virtualViews) {
-<b class="fc"><i class="no-highlight">32</i>&nbsp;        super(game, tableController, virtualViews);</b>
-<b class="fc"><i class="no-highlight">33</i>&nbsp;        drawCharactersCards();</b>
-<b class="fc"><i class="no-highlight">34</i>&nbsp;        activateSetupEffect();</b>
-<i class="no-highlight">35</i>&nbsp;    }
-<i class="no-highlight">36</i>&nbsp;
-<i class="no-highlight">37</i>&nbsp;    /**
-<i class="no-highlight">38</i>&nbsp;     *
-<i class="no-highlight">39</i>&nbsp;     * @return a copy of the effects&#39; array
-<i class="no-highlight">40</i>&nbsp;     */
-<i class="no-highlight">41</i>&nbsp;    public Effect[] getEffects() {
-<b class="fc"><i class="no-highlight">42</i>&nbsp;        return effects.clone();</b>
-<i class="no-highlight">43</i>&nbsp;    }
-<i class="no-highlight">44</i>&nbsp;
-<i class="no-highlight">45</i>&nbsp;    public void setEffects(Effect[] effects) {
-<b class="fc"><i class="no-highlight">46</i>&nbsp;        this.effects = effects;</b>
-<i class="no-highlight">47</i>&nbsp;    }
-<i class="no-highlight">48</i>&nbsp;
-<i class="no-highlight">49</i>&nbsp;    /**
-<i class="no-highlight">50</i>&nbsp;     *
-<i class="no-highlight">51</i>&nbsp;     * @param effects the effect to add
-<i class="no-highlight">52</i>&nbsp;     */
-<i class="no-highlight">53</i>&nbsp;    public void addEffects(Effect[] effects) {
-<b class="fc"><i class="no-highlight">54</i>&nbsp;        this.effects = effects;</b>
-<i class="no-highlight">55</i>&nbsp;    }
-<i class="no-highlight">56</i>&nbsp;
-<i class="no-highlight">57</i>&nbsp;    /**
-<i class="no-highlight">58</i>&nbsp;     * Draws three characterCards at the beginning of the game
-<i class="no-highlight">59</i>&nbsp;     */
-<i class="no-highlight">60</i>&nbsp;    private void drawCharactersCards() {
-<i class="no-highlight">61</i>&nbsp;        int numberCard;
-<b class="fc"><i class="no-highlight">62</i>&nbsp;        List&lt;Character&gt; characters = new ArrayList&lt;&gt;(Arrays.asList(Character.values()));</b>
-<b class="fc"><i class="no-highlight">63</i>&nbsp;        CharacterCard[] cards = new CharacterCard[3];</b>
-<b class="fc"><i class="no-highlight">64</i>&nbsp;        Effect[] newEffects = new Effect[3];</b>
-<i class="no-highlight">65</i>&nbsp;
-<b class="fc"><i class="no-highlight">66</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {</b>
-<b class="fc"><i class="no-highlight">67</i>&nbsp;            numberCard = RandomHelper.getInstance().getInt(characters.size());</b>
-<b class="fc"><i class="no-highlight">68</i>&nbsp;            cards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));</b>
-<b class="fc"><i class="no-highlight">69</i>&nbsp;            newEffects[i] = EffectFactory.getEffect(characters.get(numberCard));</b>
-<b class="fc"><i class="no-highlight">70</i>&nbsp;            characters.remove(characters.get(numberCard));</b>
-<i class="no-highlight">71</i>&nbsp;        }
-<i class="no-highlight">72</i>&nbsp;
-<b class="fc"><i class="no-highlight">73</i>&nbsp;        getGame().setCharacterCards(cards);</b>
-<b class="fc"><i class="no-highlight">74</i>&nbsp;        addEffects(newEffects);</b>
-<i class="no-highlight">75</i>&nbsp;    }
-<i class="no-highlight">76</i>&nbsp;
-<i class="no-highlight">77</i>&nbsp;    /**
-<i class="no-highlight">78</i>&nbsp;     * If the type of the message is Action_use_character, the characterCard in the message is played
-<i class="no-highlight">79</i>&nbsp;     * If it&#39;s not, the message is redirect to the gameController class
-<i class="no-highlight">80</i>&nbsp;     * @param message the incoming message
-<i class="no-highlight">81</i>&nbsp;     */
-<i class="no-highlight">82</i>&nbsp;    @Override
-<i class="no-highlight">83</i>&nbsp;    public void onMessageReceived(Message message) {
-<b class="fc"><i class="no-highlight">84</i>&nbsp;        if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {</b>
-<b class="fc"><i class="no-highlight">85</i>&nbsp;            CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();</b>
-<b class="fc"><i class="no-highlight">86</i>&nbsp;            Optional&lt;Integer&gt; cardIndex = isCardOnTable(card);</b>
-<b class="fc"><i class="no-highlight">87</i>&nbsp;            if(cardIndex.isPresent()) {</b>
-<b class="fc"><i class="no-highlight">88</i>&nbsp;                int index = cardIndex.get();</b>
-<b class="fc"><i class="no-highlight">89</i>&nbsp;                if (canActivateCharacterAbility(index) &amp;&amp; areParametersOk((CharacterCardMessage) message, index)) {</b>
-<b class="fc"><i class="no-highlight">90</i>&nbsp;                    activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());</b>
-<i class="no-highlight">91</i>&nbsp;                } else {
-<b class="fc"><i class="no-highlight">92</i>&nbsp;                    logger.log(Level.WARNING, &quot;Incorrect Character Card parameters&quot;);</b>
-<i class="no-highlight">93</i>&nbsp;                }
-<b class="fc"><i class="no-highlight">94</i>&nbsp;            }</b>
-<i class="no-highlight">95</i>&nbsp;            else{
-<b class="nc"><i class="no-highlight">96</i>&nbsp;                logger.log(Level.WARNING,&quot;Character Card not found&quot;);</b>
-<i class="no-highlight">97</i>&nbsp;            }
-<b class="fc"><i class="no-highlight">98</i>&nbsp;        } else {</b>
-<b class="fc"><i class="no-highlight">99</i>&nbsp;            super.onMessageReceived(message);</b>
-<i class="no-highlight">100</i>&nbsp;        }
-<i class="no-highlight">101</i>&nbsp;    }
-<i class="no-highlight">102</i>&nbsp;
-<i class="no-highlight">103</i>&nbsp;    /**
-<i class="no-highlight">104</i>&nbsp;     * Checks the validity of the parameters
-<i class="no-highlight">105</i>&nbsp;     * @param message the message
-<i class="no-highlight">106</i>&nbsp;     * @param index the CharacterCard&#39;s index
-<i class="no-highlight">107</i>&nbsp;     * @return true if the parameters are valid
-<i class="no-highlight">108</i>&nbsp;     */
-<i class="no-highlight">109</i>&nbsp;    private boolean areParametersOk(CharacterCardMessage message, int index) {
-<b class="fc"><i class="no-highlight">110</i>&nbsp;        return switch (message.getCharacterCard().getCharacter()) {</b>
-<b class="fc"><i class="no-highlight">111</i>&nbsp;            case CHARACTER_ONE -&gt; CharacterCardHelper.areParametersOkCharacter1(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getTable().getIslands());</b>
-<b class="fc"><i class="no-highlight">112</i>&nbsp;            case CHARACTER_SEVEN -&gt; CharacterCardHelper.areParametersOkCharacter7(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);</b>
-<b class="fc"><i class="no-highlight">113</i>&nbsp;            case CHARACTER_NINE -&gt; CharacterCardHelper.areParametersOkCharacter9(message.getParameters());</b>
-<b class="fc"><i class="no-highlight">114</i>&nbsp;            case CHARACTER_ELEVEN -&gt; CharacterCardHelper.areParametersOkCharacter11(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);</b>
-<b class="fc"><i class="no-highlight">115</i>&nbsp;            default -&gt; true;</b>
-<i class="no-highlight">116</i>&nbsp;        };
-<i class="no-highlight">117</i>&nbsp;    }
-<i class="no-highlight">118</i>&nbsp;
-<i class="no-highlight">119</i>&nbsp;    /**
-<i class="no-highlight">120</i>&nbsp;     * Moves the PawnColor to the diningRoom
-<i class="no-highlight">121</i>&nbsp;     * Checks if the player can take a coin
-<i class="no-highlight">122</i>&nbsp;     * @param pawn the PawnColor to move
-<i class="no-highlight">123</i>&nbsp;     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
-<i class="no-highlight">124</i>&nbsp;     * @throws DiningRoomFullException if the diningRoom for that PawnColor is full
-<i class="no-highlight">125</i>&nbsp;     */
-<i class="no-highlight">126</i>&nbsp;    @Override
-<i class="no-highlight">127</i>&nbsp;    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException, DiningRoomFullException {
-<b class="fc"><i class="no-highlight">128</i>&nbsp;        if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {</b>
-<b class="nc"><i class="no-highlight">129</i>&nbsp;            throw new IllegalActionException();</b>
-<i class="no-highlight">130</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">131</i>&nbsp;        if(this.game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(pawn) &gt;= ApplicationConstants.STUDENTS_IN_DININGROOM){</b>
-<b class="nc"><i class="no-highlight">132</i>&nbsp;            throw new DiningRoomFullException();</b>
-<i class="no-highlight">133</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">134</i>&nbsp;        if (this.game.getCurrentPlayerBoard().moveStudentFromEntranceToDiningRoom(pawn)) {</b>
-<i class="no-highlight">135</i>&nbsp;            try {
-<b class="nc"><i class="no-highlight">136</i>&nbsp;                ((ExpertTableController) tableController).takeCoin();</b>
-<b class="nc"><i class="no-highlight">137</i>&nbsp;            } catch (NoCoinsAvailableException e) {</b>
-<b class="nc"><i class="no-highlight">138</i>&nbsp;                logger.log(Level.WARNING,&quot;no coins on the table&quot;);</b>
-<b class="nc"><i class="no-highlight">139</i>&nbsp;            }</b>
-<b class="nc"><i class="no-highlight">140</i>&nbsp;            getGame().addCoin(getGame().getPlayers()[game.getCurrentPlayer()]);</b>
-<i class="no-highlight">141</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">142</i>&nbsp;        this.checkProfessorsStatus(pawn);</b>
-<b class="fc"><i class="no-highlight">143</i>&nbsp;        this.movedPawn();</b>
-<i class="no-highlight">144</i>&nbsp;    }
-<i class="no-highlight">145</i>&nbsp;
-<i class="no-highlight">146</i>&nbsp;    /**
-<i class="no-highlight">147</i>&nbsp;     * @param card the card that the player selected
-<i class="no-highlight">148</i>&nbsp;     * @return Optional.of(i) if the card is on the table, Optional.empty() otherwise
-<i class="no-highlight">149</i>&nbsp;     */
-<i class="no-highlight">150</i>&nbsp;    private Optional&lt;Integer&gt; isCardOnTable(CharacterCardDto card) {
-<b class="fc"><i class="no-highlight">151</i>&nbsp;        for (int i = 0; i &lt; getGame().getCharacterCards().length; i++) {</b>
-<b class="fc"><i class="no-highlight">152</i>&nbsp;            if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {</b>
-<b class="fc"><i class="no-highlight">153</i>&nbsp;                return Optional.of(i);</b>
-<i class="no-highlight">154</i>&nbsp;            }
-<i class="no-highlight">155</i>&nbsp;        }
-<b class="nc"><i class="no-highlight">156</i>&nbsp;        return Optional.empty();</b>
-<i class="no-highlight">157</i>&nbsp;    }
-<i class="no-highlight">158</i>&nbsp;
-<i class="no-highlight">159</i>&nbsp;    /**
-<i class="no-highlight">160</i>&nbsp;     *
-<i class="no-highlight">161</i>&nbsp;     * @param characterIndex the characterCard&#39;s index
-<i class="no-highlight">162</i>&nbsp;     * @return true if the characterCard can be activated
-<i class="no-highlight">163</i>&nbsp;     */
-<i class="no-highlight">164</i>&nbsp;    public boolean canActivateCharacterAbility(int characterIndex) {
-<b class="fc"><i class="no-highlight">165</i>&nbsp;        if (getGameParameters().hasAlreadyActivateCharacterCard())</b>
-<b class="fc"><i class="no-highlight">166</i>&nbsp;            return false;</b>
-<b class="fc"><i class="no-highlight">167</i>&nbsp;        return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() &gt;=</b>
-<b class="fc"><i class="no-highlight">168</i>&nbsp;                getGame().getCharacterCards()[characterIndex].getCurrentPrice();</b>
-<i class="no-highlight">169</i>&nbsp;    }
-<i class="no-highlight">170</i>&nbsp;
-<i class="no-highlight">171</i>&nbsp;    /**
-<i class="no-highlight">172</i>&nbsp;     * Activate the characterCard
-<i class="no-highlight">173</i>&nbsp;     * @param characterIndex the characterCard&#39;s index
-<i class="no-highlight">174</i>&nbsp;     * @param parameters the parameters
-<i class="no-highlight">175</i>&nbsp;     */
-<i class="no-highlight">176</i>&nbsp;    public void activateCharacterAbility(int characterIndex, Object[] parameters) {
-<b class="fc"><i class="no-highlight">177</i>&nbsp;        if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)</b>
-<b class="fc"><i class="no-highlight">178</i>&nbsp;            switch (getGame().getCharacterCards()[characterIndex].getCharacter()) {</b>
-<b class="fc"><i class="no-highlight">179</i>&nbsp;                case CHARACTER_ONE -&gt; effect1(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0], (UUID) parameters[1]);</b>
-<b class="fc"><i class="no-highlight">180</i>&nbsp;                case CHARACTER_SEVEN -&gt; effect7(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (List&lt;PawnColor&gt;) parameters[0], (List&lt;PawnColor&gt;) parameters[1]);</b>
-<b class="fc"><i class="no-highlight">181</i>&nbsp;                case CHARACTER_ELEVEN -&gt; effect11(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0]);</b>
-<b class="nc"><i class="no-highlight">182</i>&nbsp;                default -&gt; logger.log(Level.WARNING,&quot;&quot;);</b>
-<i class="no-highlight">183</i>&nbsp;        }
-<i class="no-highlight">184</i>&nbsp;        else {
-<b class="fc"><i class="no-highlight">185</i>&nbsp;            activateStandardEffect(characterIndex, parameters);</b>
-<i class="no-highlight">186</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">187</i>&nbsp;        int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();</b>
-<b class="fc"><i class="no-highlight">188</i>&nbsp;        getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);</b>
-<b class="fc"><i class="no-highlight">189</i>&nbsp;        if(getGame().getCharacterCards()[characterIndex].hasCoin())</b>
-<b class="nc"><i class="no-highlight">190</i>&nbsp;            ((ExpertTableController) tableController).depositCoins(cardPrice);</b>
-<i class="no-highlight">191</i>&nbsp;        else
-<b class="fc"><i class="no-highlight">192</i>&nbsp;            ((ExpertTableController) tableController).depositCoins(cardPrice - 1);</b>
-<b class="fc"><i class="no-highlight">193</i>&nbsp;        getGameParameters().setAlreadyActivateCharacterCard(true);</b>
-<b class="fc"><i class="no-highlight">194</i>&nbsp;        ((ExpertGame) game).useCharacterCard(getGame().getCharacterCards()[characterIndex]);</b>
-<i class="no-highlight">195</i>&nbsp;    }
-<i class="no-highlight">196</i>&nbsp;
-<i class="no-highlight">197</i>&nbsp;    /**
-<i class="no-highlight">198</i>&nbsp;     * Activate standard effect
-<i class="no-highlight">199</i>&nbsp;     * @param effectIndex the effect&#39;s index
-<i class="no-highlight">200</i>&nbsp;     * @param parameters the parameters
-<i class="no-highlight">201</i>&nbsp;     */
-<i class="no-highlight">202</i>&nbsp;    private void activateStandardEffect(int effectIndex, Object[] parameters) {
-<b class="fc"><i class="no-highlight">203</i>&nbsp;        if (getGame().getCharacterCards()[effectIndex].getCharacter() == Character.CHARACTER_NINE)</b>
-<b class="fc"><i class="no-highlight">204</i>&nbsp;            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters(), parameters[0]);</b>
-<i class="no-highlight">205</i>&nbsp;        else
-<b class="fc"><i class="no-highlight">206</i>&nbsp;            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());</b>
-<i class="no-highlight">207</i>&nbsp;    }
-<i class="no-highlight">208</i>&nbsp;
-<i class="no-highlight">209</i>&nbsp;    /**
-<i class="no-highlight">210</i>&nbsp;     * Activate the Character_1 (Move a Pawn on an islandCard)
-<i class="no-highlight">211</i>&nbsp;     * @param game the expertGame
-<i class="no-highlight">212</i>&nbsp;     * @param character the characterCard with set up action
-<i class="no-highlight">213</i>&nbsp;     * @param color the pawnColor to move
-<i class="no-highlight">214</i>&nbsp;     * @param islandIndex the islandCard&#39;s index
-<i class="no-highlight">215</i>&nbsp;     */
-<i class="no-highlight">216</i>&nbsp;    private void effect1(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
-<b class="fc"><i class="no-highlight">217</i>&nbsp;        game.removeStudent(character, color);</b>
-<i class="no-highlight">218</i>&nbsp;        try {
-<b class="fc"><i class="no-highlight">219</i>&nbsp;            tableController.movePawnOnIsland(color, islandIndex);</b>
-<b class="nc"><i class="no-highlight">220</i>&nbsp;        } catch (WrongUUIDException e) {</b>
-<b class="nc"><i class="no-highlight">221</i>&nbsp;            game.throwException(e);</b>
-<b class="fc"><i class="no-highlight">222</i>&nbsp;        }</b>
-<b class="fc"><i class="no-highlight">223</i>&nbsp;        game.addStudent(character, tableController.drawStudents(1).get(0));</b>
-<i class="no-highlight">224</i>&nbsp;    }
-<i class="no-highlight">225</i>&nbsp;
-<i class="no-highlight">226</i>&nbsp;    /**
-<i class="no-highlight">227</i>&nbsp;     * Activate the Character_7 (Swap up to 3 Pawns on this card with the schoolBoard entrance)
-<i class="no-highlight">228</i>&nbsp;     * @param game the game
-<i class="no-highlight">229</i>&nbsp;     * @param character the characterCard with set up action
-<i class="no-highlight">230</i>&nbsp;     * @param colorsFromCard list of pawnColors from the card
-<i class="no-highlight">231</i>&nbsp;     * @param colorsFromEntrance list of pawnColors from the schoolBoard entrance
-<i class="no-highlight">232</i>&nbsp;     */
-<i class="no-highlight">233</i>&nbsp;    private void effect7(ExpertGame game, CharacterCardWithSetUpAction character, List&lt;PawnColor&gt; colorsFromCard, List&lt;PawnColor&gt; colorsFromEntrance) {
-<b class="fc"><i class="no-highlight">234</i>&nbsp;        for (PawnColor c : colorsFromCard) {</b>
-<b class="fc"><i class="no-highlight">235</i>&nbsp;            game.removeStudent(character, c);</b>
-<b class="fc"><i class="no-highlight">236</i>&nbsp;        }</b>
-<b class="fc"><i class="no-highlight">237</i>&nbsp;        for (PawnColor c : colorsFromEntrance) {</b>
-<b class="fc"><i class="no-highlight">238</i>&nbsp;            game.getPlayers()[game.getCurrentPlayer()].getBoard().removeStudentFromEntrance(c);</b>
-<b class="fc"><i class="no-highlight">239</i>&nbsp;            game.addStudent(character, c);</b>
-<b class="fc"><i class="no-highlight">240</i>&nbsp;        }</b>
-<i class="no-highlight">241</i>&nbsp;
-<b class="fc"><i class="no-highlight">242</i>&nbsp;        game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentsToEntrance(colorsFromCard);</b>
-<i class="no-highlight">243</i>&nbsp;    }
-<i class="no-highlight">244</i>&nbsp;
-<i class="no-highlight">245</i>&nbsp;    /**
-<i class="no-highlight">246</i>&nbsp;     * Activate the Character_11 (add student to diningRoom)
-<i class="no-highlight">247</i>&nbsp;     * @param game the game
-<i class="no-highlight">248</i>&nbsp;     * @param character the characterCard with set up action
-<i class="no-highlight">249</i>&nbsp;     * @param color the pawnColor
-<i class="no-highlight">250</i>&nbsp;     */
-<i class="no-highlight">251</i>&nbsp;    private void effect11(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color) {
-<b class="fc"><i class="no-highlight">252</i>&nbsp;        game.removeStudent(character, color);</b>
-<b class="fc"><i class="no-highlight">253</i>&nbsp;        game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);</b>
-<b class="fc"><i class="no-highlight">254</i>&nbsp;        game.addStudent(character, tableController.drawStudents(1).get(0));</b>
-<i class="no-highlight">255</i>&nbsp;    }
-<i class="no-highlight">256</i>&nbsp;
-<i class="no-highlight">257</i>&nbsp;    /**
-<i class="no-highlight">258</i>&nbsp;     * Activate set up effect
+<i class="no-highlight">12</i>&nbsp;import it.polimi.ingsw.network.messages.CloudMessage;
+<i class="no-highlight">13</i>&nbsp;import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
+<i class="no-highlight">14</i>&nbsp;import it.polimi.ingsw.persistency.DataDumper;
+<i class="no-highlight">15</i>&nbsp;import it.polimi.ingsw.utils.ApplicationConstants;
+<i class="no-highlight">16</i>&nbsp;import it.polimi.ingsw.utils.RandomHelper;
+<i class="no-highlight">17</i>&nbsp;import it.polimi.ingsw.view.VirtualView;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;import java.util.*;
+<i class="no-highlight">20</i>&nbsp;import java.util.logging.Level;
+<i class="no-highlight">21</i>&nbsp;import java.util.logging.Logger;
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;import static it.polimi.ingsw.model.enums.GamePhase.ACTION_MOVE_STUDENTS;
+<i class="no-highlight">24</i>&nbsp;import static it.polimi.ingsw.model.enums.GamePhase.PLANNING;
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;/**
+<i class="no-highlight">27</i>&nbsp; * Expert Game Controller
+<i class="no-highlight">28</i>&nbsp; */
+<i class="no-highlight">29</i>&nbsp;public class ExpertGameController extends GameController {
+<i class="no-highlight">30</i>&nbsp;    private Effect[] effects;
+<b class="fc"><i class="no-highlight">31</i>&nbsp;    private final Logger logger = Logger.getLogger(getClass().getName());</b>
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;    public ExpertGameController(ExpertGame game, ExpertTableController tableController, VirtualView[] virtualViews) {
+<b class="fc"><i class="no-highlight">34</i>&nbsp;        super(game, tableController, virtualViews);</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;        drawCharactersCards();</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;        activateSetupEffect();</b>
+<i class="no-highlight">37</i>&nbsp;    }
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;    /**
+<i class="no-highlight">40</i>&nbsp;     *
+<i class="no-highlight">41</i>&nbsp;     * @return a copy of the effects&#39; array
+<i class="no-highlight">42</i>&nbsp;     */
+<i class="no-highlight">43</i>&nbsp;    public Effect[] getEffects() {
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        return effects.clone();</b>
+<i class="no-highlight">45</i>&nbsp;    }
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;    public void setEffects(Effect[] effects) {
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        this.effects = effects;</b>
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    /**
+<i class="no-highlight">52</i>&nbsp;     *
+<i class="no-highlight">53</i>&nbsp;     * @param effects the effect to add
+<i class="no-highlight">54</i>&nbsp;     */
+<i class="no-highlight">55</i>&nbsp;    public void addEffects(Effect[] effects) {
+<b class="fc"><i class="no-highlight">56</i>&nbsp;        this.effects = effects;</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;    /**
+<i class="no-highlight">60</i>&nbsp;     * Draws three characterCards at the beginning of the game
+<i class="no-highlight">61</i>&nbsp;     */
+<i class="no-highlight">62</i>&nbsp;    private void drawCharactersCards() {
+<i class="no-highlight">63</i>&nbsp;        int numberCard;
+<b class="fc"><i class="no-highlight">64</i>&nbsp;        List&lt;Character&gt; characters = new ArrayList&lt;&gt;(Arrays.asList(Character.values()));</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;        CharacterCard[] cards = new CharacterCard[3];</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        Effect[] newEffects = new Effect[3];</b>
+<i class="no-highlight">67</i>&nbsp;
+<b class="fc"><i class="no-highlight">68</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;            numberCard = RandomHelper.getInstance().getInt(characters.size());</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;            cards[i] = CharacterCardFactory.getCharacterCard(characters.get(numberCard));</b>
+<b class="fc"><i class="no-highlight">71</i>&nbsp;            newEffects[i] = EffectFactory.getEffect(characters.get(numberCard));</b>
+<b class="fc"><i class="no-highlight">72</i>&nbsp;            characters.remove(characters.get(numberCard));</b>
+<i class="no-highlight">73</i>&nbsp;        }
+<i class="no-highlight">74</i>&nbsp;
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        getGame().setCharacterCards(cards);</b>
+<b class="fc"><i class="no-highlight">76</i>&nbsp;        addEffects(newEffects);</b>
+<i class="no-highlight">77</i>&nbsp;    }
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;    /**
+<i class="no-highlight">80</i>&nbsp;     * If the type of the message is Action_use_character, the characterCard in the message is played
+<i class="no-highlight">81</i>&nbsp;     * If it&#39;s not, the message is redirect to the gameController class
+<i class="no-highlight">82</i>&nbsp;     * @param message the incoming message
+<i class="no-highlight">83</i>&nbsp;     */
+<i class="no-highlight">84</i>&nbsp;    @Override
+<i class="no-highlight">85</i>&nbsp;    public void onMessageReceived(Message message) {
+<b class="fc"><i class="no-highlight">86</i>&nbsp;        synchronized (game){</b>
+<i class="no-highlight">87</i>&nbsp;            try {
+<b class="fc"><i class="no-highlight">88</i>&nbsp;                checkMessage(message);</b>
+<b class="fc"><i class="no-highlight">89</i>&nbsp;                if (message.getType().equals(MessageType.ACTION_USE_CHARACTER)) {</b>
+<b class="fc"><i class="no-highlight">90</i>&nbsp;                    CharacterCardDto card = ((CharacterCardMessage) message).getCharacterCard();</b>
+<b class="fc"><i class="no-highlight">91</i>&nbsp;                    Optional&lt;Integer&gt; cardIndex = isCardOnTable(card);</b>
+<b class="fc"><i class="no-highlight">92</i>&nbsp;                    if(cardIndex.isPresent()) {</b>
+<b class="fc"><i class="no-highlight">93</i>&nbsp;                        int index = cardIndex.get();</b>
+<b class="fc"><i class="no-highlight">94</i>&nbsp;                        if (canActivateCharacterAbility(index) &amp;&amp; areParametersOk((CharacterCardMessage) message, index)) {</b>
+<b class="fc"><i class="no-highlight">95</i>&nbsp;                            activateCharacterAbility(index, ((CharacterCardMessage) message).getParameters());</b>
+<i class="no-highlight">96</i>&nbsp;                        } else {
+<b class="fc"><i class="no-highlight">97</i>&nbsp;                            logger.log(Level.WARNING, &quot;Incorrect Character Card parameters&quot;);</b>
+<i class="no-highlight">98</i>&nbsp;                        }
+<b class="fc"><i class="no-highlight">99</i>&nbsp;                    }</b>
+<i class="no-highlight">100</i>&nbsp;                    else{
+<b class="nc"><i class="no-highlight">101</i>&nbsp;                        logger.log(Level.WARNING,&quot;Character Card not found&quot;);</b>
+<i class="no-highlight">102</i>&nbsp;                    }
+<b class="fc"><i class="no-highlight">103</i>&nbsp;                } else {</b>
+<b class="fc"><i class="no-highlight">104</i>&nbsp;                    super.onMessageReceived(message);</b>
+<i class="no-highlight">105</i>&nbsp;                }
+<b class="fc"><i class="no-highlight">106</i>&nbsp;            } catch (WrongPlayerException e) {</b>
+<b class="fc"><i class="no-highlight">107</i>&nbsp;                logger.log(Level.WARNING,&quot;&quot;,e);</b>
+<b class="fc"><i class="no-highlight">108</i>&nbsp;            }</b>
+<b class="fc"><i class="no-highlight">109</i>&nbsp;        }</b>
+<i class="no-highlight">110</i>&nbsp;    }
+<i class="no-highlight">111</i>&nbsp;
+<i class="no-highlight">112</i>&nbsp;    /**
+<i class="no-highlight">113</i>&nbsp;     * Checks the validity of the parameters
+<i class="no-highlight">114</i>&nbsp;     * @param message the message
+<i class="no-highlight">115</i>&nbsp;     * @param index the CharacterCard&#39;s index
+<i class="no-highlight">116</i>&nbsp;     * @return true if the parameters are valid
+<i class="no-highlight">117</i>&nbsp;     */
+<i class="no-highlight">118</i>&nbsp;    private boolean areParametersOk(CharacterCardMessage message, int index) {
+<b class="fc"><i class="no-highlight">119</i>&nbsp;        return switch (message.getCharacterCard().getCharacter()) {</b>
+<b class="fc"><i class="no-highlight">120</i>&nbsp;            case CHARACTER_ONE -&gt; CharacterCardHelper.areParametersOkCharacter1(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getTable().getIslands());</b>
+<b class="fc"><i class="no-highlight">121</i>&nbsp;            case CHARACTER_SEVEN -&gt; CharacterCardHelper.areParametersOkCharacter7(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);</b>
+<b class="fc"><i class="no-highlight">122</i>&nbsp;            case CHARACTER_NINE -&gt; CharacterCardHelper.areParametersOkCharacter9(message.getParameters());</b>
+<b class="fc"><i class="no-highlight">123</i>&nbsp;            case CHARACTER_ELEVEN -&gt; CharacterCardHelper.areParametersOkCharacter11(message.getCharacterCard(), getGame().getCharacterCards()[index], message.getParameters(), getGame().getPlayers()[getGame().getCurrentPlayer()]);</b>
+<b class="fc"><i class="no-highlight">124</i>&nbsp;            default -&gt; true;</b>
+<i class="no-highlight">125</i>&nbsp;        };
+<i class="no-highlight">126</i>&nbsp;    }
+<i class="no-highlight">127</i>&nbsp;
+<i class="no-highlight">128</i>&nbsp;    /**
+<i class="no-highlight">129</i>&nbsp;     * Moves the PawnColor to the diningRoom
+<i class="no-highlight">130</i>&nbsp;     * Checks if the player can take a coin
+<i class="no-highlight">131</i>&nbsp;     * @param pawn the PawnColor to move
+<i class="no-highlight">132</i>&nbsp;     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+<i class="no-highlight">133</i>&nbsp;     * @throws DiningRoomFullException if the diningRoom for that PawnColor is full
+<i class="no-highlight">134</i>&nbsp;     */
+<i class="no-highlight">135</i>&nbsp;    @Override
+<i class="no-highlight">136</i>&nbsp;    public void moveStudentToDiningRoom(PawnColor pawn) throws IllegalActionException, DiningRoomFullException {
+<b class="fc"><i class="no-highlight">137</i>&nbsp;        if (this.game.getGamePhase() != ACTION_MOVE_STUDENTS) {</b>
+<b class="nc"><i class="no-highlight">138</i>&nbsp;            throw new IllegalActionException();</b>
+<i class="no-highlight">139</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">140</i>&nbsp;        if(this.game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(pawn) &gt;= ApplicationConstants.STUDENTS_IN_DININGROOM){</b>
+<b class="nc"><i class="no-highlight">141</i>&nbsp;            throw new DiningRoomFullException();</b>
+<i class="no-highlight">142</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">143</i>&nbsp;        if (this.game.getCurrentPlayerBoard().moveStudentFromEntranceToDiningRoom(pawn)) {</b>
+<i class="no-highlight">144</i>&nbsp;            try {
+<b class="nc"><i class="no-highlight">145</i>&nbsp;                ((ExpertTableController) tableController).takeCoin();</b>
+<b class="nc"><i class="no-highlight">146</i>&nbsp;            } catch (NoCoinsAvailableException e) {</b>
+<b class="nc"><i class="no-highlight">147</i>&nbsp;                logger.log(Level.WARNING,&quot;no coins on the table&quot;);</b>
+<b class="nc"><i class="no-highlight">148</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">149</i>&nbsp;            getGame().addCoin(getGame().getPlayers()[game.getCurrentPlayer()]);</b>
+<i class="no-highlight">150</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">151</i>&nbsp;        this.checkProfessorsStatus(pawn);</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;        this.movedPawn();</b>
+<i class="no-highlight">153</i>&nbsp;    }
+<i class="no-highlight">154</i>&nbsp;
+<i class="no-highlight">155</i>&nbsp;    /**
+<i class="no-highlight">156</i>&nbsp;     * @param card the card that the player selected
+<i class="no-highlight">157</i>&nbsp;     * @return Optional.of(i) if the card is on the table, Optional.empty() otherwise
+<i class="no-highlight">158</i>&nbsp;     */
+<i class="no-highlight">159</i>&nbsp;    private Optional&lt;Integer&gt; isCardOnTable(CharacterCardDto card) {
+<b class="fc"><i class="no-highlight">160</i>&nbsp;        for (int i = 0; i &lt; getGame().getCharacterCards().length; i++) {</b>
+<b class="fc"><i class="no-highlight">161</i>&nbsp;            if (getGame().getCharacterCards()[i].getCharacter().equals(card.getCharacter())) {</b>
+<b class="fc"><i class="no-highlight">162</i>&nbsp;                return Optional.of(i);</b>
+<i class="no-highlight">163</i>&nbsp;            }
+<i class="no-highlight">164</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">165</i>&nbsp;        return Optional.empty();</b>
+<i class="no-highlight">166</i>&nbsp;    }
+<i class="no-highlight">167</i>&nbsp;
+<i class="no-highlight">168</i>&nbsp;    /**
+<i class="no-highlight">169</i>&nbsp;     *
+<i class="no-highlight">170</i>&nbsp;     * @param characterIndex the characterCard&#39;s index
+<i class="no-highlight">171</i>&nbsp;     * @return true if the characterCard can be activated
+<i class="no-highlight">172</i>&nbsp;     */
+<i class="no-highlight">173</i>&nbsp;    public boolean canActivateCharacterAbility(int characterIndex) {
+<b class="fc"><i class="no-highlight">174</i>&nbsp;        if (getGameParameters().hasAlreadyActivateCharacterCard())</b>
+<b class="fc"><i class="no-highlight">175</i>&nbsp;            return false;</b>
+<b class="fc"><i class="no-highlight">176</i>&nbsp;        return getGame().getPlayers()[game.getCurrentPlayer()].getCoins() &gt;=</b>
+<b class="fc"><i class="no-highlight">177</i>&nbsp;                getGame().getCharacterCards()[characterIndex].getCurrentPrice();</b>
+<i class="no-highlight">178</i>&nbsp;    }
+<i class="no-highlight">179</i>&nbsp;
+<i class="no-highlight">180</i>&nbsp;    /**
+<i class="no-highlight">181</i>&nbsp;     * Activate the characterCard
+<i class="no-highlight">182</i>&nbsp;     * @param characterIndex the characterCard&#39;s index
+<i class="no-highlight">183</i>&nbsp;     * @param parameters the parameters
+<i class="no-highlight">184</i>&nbsp;     */
+<i class="no-highlight">185</i>&nbsp;    public void activateCharacterAbility(int characterIndex, Object[] parameters) {
+<b class="fc"><i class="no-highlight">186</i>&nbsp;        if (getGame().getCharacterCards()[characterIndex] instanceof CharacterCardWithSetUpAction)</b>
+<b class="fc"><i class="no-highlight">187</i>&nbsp;            switch (getGame().getCharacterCards()[characterIndex].getCharacter()) {</b>
+<b class="fc"><i class="no-highlight">188</i>&nbsp;                case CHARACTER_ONE -&gt; effect1(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0], (UUID) parameters[1]);</b>
+<b class="fc"><i class="no-highlight">189</i>&nbsp;                case CHARACTER_SEVEN -&gt; effect7(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (List&lt;PawnColor&gt;) parameters[0], (List&lt;PawnColor&gt;) parameters[1]);</b>
+<b class="fc"><i class="no-highlight">190</i>&nbsp;                case CHARACTER_ELEVEN -&gt; effect11(getGame(), (CharacterCardWithSetUpAction) getGame().getCharacterCards()[characterIndex], (PawnColor) parameters[0]);</b>
+<b class="nc"><i class="no-highlight">191</i>&nbsp;                default -&gt; logger.log(Level.WARNING,&quot;&quot;);</b>
+<i class="no-highlight">192</i>&nbsp;        }
+<i class="no-highlight">193</i>&nbsp;        else {
+<b class="fc"><i class="no-highlight">194</i>&nbsp;            activateStandardEffect(characterIndex, parameters);</b>
+<i class="no-highlight">195</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">196</i>&nbsp;        int cardPrice = (getGame()).getCharacterCards()[characterIndex].getCurrentPrice();</b>
+<b class="fc"><i class="no-highlight">197</i>&nbsp;        getGame().decreaseCoins(getGame().getPlayers()[game.getCurrentPlayer()], cardPrice);</b>
+<b class="fc"><i class="no-highlight">198</i>&nbsp;        if(getGame().getCharacterCards()[characterIndex].hasCoin())</b>
+<b class="nc"><i class="no-highlight">199</i>&nbsp;            ((ExpertTableController) tableController).depositCoins(cardPrice);</b>
+<i class="no-highlight">200</i>&nbsp;        else
+<b class="fc"><i class="no-highlight">201</i>&nbsp;            ((ExpertTableController) tableController).depositCoins(cardPrice - 1);</b>
+<b class="fc"><i class="no-highlight">202</i>&nbsp;        getGameParameters().setAlreadyActivateCharacterCard(true);</b>
+<b class="fc"><i class="no-highlight">203</i>&nbsp;        ((ExpertGame) game).useCharacterCard(getGame().getCharacterCards()[characterIndex]);</b>
+<i class="no-highlight">204</i>&nbsp;    }
+<i class="no-highlight">205</i>&nbsp;
+<i class="no-highlight">206</i>&nbsp;    /**
+<i class="no-highlight">207</i>&nbsp;     * Activate standard effect
+<i class="no-highlight">208</i>&nbsp;     * @param effectIndex the effect&#39;s index
+<i class="no-highlight">209</i>&nbsp;     * @param parameters the parameters
+<i class="no-highlight">210</i>&nbsp;     */
+<i class="no-highlight">211</i>&nbsp;    private void activateStandardEffect(int effectIndex, Object[] parameters) {
+<b class="fc"><i class="no-highlight">212</i>&nbsp;        if (getGame().getCharacterCards()[effectIndex].getCharacter() == Character.CHARACTER_NINE)</b>
+<b class="fc"><i class="no-highlight">213</i>&nbsp;            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters(), parameters[0]);</b>
+<i class="no-highlight">214</i>&nbsp;        else
+<b class="fc"><i class="no-highlight">215</i>&nbsp;            ((StandardEffect) getEffects()[effectIndex]).activateEffect(getGameParameters());</b>
+<i class="no-highlight">216</i>&nbsp;    }
+<i class="no-highlight">217</i>&nbsp;
+<i class="no-highlight">218</i>&nbsp;    /**
+<i class="no-highlight">219</i>&nbsp;     * Activate the Character_1 (Move a Pawn on an islandCard)
+<i class="no-highlight">220</i>&nbsp;     * @param game the expertGame
+<i class="no-highlight">221</i>&nbsp;     * @param character the characterCard with set up action
+<i class="no-highlight">222</i>&nbsp;     * @param color the pawnColor to move
+<i class="no-highlight">223</i>&nbsp;     * @param islandIndex the islandCard&#39;s index
+<i class="no-highlight">224</i>&nbsp;     */
+<i class="no-highlight">225</i>&nbsp;    private void effect1(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color, UUID islandIndex) {
+<b class="fc"><i class="no-highlight">226</i>&nbsp;        game.removeStudent(character, color);</b>
+<i class="no-highlight">227</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">228</i>&nbsp;            tableController.movePawnOnIsland(color, islandIndex);</b>
+<b class="nc"><i class="no-highlight">229</i>&nbsp;        } catch (WrongUUIDException e) {</b>
+<b class="nc"><i class="no-highlight">230</i>&nbsp;            game.throwException(e);</b>
+<b class="fc"><i class="no-highlight">231</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">232</i>&nbsp;        game.addStudent(character, tableController.drawStudents(1).get(0));</b>
+<i class="no-highlight">233</i>&nbsp;    }
+<i class="no-highlight">234</i>&nbsp;
+<i class="no-highlight">235</i>&nbsp;    /**
+<i class="no-highlight">236</i>&nbsp;     * Activate the Character_7 (Swap up to 3 Pawns on this card with the schoolBoard entrance)
+<i class="no-highlight">237</i>&nbsp;     * @param game the game
+<i class="no-highlight">238</i>&nbsp;     * @param character the characterCard with set up action
+<i class="no-highlight">239</i>&nbsp;     * @param colorsFromCard list of pawnColors from the card
+<i class="no-highlight">240</i>&nbsp;     * @param colorsFromEntrance list of pawnColors from the schoolBoard entrance
+<i class="no-highlight">241</i>&nbsp;     */
+<i class="no-highlight">242</i>&nbsp;    private void effect7(ExpertGame game, CharacterCardWithSetUpAction character, List&lt;PawnColor&gt; colorsFromCard, List&lt;PawnColor&gt; colorsFromEntrance) {
+<b class="fc"><i class="no-highlight">243</i>&nbsp;        for (PawnColor c : colorsFromCard) {</b>
+<b class="fc"><i class="no-highlight">244</i>&nbsp;            game.removeStudent(character, c);</b>
+<b class="fc"><i class="no-highlight">245</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">246</i>&nbsp;        for (PawnColor c : colorsFromEntrance) {</b>
+<b class="fc"><i class="no-highlight">247</i>&nbsp;            game.getPlayers()[game.getCurrentPlayer()].getBoard().removeStudentFromEntrance(c);</b>
+<b class="fc"><i class="no-highlight">248</i>&nbsp;            game.addStudent(character, c);</b>
+<b class="fc"><i class="no-highlight">249</i>&nbsp;        }</b>
+<i class="no-highlight">250</i>&nbsp;
+<b class="fc"><i class="no-highlight">251</i>&nbsp;        game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentsToEntrance(colorsFromCard);</b>
+<i class="no-highlight">252</i>&nbsp;    }
+<i class="no-highlight">253</i>&nbsp;
+<i class="no-highlight">254</i>&nbsp;    /**
+<i class="no-highlight">255</i>&nbsp;     * Activate the Character_11 (add student to diningRoom)
+<i class="no-highlight">256</i>&nbsp;     * @param game the game
+<i class="no-highlight">257</i>&nbsp;     * @param character the characterCard with set up action
+<i class="no-highlight">258</i>&nbsp;     * @param color the pawnColor
 <i class="no-highlight">259</i>&nbsp;     */
-<i class="no-highlight">260</i>&nbsp;    public void activateSetupEffect() {
-<b class="fc"><i class="no-highlight">261</i>&nbsp;        for (int i = 0; i &lt; effects.length; i++) {</b>
-<b class="fc"><i class="no-highlight">262</i>&nbsp;            if (effects[i] instanceof SetupEffect effect)</b>
-<b class="fc"><i class="no-highlight">263</i>&nbsp;                effect.setupEffect(getGame(), tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[i]);</b>
-<i class="no-highlight">264</i>&nbsp;        }
-<i class="no-highlight">265</i>&nbsp;    }
-<i class="no-highlight">266</i>&nbsp;
-<i class="no-highlight">267</i>&nbsp;    /**
-<i class="no-highlight">268</i>&nbsp;     * Activate reverseEffect for all characterCards
-<i class="no-highlight">269</i>&nbsp;     */
-<i class="no-highlight">270</i>&nbsp;    public void reverseEffect() {
-<b class="fc"><i class="no-highlight">271</i>&nbsp;        for (Effect e : getEffects()) {</b>
-<b class="fc"><i class="no-highlight">272</i>&nbsp;            if (e instanceof StandardEffect effect)</b>
-<b class="fc"><i class="no-highlight">273</i>&nbsp;                effect.reverseEffect(getGameParameters());</b>
-<i class="no-highlight">274</i>&nbsp;        }
-<i class="no-highlight">275</i>&nbsp;    }
-<i class="no-highlight">276</i>&nbsp;
-<i class="no-highlight">277</i>&nbsp;    /**
-<i class="no-highlight">278</i>&nbsp;     * At the end of a turn, the active characterCard&#39;s effect is reverse
-<i class="no-highlight">279</i>&nbsp;     */
-<i class="no-highlight">280</i>&nbsp;    @Override
-<i class="no-highlight">281</i>&nbsp;    protected void playerHasEndedAction() {
-<b class="fc"><i class="no-highlight">282</i>&nbsp;        this.game.setGamePhase(this.pickNextPhase());</b>
-<b class="fc"><i class="no-highlight">283</i>&nbsp;        if (this.game.getGamePhase() == GamePhase.ACTION_END) {</b>
-<i class="no-highlight">284</i>&nbsp;            do{
-<b class="fc"><i class="no-highlight">285</i>&nbsp;                this.game.setPlayedCount(game.getPlayedCount() + 1);</b>
-<b class="fc"><i class="no-highlight">286</i>&nbsp;                reverseEffect();</b>
-<b class="fc"><i class="no-highlight">287</i>&nbsp;                getGameParameters().setAlreadyActivateCharacterCard(false);</b>
-<b class="fc"><i class="no-highlight">288</i>&nbsp;                getGame().expertParameters(getGameParameters());</b>
-<b class="fc"><i class="no-highlight">289</i>&nbsp;                if (!super.isRoundComplete()) {</b>
-<b class="fc"><i class="no-highlight">290</i>&nbsp;                    this.game.setGamePhase(ACTION_MOVE_STUDENTS);</b>
-<i class="no-highlight">291</i>&nbsp;                } else {
-<b class="fc"><i class="no-highlight">292</i>&nbsp;                    endOfRound();</b>
-<b class="fc"><i class="no-highlight">293</i>&nbsp;                    if(game.isGameOver())</b>
-<i class="no-highlight">294</i>&nbsp;                        return;
-<i class="no-highlight">295</i>&nbsp;                }
-<b class="fc"><i class="no-highlight">296</i>&nbsp;                super.changePlayer();</b>
-<i class="no-highlight">297</i>&nbsp;            }
-<b class="fc"><i class="no-highlight">298</i>&nbsp;            while (!game.getPlayer(game.getCurrentPlayer()).canPlayThisRound() &amp;&amp; this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);</b>
-<b class="fc"><i class="no-highlight">299</i>&nbsp;            if(this.game.getGamePhase() == PLANNING &amp;&amp; !game.getPlayer(game.getCurrentPlayer()).canPlayThisRound())</b>
-<b class="nc"><i class="no-highlight">300</i>&nbsp;                playerHasEndedPlanning();</b>
-<b class="fc"><i class="no-highlight">301</i>&nbsp;            DataDumper.getInstance().saveGame(game);</b>
-<i class="no-highlight">302</i>&nbsp;        }
-<i class="no-highlight">303</i>&nbsp;    }
-<i class="no-highlight">304</i>&nbsp;
-<i class="no-highlight">305</i>&nbsp;    /**
-<i class="no-highlight">306</i>&nbsp;     *
-<i class="no-highlight">307</i>&nbsp;     * @return the expertGameParameters
-<i class="no-highlight">308</i>&nbsp;     */
-<i class="no-highlight">309</i>&nbsp;    public ExpertGameParameters getGameParameters() {
-<b class="fc"><i class="no-highlight">310</i>&nbsp;        return (ExpertGameParameters) super.game.getParameters();</b>
-<i class="no-highlight">311</i>&nbsp;    }
-<i class="no-highlight">312</i>&nbsp;
-<i class="no-highlight">313</i>&nbsp;    /**
-<i class="no-highlight">314</i>&nbsp;     *
-<i class="no-highlight">315</i>&nbsp;     * @return the expertGame
-<i class="no-highlight">316</i>&nbsp;     */
-<i class="no-highlight">317</i>&nbsp;    public ExpertGame getGame() {
-<b class="fc"><i class="no-highlight">318</i>&nbsp;        return (ExpertGame) this.game;</b>
-<i class="no-highlight">319</i>&nbsp;    }
-<i class="no-highlight">320</i>&nbsp;
-<i class="no-highlight">321</i>&nbsp;    /**
-<i class="no-highlight">322</i>&nbsp;     * Overrides the gameController method
-<i class="no-highlight">323</i>&nbsp;     * Checks if the effect of an active characterCard affects the move
-<i class="no-highlight">324</i>&nbsp;     * @param color the PawnColor just moved
-<i class="no-highlight">325</i>&nbsp;     * @param player the other player
-<i class="no-highlight">326</i>&nbsp;     */
-<i class="no-highlight">327</i>&nbsp;    @Override
-<i class="no-highlight">328</i>&nbsp;    public void tryStealProfessor(PawnColor color, Player player) {
-<b class="fc"><i class="no-highlight">329</i>&nbsp;        if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &amp;&amp;</b>
-<b class="fc"><i class="no-highlight">330</i>&nbsp;                player.getBoard().isThereProfessor(color)) {</b>
-<b class="fc"><i class="no-highlight">331</i>&nbsp;            if (getGameParameters().isTakeProfessorEvenIfSameStudents()) {</b>
-<b class="nc"><i class="no-highlight">332</i>&nbsp;                if (game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)</b>
-<b class="nc"><i class="no-highlight">333</i>&nbsp;                        &gt;= player.getBoard().getStudentsInDiningRoom(color)) {</b>
-<b class="nc"><i class="no-highlight">334</i>&nbsp;                    player.getBoard().removeProfessor(color);</b>
-<b class="nc"><i class="no-highlight">335</i>&nbsp;                    game.getCurrentPlayerSchoolBoard().addProfessor(color);</b>
-<i class="no-highlight">336</i>&nbsp;                }
-<i class="no-highlight">337</i>&nbsp;            } else {
-<b class="fc"><i class="no-highlight">338</i>&nbsp;                if (game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)</b>
-<b class="fc"><i class="no-highlight">339</i>&nbsp;                        &gt; player.getBoard().getStudentsInDiningRoom(color)) {</b>
-<b class="fc"><i class="no-highlight">340</i>&nbsp;                    player.getBoard().removeProfessor(color);</b>
-<b class="fc"><i class="no-highlight">341</i>&nbsp;                    game.getCurrentPlayerSchoolBoard().addProfessor(color);</b>
-<i class="no-highlight">342</i>&nbsp;                }
-<i class="no-highlight">343</i>&nbsp;            }
-<i class="no-highlight">344</i>&nbsp;        }
-<i class="no-highlight">345</i>&nbsp;    }
-<i class="no-highlight">346</i>&nbsp;
-<i class="no-highlight">347</i>&nbsp;    /**
-<i class="no-highlight">348</i>&nbsp;     * Overrides the gameController method
-<i class="no-highlight">349</i>&nbsp;     * Checks if the effect of an active characterCard affects the move
-<i class="no-highlight">350</i>&nbsp;     * @param steps motherNature&#39;s steps
-<i class="no-highlight">351</i>&nbsp;     * @throws NotAllowedMotherNatureMovementException if the number of motherNature steps isn&#39;t valid
-<i class="no-highlight">352</i>&nbsp;     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
-<i class="no-highlight">353</i>&nbsp;     */
-<i class="no-highlight">354</i>&nbsp;    @Override
-<i class="no-highlight">355</i>&nbsp;    public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
-<b class="fc"><i class="no-highlight">356</i>&nbsp;        if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {</b>
-<b class="nc"><i class="no-highlight">357</i>&nbsp;            throw new IllegalActionException();</b>
-<i class="no-highlight">358</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">359</i>&nbsp;        if (steps &lt; 1 || steps &gt; this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {</b>
-<b class="fc"><i class="no-highlight">360</i>&nbsp;            throw new NotAllowedMotherNatureMovementException();</b>
-<i class="no-highlight">361</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">362</i>&nbsp;        this.tableController.moveMotherNature(steps);</b>
-<i class="no-highlight">363</i>&nbsp;
-<b class="fc"><i class="no-highlight">364</i>&nbsp;        this.checkInfluence();</b>
-<i class="no-highlight">365</i>&nbsp;
-<b class="fc"><i class="no-highlight">366</i>&nbsp;        this.playerHasEndedAction();</b>
-<i class="no-highlight">367</i>&nbsp;    }
-<i class="no-highlight">368</i>&nbsp;}
+<i class="no-highlight">260</i>&nbsp;    private void effect11(ExpertGame game, CharacterCardWithSetUpAction character, PawnColor color) {
+<b class="fc"><i class="no-highlight">261</i>&nbsp;        game.removeStudent(character, color);</b>
+<b class="fc"><i class="no-highlight">262</i>&nbsp;        game.getPlayers()[game.getCurrentPlayer()].getBoard().addStudentToDiningRoom(color);</b>
+<b class="fc"><i class="no-highlight">263</i>&nbsp;        game.addStudent(character, tableController.drawStudents(1).get(0));</b>
+<i class="no-highlight">264</i>&nbsp;    }
+<i class="no-highlight">265</i>&nbsp;
+<i class="no-highlight">266</i>&nbsp;    /**
+<i class="no-highlight">267</i>&nbsp;     * Activate set up effect
+<i class="no-highlight">268</i>&nbsp;     */
+<i class="no-highlight">269</i>&nbsp;    public void activateSetupEffect() {
+<b class="fc"><i class="no-highlight">270</i>&nbsp;        for (int i = 0; i &lt; effects.length; i++) {</b>
+<b class="fc"><i class="no-highlight">271</i>&nbsp;            if (effects[i] instanceof SetupEffect effect)</b>
+<b class="fc"><i class="no-highlight">272</i>&nbsp;                effect.setupEffect(getGame(), tableController, (CharacterCardWithSetUpAction) getGame().getCharacterCards()[i]);</b>
+<i class="no-highlight">273</i>&nbsp;        }
+<i class="no-highlight">274</i>&nbsp;    }
+<i class="no-highlight">275</i>&nbsp;
+<i class="no-highlight">276</i>&nbsp;    /**
+<i class="no-highlight">277</i>&nbsp;     * Activate reverseEffect for all characterCards
+<i class="no-highlight">278</i>&nbsp;     */
+<i class="no-highlight">279</i>&nbsp;    public void reverseEffect() {
+<b class="fc"><i class="no-highlight">280</i>&nbsp;        for (Effect e : getEffects()) {</b>
+<b class="fc"><i class="no-highlight">281</i>&nbsp;            if (e instanceof StandardEffect effect)</b>
+<b class="fc"><i class="no-highlight">282</i>&nbsp;                effect.reverseEffect(getGameParameters());</b>
+<i class="no-highlight">283</i>&nbsp;        }
+<i class="no-highlight">284</i>&nbsp;    }
+<i class="no-highlight">285</i>&nbsp;
+<i class="no-highlight">286</i>&nbsp;    /**
+<i class="no-highlight">287</i>&nbsp;     * At the end of a turn, the active characterCard&#39;s effect is reverse
+<i class="no-highlight">288</i>&nbsp;     */
+<i class="no-highlight">289</i>&nbsp;    @Override
+<i class="no-highlight">290</i>&nbsp;    protected void playerHasEndedAction() {
+<b class="fc"><i class="no-highlight">291</i>&nbsp;        this.game.setGamePhase(this.pickNextPhase());</b>
+<b class="fc"><i class="no-highlight">292</i>&nbsp;        if (this.game.getGamePhase() == GamePhase.ACTION_END) {</b>
+<i class="no-highlight">293</i>&nbsp;            do{
+<b class="fc"><i class="no-highlight">294</i>&nbsp;                this.game.setPlayedCount(game.getPlayedCount() + 1);</b>
+<b class="fc"><i class="no-highlight">295</i>&nbsp;                reverseEffect();</b>
+<b class="fc"><i class="no-highlight">296</i>&nbsp;                getGameParameters().setAlreadyActivateCharacterCard(false);</b>
+<b class="fc"><i class="no-highlight">297</i>&nbsp;                getGame().expertParameters(getGameParameters());</b>
+<b class="fc"><i class="no-highlight">298</i>&nbsp;                if (!super.isRoundComplete()) {</b>
+<b class="fc"><i class="no-highlight">299</i>&nbsp;                    this.game.setGamePhase(ACTION_MOVE_STUDENTS);</b>
+<i class="no-highlight">300</i>&nbsp;                } else {
+<b class="fc"><i class="no-highlight">301</i>&nbsp;                    endOfRound();</b>
+<b class="fc"><i class="no-highlight">302</i>&nbsp;                    if(game.isGameOver())</b>
+<i class="no-highlight">303</i>&nbsp;                        return;
+<i class="no-highlight">304</i>&nbsp;                }
+<b class="fc"><i class="no-highlight">305</i>&nbsp;                super.changePlayer();</b>
+<i class="no-highlight">306</i>&nbsp;            }
+<b class="fc"><i class="no-highlight">307</i>&nbsp;            while (!game.getPlayer(game.getCurrentPlayer()).canPlayThisRound() &amp;&amp; this.game.getGamePhase() == GamePhase.ACTION_MOVE_STUDENTS);</b>
+<b class="fc"><i class="no-highlight">308</i>&nbsp;            if(this.game.getGamePhase() == PLANNING &amp;&amp; !game.getPlayer(game.getCurrentPlayer()).canPlayThisRound())</b>
+<b class="nc"><i class="no-highlight">309</i>&nbsp;                playerHasEndedPlanning();</b>
+<b class="fc"><i class="no-highlight">310</i>&nbsp;            DataDumper.getInstance().saveGame(game);</b>
+<i class="no-highlight">311</i>&nbsp;        }
+<i class="no-highlight">312</i>&nbsp;    }
+<i class="no-highlight">313</i>&nbsp;
+<i class="no-highlight">314</i>&nbsp;    /**
+<i class="no-highlight">315</i>&nbsp;     *
+<i class="no-highlight">316</i>&nbsp;     * @return the expertGameParameters
+<i class="no-highlight">317</i>&nbsp;     */
+<i class="no-highlight">318</i>&nbsp;    public ExpertGameParameters getGameParameters() {
+<b class="fc"><i class="no-highlight">319</i>&nbsp;        return (ExpertGameParameters) super.game.getParameters();</b>
+<i class="no-highlight">320</i>&nbsp;    }
+<i class="no-highlight">321</i>&nbsp;
+<i class="no-highlight">322</i>&nbsp;    /**
+<i class="no-highlight">323</i>&nbsp;     *
+<i class="no-highlight">324</i>&nbsp;     * @return the expertGame
+<i class="no-highlight">325</i>&nbsp;     */
+<i class="no-highlight">326</i>&nbsp;    public ExpertGame getGame() {
+<b class="fc"><i class="no-highlight">327</i>&nbsp;        return (ExpertGame) this.game;</b>
+<i class="no-highlight">328</i>&nbsp;    }
+<i class="no-highlight">329</i>&nbsp;
+<i class="no-highlight">330</i>&nbsp;    /**
+<i class="no-highlight">331</i>&nbsp;     * Overrides the gameController method
+<i class="no-highlight">332</i>&nbsp;     * Checks if the effect of an active characterCard affects the move
+<i class="no-highlight">333</i>&nbsp;     * @param color the PawnColor just moved
+<i class="no-highlight">334</i>&nbsp;     * @param player the other player
+<i class="no-highlight">335</i>&nbsp;     */
+<i class="no-highlight">336</i>&nbsp;    @Override
+<i class="no-highlight">337</i>&nbsp;    public void tryStealProfessor(PawnColor color, Player player) {
+<b class="fc"><i class="no-highlight">338</i>&nbsp;        if (!game.getCurrentPlayerSchoolBoard().isThereProfessor(color) &amp;&amp;</b>
+<b class="fc"><i class="no-highlight">339</i>&nbsp;                player.getBoard().isThereProfessor(color)) {</b>
+<b class="fc"><i class="no-highlight">340</i>&nbsp;            if (getGameParameters().isTakeProfessorEvenIfSameStudents()) {</b>
+<b class="nc"><i class="no-highlight">341</i>&nbsp;                if (game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)</b>
+<b class="nc"><i class="no-highlight">342</i>&nbsp;                        &gt;= player.getBoard().getStudentsInDiningRoom(color)) {</b>
+<b class="nc"><i class="no-highlight">343</i>&nbsp;                    player.getBoard().removeProfessor(color);</b>
+<b class="nc"><i class="no-highlight">344</i>&nbsp;                    game.getCurrentPlayerSchoolBoard().addProfessor(color);</b>
+<i class="no-highlight">345</i>&nbsp;                }
+<i class="no-highlight">346</i>&nbsp;            } else {
+<b class="fc"><i class="no-highlight">347</i>&nbsp;                if (game.getCurrentPlayerSchoolBoard().getStudentsInDiningRoom(color)</b>
+<b class="fc"><i class="no-highlight">348</i>&nbsp;                        &gt; player.getBoard().getStudentsInDiningRoom(color)) {</b>
+<b class="nc"><i class="no-highlight">349</i>&nbsp;                    player.getBoard().removeProfessor(color);</b>
+<b class="nc"><i class="no-highlight">350</i>&nbsp;                    game.getCurrentPlayerSchoolBoard().addProfessor(color);</b>
+<i class="no-highlight">351</i>&nbsp;                }
+<i class="no-highlight">352</i>&nbsp;            }
+<i class="no-highlight">353</i>&nbsp;        }
+<i class="no-highlight">354</i>&nbsp;    }
+<i class="no-highlight">355</i>&nbsp;
+<i class="no-highlight">356</i>&nbsp;    /**
+<i class="no-highlight">357</i>&nbsp;     * Overrides the gameController method
+<i class="no-highlight">358</i>&nbsp;     * Checks if the effect of an active characterCard affects the move
+<i class="no-highlight">359</i>&nbsp;     * @param steps motherNature&#39;s steps
+<i class="no-highlight">360</i>&nbsp;     * @throws NotAllowedMotherNatureMovementException if the number of motherNature steps isn&#39;t valid
+<i class="no-highlight">361</i>&nbsp;     * @throws IllegalActionException if the player is trying to execute an action in the wrong game phase
+<i class="no-highlight">362</i>&nbsp;     */
+<i class="no-highlight">363</i>&nbsp;    @Override
+<i class="no-highlight">364</i>&nbsp;    public void moveMotherNature(int steps) throws NotAllowedMotherNatureMovementException, IllegalActionException {
+<b class="fc"><i class="no-highlight">365</i>&nbsp;        if (this.game.getGamePhase() != GamePhase.ACTION_MOVE_MOTHER_NATURE) {</b>
+<b class="nc"><i class="no-highlight">366</i>&nbsp;            throw new IllegalActionException();</b>
+<i class="no-highlight">367</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">368</i>&nbsp;        if (steps &lt; 1 || steps &gt; this.game.getPlayers()[game.getCurrentPlayer()].getDiscardPileHead().motherNatureMovement() + getGameParameters().getMotherNatureExtraMovements()) {</b>
+<b class="fc"><i class="no-highlight">369</i>&nbsp;            throw new NotAllowedMotherNatureMovementException();</b>
+<i class="no-highlight">370</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">371</i>&nbsp;        this.tableController.moveMotherNature(steps);</b>
+<i class="no-highlight">372</i>&nbsp;
+<b class="fc"><i class="no-highlight">373</i>&nbsp;        this.checkInfluence();</b>
+<i class="no-highlight">374</i>&nbsp;
+<b class="fc"><i class="no-highlight">375</i>&nbsp;        this.playerHasEndedAction();</b>
+<i class="no-highlight">376</i>&nbsp;    }
+<i class="no-highlight">377</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -493,7 +502,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-07-01 21:06</div>
+    <div style="float:right;">generated on 2022-07-01 21:53</div>
 </div>
 </body>
 </html>
