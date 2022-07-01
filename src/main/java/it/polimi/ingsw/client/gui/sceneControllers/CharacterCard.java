@@ -123,6 +123,7 @@ public class CharacterCard extends Pane {
                         case CHARACTER_FOUR -> {
                             gui.setAdditionalMotherNatureMovement(2);
                             gui.genericMessage("You activated the Character");
+                            gui.activateCharacter(index);
                         }
                         case CHARACTER_SEVEN -> handleEffectSeven();
                         case CHARACTER_NINE -> handleEffectNine();
