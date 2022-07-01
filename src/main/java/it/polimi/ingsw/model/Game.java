@@ -261,7 +261,6 @@ public class Game extends ModelObservable implements Serializable {
     public void setEnoughPlayersOnline(boolean enoughPlayersOnline) {
         this.enoughPlayersOnline = enoughPlayersOnline;
         notifyEnoughPlayerOnline(enoughPlayersOnline);
-        //TODO block all action if false
     }
 
     /**
