@@ -13,6 +13,7 @@ import it.polimi.ingsw.network.messages.AssistantPlayedMessage;
 import it.polimi.ingsw.network.messages.CloudMessage;
 import it.polimi.ingsw.network.messages.MoveMotherNatureMessage;
 import it.polimi.ingsw.network.messages.MoveStudentMessage;
+import it.polimi.ingsw.servercontroller.GameEndingListener;
 import it.polimi.ingsw.servercontroller.User;
 import it.polimi.ingsw.view.VirtualView;
 import junit.framework.TestCase;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.*;
 
 class GameControllerTest extends TestCase {
@@ -37,6 +39,37 @@ class GameControllerTest extends TestCase {
     @BeforeEach
     void init(){
         gameController.init();
+    }
+
+    @Test
+    void generalGameTest(){
+        Exception e = new Exception();
+        game.throwException(e);
+        Assertions.assertEquals(e, game.getLastError());
+
+        game.callGameOverFromDisconnection();
+        Assertions.assertTrue(game.isGameOver());
+        Assertions.assertEquals(GamePhase.GAME_OVER, game.getGamePhase());
+
+        GameEndingListener listener = new GameEndingListener() {
+            @Override
+            public void onGameEnding(UUID uuid) {
+            }
+        };
+        game.addGameEndingListener(listener);
+        Assertions.assertTrue(game.getGameEndingListeners().contains(listener));
+        game.removeGameEndingListener(listener);
+        Assertions.assertFalse(game.getGameEndingListeners().contains(listener));
+
+        List<GameEndingListener> list = new LinkedList<>();
+        game.setGameEndingListeners(list);
+        Assertions.assertEquals(game.getGameEndingListeners(), list);
+
+        Game newGame = new Game(null, null, null);
+        newGame.copyStatusFrom(game);
+        Assertions.assertEquals(game.getPlayer(0).getNickname(), newGame.getPlayer(0).getNickname());
+        Assertions.assertEquals(game.getPlayer(1).getNickname(), newGame.getPlayer(1).getNickname());
+        Assertions.assertEquals(game.getParameters(), newGame.getParameters());
     }
 
     @Test

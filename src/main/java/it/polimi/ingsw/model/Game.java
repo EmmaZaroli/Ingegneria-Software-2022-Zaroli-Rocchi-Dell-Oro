@@ -338,7 +338,9 @@ public class Game extends ModelObservable implements Serializable {
         this.gameEndingListeners.remove(l);
     }
 
-    // TODO remove if not needed
+    /**
+     * Get GameEndingListener list
+     */
     public List<GameEndingListener> getGameEndingListeners(){
         return gameEndingListeners;
     }

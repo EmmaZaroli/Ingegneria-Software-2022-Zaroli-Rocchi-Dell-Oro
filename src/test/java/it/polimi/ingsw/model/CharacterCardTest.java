@@ -12,6 +12,11 @@ class CharacterCardTest {
     List<CharacterCard> deck = new ArrayList<>();
 
     @Test
+    void generalTest(){
+
+    }
+
+    @Test
     void allCharacterCard() {
         for (Character c : Character.values()) {
             deck.add(CharacterCardFactory.getCharacterCard(c));

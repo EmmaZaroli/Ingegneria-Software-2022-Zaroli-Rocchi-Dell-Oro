@@ -71,6 +71,16 @@ class TableControllerTest extends TestCase {
     }
 
     @Test
+    void generalTableControllerTest(){
+        tableController2Player.setTable(table2Player);
+        Assertions.assertEquals(table2Player, tableController2Player.getTable());
+
+        tableController3Player.setTable(table3Player);
+        Assertions.assertEquals(table3Player, tableController3Player.getTable());
+
+    }
+
+    @Test
     void drawStudents() {
         Assertions.assertEquals(7, tableController2Player.drawStudents().size());
         Assertions.assertEquals(9, tableController3Player.drawStudents().size());
