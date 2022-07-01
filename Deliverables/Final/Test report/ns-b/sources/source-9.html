@@ -1,0 +1,226 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ExpertGameParameters</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.model</a>
+</div>
+
+<h1>Coverage Summary for Class: ExpertGameParameters (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ExpertGameParameters</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.model;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.GameMode;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">6</i>&nbsp;
+<i class="no-highlight">7</i>&nbsp;/**
+<i class="no-highlight">8</i>&nbsp; * Expert game parameters,set when a character card is activated
+<i class="no-highlight">9</i>&nbsp; */
+<i class="no-highlight">10</i>&nbsp;public class ExpertGameParameters extends GameParameters {
+<i class="no-highlight">11</i>&nbsp;    private boolean takeProfessorEvenIfSameStudents;
+<i class="no-highlight">12</i>&nbsp;    private int motherNatureExtraMovements;
+<b class="fc"><i class="no-highlight">13</i>&nbsp;    private boolean towersCountInInfluence = true;</b>
+<i class="no-highlight">14</i>&nbsp;    private int extraInfluence;
+<b class="fc"><i class="no-highlight">15</i>&nbsp;    private PawnColor colorWithNoInfluence = PawnColor.NONE;</b>
+<i class="no-highlight">16</i>&nbsp;    private boolean alreadyActivateCharacterCard;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;    /**
+<i class="no-highlight">19</i>&nbsp;     * Instantiates a new Expert Game Parameters
+<i class="no-highlight">20</i>&nbsp;     * @param playersNumber the player&#39;s number
+<i class="no-highlight">21</i>&nbsp;     * @param gameMode the gameMode
+<i class="no-highlight">22</i>&nbsp;     */
+<i class="no-highlight">23</i>&nbsp;    public ExpertGameParameters(PlayersNumber playersNumber, GameMode gameMode) {
+<b class="fc"><i class="no-highlight">24</i>&nbsp;        super(playersNumber, gameMode);</b>
+<i class="no-highlight">25</i>&nbsp;    }
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;    /**
+<i class="no-highlight">28</i>&nbsp;     * @return true if the player can take control of the professors even
+<i class="no-highlight">29</i>&nbsp;     * if he has the same number of students in his dining room as the player
+<i class="no-highlight">30</i>&nbsp;     * who currently controls them, false otherwise
+<i class="no-highlight">31</i>&nbsp;     */
+<i class="no-highlight">32</i>&nbsp;    public boolean isTakeProfessorEvenIfSameStudents() {
+<b class="fc"><i class="no-highlight">33</i>&nbsp;        return takeProfessorEvenIfSameStudents;</b>
+<i class="no-highlight">34</i>&nbsp;    }
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    /**
+<i class="no-highlight">37</i>&nbsp;     * @return mother nature extra movements
+<i class="no-highlight">38</i>&nbsp;     */
+<i class="no-highlight">39</i>&nbsp;    public int getMotherNatureExtraMovements() {
+<b class="fc"><i class="no-highlight">40</i>&nbsp;        return motherNatureExtraMovements;</b>
+<i class="no-highlight">41</i>&nbsp;    }
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;    /**
+<i class="no-highlight">44</i>&nbsp;     * @return true if, when counting the influence on an island, the towers
+<i class="no-highlight">45</i>&nbsp;     * present are not calculated
+<i class="no-highlight">46</i>&nbsp;     */
+<i class="no-highlight">47</i>&nbsp;    public boolean isTowersCountInInfluence() {
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        return towersCountInInfluence;</b>
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    /**
+<i class="no-highlight">52</i>&nbsp;     * @return the extra influence of a player on the island
+<i class="no-highlight">53</i>&nbsp;     */
+<i class="no-highlight">54</i>&nbsp;    public int getExtraInfluence() {
+<b class="fc"><i class="no-highlight">55</i>&nbsp;        return extraInfluence;</b>
+<i class="no-highlight">56</i>&nbsp;    }
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;    /**
+<i class="no-highlight">59</i>&nbsp;     * @return the student&#39;s color with no influence
+<i class="no-highlight">60</i>&nbsp;     */
+<i class="no-highlight">61</i>&nbsp;    public PawnColor getColorWithNoInfluence() {
+<b class="fc"><i class="no-highlight">62</i>&nbsp;        return colorWithNoInfluence;</b>
+<i class="no-highlight">63</i>&nbsp;    }
+<i class="no-highlight">64</i>&nbsp;
+<i class="no-highlight">65</i>&nbsp;    public boolean hasAlreadyActivateCharacterCard() {
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        return alreadyActivateCharacterCard;</b>
+<i class="no-highlight">67</i>&nbsp;    }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;    /**
+<i class="no-highlight">70</i>&nbsp;     * Sets take professor even if same students.
+<i class="no-highlight">71</i>&nbsp;     *
+<i class="no-highlight">72</i>&nbsp;     * @param takeProfessorEvenIfSameStudents The value to set
+<i class="no-highlight">73</i>&nbsp;     */
+<i class="no-highlight">74</i>&nbsp;    public void setTakeProfessorEvenIfSameStudents(boolean takeProfessorEvenIfSameStudents) {
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        this.takeProfessorEvenIfSameStudents = takeProfessorEvenIfSameStudents;</b>
+<i class="no-highlight">76</i>&nbsp;    }
+<i class="no-highlight">77</i>&nbsp;
+<i class="no-highlight">78</i>&nbsp;    /**
+<i class="no-highlight">79</i>&nbsp;     * Sets mother nature extra movements.
+<i class="no-highlight">80</i>&nbsp;     *
+<i class="no-highlight">81</i>&nbsp;     * @param motherNatureExtraMovements the mother nature extra movements
+<i class="no-highlight">82</i>&nbsp;     */
+<i class="no-highlight">83</i>&nbsp;    public void setMotherNatureExtraMovements(int motherNatureExtraMovements) {
+<b class="fc"><i class="no-highlight">84</i>&nbsp;        this.motherNatureExtraMovements = motherNatureExtraMovements;</b>
+<i class="no-highlight">85</i>&nbsp;    }
+<i class="no-highlight">86</i>&nbsp;
+<i class="no-highlight">87</i>&nbsp;    /**
+<i class="no-highlight">88</i>&nbsp;     * Sets the variable towers count in influence.
+<i class="no-highlight">89</i>&nbsp;     *
+<i class="no-highlight">90</i>&nbsp;     * @param towersCountInInfluence If true, towers are treated ad students while counting influence
+<i class="no-highlight">91</i>&nbsp;     */
+<i class="no-highlight">92</i>&nbsp;    public void setTowersCountInInfluence(boolean towersCountInInfluence) {
+<b class="fc"><i class="no-highlight">93</i>&nbsp;        this.towersCountInInfluence = towersCountInInfluence;</b>
+<i class="no-highlight">94</i>&nbsp;    }
+<i class="no-highlight">95</i>&nbsp;
+<i class="no-highlight">96</i>&nbsp;    /**
+<i class="no-highlight">97</i>&nbsp;     * Sets extra influence on an island
+<i class="no-highlight">98</i>&nbsp;     *
+<i class="no-highlight">99</i>&nbsp;     * @param extraInfluence the extra influence
+<i class="no-highlight">100</i>&nbsp;     */
+<i class="no-highlight">101</i>&nbsp;    public void setExtraInfluence(int extraInfluence) {
+<b class="fc"><i class="no-highlight">102</i>&nbsp;        this.extraInfluence = extraInfluence;</b>
+<i class="no-highlight">103</i>&nbsp;    }
+<i class="no-highlight">104</i>&nbsp;
+<i class="no-highlight">105</i>&nbsp;    /**
+<i class="no-highlight">106</i>&nbsp;     * Sets color with no influence.
+<i class="no-highlight">107</i>&nbsp;     *
+<i class="no-highlight">108</i>&nbsp;     * @param colorWithNoInfluence the color with no influence
+<i class="no-highlight">109</i>&nbsp;     */
+<i class="no-highlight">110</i>&nbsp;    public void setColorWithNoInfluence(PawnColor colorWithNoInfluence) {
+<b class="fc"><i class="no-highlight">111</i>&nbsp;        this.colorWithNoInfluence = colorWithNoInfluence;</b>
+<i class="no-highlight">112</i>&nbsp;    }
+<i class="no-highlight">113</i>&nbsp;
+<i class="no-highlight">114</i>&nbsp;    /**
+<i class="no-highlight">115</i>&nbsp;     *
+<i class="no-highlight">116</i>&nbsp;     * @param alreadyActivateCharacterCard is true if a card was activated, false otherwise
+<i class="no-highlight">117</i>&nbsp;     */
+<i class="no-highlight">118</i>&nbsp;    public void setAlreadyActivateCharacterCard(boolean alreadyActivateCharacterCard) {
+<b class="fc"><i class="no-highlight">119</i>&nbsp;        this.alreadyActivateCharacterCard = alreadyActivateCharacterCard;</b>
+<i class="no-highlight">120</i>&nbsp;    }
+<i class="no-highlight">121</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

@@ -37,11 +37,12 @@ java -jar Server.jar --port <port>
 java -jar Client.jar [--cli]
 ```
 
-Omitting the argument --cli will start the GUI version of the client
+Omitting the argument --cli will start the GUI version of the client.
+Please, note that the cli supports Linux and MacOS only.
 
 ## Tests coverage report
 
-For a complete report, please refer to the [full data](Deliverables/Final/Testing%20Report) in the deliverables folder
+For a complete report, please refer to the [full data](Deliverables/Final/Test%20report) in the deliverables folder
 
 ![](Deliverables/Final/High%20level%20coverage%20data.png)
 

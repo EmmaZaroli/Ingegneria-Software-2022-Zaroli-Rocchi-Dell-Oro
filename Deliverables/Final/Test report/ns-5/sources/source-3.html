@@ -1,0 +1,597 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > CharacterCard</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.client.gui.sceneControllers</a>
+</div>
+
+<h1>Coverage Summary for Class: CharacterCard (it.polimi.ingsw.client.gui.sceneControllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CharacterCard</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/172)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CharacterCard$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/43)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CharacterCard$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CharacterCard$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/219)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.client.gui.sceneControllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.client.gui.Gui;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.client.modelview.ViewCharacterCard;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.model.enums.Character;
+<i class="no-highlight">6</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">7</i>&nbsp;import javafx.application.Platform;
+<i class="no-highlight">8</i>&nbsp;import javafx.beans.NamedArg;
+<i class="no-highlight">9</i>&nbsp;import javafx.event.EventHandler;
+<i class="no-highlight">10</i>&nbsp;import javafx.fxml.FXML;
+<i class="no-highlight">11</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i class="no-highlight">12</i>&nbsp;import javafx.scene.control.Alert;
+<i class="no-highlight">13</i>&nbsp;import javafx.scene.control.ButtonBar;
+<i class="no-highlight">14</i>&nbsp;import javafx.scene.control.ButtonType;
+<i class="no-highlight">15</i>&nbsp;import javafx.scene.image.Image;
+<i class="no-highlight">16</i>&nbsp;import javafx.scene.image.ImageView;
+<i class="no-highlight">17</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i class="no-highlight">18</i>&nbsp;import javafx.scene.layout.GridPane;
+<i class="no-highlight">19</i>&nbsp;import javafx.scene.layout.Pane;
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;import java.io.IOException;
+<i class="no-highlight">22</i>&nbsp;import java.util.LinkedList;
+<i class="no-highlight">23</i>&nbsp;import java.util.List;
+<i class="no-highlight">24</i>&nbsp;import java.util.Optional;
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;/**
+<i class="no-highlight">27</i>&nbsp; * A class representing a Caracter card
+<i class="no-highlight">28</i>&nbsp; */
+<i class="no-highlight">29</i>&nbsp;public class CharacterCard extends Pane {
+<i class="no-highlight">30</i>&nbsp;    private ViewCharacterCard characterCard;
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;    private Gui gui;
+<i class="no-highlight">33</i>&nbsp;
+<i class="no-highlight">34</i>&nbsp;    @FXML
+<i class="no-highlight">35</i>&nbsp;    private int index;
+<i class="no-highlight">36</i>&nbsp;
+<b class="nc"><i class="no-highlight">37</i>&nbsp;    private boolean isDragAndDropEnabled = false;</b>
+<i class="no-highlight">38</i>&nbsp;    private double orgSceneX, orgSceneY, orgTranslateX, orgTranslateY;
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    @FXML
+<i class="no-highlight">41</i>&nbsp;    private ImageView imageView;
+<i class="no-highlight">42</i>&nbsp;    @FXML
+<i class="no-highlight">43</i>&nbsp;    private ImageView coin;
+<i class="no-highlight">44</i>&nbsp;    @FXML
+<i class="no-highlight">45</i>&nbsp;    private GridPane students;
+<i class="no-highlight">46</i>&nbsp;
+<i class="no-highlight">47</i>&nbsp;    /**
+<i class="no-highlight">48</i>&nbsp;     * Creates a card
+<i class="no-highlight">49</i>&nbsp;     *
+<i class="no-highlight">50</i>&nbsp;     * @param index the index of the card in the deck
+<i class="no-highlight">51</i>&nbsp;     */
+<b class="nc"><i class="no-highlight">52</i>&nbsp;    public CharacterCard(@NamedArg(&quot;index&quot;) int index) {</b>
+<b class="nc"><i class="no-highlight">53</i>&nbsp;        this.index = index;</b>
+<b class="nc"><i class="no-highlight">54</i>&nbsp;        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(&quot;/it.polimi.ingsw.client.gui/markups/components/character-card.fxml&quot;));</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        fxmlLoader.setRoot(this);</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;        fxmlLoader.setController(this);</b>
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;        try {
+<b class="nc"><i class="no-highlight">59</i>&nbsp;            fxmlLoader.load();</b>
+<b class="nc"><i class="no-highlight">60</i>&nbsp;        } catch (IOException exception) {</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;            throw new RuntimeException(exception);</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;        }</b>
+<i class="no-highlight">63</i>&nbsp;    }
+<i class="no-highlight">64</i>&nbsp;
+<i class="no-highlight">65</i>&nbsp;    /**
+<i class="no-highlight">66</i>&nbsp;     * Sets a reference to the main application controller
+<i class="no-highlight">67</i>&nbsp;     *
+<i class="no-highlight">68</i>&nbsp;     * @param gui A reference to the main application controller
+<i class="no-highlight">69</i>&nbsp;     */
+<i class="no-highlight">70</i>&nbsp;    public void setController(Gui gui) {
+<b class="nc"><i class="no-highlight">71</i>&nbsp;        this.gui = gui;</b>
+<i class="no-highlight">72</i>&nbsp;    }
+<i class="no-highlight">73</i>&nbsp;
+<i class="no-highlight">74</i>&nbsp;    /**
+<i class="no-highlight">75</i>&nbsp;     * Selects the image to load based on the card
+<i class="no-highlight">76</i>&nbsp;     *
+<i class="no-highlight">77</i>&nbsp;     * @param card The character to use when loading the image
+<i class="no-highlight">78</i>&nbsp;     */
+<i class="no-highlight">79</i>&nbsp;    public void setCard(ViewCharacterCard card) {
+<b class="nc"><i class="no-highlight">80</i>&nbsp;        this.characterCard = card;</b>
+<b class="nc"><i class="no-highlight">81</i>&nbsp;        Image image = switch (characterCard.getCharacter()) {</b>
+<b class="nc"><i class="no-highlight">82</i>&nbsp;            case CHARACTER_ONE -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character1.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">83</i>&nbsp;            case CHARACTER_TWO -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character2.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;            case CHARACTER_FOUR -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character4.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;            case CHARACTER_SIX -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character6.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;            case CHARACTER_SEVEN -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character7.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;            case CHARACTER_EIGHT -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character8.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;            case CHARACTER_NINE -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character9.jpg&quot;);</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;            case CHARACTER_ELEVEN -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/character11.jpg&quot;);</b>
+<i class="no-highlight">90</i>&nbsp;        };
+<i class="no-highlight">91</i>&nbsp;
+<b class="nc"><i class="no-highlight">92</i>&nbsp;        int column = 0;</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;        int row = 1;</b>
+<i class="no-highlight">94</i>&nbsp;
+<b class="nc"><i class="no-highlight">95</i>&nbsp;        this.students.getChildren().removeAll(this.students.getChildren());</b>
+<i class="no-highlight">96</i>&nbsp;
+<b class="nc"><i class="no-highlight">97</i>&nbsp;        for (int i = 0; i &lt; card.getStudents().size(); i++) {</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;            String basePath = &quot;/it.polimi.ingsw.client.gui/assets/student_&quot;;</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;            String path = switch (card.getStudents().get(i)) {</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;                case PINK -&gt; &quot;pink.png&quot;;</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;                case YELLOW -&gt; &quot;yellow.png&quot;;</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;                case GREEN -&gt; &quot;green.png&quot;;</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;                case RED -&gt; &quot;red.png&quot;;</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;                case BLUE -&gt; &quot;blue.png&quot;;</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;                case NONE -&gt; &quot;none.png&quot;;</b>
+<i class="no-highlight">106</i>&nbsp;            };
+<b class="nc"><i class="no-highlight">107</i>&nbsp;            Image img = new Image(basePath + path);</b>
+<b class="nc"><i class="no-highlight">108</i>&nbsp;            ImageView iv = new ImageView(img);</b>
+<b class="nc"><i class="no-highlight">109</i>&nbsp;            iv.setFitHeight(25);</b>
+<b class="nc"><i class="no-highlight">110</i>&nbsp;            iv.setFitWidth(25);</b>
+<i class="no-highlight">111</i>&nbsp;
+<b class="nc"><i class="no-highlight">112</i>&nbsp;            iv.setOnMousePressed(mouseEvent -&gt; {</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;                if (isDragAndDropEnabled) {</b>
+<b class="nc"><i class="no-highlight">114</i>&nbsp;                    orgSceneX = mouseEvent.getSceneX();</b>
+<b class="nc"><i class="no-highlight">115</i>&nbsp;                    orgSceneY = mouseEvent.getSceneY();</b>
+<b class="nc"><i class="no-highlight">116</i>&nbsp;                    orgTranslateX = imageView.getTranslateX();</b>
+<b class="nc"><i class="no-highlight">117</i>&nbsp;                    orgTranslateY = imageView.getTranslateY();</b>
+<i class="no-highlight">118</i>&nbsp;                }
+<i class="no-highlight">119</i>&nbsp;            });
+<i class="no-highlight">120</i>&nbsp;
+<b class="nc"><i class="no-highlight">121</i>&nbsp;            final int j = i;</b>
+<i class="no-highlight">122</i>&nbsp;
+<b class="nc"><i class="no-highlight">123</i>&nbsp;            iv.setOnMouseDragged(mouseEvent -&gt; {</b>
+<b class="nc"><i class="no-highlight">124</i>&nbsp;                if (isDragAndDropEnabled) {</b>
+<b class="nc"><i class="no-highlight">125</i>&nbsp;                    double offsetX = mouseEvent.getSceneX() - orgSceneX;</b>
+<b class="nc"><i class="no-highlight">126</i>&nbsp;                    double offsetY = mouseEvent.getSceneY() - orgSceneY;</b>
+<b class="nc"><i class="no-highlight">127</i>&nbsp;                    double newTranslateX = orgTranslateX + offsetX;</b>
+<b class="nc"><i class="no-highlight">128</i>&nbsp;                    double newTranslateY = orgTranslateY + offsetY;</b>
+<i class="no-highlight">129</i>&nbsp;
+<b class="nc"><i class="no-highlight">130</i>&nbsp;                    iv.setTranslateX(newTranslateX);</b>
+<b class="nc"><i class="no-highlight">131</i>&nbsp;                    iv.setTranslateY(newTranslateY);</b>
+<i class="no-highlight">132</i>&nbsp;                }
+<i class="no-highlight">133</i>&nbsp;            });
+<i class="no-highlight">134</i>&nbsp;
+<b class="nc"><i class="no-highlight">135</i>&nbsp;            iv.setOnMouseReleased(getReleasedCallback(card.getCharacter(), i, card.getStudents().get(i)));</b>
+<b class="nc"><i class="no-highlight">136</i>&nbsp;            this.students.add(iv, column, row);</b>
+<b class="nc"><i class="no-highlight">137</i>&nbsp;            column++;</b>
+<b class="nc"><i class="no-highlight">138</i>&nbsp;            if (column == 2) {</b>
+<b class="nc"><i class="no-highlight">139</i>&nbsp;                row++;</b>
+<b class="nc"><i class="no-highlight">140</i>&nbsp;                column = 0;</b>
+<i class="no-highlight">141</i>&nbsp;            }
+<i class="no-highlight">142</i>&nbsp;        }
+<i class="no-highlight">143</i>&nbsp;
+<b class="nc"><i class="no-highlight">144</i>&nbsp;        this.setOnMouseClicked(mouseEvent -&gt; {</b>
+<b class="nc"><i class="no-highlight">145</i>&nbsp;            if (gui.canActivateCharacterProxy(card)) {</b>
+<b class="nc"><i class="no-highlight">146</i>&nbsp;                switch (characterCard.getCharacter()) {</b>
+<i class="no-highlight">147</i>&nbsp;                    case CHARACTER_ONE -&gt; {
+<b class="nc"><i class="no-highlight">148</i>&nbsp;                        gui.genericMessage(&quot;You activated the Character.\nMove a student from the CharacterCard to an island&quot;);</b>
+<b class="nc"><i class="no-highlight">149</i>&nbsp;                        isDragAndDropEnabled = true;</b>
+<b class="nc"><i class="no-highlight">150</i>&nbsp;                    }</b>
+<i class="no-highlight">151</i>&nbsp;                    case CHARACTER_TWO, CHARACTER_SIX, CHARACTER_EIGHT -&gt; {
+<b class="nc"><i class="no-highlight">152</i>&nbsp;                        gui.genericMessage(&quot;You activated the Character.&quot;);</b>
+<b class="nc"><i class="no-highlight">153</i>&nbsp;                        gui.activateCharacter(index);</b>
+<b class="nc"><i class="no-highlight">154</i>&nbsp;                    }</b>
+<i class="no-highlight">155</i>&nbsp;                    case CHARACTER_FOUR -&gt; {
+<b class="nc"><i class="no-highlight">156</i>&nbsp;                        gui.setAdditionalMotherNatureMovement(2);</b>
+<b class="nc"><i class="no-highlight">157</i>&nbsp;                        gui.genericMessage(&quot;You activated the Character&quot;);</b>
+<b class="nc"><i class="no-highlight">158</i>&nbsp;                        gui.activateCharacter(index);</b>
+<b class="nc"><i class="no-highlight">159</i>&nbsp;                    }</b>
+<b class="nc"><i class="no-highlight">160</i>&nbsp;                    case CHARACTER_SEVEN -&gt; handleEffectSeven();</b>
+<b class="nc"><i class="no-highlight">161</i>&nbsp;                    case CHARACTER_NINE -&gt; handleEffectNine();</b>
+<b class="nc"><i class="no-highlight">162</i>&nbsp;                    case CHARACTER_ELEVEN -&gt; handleEffectEleven();</b>
+<i class="no-highlight">163</i>&nbsp;                }
+<i class="no-highlight">164</i>&nbsp;            }
+<i class="no-highlight">165</i>&nbsp;        });
+<i class="no-highlight">166</i>&nbsp;
+<b class="nc"><i class="no-highlight">167</i>&nbsp;        imageView.setImage(image);</b>
+<b class="nc"><i class="no-highlight">168</i>&nbsp;        coin.setVisible(card.hasCoin());</b>
+<i class="no-highlight">169</i>&nbsp;    }
+<i class="no-highlight">170</i>&nbsp;
+<i class="no-highlight">171</i>&nbsp;    /**
+<i class="no-highlight">172</i>&nbsp;     * handles the effect card nine
+<i class="no-highlight">173</i>&nbsp;     */
+<i class="no-highlight">174</i>&nbsp;    private void handleEffectNine() {
+<b class="nc"><i class="no-highlight">175</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i class="no-highlight">176</i>&nbsp;            List&lt;ButtonType&gt; buttons = new LinkedList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">177</i>&nbsp;            buttons.add(new ButtonType(&quot;Red&quot;, ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">178</i>&nbsp;            buttons.add(new ButtonType(&quot;Green&quot;, ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">179</i>&nbsp;            buttons.add(new ButtonType(&quot;Blue&quot;, ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">180</i>&nbsp;            buttons.add(new ButtonType(&quot;Pink&quot;, ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">181</i>&nbsp;            buttons.add(new ButtonType(&quot;Yellow&quot;, ButtonBar.ButtonData.OK_DONE));</b>
+<i class="no-highlight">182</i>&nbsp;
+<b class="nc"><i class="no-highlight">183</i>&nbsp;            Alert alert = new Alert(Alert.AlertType.INFORMATION, &quot;Chose a color to invalidate&quot;, buttons.toArray(new ButtonType[]{}));</b>
+<b class="nc"><i class="no-highlight">184</i>&nbsp;            Optional&lt;ButtonType&gt; response = alert.showAndWait();</b>
+<b class="nc"><i class="no-highlight">185</i>&nbsp;            if (response.isPresent()) {</b>
+<b class="nc"><i class="no-highlight">186</i>&nbsp;                PawnColor color = switch (response.get().getText()) {</b>
+<b class="nc"><i class="no-highlight">187</i>&nbsp;                    case &quot;Red&quot; -&gt; PawnColor.RED;</b>
+<b class="nc"><i class="no-highlight">188</i>&nbsp;                    case &quot;Green&quot; -&gt; PawnColor.GREEN;</b>
+<b class="nc"><i class="no-highlight">189</i>&nbsp;                    case &quot;Blue&quot; -&gt; PawnColor.BLUE;</b>
+<b class="nc"><i class="no-highlight">190</i>&nbsp;                    case &quot;Pink&quot; -&gt; PawnColor.PINK;</b>
+<b class="nc"><i class="no-highlight">191</i>&nbsp;                    case &quot;Yellow&quot; -&gt; PawnColor.YELLOW;</b>
+<b class="nc"><i class="no-highlight">192</i>&nbsp;                    default -&gt; PawnColor.NONE;</b>
+<i class="no-highlight">193</i>&nbsp;                };
+<b class="nc"><i class="no-highlight">194</i>&nbsp;                if (!gui.activateCharacter(index, color)) {</b>
+<b class="nc"><i class="no-highlight">195</i>&nbsp;                    gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">196</i>&nbsp;                }
+<b class="nc"><i class="no-highlight">197</i>&nbsp;            } else {</b>
+<b class="nc"><i class="no-highlight">198</i>&nbsp;                handleEffectNine();</b>
+<i class="no-highlight">199</i>&nbsp;            }
+<i class="no-highlight">200</i>&nbsp;        });
+<i class="no-highlight">201</i>&nbsp;    }
+<i class="no-highlight">202</i>&nbsp;
+<i class="no-highlight">203</i>&nbsp;    /**
+<i class="no-highlight">204</i>&nbsp;     * Returns a string with the name of the given color
+<i class="no-highlight">205</i>&nbsp;     *
+<i class="no-highlight">206</i>&nbsp;     * @param color The color to translate
+<i class="no-highlight">207</i>&nbsp;     * @return A string representing the color
+<i class="no-highlight">208</i>&nbsp;     */
+<i class="no-highlight">209</i>&nbsp;    private String resolveColorString(PawnColor color) {
+<b class="nc"><i class="no-highlight">210</i>&nbsp;        return switch (color) {</b>
+<b class="nc"><i class="no-highlight">211</i>&nbsp;            case RED -&gt; &quot;Red&quot;;</b>
+<b class="nc"><i class="no-highlight">212</i>&nbsp;            case GREEN -&gt; &quot;Green&quot;;</b>
+<b class="nc"><i class="no-highlight">213</i>&nbsp;            case BLUE -&gt; &quot;Blue&quot;;</b>
+<b class="nc"><i class="no-highlight">214</i>&nbsp;            case YELLOW -&gt; &quot;Yellow&quot;;</b>
+<b class="nc"><i class="no-highlight">215</i>&nbsp;            case PINK -&gt; &quot;Pink&quot;;</b>
+<b class="nc"><i class="no-highlight">216</i>&nbsp;            case NONE -&gt; &quot;None&quot;;</b>
+<i class="no-highlight">217</i>&nbsp;        };
+<i class="no-highlight">218</i>&nbsp;    }
+<i class="no-highlight">219</i>&nbsp;
+<i class="no-highlight">220</i>&nbsp;    /**
+<i class="no-highlight">221</i>&nbsp;     * Handles the effect linked to the character 11
+<i class="no-highlight">222</i>&nbsp;     */
+<i class="no-highlight">223</i>&nbsp;    private void handleEffectEleven() {
+<b class="nc"><i class="no-highlight">224</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i class="no-highlight">225</i>&nbsp;            List&lt;ButtonType&gt; buttons = new LinkedList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">226</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(0)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">227</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(1)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">228</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(2)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">229</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(3)), ButtonBar.ButtonData.OK_DONE));</b>
+<i class="no-highlight">230</i>&nbsp;
+<b class="nc"><i class="no-highlight">231</i>&nbsp;            Alert alert = new Alert(Alert.AlertType.INFORMATION, &quot;Chose a student to place in your dinning room&quot;, buttons.toArray(new ButtonType[]{}));</b>
+<b class="nc"><i class="no-highlight">232</i>&nbsp;            Optional&lt;ButtonType&gt; response = alert.showAndWait();</b>
+<b class="nc"><i class="no-highlight">233</i>&nbsp;            if (response.isPresent()) {</b>
+<b class="nc"><i class="no-highlight">234</i>&nbsp;                PawnColor color = switch (response.get().getText()) {</b>
+<b class="nc"><i class="no-highlight">235</i>&nbsp;                    case &quot;Red&quot; -&gt; PawnColor.RED;</b>
+<b class="nc"><i class="no-highlight">236</i>&nbsp;                    case &quot;Green&quot; -&gt; PawnColor.GREEN;</b>
+<b class="nc"><i class="no-highlight">237</i>&nbsp;                    case &quot;Blue&quot; -&gt; PawnColor.BLUE;</b>
+<b class="nc"><i class="no-highlight">238</i>&nbsp;                    case &quot;Pink&quot; -&gt; PawnColor.PINK;</b>
+<b class="nc"><i class="no-highlight">239</i>&nbsp;                    case &quot;Yellow&quot; -&gt; PawnColor.YELLOW;</b>
+<b class="nc"><i class="no-highlight">240</i>&nbsp;                    default -&gt; PawnColor.NONE;</b>
+<i class="no-highlight">241</i>&nbsp;                };
+<b class="nc"><i class="no-highlight">242</i>&nbsp;                if (!gui.activateCharacter(index, color)) {</b>
+<b class="nc"><i class="no-highlight">243</i>&nbsp;                    gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">244</i>&nbsp;                }
+<b class="nc"><i class="no-highlight">245</i>&nbsp;            } else {</b>
+<b class="nc"><i class="no-highlight">246</i>&nbsp;                handleEffectEleven();</b>
+<i class="no-highlight">247</i>&nbsp;            }
+<i class="no-highlight">248</i>&nbsp;        });
+<i class="no-highlight">249</i>&nbsp;    }
+<i class="no-highlight">250</i>&nbsp;
+<i class="no-highlight">251</i>&nbsp;    /**
+<i class="no-highlight">252</i>&nbsp;     * Returns an eventHandler for the card ant position j
+<i class="no-highlight">253</i>&nbsp;     *
+<i class="no-highlight">254</i>&nbsp;     * @param character The character of the given card
+<i class="no-highlight">255</i>&nbsp;     * @param j         The index of the card in the deck
+<i class="no-highlight">256</i>&nbsp;     * @param color     The color of the selected pawn
+<i class="no-highlight">257</i>&nbsp;     * @return The eventHandler for the card
+<i class="no-highlight">258</i>&nbsp;     */
+<i class="no-highlight">259</i>&nbsp;    private EventHandler&lt;MouseEvent&gt; getReleasedCallback(Character character, int j, PawnColor color) {
+<b class="nc"><i class="no-highlight">260</i>&nbsp;        return switch (character) {</b>
+<b class="nc"><i class="no-highlight">261</i>&nbsp;            case CHARACTER_ONE -&gt; new EventHandler&lt;MouseEvent&gt;() {</b>
+<i class="no-highlight">262</i>&nbsp;                @Override
+<i class="no-highlight">263</i>&nbsp;                public void handle(MouseEvent mouseEvent) {
+<b class="nc"><i class="no-highlight">264</i>&nbsp;                    if (isDragAndDropEnabled) {</b>
+<b class="nc"><i class="no-highlight">265</i>&nbsp;                        double x = mouseEvent.getScreenX();</b>
+<b class="nc"><i class="no-highlight">266</i>&nbsp;                        double y = mouseEvent.getScreenY();</b>
+<b class="nc"><i class="no-highlight">267</i>&nbsp;                        isDragAndDropEnabled = false;</b>
+<b class="nc"><i class="no-highlight">268</i>&nbsp;                        if (isInRange(x, y, 158, 404)) {</b>
+<b class="nc"><i class="no-highlight">269</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(0).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">270</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">271</i>&nbsp;                            }
+<i class="no-highlight">272</i>&nbsp;                            return;
+<i class="no-highlight">273</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">274</i>&nbsp;                        if (isInRange(x, y, 324, 317)) {</b>
+<b class="nc"><i class="no-highlight">275</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(1).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">276</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">277</i>&nbsp;                            }
+<i class="no-highlight">278</i>&nbsp;                            return;
+<i class="no-highlight">279</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">280</i>&nbsp;                        if (isInRange(x, y, 482, 316)) {</b>
+<b class="nc"><i class="no-highlight">281</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(2).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">282</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">283</i>&nbsp;                            }
+<i class="no-highlight">284</i>&nbsp;                            return;
+<i class="no-highlight">285</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">286</i>&nbsp;                        if (isInRange(x, y, 648, 319)) {</b>
+<b class="nc"><i class="no-highlight">287</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(3).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">288</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">289</i>&nbsp;                            }
+<i class="no-highlight">290</i>&nbsp;                            return;
+<i class="no-highlight">291</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">292</i>&nbsp;                        if (isInRange(x, y, 814, 318)) {</b>
+<b class="nc"><i class="no-highlight">293</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(4).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">294</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">295</i>&nbsp;                            }
+<i class="no-highlight">296</i>&nbsp;                            return;
+<i class="no-highlight">297</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">298</i>&nbsp;                        if (isInRange(x, y, 971, 324)) {</b>
+<b class="nc"><i class="no-highlight">299</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(5).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">300</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">301</i>&nbsp;                            }
+<i class="no-highlight">302</i>&nbsp;                            return;
+<i class="no-highlight">303</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">304</i>&nbsp;                        if (isInRange(x, y, 323, 492)) {</b>
+<b class="nc"><i class="no-highlight">305</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(11).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">306</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">307</i>&nbsp;                            }
+<i class="no-highlight">308</i>&nbsp;                            return;
+<i class="no-highlight">309</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">310</i>&nbsp;                        if (isInRange(x, y, 483, 491)) {</b>
+<b class="nc"><i class="no-highlight">311</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(10).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">312</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">313</i>&nbsp;                            }
+<i class="no-highlight">314</i>&nbsp;                            return;
+<i class="no-highlight">315</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">316</i>&nbsp;                        if (isInRange(x, y, 640, 493)) {</b>
+<b class="nc"><i class="no-highlight">317</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(9).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">318</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">319</i>&nbsp;                            }
+<i class="no-highlight">320</i>&nbsp;                            return;
+<i class="no-highlight">321</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">322</i>&nbsp;                        if (isInRange(x, y, 808, 493)) {</b>
+<b class="nc"><i class="no-highlight">323</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(8).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">324</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">325</i>&nbsp;                            }
+<i class="no-highlight">326</i>&nbsp;                            return;
+<i class="no-highlight">327</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">328</i>&nbsp;                        if (isInRange(x, y, 973, 494)) {</b>
+<b class="nc"><i class="no-highlight">329</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(7).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">330</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">331</i>&nbsp;                            }
+<i class="no-highlight">332</i>&nbsp;                            return;
+<i class="no-highlight">333</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">334</i>&nbsp;                        if (isInRange(x, y, 1132, 408)) {</b>
+<b class="nc"><i class="no-highlight">335</i>&nbsp;                            if (!gui.activateCharacter(index, color, gui.getIslands().get(6).getIsland().getUuid())) {</b>
+<b class="nc"><i class="no-highlight">336</i>&nbsp;                                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">337</i>&nbsp;                            }
+<i class="no-highlight">338</i>&nbsp;                            return;
+<i class="no-highlight">339</i>&nbsp;                        }
+<b class="nc"><i class="no-highlight">340</i>&nbsp;                        isDragAndDropEnabled = true;</b>
+<b class="nc"><i class="no-highlight">341</i>&nbsp;                        gui.error(&quot;Invalid selection&quot;);</b>
+<i class="no-highlight">342</i>&nbsp;                    }
+<i class="no-highlight">343</i>&nbsp;                }
+<i class="no-highlight">344</i>&nbsp;            };
+<b class="nc"><i class="no-highlight">345</i>&nbsp;            default -&gt; new EventHandler&lt;MouseEvent&gt;() {</b>
+<i class="no-highlight">346</i>&nbsp;                @Override
+<i class="no-highlight">347</i>&nbsp;                public void handle(MouseEvent mouseEvent) {
+<i class="no-highlight">348</i>&nbsp;
+<b class="nc"><i class="no-highlight">349</i>&nbsp;                }</b>
+<i class="no-highlight">350</i>&nbsp;            };
+<i class="no-highlight">351</i>&nbsp;        };
+<i class="no-highlight">352</i>&nbsp;    }
+<i class="no-highlight">353</i>&nbsp;
+<i class="no-highlight">354</i>&nbsp;    /**
+<i class="no-highlight">355</i>&nbsp;     * Handles the effect of the character 7
+<i class="no-highlight">356</i>&nbsp;     */
+<i class="no-highlight">357</i>&nbsp;    private void handleEffectSeven() {
+<b class="nc"><i class="no-highlight">358</i>&nbsp;        Platform.runLater(() -&gt; {</b>
+<b class="nc"><i class="no-highlight">359</i>&nbsp;            List&lt;ButtonType&gt; buttons = new LinkedList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">360</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(0)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">361</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(1)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">362</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(2)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">363</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(3)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">364</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(4)), ButtonBar.ButtonData.OK_DONE));</b>
+<b class="nc"><i class="no-highlight">365</i>&nbsp;            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(5)), ButtonBar.ButtonData.OK_DONE));</b>
+<i class="no-highlight">366</i>&nbsp;
+<b class="nc"><i class="no-highlight">367</i>&nbsp;            buttons.add(new ButtonType(&quot;Skip&quot;, ButtonBar.ButtonData.CANCEL_CLOSE));</b>
+<i class="no-highlight">368</i>&nbsp;
+<b class="nc"><i class="no-highlight">369</i>&nbsp;            boolean shouldContinue = true;</b>
+<i class="no-highlight">370</i>&nbsp;
+<b class="nc"><i class="no-highlight">371</i>&nbsp;            List&lt;PawnColor&gt; studentsFromCard = new LinkedList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">372</i>&nbsp;            List&lt;PawnColor&gt; studentsFromEntrance = new LinkedList&lt;&gt;();</b>
+<i class="no-highlight">373</i>&nbsp;
+<b class="nc"><i class="no-highlight">374</i>&nbsp;            for (int i = 0; i &lt; 3 &amp;&amp; shouldContinue; i++) {</b>
+<b class="nc"><i class="no-highlight">375</i>&nbsp;                Alert alert = new Alert(Alert.AlertType.INFORMATION, &quot;Chose a student to place in your entrance&quot;, buttons.toArray(new ButtonType[]{}));</b>
+<b class="nc"><i class="no-highlight">376</i>&nbsp;                Optional&lt;ButtonType&gt; response = alert.showAndWait();</b>
+<b class="nc"><i class="no-highlight">377</i>&nbsp;                if (response.isPresent()) {</b>
+<b class="nc"><i class="no-highlight">378</i>&nbsp;                    if (!response.get().getButtonData().isCancelButton()) {</b>
+<b class="nc"><i class="no-highlight">379</i>&nbsp;                        PawnColor fromCard = switch (response.get().getText()) {</b>
+<b class="nc"><i class="no-highlight">380</i>&nbsp;                            case &quot;Red&quot; -&gt; PawnColor.RED;</b>
+<b class="nc"><i class="no-highlight">381</i>&nbsp;                            case &quot;Green&quot; -&gt; PawnColor.GREEN;</b>
+<b class="nc"><i class="no-highlight">382</i>&nbsp;                            case &quot;Blue&quot; -&gt; PawnColor.BLUE;</b>
+<b class="nc"><i class="no-highlight">383</i>&nbsp;                            case &quot;Pink&quot; -&gt; PawnColor.PINK;</b>
+<b class="nc"><i class="no-highlight">384</i>&nbsp;                            case &quot;Yellow&quot; -&gt; PawnColor.YELLOW;</b>
+<b class="nc"><i class="no-highlight">385</i>&nbsp;                            default -&gt; PawnColor.NONE;</b>
+<i class="no-highlight">386</i>&nbsp;                        };
+<i class="no-highlight">387</i>&nbsp;
+<b class="nc"><i class="no-highlight">388</i>&nbsp;                        if (fromCard != PawnColor.NONE) {</b>
+<b class="nc"><i class="no-highlight">389</i>&nbsp;                            studentsFromCard.add(fromCard);</b>
+<b class="nc"><i class="no-highlight">390</i>&nbsp;                            List&lt;ButtonType&gt; buttons2 = new LinkedList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">391</i>&nbsp;                            for (int ii = 0; ii &lt; gui.getMe().getBoard().getEntrance().size(); ii++) {</b>
+<b class="nc"><i class="no-highlight">392</i>&nbsp;                                buttons2.add(new ButtonType(resolveColorString(gui.getMe().getBoard().getEntrance().get(ii)), ButtonBar.ButtonData.OK_DONE));</b>
+<i class="no-highlight">393</i>&nbsp;                            }
+<i class="no-highlight">394</i>&nbsp;
+<b class="nc"><i class="no-highlight">395</i>&nbsp;                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION, &quot;Chose a student to remove from your entrance&quot;, buttons2.toArray(new ButtonType[]{}));</b>
+<b class="nc"><i class="no-highlight">396</i>&nbsp;                            Optional&lt;ButtonType&gt; response2 = alert2.showAndWait();</b>
+<b class="nc"><i class="no-highlight">397</i>&nbsp;                            if (response2.isPresent()) {</b>
+<b class="nc"><i class="no-highlight">398</i>&nbsp;                                PawnColor fromEntrance = switch (response.get().getText()) {</b>
+<b class="nc"><i class="no-highlight">399</i>&nbsp;                                    case &quot;Red&quot; -&gt; PawnColor.RED;</b>
+<b class="nc"><i class="no-highlight">400</i>&nbsp;                                    case &quot;Green&quot; -&gt; PawnColor.GREEN;</b>
+<b class="nc"><i class="no-highlight">401</i>&nbsp;                                    case &quot;Blue&quot; -&gt; PawnColor.BLUE;</b>
+<b class="nc"><i class="no-highlight">402</i>&nbsp;                                    case &quot;Pink&quot; -&gt; PawnColor.PINK;</b>
+<b class="nc"><i class="no-highlight">403</i>&nbsp;                                    case &quot;Yellow&quot; -&gt; PawnColor.YELLOW;</b>
+<b class="nc"><i class="no-highlight">404</i>&nbsp;                                    default -&gt; PawnColor.NONE;</b>
+<i class="no-highlight">405</i>&nbsp;                                };
+<b class="nc"><i class="no-highlight">406</i>&nbsp;                                studentsFromEntrance.add(fromEntrance);</b>
+<i class="no-highlight">407</i>&nbsp;                            }
+<b class="nc"><i class="no-highlight">408</i>&nbsp;                        } else {</b>
+<b class="nc"><i class="no-highlight">409</i>&nbsp;                            shouldContinue = false;</b>
+<i class="no-highlight">410</i>&nbsp;                        }
+<i class="no-highlight">411</i>&nbsp;                    }
+<i class="no-highlight">412</i>&nbsp;                }
+<i class="no-highlight">413</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">414</i>&nbsp;            if (!gui.activateCharacter(index, studentsFromCard, studentsFromEntrance)) {</b>
+<b class="nc"><i class="no-highlight">415</i>&nbsp;                gui.error(&quot;Error while activating the effect&quot;);</b>
+<i class="no-highlight">416</i>&nbsp;            }
+<i class="no-highlight">417</i>&nbsp;        });
+<i class="no-highlight">418</i>&nbsp;    }
+<i class="no-highlight">419</i>&nbsp;
+<i class="no-highlight">420</i>&nbsp;    /**
+<i class="no-highlight">421</i>&nbsp;     * Checks if a point x, y is included in the square of edge 150 starting at startX, startY
+<i class="no-highlight">422</i>&nbsp;     *
+<i class="no-highlight">423</i>&nbsp;     * @return true if the point is included
+<i class="no-highlight">424</i>&nbsp;     */
+<i class="no-highlight">425</i>&nbsp;    private boolean isInRange(double x, double y, int startX, int startY) {
+<b class="nc"><i class="no-highlight">426</i>&nbsp;        return x &gt; startX &amp;&amp; x &lt; (startX + 150) &amp;&amp; y &gt; startY &amp;&amp; y &lt; (startY + 150);</b>
+<i class="no-highlight">427</i>&nbsp;    }
+<i class="no-highlight">428</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

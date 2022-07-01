@@ -1,0 +1,220 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PrinterClouds</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.client.cli</a>
+</div>
+
+<h1>Coverage Summary for Class: PrinterClouds (it.polimi.ingsw.client.cli)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PrinterClouds</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/37)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PrinterClouds$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.client.cli;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.dtos.CloudTileDto;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">5</i>&nbsp;
+<i class="no-highlight">6</i>&nbsp;import java.util.List;
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;/**
+<i class="no-highlight">9</i>&nbsp; * Class for printing the CloudTiles
+<i class="no-highlight">10</i>&nbsp; */
+<b class="nc"><i class="no-highlight">11</i>&nbsp;public class PrinterClouds {</b>
+<i class="no-highlight">12</i>&nbsp;    public static final String FULL_CIRCLE = &quot;?&quot;;
+<i class="no-highlight">13</i>&nbsp;    public static final String ANSI_RESET = &quot;\u001B[0m&quot;;
+<i class="no-highlight">14</i>&nbsp;    public static final String ANSI_RED = &quot;\u001B[31m&quot;;
+<i class="no-highlight">15</i>&nbsp;    public static final String ANSI_GREEN = &quot;\u001B[32m&quot;;
+<i class="no-highlight">16</i>&nbsp;    public static final String ANSI_YELLOW = &quot;\u001B[33m&quot;;
+<i class="no-highlight">17</i>&nbsp;    public static final String ANSI_BLUE = &quot;\u001B[34m&quot;;
+<i class="no-highlight">18</i>&nbsp;    public static final String ANSI_PURPLE = &quot;\u001B[35m&quot;;
+<i class="no-highlight">19</i>&nbsp;    public static final String ANSI_WHITE = &quot;\u001B[37m&quot;;
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;    /**
+<i class="no-highlight">22</i>&nbsp;     *
+<i class="no-highlight">23</i>&nbsp;     * @param clouds cloudTiles on the table
+<i class="no-highlight">24</i>&nbsp;     */
+<i class="no-highlight">25</i>&nbsp;    public void printClouds(List&lt;CloudTileDto&gt; clouds) {
+<i class="no-highlight">26</i>&nbsp;        int i;
+<b class="nc"><i class="no-highlight">27</i>&nbsp;        space(50);</b>
+<b class="nc"><i class="no-highlight">28</i>&nbsp;        for(i=0;i&lt; clouds.size();i++){</b>
+<b class="nc"><i class="no-highlight">29</i>&nbsp;            System.out.print(&quot;     &quot;+i+&quot;     &quot;);</b>
+<b class="nc"><i class="no-highlight">30</i>&nbsp;            space(7);</b>
+<i class="no-highlight">31</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">32</i>&nbsp;        System.out.println();</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;        space(50);</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;        for (i = 0; i &lt; clouds.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;            System.out.print(&quot;   _____   &quot;);</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;            space(7);</b>
+<i class="no-highlight">37</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">38</i>&nbsp;        System.out.println();</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;        space(50);</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;        for (i = 0; i &lt; clouds.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;            if ((clouds.get(i)).getStudents().isEmpty())</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;                System.out.print(&quot;  (     )  &quot;);</b>
+<i class="no-highlight">43</i>&nbsp;            else {
+<b class="nc"><i class="no-highlight">44</i>&nbsp;                System.out.print(&quot;  ( &quot;);</b>
+<b class="nc"><i class="no-highlight">45</i>&nbsp;                for(int j=0 ; j&lt;clouds.get(i).getStudents().size() ; j++){</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;                    PawnColor student = (clouds.get(i)).getStudents().get(j);</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;                    System.out.print(assignColor(student));</b>
+<i class="no-highlight">48</i>&nbsp;                }
+<b class="nc"><i class="no-highlight">49</i>&nbsp;                System.out.print(&quot; )  &quot;);</b>
+<i class="no-highlight">50</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">51</i>&nbsp;            int space = clouds.get(i).getStudents().size()==4 ? 1 : 0;</b>
+<b class="nc"><i class="no-highlight">52</i>&nbsp;            space(7-space);</b>
+<i class="no-highlight">53</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">54</i>&nbsp;        System.out.println();</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        space(50);</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;        for (i = 0; i &lt; clouds.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">57</i>&nbsp;            System.out.print(&quot;(____)____)&quot;);</b>
+<b class="nc"><i class="no-highlight">58</i>&nbsp;            space(7);</b>
+<i class="no-highlight">59</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">60</i>&nbsp;        System.out.println();</b>
+<i class="no-highlight">61</i>&nbsp;    }
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    /**
+<i class="no-highlight">65</i>&nbsp;     *
+<i class="no-highlight">66</i>&nbsp;     * @param studentColor
+<i class="no-highlight">67</i>&nbsp;     * @return
+<i class="no-highlight">68</i>&nbsp;     */
+<i class="no-highlight">69</i>&nbsp;    private static String assignColor(PawnColor studentColor) {
+<i class="no-highlight">70</i>&nbsp;        String assignedColor;
+<b class="nc"><i class="no-highlight">71</i>&nbsp;        switch (studentColor) {</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;            case RED -&gt; assignedColor = ANSI_RED;</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;            case BLUE -&gt; assignedColor = ANSI_BLUE;</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;            case GREEN -&gt; assignedColor = ANSI_GREEN;</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;            case YELLOW -&gt; assignedColor = ANSI_YELLOW;</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;            case PINK -&gt; assignedColor = ANSI_PURPLE;</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;            default -&gt; assignedColor = ANSI_WHITE;</b>
+<i class="no-highlight">78</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">79</i>&nbsp;        return assignedColor + FULL_CIRCLE + ANSI_RESET;</b>
+<i class="no-highlight">80</i>&nbsp;    }
+<i class="no-highlight">81</i>&nbsp;
+<i class="no-highlight">82</i>&nbsp;    /**
+<i class="no-highlight">83</i>&nbsp;     *
+<i class="no-highlight">84</i>&nbsp;     * @param move
+<i class="no-highlight">85</i>&nbsp;     */
+<i class="no-highlight">86</i>&nbsp;    private void space(int move) {
+<b class="nc"><i class="no-highlight">87</i>&nbsp;        for (int i = 0; i &lt; move; i++) System.out.print(&quot; &quot;);</b>
+<i class="no-highlight">88</i>&nbsp;    }
+<i class="no-highlight">89</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

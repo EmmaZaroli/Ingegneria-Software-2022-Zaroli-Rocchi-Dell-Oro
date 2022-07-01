@@ -1,0 +1,343 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TableController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.gamecontroller</a>
+</div>
+
+<h1>Coverage Summary for Class: TableController (it.polimi.ingsw.gamecontroller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TableController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    94,1%
+  </span>
+  <span class="absValue">
+    (16/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,1%
+  </span>
+  <span class="absValue">
+    (52/53)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.gamecontroller;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.gamecontroller.exceptions.FullCloudException;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.gamecontroller.exceptions.WrongUUIDException;
+<i class="no-highlight">6</i>&nbsp;import it.polimi.ingsw.model.*;
+<i class="no-highlight">7</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">8</i>&nbsp;import it.polimi.ingsw.model.enums.Tower;
+<i class="no-highlight">9</i>&nbsp;import it.polimi.ingsw.utils.Pair;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.util.*;
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;import static it.polimi.ingsw.utils.ApplicationConstants.CLOUDS_STUDENTS_2_PLAYERS;
+<i class="no-highlight">14</i>&nbsp;import static it.polimi.ingsw.utils.ApplicationConstants.CLOUDS_STUDENTS_3_PLAYERS;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;/**
+<i class="no-highlight">17</i>&nbsp; * A class wrapping the logic for the management of the game table
+<i class="no-highlight">18</i>&nbsp; */
+<i class="no-highlight">19</i>&nbsp;public class TableController {
+<i class="no-highlight">20</i>&nbsp;    protected Table table;
+<i class="no-highlight">21</i>&nbsp;    private final GameParameters parameters;
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;    /**
+<i class="no-highlight">24</i>&nbsp;     * Creates a new controller for the given table
+<i class="no-highlight">25</i>&nbsp;     *
+<i class="no-highlight">26</i>&nbsp;     * @param table The table to associate to the controller
+<i class="no-highlight">27</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    public TableController(Table table, GameParameters parameters) {</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;        this.table = table;</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;        this.parameters = parameters;</b>
+<i class="no-highlight">31</i>&nbsp;    }
+<i class="no-highlight">32</i>&nbsp;
+<i class="no-highlight">33</i>&nbsp;    /**
+<i class="no-highlight">34</i>&nbsp;     * Fills the entrances at the beginning of the game
+<i class="no-highlight">35</i>&nbsp;     */
+<i class="no-highlight">36</i>&nbsp;    public List&lt;PawnColor&gt; drawStudents() {
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        List&lt;PawnColor&gt; studentsDrawn = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">38</i>&nbsp;        if (table.getPlayersNumber() == PlayersNumber.TWO) {</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;            for (int i = 0; i &lt; 7; i++) {</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;                studentsDrawn.add(table.getBag().drawStudent());</b>
+<i class="no-highlight">41</i>&nbsp;            }
+<i class="no-highlight">42</i>&nbsp;        } else {
+<b class="fc"><i class="no-highlight">43</i>&nbsp;            for (int i = 0; i &lt; 9; i++) {</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;                studentsDrawn.add(table.getBag().drawStudent());</b>
+<i class="no-highlight">45</i>&nbsp;            }
+<i class="no-highlight">46</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">47</i>&nbsp;        return studentsDrawn;</b>
+<i class="no-highlight">48</i>&nbsp;    }
+<i class="no-highlight">49</i>&nbsp;
+<i class="no-highlight">50</i>&nbsp;    /**
+<i class="no-highlight">51</i>&nbsp;     * Draws n students from the bag
+<i class="no-highlight">52</i>&nbsp;     *
+<i class="no-highlight">53</i>&nbsp;     * @param n The number fo students to draw
+<i class="no-highlight">54</i>&nbsp;     * @return The drawn students
+<i class="no-highlight">55</i>&nbsp;     */
+<i class="no-highlight">56</i>&nbsp;    public List&lt;PawnColor&gt; drawStudents(int n) {
+<b class="fc"><i class="no-highlight">57</i>&nbsp;        List&lt;PawnColor&gt; students = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">58</i>&nbsp;        for (int i = 0; i &lt; n; i++) {</b>
+<b class="fc"><i class="no-highlight">59</i>&nbsp;            students.add(table.getBag().drawStudent());</b>
+<i class="no-highlight">60</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">61</i>&nbsp;        return students;</b>
+<i class="no-highlight">62</i>&nbsp;    }
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    /**
+<i class="no-highlight">65</i>&nbsp;     * Adds the students to the cloud
+<i class="no-highlight">66</i>&nbsp;     *
+<i class="no-highlight">67</i>&nbsp;     * @throws FullCloudException The cloud is not empty
+<i class="no-highlight">68</i>&nbsp;     */
+<i class="no-highlight">69</i>&nbsp;    public void fillClouds() throws FullCloudException {
+<b class="fc"><i class="no-highlight">70</i>&nbsp;        List&lt;PawnColor&gt; studentsDrawn = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">71</i>&nbsp;        int numberOfPlayers = table.getPlayersNumber() == PlayersNumber.TWO ? CLOUDS_STUDENTS_2_PLAYERS : CLOUDS_STUDENTS_3_PLAYERS;</b>
+<i class="no-highlight">72</i>&nbsp;        /*for (CloudTile cloudTile : table.getCloudTiles()) {
+<i class="no-highlight">73</i>&nbsp;            if (!table.takeStudentsFromCloud(cloudTile).isEmpty()) throw new FullCloudException();
+<i class="no-highlight">74</i>&nbsp;        }*/
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        for (CloudTile cloud : table.getCloudTiles()) {</b>
+<b class="fc"><i class="no-highlight">76</i>&nbsp;            if(cloud.getStudentsNumber() == 0) {</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;                for (int i = 0; i &lt; numberOfPlayers &amp;&amp; !table.getBag().isEmpty(); i++) {</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;                    studentsDrawn.add(table.getBag().drawStudent());</b>
+<i class="no-highlight">79</i>&nbsp;                }
+<b class="fc"><i class="no-highlight">80</i>&nbsp;                table.addStudents(cloud, studentsDrawn);</b>
+<b class="fc"><i class="no-highlight">81</i>&nbsp;                studentsDrawn.clear();</b>
+<i class="no-highlight">82</i>&nbsp;            }
+<b class="fc"><i class="no-highlight">83</i>&nbsp;        }</b>
+<i class="no-highlight">84</i>&nbsp;    }
+<i class="no-highlight">85</i>&nbsp;
+<i class="no-highlight">86</i>&nbsp;    /**
+<i class="no-highlight">87</i>&nbsp;     * Moves a pawn on an island
+<i class="no-highlight">88</i>&nbsp;     *
+<i class="no-highlight">89</i>&nbsp;     * @param student The student to place
+<i class="no-highlight">90</i>&nbsp;     * @param uuid    The id of the target island
+<i class="no-highlight">91</i>&nbsp;     * @throws WrongUUIDException When the given id doesn&#39;t correspond to an island
+<i class="no-highlight">92</i>&nbsp;     */
+<i class="no-highlight">93</i>&nbsp;    public void movePawnOnIsland(PawnColor student, UUID uuid) throws WrongUUIDException {
+<b class="fc"><i class="no-highlight">94</i>&nbsp;        table.movePawnOnIsland(table.getIsland(uuid), student);</b>
+<i class="no-highlight">95</i>&nbsp;    }
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;    /**
+<i class="no-highlight">98</i>&nbsp;     * Takes a professor from the table
+<i class="no-highlight">99</i>&nbsp;     *
+<i class="no-highlight">100</i>&nbsp;     * @param professor The color of the professor to take
+<i class="no-highlight">101</i>&nbsp;     * @return True if the professor has been taken
+<i class="no-highlight">102</i>&nbsp;     */
+<i class="no-highlight">103</i>&nbsp;    public boolean takeProfessor(PawnColor professor) {
+<b class="fc"><i class="no-highlight">104</i>&nbsp;        if (table.getProfessors().contains(professor)) {</b>
+<b class="fc"><i class="no-highlight">105</i>&nbsp;            table.getProfessors().remove(professor);</b>
+<b class="fc"><i class="no-highlight">106</i>&nbsp;            return true;</b>
+<i class="no-highlight">107</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">108</i>&nbsp;        return false;</b>
+<i class="no-highlight">109</i>&nbsp;    }
+<i class="no-highlight">110</i>&nbsp;
+<i class="no-highlight">111</i>&nbsp;    /**
+<i class="no-highlight">112</i>&nbsp;     * Moves Mother Nature
+<i class="no-highlight">113</i>&nbsp;     *
+<i class="no-highlight">114</i>&nbsp;     * @param move The number of steps to make
+<i class="no-highlight">115</i>&nbsp;     */
+<i class="no-highlight">116</i>&nbsp;    public void moveMotherNature(int move) {
+<b class="fc"><i class="no-highlight">117</i>&nbsp;        table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() + move, table.getIslands().size()));</b>
+<i class="no-highlight">118</i>&nbsp;    }
+<i class="no-highlight">119</i>&nbsp;
+<i class="no-highlight">120</i>&nbsp;    /**
+<i class="no-highlight">121</i>&nbsp;     * Calculates the influence on a given island
+<i class="no-highlight">122</i>&nbsp;     *
+<i class="no-highlight">123</i>&nbsp;     * @param playerProfessors The professors on the player&#39;s schoolBoard
+<i class="no-highlight">124</i>&nbsp;     * @param towerColor       The color of the towers of the current player
+<i class="no-highlight">125</i>&nbsp;     * @return The calculated influence
+<i class="no-highlight">126</i>&nbsp;     */
+<i class="no-highlight">127</i>&nbsp;    public int countInfluenceOnIsland(Set&lt;PawnColor&gt; playerProfessors, Tower towerColor) {
+<b class="fc"><i class="no-highlight">128</i>&nbsp;        return table.getIslands().get(table.getIslandWithMotherNature()).countInfluence(playerProfessors, towerColor);</b>
+<i class="no-highlight">129</i>&nbsp;    }
+<i class="no-highlight">130</i>&nbsp;
+<i class="no-highlight">131</i>&nbsp;    /**
+<i class="no-highlight">132</i>&nbsp;     * Checks if the current player can build a tower
+<i class="no-highlight">133</i>&nbsp;     *
+<i class="no-highlight">134</i>&nbsp;     * @param towerColor The color of the towers of the player
+<i class="no-highlight">135</i>&nbsp;     * @return True if the player can build a tower
+<i class="no-highlight">136</i>&nbsp;     */
+<i class="no-highlight">137</i>&nbsp;    public boolean canBuildTower(Tower towerColor) {
+<b class="fc"><i class="no-highlight">138</i>&nbsp;        Tower towerOnIsland = table.getIslands().get(table.getIslandWithMotherNature()).getTower();</b>
+<b class="fc"><i class="no-highlight">139</i>&nbsp;        return (towerOnIsland.equals(Tower.NONE) || !towerOnIsland.equals(towerColor));</b>
+<i class="no-highlight">140</i>&nbsp;    }
+<i class="no-highlight">141</i>&nbsp;
+<i class="no-highlight">142</i>&nbsp;    /**
+<i class="no-highlight">143</i>&nbsp;     * Builds a tower on the island with Mother Nature
+<i class="no-highlight">144</i>&nbsp;     *
+<i class="no-highlight">145</i>&nbsp;     * @param towerColor The color of the tower to build
+<i class="no-highlight">146</i>&nbsp;     * @return A tuple containing the color of the tower previously on the island and the number of them
+<i class="no-highlight">147</i>&nbsp;     */
+<i class="no-highlight">148</i>&nbsp;    public Pair&lt;Tower, Integer&gt; buildTower(Tower towerColor) {
+<b class="fc"><i class="no-highlight">149</i>&nbsp;        Tower towerOnIsland = table.getIslands().get(table.getIslandWithMotherNature()).getTower();</b>
+<b class="fc"><i class="no-highlight">150</i>&nbsp;        Pair&lt;Tower, Integer&gt; pair = new Pair&lt;&gt;(towerOnIsland, table.getIslands().get(table.getIslandWithMotherNature()).getSize());</b>
+<b class="fc"><i class="no-highlight">151</i>&nbsp;        table.setTower(table.getIslands().get(table.getIslandWithMotherNature()), towerColor);</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;        tryUnifyIslands(towerColor);</b>
+<b class="fc"><i class="no-highlight">153</i>&nbsp;        return pair;</b>
+<i class="no-highlight">154</i>&nbsp;    }
+<i class="no-highlight">155</i>&nbsp;
+<i class="no-highlight">156</i>&nbsp;    /**
+<i class="no-highlight">157</i>&nbsp;     * Tries to unify adjacent island
+<i class="no-highlight">158</i>&nbsp;     *
+<i class="no-highlight">159</i>&nbsp;     * @param towerColor The color of the tower of the current player
+<i class="no-highlight">160</i>&nbsp;     */
+<i class="no-highlight">161</i>&nbsp;    private void tryUnifyIslands(Tower towerColor) {
+<i class="no-highlight">162</i>&nbsp;        //right
+<b class="fc"><i class="no-highlight">163</i>&nbsp;        IslandCard islandLeft = table.getIsland(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));</b>
+<b class="fc"><i class="no-highlight">164</i>&nbsp;        if (islandLeft.getTower().equals(towerColor)) {</b>
+<b class="fc"><i class="no-highlight">165</i>&nbsp;            table.unifyIslands(table.getIslandWithMotherNature(), Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));</b>
+<i class="no-highlight">166</i>&nbsp;            //islandLeft.setHasMotherNature(false);
+<i class="no-highlight">167</i>&nbsp;            //if (table.getIslandWithMotherNature() != 0)
+<i class="no-highlight">168</i>&nbsp;            //    table.setIslandWithMotherNature(Math.floorMod(table.getIslandWithMotherNature() - 1, table.getIslands().size()));
+<i class="no-highlight">169</i>&nbsp;        }
+<i class="no-highlight">170</i>&nbsp;        //left
+<b class="fc"><i class="no-highlight">171</i>&nbsp;        IslandCard islandRight = table.getIsland(Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));</b>
+<b class="fc"><i class="no-highlight">172</i>&nbsp;        if (islandRight.getTower().equals(towerColor)) {</b>
+<b class="fc"><i class="no-highlight">173</i>&nbsp;            table.unifyIslands(table.getIslandWithMotherNature(), Math.floorMod(table.getIslandWithMotherNature() + 1, table.getIslands().size()));</b>
+<i class="no-highlight">174</i>&nbsp;            //islandRight.setHasMotherNature(false);
+<i class="no-highlight">175</i>&nbsp;            //if (table.getIslandWithMotherNature() == table.getIslands().size())
+<i class="no-highlight">176</i>&nbsp;            //    table.setIslandWithMotherNature(table.getIslandWithMotherNature() - 1);
+<i class="no-highlight">177</i>&nbsp;        }
+<i class="no-highlight">178</i>&nbsp;
+<i class="no-highlight">179</i>&nbsp;    }
+<i class="no-highlight">180</i>&nbsp;
+<i class="no-highlight">181</i>&nbsp;    /**
+<i class="no-highlight">182</i>&nbsp;     * Takes the students from a cloud
+<i class="no-highlight">183</i>&nbsp;     *
+<i class="no-highlight">184</i>&nbsp;     * @param uuid The id of the cloud
+<i class="no-highlight">185</i>&nbsp;     * @return The students on the selected cloud
+<i class="no-highlight">186</i>&nbsp;     * @throws WrongUUIDException When the cloud does not exist
+<i class="no-highlight">187</i>&nbsp;     */
+<i class="no-highlight">188</i>&nbsp;    public List&lt;PawnColor&gt; takeStudentsFromCloud(UUID uuid) throws WrongUUIDException {
+<b class="fc"><i class="no-highlight">189</i>&nbsp;        for (CloudTile cloud : table.getCloudTiles()) {</b>
+<b class="fc"><i class="no-highlight">190</i>&nbsp;            if (cloud.getUuid().equals(uuid)) {</b>
+<b class="fc"><i class="no-highlight">191</i>&nbsp;                return table.takeStudentsFromCloud(cloud);</b>
+<i class="no-highlight">192</i>&nbsp;            }
+<b class="fc"><i class="no-highlight">193</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">194</i>&nbsp;        throw new WrongUUIDException();</b>
+<i class="no-highlight">195</i>&nbsp;    }
+<i class="no-highlight">196</i>&nbsp;
+<i class="no-highlight">197</i>&nbsp;    /**
+<i class="no-highlight">198</i>&nbsp;     * Returns the number of islands on the table
+<i class="no-highlight">199</i>&nbsp;     *
+<i class="no-highlight">200</i>&nbsp;     * @return The number of islands
+<i class="no-highlight">201</i>&nbsp;     */
+<i class="no-highlight">202</i>&nbsp;    public int countIslands() {
+<b class="fc"><i class="no-highlight">203</i>&nbsp;        return this.table.countIsland();</b>
+<i class="no-highlight">204</i>&nbsp;    }
+<i class="no-highlight">205</i>&nbsp;
+<i class="no-highlight">206</i>&nbsp;    /**
+<i class="no-highlight">207</i>&nbsp;     * Returns the bag associated to the current game
+<i class="no-highlight">208</i>&nbsp;     *
+<i class="no-highlight">209</i>&nbsp;     * @return The Bag
+<i class="no-highlight">210</i>&nbsp;     */
+<i class="no-highlight">211</i>&nbsp;    public Bag getBag() {
+<b class="fc"><i class="no-highlight">212</i>&nbsp;        return this.table.getBag();</b>
+<i class="no-highlight">213</i>&nbsp;    }
+<i class="no-highlight">214</i>&nbsp;
+<i class="no-highlight">215</i>&nbsp;    /**
+<i class="no-highlight">216</i>&nbsp;     *
+<i class="no-highlight">217</i>&nbsp;     * @return the Table
+<i class="no-highlight">218</i>&nbsp;     */
+<i class="no-highlight">219</i>&nbsp;    public Table getTable() {
+<b class="fc"><i class="no-highlight">220</i>&nbsp;        return table;</b>
+<i class="no-highlight">221</i>&nbsp;    }
+<i class="no-highlight">222</i>&nbsp;
+<i class="no-highlight">223</i>&nbsp;    /**
+<i class="no-highlight">224</i>&nbsp;     *
+<i class="no-highlight">225</i>&nbsp;     * @return the GameParameters
+<i class="no-highlight">226</i>&nbsp;     */
+<i class="no-highlight">227</i>&nbsp;    public GameParameters getParameters() {
+<b class="fc"><i class="no-highlight">228</i>&nbsp;        return parameters;</b>
+<i class="no-highlight">229</i>&nbsp;    }
+<i class="no-highlight">230</i>&nbsp;
+<i class="no-highlight">231</i>&nbsp;    /**
+<i class="no-highlight">232</i>&nbsp;     *
+<i class="no-highlight">233</i>&nbsp;     * @param table the Table
+<i class="no-highlight">234</i>&nbsp;     */
+<i class="no-highlight">235</i>&nbsp;    public void setTable(Table table) {
+<b class="nc"><i class="no-highlight">236</i>&nbsp;        this.table = table;</b>
+<i class="no-highlight">237</i>&nbsp;    }
+<i class="no-highlight">238</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

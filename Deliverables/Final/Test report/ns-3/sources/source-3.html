@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PrinterAssistantCards</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.client.cli</a>
+</div>
+
+<h1>Coverage Summary for Class: PrinterAssistantCards (it.polimi.ingsw.client.cli)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PrinterAssistantCards</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.client.cli;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.client.modelview.PlayerInfo;
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;import java.io.PrintStream;
+<i class="no-highlight">6</i>&nbsp;import java.util.List;
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;/**
+<i class="no-highlight">9</i>&nbsp; * Class for printing Assistant Cards
+<i class="no-highlight">10</i>&nbsp; */
+<b class="nc"><i class="no-highlight">11</i>&nbsp;public class PrinterAssistantCards {</b>
+<i class="no-highlight">12</i>&nbsp;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;    /**
+<i class="no-highlight">15</i>&nbsp;     * Prints the assistant card chose by the players
+<i class="no-highlight">16</i>&nbsp;     * @param players the players
+<i class="no-highlight">17</i>&nbsp;     */
+<i class="no-highlight">18</i>&nbsp;    public void print(List&lt;PlayerInfo&gt; players) {
+<b class="nc"><i class="no-highlight">19</i>&nbsp;        PrintStream out = System.out;</b>
+<b class="nc"><i class="no-highlight">20</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">21</i>&nbsp;        centre();</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;        for (int i = 0; i &lt; players.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;            out.print(&quot; _____ &quot;);</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;            space();</b>
+<i class="no-highlight">25</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">26</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">27</i>&nbsp;        centre();</b>
+<b class="nc"><i class="no-highlight">28</i>&nbsp;        for (PlayerInfo player : players) {</b>
+<b class="nc"><i class="no-highlight">29</i>&nbsp;            if (player.getDiscardPileHead().isPresent()) {</b>
+<b class="nc"><i class="no-highlight">30</i>&nbsp;                int value = player.getDiscardPileHead().get().value();</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;                if (value != 10)</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;                    out.print(&quot;|&quot; + value + &quot;   &quot; + player.getDiscardPileHead().get().motherNatureMovement() + &quot;|&quot;);</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;                else out.print(&quot;|&quot; + value + &quot;  &quot; + player.getDiscardPileHead().get().motherNatureMovement() + &quot;|&quot;);</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;            } else out.print(&quot;|     |&quot;);</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;            space();</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">37</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">38</i>&nbsp;        centre();</b>
+<b class="nc"><i class="no-highlight">39</i>&nbsp;        for (int i = 0; i &lt; players.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;            out.print(&quot;|     |&quot;);</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;            space();</b>
+<i class="no-highlight">42</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">43</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">44</i>&nbsp;        centre();</b>
+<b class="nc"><i class="no-highlight">45</i>&nbsp;        for (int i = 0; i &lt; players.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;            out.print(&quot;|_____|&quot;);</b>
+<b class="nc"><i class="no-highlight">47</i>&nbsp;            space();</b>
+<i class="no-highlight">48</i>&nbsp;        }
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    /**
+<i class="no-highlight">52</i>&nbsp;     * space between cards
+<i class="no-highlight">53</i>&nbsp;     */
+<i class="no-highlight">54</i>&nbsp;    private void space() {
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        int space = 45;</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;        for (int i = 0; i &lt; space; i++) System.out.print(&quot; &quot;);</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;    /**
+<i class="no-highlight">60</i>&nbsp;     * left space for centering the card
+<i class="no-highlight">61</i>&nbsp;     */
+<i class="no-highlight">62</i>&nbsp;    private void centre() {
+<b class="nc"><i class="no-highlight">63</i>&nbsp;        int space = 15;</b>
+<b class="nc"><i class="no-highlight">64</i>&nbsp;        for (int i = 0; i &lt; space; i++) System.out.print(&quot; &quot;);</b>
+<i class="no-highlight">65</i>&nbsp;    }
+<i class="no-highlight">66</i>&nbsp;
+<i class="no-highlight">67</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

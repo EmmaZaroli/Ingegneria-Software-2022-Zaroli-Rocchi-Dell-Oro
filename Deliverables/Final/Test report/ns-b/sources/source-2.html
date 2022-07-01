@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Bag</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Bag (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Bag</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (31/31)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.model;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.utils.RandomHelper;
+<i class="no-highlight">5</i>&nbsp;
+<i class="no-highlight">6</i>&nbsp;import java.io.Serial;
+<i class="no-highlight">7</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">8</i>&nbsp;import java.util.EnumMap;
+<i class="no-highlight">9</i>&nbsp;import java.util.Map;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;/**
+<i class="no-highlight">12</i>&nbsp; * A class representing the bag
+<i class="no-highlight">13</i>&nbsp; */
+<i class="no-highlight">14</i>&nbsp;public class Bag implements Serializable {
+<i class="no-highlight">15</i>&nbsp;    @Serial
+<i class="no-highlight">16</i>&nbsp;    private static final long serialVersionUID = 4L;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;    private static final int PAWNS_PER_COLOR = 24;
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;    private final EnumMap&lt;PawnColor, Integer&gt; students;
+<i class="no-highlight">21</i>&nbsp;    private int pawnCount;
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;    /**
+<i class="no-highlight">24</i>&nbsp;     * Builds the new bag
+<i class="no-highlight">25</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">26</i>&nbsp;    protected Bag() {</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;        this.students = new EnumMap&lt;&gt;(PawnColor.class);</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;        for (PawnColor pc : PawnColor.values()) {</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;            if (pc != PawnColor.NONE) {</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;                students.put(pc, PAWNS_PER_COLOR);</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;                this.pawnCount += PAWNS_PER_COLOR;</b>
+<i class="no-highlight">32</i>&nbsp;            }
+<i class="no-highlight">33</i>&nbsp;        }
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    }
+<i class="no-highlight">37</i>&nbsp;    /**
+<i class="no-highlight">38</i>&nbsp;     * Draws a student and removes it from the bag
+<i class="no-highlight">39</i>&nbsp;     *
+<i class="no-highlight">40</i>&nbsp;     * @return The drawn student
+<i class="no-highlight">41</i>&nbsp;     */
+<i class="no-highlight">42</i>&nbsp;    public PawnColor drawStudent() {
+<b class="fc"><i class="no-highlight">43</i>&nbsp;        RandomHelper randomHelper = RandomHelper.getInstance();</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        if (pawnCount &gt; 0) {</b>
+<i class="no-highlight">45</i>&nbsp;            //randomHelper.getInt(n) returns an integer in [0, n), so we need to add 1
+<b class="fc"><i class="no-highlight">46</i>&nbsp;            int random = randomHelper.getInt(pawnCount) + 1;</b>
+<b class="fc"><i class="no-highlight">47</i>&nbsp;            int pos = 0;</b>
+<i class="no-highlight">48</i>&nbsp;
+<b class="fc"><i class="no-highlight">49</i>&nbsp;            for (Map.Entry&lt;PawnColor, Integer&gt; e : students.entrySet()) {</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;                pos += e.getValue();</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;                if (random &lt;= pos) {</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;                    removePawn(e.getKey());</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;                    return e.getKey();</b>
+<i class="no-highlight">54</i>&nbsp;                }
+<b class="fc"><i class="no-highlight">55</i>&nbsp;            }</b>
+<i class="no-highlight">56</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">57</i>&nbsp;        return PawnColor.NONE;</b>
+<i class="no-highlight">58</i>&nbsp;    }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;    /**
+<i class="no-highlight">61</i>&nbsp;     * Removes a pawn from the bag
+<i class="no-highlight">62</i>&nbsp;     */
+<i class="no-highlight">63</i>&nbsp;    private void removePawn(PawnColor c) {
+<b class="fc"><i class="no-highlight">64</i>&nbsp;        Integer pawnColorCount = this.students.get(c);</b>
+<b class="fc"><i class="no-highlight">65</i>&nbsp;        pawnColorCount = pawnColorCount - 1;</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        this.students.replace(c, pawnColorCount);</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;        this.pawnCount--;</b>
+<i class="no-highlight">68</i>&nbsp;    }
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;    /**
+<i class="no-highlight">71</i>&nbsp;     * @return True if the bag is empty
+<i class="no-highlight">72</i>&nbsp;     */
+<i class="no-highlight">73</i>&nbsp;    public boolean isEmpty() {
+<b class="fc"><i class="no-highlight">74</i>&nbsp;        for (Map.Entry&lt;PawnColor, Integer&gt; e : students.entrySet()) {</b>
+<b class="fc"><i class="no-highlight">75</i>&nbsp;            if (e.getValue() &gt; 0)</b>
+<b class="fc"><i class="no-highlight">76</i>&nbsp;                return false;</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;        return true;</b>
+<i class="no-highlight">79</i>&nbsp;    }
+<i class="no-highlight">80</i>&nbsp;
+<i class="no-highlight">81</i>&nbsp;    /**
+<i class="no-highlight">82</i>&nbsp;     * @return number of students left in bag
+<i class="no-highlight">83</i>&nbsp;     */
+<i class="no-highlight">84</i>&nbsp;    public int getStudentsLeft(){
+<b class="fc"><i class="no-highlight">85</i>&nbsp;        int res = 0;</b>
+<b class="fc"><i class="no-highlight">86</i>&nbsp;        for (Map.Entry&lt;PawnColor, Integer&gt; e : students.entrySet()) {</b>
+<b class="fc"><i class="no-highlight">87</i>&nbsp;            res += e.getValue();</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;        }</b>
+<b class="fc"><i class="no-highlight">89</i>&nbsp;        return res;</b>
+<i class="no-highlight">90</i>&nbsp;    }
+<i class="no-highlight">91</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

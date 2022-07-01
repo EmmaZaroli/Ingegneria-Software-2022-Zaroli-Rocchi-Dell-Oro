@@ -1,0 +1,832 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Cli</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.client.cli</a>
+</div>
+
+<h1>Coverage Summary for Class: Cli (it.polimi.ingsw.client.cli)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Cli</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/314)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Cli$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/43)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/315)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.client.cli;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.client.InputParser;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.client.View;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.client.modelview.PlayerInfo;
+<i class="no-highlight">6</i>&nbsp;import it.polimi.ingsw.dtos.SchoolBoardDto;
+<i class="no-highlight">7</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.GameMode;
+<i class="no-highlight">8</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+<i class="no-highlight">9</i>&nbsp;import it.polimi.ingsw.model.AssistantCard;
+<i class="no-highlight">10</i>&nbsp;import it.polimi.ingsw.model.enums.Character;
+<i class="no-highlight">11</i>&nbsp;import it.polimi.ingsw.model.enums.GamePhase;
+<i class="no-highlight">12</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;import java.io.PrintStream;
+<i class="no-highlight">15</i>&nbsp;import java.util.*;
+<i class="no-highlight">16</i>&nbsp;import java.util.stream.Collectors;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;/**
+<i class="no-highlight">19</i>&nbsp; * CLI
+<i class="no-highlight">20</i>&nbsp; */
+<i class="no-highlight">21</i>&nbsp;public class Cli extends View {
+<i class="no-highlight">22</i>&nbsp;    private final PrintStream out;
+<i class="no-highlight">23</i>&nbsp;    private final Scanner in;
+<i class="no-highlight">24</i>&nbsp;    private final InputParser inputParser;
+<i class="no-highlight">25</i>&nbsp;    public static final String ANSI_RESET = &quot;\u001B[0m&quot;;
+<i class="no-highlight">26</i>&nbsp;    public static final String ANSI_RED = &quot;\u001B[31m&quot;;
+<i class="no-highlight">27</i>&nbsp;    public static final String COIN = &quot;¢&quot;;
+<i class="no-highlight">28</i>&nbsp;    public static final String ANSI_YELLOW = &quot;\u001B[33m&quot;;
+<b class="nc"><i class="no-highlight">29</i>&nbsp;    private final PrinterSchoolBoard boardPrinter = new PrinterSchoolBoard();</b>
+<b class="nc"><i class="no-highlight">30</i>&nbsp;    private final PrinterClouds cloudPrinter = new PrinterClouds();</b>
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    private final PrinterIslands islandsPrinter = new PrinterIslands();</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    private final PrinterCharacterCards characterCardPrinter = new PrinterCharacterCards();</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;    private final PrinterAssistantCards assistantCardsPrinter = new PrinterAssistantCards();</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;    private final CliParser cliParser = new CliParser();</b>
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    /**
+<i class="no-highlight">37</i>&nbsp;     * Instantiates a new cli
+<i class="no-highlight">38</i>&nbsp;     */
+<b class="nc"><i class="no-highlight">39</i>&nbsp;    public Cli() {</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;        out = System.out;</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;        in = new Scanner(System.in);</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;        inputParser = new InputParser();</b>
+<i class="no-highlight">43</i>&nbsp;    }
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    /**
+<i class="no-highlight">46</i>&nbsp;     * prints game title
+<i class="no-highlight">47</i>&nbsp;     */
+<i class="no-highlight">48</i>&nbsp;    @Override
+<i class="no-highlight">49</i>&nbsp;    public void printWelcomeMessage() {
+<b class="nc"><i class="no-highlight">50</i>&nbsp;        out.println(&quot;                       ?????????    ?????????  ??     ????????? ???????       ???     ???   ?      ????????? \n&quot; +</b>
+<i class="no-highlight">51</i>&nbsp;                &quot;                      ???    ???   ???    ??? ???    ???    ??? ????????? ??????????? ???   ???   ???    ??? \n&quot; +
+<i class="no-highlight">52</i>&nbsp;                &quot;                      ???    ??    ???    ??? ????   ???    ??? ???   ???    ???????? ?????????   ???    ??  \n&quot; +
+<i class="no-highlight">53</i>&nbsp;                &quot;                     ???????      ??????????? ????   ???    ??? ???   ???     ???   ? ?????????   ???        \n&quot; +
+<i class="no-highlight">54</i>&nbsp;                &quot;                    ????????     ??????????   ???? ???????????? ???   ???     ???     ???   ??? ???????????? \n&quot; +
+<i class="no-highlight">55</i>&nbsp;                &quot;                      ???    ??  ???????????? ???    ???    ??? ???   ???     ???     ???   ???          ??? \n&quot; +
+<i class="no-highlight">56</i>&nbsp;                &quot;                      ???    ???   ???    ??? ???    ???    ??? ???   ???     ???     ???   ???    ??    ??? \n&quot; +
+<i class="no-highlight">57</i>&nbsp;                &quot;                      ??????????   ???    ??? ??     ???    ??   ??   ??     ??????    ???????   ??????????  \n&quot; +
+<i class="no-highlight">58</i>&nbsp;                &quot;                                   ???    ???                                                                &quot;);
+<i class="no-highlight">59</i>&nbsp;
+<b class="nc"><i class="no-highlight">60</i>&nbsp;        out.println(&quot; &quot;);</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;        space(45);</b>
+<b class="nc"><i class="no-highlight">62</i>&nbsp;        out.println(&quot;Welcome to Eriantys Board Game!&quot;);</b>
+<i class="no-highlight">63</i>&nbsp;    }
+<i class="no-highlight">64</i>&nbsp;
+<i class="no-highlight">65</i>&nbsp;    @Override
+<i class="no-highlight">66</i>&nbsp;    public void printEnqueuedMessage() {
+<b class="nc"><i class="no-highlight">67</i>&nbsp;        System.out.println(&quot;You&#39;ve been added to the players queue.\nPlease, wait for a game to start&quot;);</b>
+<i class="no-highlight">68</i>&nbsp;    }
+<i class="no-highlight">69</i>&nbsp;
+<i class="no-highlight">70</i>&nbsp;    //@Override
+<i class="no-highlight">71</i>&nbsp;    public void printGameStartingMessage() {
+<b class="nc"><i class="no-highlight">72</i>&nbsp;        System.out.println(&quot;Game starting!&quot;);</b>
+<i class="no-highlight">73</i>&nbsp;    }
+<i class="no-highlight">74</i>&nbsp;
+<i class="no-highlight">75</i>&nbsp;    /**
+<i class="no-highlight">76</i>&nbsp;     * asks the ip and the port of the server
+<i class="no-highlight">77</i>&nbsp;     */
+<i class="no-highlight">78</i>&nbsp;    @Override
+<i class="no-highlight">79</i>&nbsp;    public void askServerInfo() {
+<i class="no-highlight">80</i>&nbsp;        String ip;
+<b class="nc"><i class="no-highlight">81</i>&nbsp;        int port=24000;</b>
+<i class="no-highlight">82</i>&nbsp;
+<b class="nc"><i class="no-highlight">83</i>&nbsp;        out.print(&quot;Please, insert the Server&#39;s ip address: &quot;);</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;        ip = readLine();</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;        out.print(&quot;Select the Server&#39;s port number: &quot;);</b>
+<i class="no-highlight">86</i>&nbsp;        try {
+<b class="nc"><i class="no-highlight">87</i>&nbsp;            port = Integer.parseInt(readLine());</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;        }catch(NumberFormatException e){</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;            errorAndExit(&quot;the port entered is not a number&quot;);</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;        }</b>
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;        //ip = &quot;127.0.0.1&quot;;
+<i class="no-highlight">93</i>&nbsp;        //port = 24000;
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;
+<b class="nc"><i class="no-highlight">96</i>&nbsp;        this.startConnection(ip, port);</b>
+<i class="no-highlight">97</i>&nbsp;    }
+<i class="no-highlight">98</i>&nbsp;
+<i class="no-highlight">99</i>&nbsp;    /**
+<i class="no-highlight">100</i>&nbsp;     * Reads a line from the standard input.
+<i class="no-highlight">101</i>&nbsp;     *
+<i class="no-highlight">102</i>&nbsp;     * @return the string read from the input.
+<i class="no-highlight">103</i>&nbsp;     */
+<i class="no-highlight">104</i>&nbsp;    private String readLine() {
+<b class="nc"><i class="no-highlight">105</i>&nbsp;        String input = &quot;&quot;;</b>
+<b class="nc"><i class="no-highlight">106</i>&nbsp;        boolean helpRequest = false;</b>
+<b class="nc"><i class="no-highlight">107</i>&nbsp;        while (!helpRequest) {</b>
+<b class="nc"><i class="no-highlight">108</i>&nbsp;            input = in.nextLine();</b>
+<b class="nc"><i class="no-highlight">109</i>&nbsp;            if (input.equals(&quot;-h&quot;) &amp;&amp; isExpertGame()) {</b>
+<b class="nc"><i class="no-highlight">110</i>&nbsp;                helpMessage();</b>
+<b class="nc"><i class="no-highlight">111</i>&nbsp;            } else helpRequest = true;</b>
+<i class="no-highlight">112</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">113</i>&nbsp;        return input;</b>
+<i class="no-highlight">114</i>&nbsp;    }
+<i class="no-highlight">115</i>&nbsp;
+<i class="no-highlight">116</i>&nbsp;
+<i class="no-highlight">117</i>&nbsp;    /**
+<i class="no-highlight">118</i>&nbsp;     * Asks the player a nickname
+<i class="no-highlight">119</i>&nbsp;     */
+<i class="no-highlight">120</i>&nbsp;    public void askPlayerNickname() {
+<i class="no-highlight">121</i>&nbsp;        boolean valid;
+<i class="no-highlight">122</i>&nbsp;        String nickname;
+<i class="no-highlight">123</i>&nbsp;        do {
+<b class="nc"><i class="no-highlight">124</i>&nbsp;            out.print(&quot;Enter your nickname: &quot;);</b>
+<b class="nc"><i class="no-highlight">125</i>&nbsp;            nickname = readLine();</b>
+<b class="nc"><i class="no-highlight">126</i>&nbsp;            valid = inputParser.checkUsername(nickname);</b>
+<b class="nc"><i class="no-highlight">127</i>&nbsp;        } while (!valid);</b>
+<b class="nc"><i class="no-highlight">128</i>&nbsp;        this.sendPlayerNickname(nickname);</b>
+<i class="no-highlight">129</i>&nbsp;    }
+<i class="no-highlight">130</i>&nbsp;
+<i class="no-highlight">131</i>&nbsp;    /**
+<i class="no-highlight">132</i>&nbsp;     * @param nicknameAccepted  is true if the server accepted the nickname
+<i class="no-highlight">133</i>&nbsp;     * @param playerReconnected if the nickname was of a player previously disconnected
+<i class="no-highlight">134</i>&nbsp;     */
+<i class="no-highlight">135</i>&nbsp;    public void showNicknameResult(boolean nicknameAccepted, boolean playerReconnected) {
+<b class="nc"><i class="no-highlight">136</i>&nbsp;        if (playerReconnected) {</b>
+<b class="nc"><i class="no-highlight">137</i>&nbsp;            out.println(&quot;You&#39;ve been reconnected to your previous game&quot;);</b>
+<i class="no-highlight">138</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">139</i>&nbsp;        if (nicknameAccepted &amp;&amp; !playerReconnected) {</b>
+<b class="nc"><i class="no-highlight">140</i>&nbsp;            out.println(&quot;Welcome, &quot; + getMe().getNickname() + &quot;, get ready to play!&quot;);</b>
+<i class="no-highlight">141</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">142</i>&nbsp;        if (!nicknameAccepted &amp;&amp; !playerReconnected) {</b>
+<b class="nc"><i class="no-highlight">143</i>&nbsp;            out.println(&quot;Sorry, your nickname is already taken, please choose another one &quot;);</b>
+<i class="no-highlight">144</i>&nbsp;        }
+<i class="no-highlight">145</i>&nbsp;    }
+<i class="no-highlight">146</i>&nbsp;
+<i class="no-highlight">147</i>&nbsp;    /**
+<i class="no-highlight">148</i>&nbsp;     * Asks the player the gameMode and the number of players to play with
+<i class="no-highlight">149</i>&nbsp;     */
+<i class="no-highlight">150</i>&nbsp;    public void askGameSettings() {
+<b class="nc"><i class="no-highlight">151</i>&nbsp;        int playersNumber = 0;</b>
+<b class="nc"><i class="no-highlight">152</i>&nbsp;        String gameMode = null;</b>
+<b class="nc"><i class="no-highlight">153</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">154</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">155</i>&nbsp;            out.print(&quot;Please enter the Game mode: [normal/expert] &quot;);</b>
+<b class="nc"><i class="no-highlight">156</i>&nbsp;            gameMode = readLine();</b>
+<b class="nc"><i class="no-highlight">157</i>&nbsp;            valid = (gameMode.equals(&quot;normal&quot;) || gameMode.equals(&quot;expert&quot;));</b>
+<i class="no-highlight">158</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">159</i>&nbsp;        valid = false;</b>
+<b class="nc"><i class="no-highlight">160</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">161</i>&nbsp;            out.print(&quot;How many players are you going to play with? [2/3] &quot;);</b>
+<i class="no-highlight">162</i>&nbsp;            try {
+<b class="nc"><i class="no-highlight">163</i>&nbsp;                playersNumber = Integer.parseInt(readLine());</b>
+<b class="nc"><i class="no-highlight">164</i>&nbsp;                valid = (playersNumber == 2 || playersNumber == 3);</b>
+<b class="nc"><i class="no-highlight">165</i>&nbsp;            } catch (NumberFormatException e) {</b>
+<b class="nc"><i class="no-highlight">166</i>&nbsp;                error(&quot;not a number&quot;);</b>
+<b class="nc"><i class="no-highlight">167</i>&nbsp;            }</b>
+<i class="no-highlight">168</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">169</i>&nbsp;        this.sendGameSettings(playersNumber == 2 ? PlayersNumber.TWO : PlayersNumber.THREE,</b>
+<b class="nc"><i class="no-highlight">170</i>&nbsp;                gameMode.equals(&quot;expert&quot;) ? GameMode.EXPERT_MODE : GameMode.NORMAL_MODE);</b>
+<i class="no-highlight">171</i>&nbsp;    }
+<i class="no-highlight">172</i>&nbsp;
+<i class="no-highlight">173</i>&nbsp;    public void genericMessage(String message) {
+<b class="nc"><i class="no-highlight">174</i>&nbsp;        out.println(message);</b>
+<i class="no-highlight">175</i>&nbsp;    }
+<i class="no-highlight">176</i>&nbsp;
+<i class="no-highlight">177</i>&nbsp;    /**
+<i class="no-highlight">178</i>&nbsp;     * Used in the expert game mode, prints the effects of each character card
+<i class="no-highlight">179</i>&nbsp;     */
+<i class="no-highlight">180</i>&nbsp;    public void helpMessage() {
+<b class="nc"><i class="no-highlight">181</i>&nbsp;        out.println(&quot;character_1: Take 1 student from this card and place it on an island of your choice. &quot;);</b>
+<b class="nc"><i class="no-highlight">182</i>&nbsp;        out.println(&quot;character_2: During this turn, you take control of any number of professors,even if you have the same number of students as the player who currently controls them.&quot;);</b>
+<b class="nc"><i class="no-highlight">183</i>&nbsp;        out.println(&quot;character_4: You may move Mother Nature up to 2 additional steps.&quot;);</b>
+<b class="nc"><i class="no-highlight">184</i>&nbsp;        out.println(&quot;character_6: When resolving a Conquering on an Island, towers don&#39;t count towards influence.&quot;);</b>
+<b class="nc"><i class="no-highlight">185</i>&nbsp;        out.println(&quot;character_7: You may take up to 3 students from this card and replace them with the same number of students from you entrance.&quot;);</b>
+<b class="nc"><i class="no-highlight">186</i>&nbsp;        out.println(&quot;character_8: During the influence calculation this turn, you count as having 2 more influence.&quot;);</b>
+<b class="nc"><i class="no-highlight">187</i>&nbsp;        out.println(&quot;character_9: Choose a color of students, during the influence calculation this turn, that color adds no influence.&quot;);</b>
+<b class="nc"><i class="no-highlight">188</i>&nbsp;        out.println(&quot;character_11: Take one student from this card and place it in your dining room.&quot;);</b>
+<b class="nc"><i class="no-highlight">189</i>&nbsp;        out.print(&quot;Make your move:&quot;);</b>
+<i class="no-highlight">190</i>&nbsp;    }
+<i class="no-highlight">191</i>&nbsp;
+<i class="no-highlight">192</i>&nbsp;    /**
+<i class="no-highlight">193</i>&nbsp;     * Prints the new game phase
+<i class="no-highlight">194</i>&nbsp;     *
+<i class="no-highlight">195</i>&nbsp;     * @param phase the new GamePhase
+<i class="no-highlight">196</i>&nbsp;     */
+<i class="no-highlight">197</i>&nbsp;    public void changePhase(GamePhase phase) {
+<b class="nc"><i class="no-highlight">198</i>&nbsp;        space(57);</b>
+<b class="nc"><i class="no-highlight">199</i>&nbsp;        out.println(ANSI_YELLOW + &quot;Phase: &quot; + phase + ANSI_RESET);</b>
+<i class="no-highlight">200</i>&nbsp;    }
+<i class="no-highlight">201</i>&nbsp;
+<i class="no-highlight">202</i>&nbsp;    /**
+<i class="no-highlight">203</i>&nbsp;     * print the Assistant Card of the player and asks him which one to play
+<i class="no-highlight">204</i>&nbsp;     *
+<i class="no-highlight">205</i>&nbsp;     * @param deck the list of Assistant cards
+<i class="no-highlight">206</i>&nbsp;     */
+<i class="no-highlight">207</i>&nbsp;    public void askAssistantCard(List&lt;AssistantCard&gt; deck) {
+<i class="no-highlight">208</i>&nbsp;
+<b class="nc"><i class="no-highlight">209</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">210</i>&nbsp;        for (int i = 0; i &lt; deck.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">211</i>&nbsp;            out.print(&quot;     &quot; + (i + 1) + &quot;.      &quot;);</b>
+<i class="no-highlight">212</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">213</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">214</i>&nbsp;        for (int i = 0; i &lt; deck.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">215</i>&nbsp;            out.print(&quot;   _____     &quot;);</b>
+<i class="no-highlight">216</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">217</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">218</i>&nbsp;        for (AssistantCard assistantCard : deck) {</b>
+<b class="nc"><i class="no-highlight">219</i>&nbsp;            if (assistantCard.value() != 10)</b>
+<b class="nc"><i class="no-highlight">220</i>&nbsp;                out.print(&quot;  |&quot; + assistantCard.value() + &quot;   &quot; + assistantCard.motherNatureMovement() + &quot;|    &quot;);</b>
+<b class="nc"><i class="no-highlight">221</i>&nbsp;            else out.print(&quot;  |&quot; + assistantCard.value() + &quot;  &quot; + assistantCard.motherNatureMovement() + &quot;|    &quot;);</b>
+<b class="nc"><i class="no-highlight">222</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">223</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">224</i>&nbsp;        for (int i = 0; i &lt; deck.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">225</i>&nbsp;            out.print(&quot;  |     |    &quot;);</b>
+<i class="no-highlight">226</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">227</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">228</i>&nbsp;        for (int i = 0; i &lt; deck.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">229</i>&nbsp;            out.print(&quot;  |_____|    &quot;);</b>
+<i class="no-highlight">230</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">231</i>&nbsp;        out.println();</b>
+<i class="no-highlight">232</i>&nbsp;        int card;
+<b class="nc"><i class="no-highlight">233</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">234</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">235</i>&nbsp;            out.print(&quot;chose the assistant card to play: &quot;);</b>
+<b class="nc"><i class="no-highlight">236</i>&nbsp;            String input = readLine();</b>
+<i class="no-highlight">237</i>&nbsp;            try {
+<b class="nc"><i class="no-highlight">238</i>&nbsp;                card = Integer.parseInt(input);</b>
+<b class="nc"><i class="no-highlight">239</i>&nbsp;                valid = this.sendAssistantCard(card - 1);</b>
+<b class="nc"><i class="no-highlight">240</i>&nbsp;            } catch (NumberFormatException e) {</b>
+<b class="nc"><i class="no-highlight">241</i>&nbsp;                valid = false;</b>
+<b class="nc"><i class="no-highlight">242</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">243</i>&nbsp;            if (!valid) error(&quot;Error, the card you selected is not valid!&quot;);</b>
+<b class="nc"><i class="no-highlight">244</i>&nbsp;        }</b>
+<i class="no-highlight">245</i>&nbsp;    }
+<i class="no-highlight">246</i>&nbsp;
+<i class="no-highlight">247</i>&nbsp;    /**
+<i class="no-highlight">248</i>&nbsp;     * Asks the number of mother nature steps
+<i class="no-highlight">249</i>&nbsp;     * In the expert mode is given the chance to choose a character card to play
+<i class="no-highlight">250</i>&nbsp;     */
+<i class="no-highlight">251</i>&nbsp;    public void askMotherNatureSteps() {
+<b class="nc"><i class="no-highlight">252</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">253</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">254</i>&nbsp;            out.print(&quot;Mother Nature steps&quot;);</b>
+<b class="nc"><i class="no-highlight">255</i>&nbsp;            if (isExpertGame() &amp;&amp; !areCharacterActive()) out.print(&quot; or choose character card to activate&quot;);</b>
+<b class="nc"><i class="no-highlight">256</i>&nbsp;            out.print(&quot;: &quot;);</b>
+<i class="no-highlight">257</i>&nbsp;
+<b class="nc"><i class="no-highlight">258</i>&nbsp;            String input = readLine();</b>
+<b class="nc"><i class="no-highlight">259</i>&nbsp;            Optional&lt;Integer&gt; characterCard = cliParser.indexCharacterCard(input, getCharacterCards());</b>
+<b class="nc"><i class="no-highlight">260</i>&nbsp;            if (characterCard.isEmpty()) {</b>
+<i class="no-highlight">261</i>&nbsp;                try {
+<b class="nc"><i class="no-highlight">262</i>&nbsp;                    int steps = Integer.parseInt(input);</b>
+<b class="nc"><i class="no-highlight">263</i>&nbsp;                    if (steps &lt;= getMe().getDiscardPileHead().get().motherNatureMovement()) {</b>
+<b class="nc"><i class="no-highlight">264</i>&nbsp;                        valid = this.sendMotherNatureSteps(steps);</b>
+<i class="no-highlight">265</i>&nbsp;                    } else {
+<b class="nc"><i class="no-highlight">266</i>&nbsp;                        valid = false;</b>
+<i class="no-highlight">267</i>&nbsp;                    }
+<b class="nc"><i class="no-highlight">268</i>&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc"><i class="no-highlight">269</i>&nbsp;                    valid = false;</b>
+<b class="nc"><i class="no-highlight">270</i>&nbsp;                }</b>
+<i class="no-highlight">271</i>&nbsp;            } else {
+<b class="nc"><i class="no-highlight">272</i>&nbsp;                if (canActivateCharacter(characterCard.get()))</b>
+<b class="nc"><i class="no-highlight">273</i>&nbsp;                    valid = askCharacterCardParameters(characterCard.get());</b>
+<i class="no-highlight">274</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">275</i>&nbsp;            if (!valid &amp;&amp; isExpertGame()) error(&quot;invalid number of steps or invalid character card&quot;);</b>
+<b class="nc"><i class="no-highlight">276</i>&nbsp;            else if (!valid) error(&quot;invalid number of steps&quot;);</b>
+<b class="nc"><i class="no-highlight">277</i>&nbsp;        }</b>
+<i class="no-highlight">278</i>&nbsp;    }
+<i class="no-highlight">279</i>&nbsp;
+<i class="no-highlight">280</i>&nbsp;    /**
+<i class="no-highlight">281</i>&nbsp;     * Asks the index of the cloud
+<i class="no-highlight">282</i>&nbsp;     * In the expert mode is given the chance to choose a character card to play
+<i class="no-highlight">283</i>&nbsp;     */
+<i class="no-highlight">284</i>&nbsp;    public void askCloud() {
+<b class="nc"><i class="no-highlight">285</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">286</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">287</i>&nbsp;            out.print(&quot;Choose Cloud&quot;);</b>
+<b class="nc"><i class="no-highlight">288</i>&nbsp;            if (isExpertGame() &amp;&amp; !areCharacterActive()) out.print(&quot; or choose character card to activate&quot;);</b>
+<b class="nc"><i class="no-highlight">289</i>&nbsp;            out.print(&quot;: &quot;);</b>
+<b class="nc"><i class="no-highlight">290</i>&nbsp;            String input = readLine();</b>
+<b class="nc"><i class="no-highlight">291</i>&nbsp;            Optional&lt;Integer&gt; characterCard = cliParser.indexCharacterCard(input, getCharacterCards());</b>
+<b class="nc"><i class="no-highlight">292</i>&nbsp;            if (characterCard.isEmpty()) {</b>
+<i class="no-highlight">293</i>&nbsp;                try {
+<b class="nc"><i class="no-highlight">294</i>&nbsp;                    int indexCloud = Integer.parseInt(input);</b>
+<b class="nc"><i class="no-highlight">295</i>&nbsp;                    valid = this.sendCloudChoice(indexCloud);</b>
+<b class="nc"><i class="no-highlight">296</i>&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc"><i class="no-highlight">297</i>&nbsp;                    valid = false;</b>
+<b class="nc"><i class="no-highlight">298</i>&nbsp;                }</b>
+<i class="no-highlight">299</i>&nbsp;            } else {
+<b class="nc"><i class="no-highlight">300</i>&nbsp;                if (canActivateCharacter(characterCard.get()))</b>
+<b class="nc"><i class="no-highlight">301</i>&nbsp;                    valid = askCharacterCardParameters(characterCard.get());</b>
+<i class="no-highlight">302</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">303</i>&nbsp;            if (!valid &amp;&amp; isExpertGame()) error(&quot;invalid cloud or invalid character card&quot;);</b>
+<b class="nc"><i class="no-highlight">304</i>&nbsp;            else if (!valid) error(&quot;invalid cloud&quot;);</b>
+<b class="nc"><i class="no-highlight">305</i>&nbsp;        }</b>
+<i class="no-highlight">306</i>&nbsp;
+<i class="no-highlight">307</i>&nbsp;    }
+<i class="no-highlight">308</i>&nbsp;
+<i class="no-highlight">309</i>&nbsp;
+<i class="no-highlight">310</i>&nbsp;    /**
+<i class="no-highlight">311</i>&nbsp;     * Asks the student to move and the destination
+<i class="no-highlight">312</i>&nbsp;     * In the expert mode is given the chance to choose a character card to play
+<i class="no-highlight">313</i>&nbsp;     */
+<i class="no-highlight">314</i>&nbsp;    public void askStudents() {
+<i class="no-highlight">315</i>&nbsp;
+<b class="nc"><i class="no-highlight">316</i>&nbsp;        boolean validObject = false;</b>
+<i class="no-highlight">317</i>&nbsp;        boolean validDestination;
+<b class="nc"><i class="no-highlight">318</i>&nbsp;        int destination = 0;</b>
+<b class="nc"><i class="no-highlight">319</i>&nbsp;        while (!validObject) {</b>
+<b class="nc"><i class="no-highlight">320</i>&nbsp;            out.print(&quot;Choose student to move&quot;);</b>
+<b class="nc"><i class="no-highlight">321</i>&nbsp;            if (isExpertGame() &amp;&amp; !areCharacterActive()) out.print(&quot; or choose character card to activate&quot;);</b>
+<b class="nc"><i class="no-highlight">322</i>&nbsp;            out.print(&quot;: &quot;);</b>
+<b class="nc"><i class="no-highlight">323</i>&nbsp;            String input = readLine();</b>
+<b class="nc"><i class="no-highlight">324</i>&nbsp;            PawnColor student = cliParser.checkIfStudent(input);</b>
+<b class="nc"><i class="no-highlight">325</i>&nbsp;            if (student != PawnColor.NONE &amp;&amp; getMe().getBoard().getEntrance().contains(student)) {</b>
+<b class="nc"><i class="no-highlight">326</i>&nbsp;                validDestination = false;</b>
+<b class="nc"><i class="no-highlight">327</i>&nbsp;                while (!validDestination) {</b>
+<b class="nc"><i class="no-highlight">328</i>&nbsp;                    out.print(&quot;Choose location (island&#39;s index/schoolboard) : &quot;);</b>
+<b class="nc"><i class="no-highlight">329</i>&nbsp;                    destination = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());</b>
+<b class="nc"><i class="no-highlight">330</i>&nbsp;                    if (destination != 13) {</b>
+<b class="nc"><i class="no-highlight">331</i>&nbsp;                        validObject = true;</b>
+<b class="nc"><i class="no-highlight">332</i>&nbsp;                        validDestination = true;</b>
+<i class="no-highlight">333</i>&nbsp;                    } else {
+<b class="nc"><i class="no-highlight">334</i>&nbsp;                        this.error(&quot;the destination selected is invalid, please retry&quot;);</b>
+<i class="no-highlight">335</i>&nbsp;                    }
+<i class="no-highlight">336</i>&nbsp;                }
+<b class="nc"><i class="no-highlight">337</i>&nbsp;                if (destination == 12) validObject = sendStudentMoveOnBoard(student);</b>
+<b class="nc"><i class="no-highlight">338</i>&nbsp;                else validObject = sendStudentMoveOnIsland(student, destination);</b>
+<i class="no-highlight">339</i>&nbsp;            }
+<i class="no-highlight">340</i>&nbsp;            // the input was not a color, checking if it&#39;s a character card
+<i class="no-highlight">341</i>&nbsp;            else {
+<b class="nc"><i class="no-highlight">342</i>&nbsp;                Optional&lt;Integer&gt; characterCard = cliParser.indexCharacterCard(input, getCharacterCards());</b>
+<b class="nc"><i class="no-highlight">343</i>&nbsp;                if (characterCard.isPresent() &amp;&amp; canActivateCharacter(characterCard.get())) {</b>
+<b class="nc"><i class="no-highlight">344</i>&nbsp;                    validObject = askCharacterCardParameters(characterCard.get());</b>
+<i class="no-highlight">345</i>&nbsp;                }
+<i class="no-highlight">346</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">347</i>&nbsp;            if (!validObject &amp;&amp; isExpertGame()) error(&quot;invalid student or invalid character card&quot;);</b>
+<b class="nc"><i class="no-highlight">348</i>&nbsp;            else if (!validObject &amp;&amp; !isExpertGame()) error(&quot;invalid student or move&quot;);</b>
+<b class="nc"><i class="no-highlight">349</i>&nbsp;        }</b>
+<i class="no-highlight">350</i>&nbsp;    }
+<i class="no-highlight">351</i>&nbsp;
+<i class="no-highlight">352</i>&nbsp;
+<i class="no-highlight">353</i>&nbsp;    /**
+<i class="no-highlight">354</i>&nbsp;     * Called at the beginning of the game
+<i class="no-highlight">355</i>&nbsp;     */
+<i class="no-highlight">356</i>&nbsp;    public void printGameStarting() {
+<b class="nc"><i class="no-highlight">357</i>&nbsp;        out.println(&quot;The game is starting!&quot;);</b>
+<i class="no-highlight">358</i>&nbsp;    }
+<i class="no-highlight">359</i>&nbsp;
+<i class="no-highlight">360</i>&nbsp;    /**
+<i class="no-highlight">361</i>&nbsp;     * @param otherPlayer the new current player
+<i class="no-highlight">362</i>&nbsp;     */
+<i class="no-highlight">363</i>&nbsp;    public void updateCurrentPlayersTurn(String otherPlayer) {
+<b class="nc"><i class="no-highlight">364</i>&nbsp;        out.println(&quot;It&#39;s &quot; + otherPlayer.toUpperCase() + &quot;&#39;s turn&quot;);</b>
+<i class="no-highlight">365</i>&nbsp;    }
+<i class="no-highlight">366</i>&nbsp;
+<i class="no-highlight">367</i>&nbsp;    /**
+<i class="no-highlight">368</i>&nbsp;     * Prints the table
+<i class="no-highlight">369</i>&nbsp;     */
+<i class="no-highlight">370</i>&nbsp;    @Override
+<i class="no-highlight">371</i>&nbsp;    public void print() {
+<b class="nc"><i class="no-highlight">372</i>&nbsp;        clearCli();</b>
+<b class="nc"><i class="no-highlight">373</i>&nbsp;        changePhase(getCurrentPhase());</b>
+<b class="nc"><i class="no-highlight">374</i>&nbsp;        printCloud();</b>
+<b class="nc"><i class="no-highlight">375</i>&nbsp;        printIslands();</b>
+<b class="nc"><i class="no-highlight">376</i>&nbsp;        if (isExpertGame()) {</b>
+<b class="nc"><i class="no-highlight">377</i>&nbsp;            printTableCoins();</b>
+<b class="nc"><i class="no-highlight">378</i>&nbsp;            printCharacterCards();</b>
+<i class="no-highlight">379</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">380</i>&nbsp;        printSchoolBoard();</b>
+<b class="nc"><i class="no-highlight">381</i>&nbsp;        updateCurrentPlayersTurn(getCurrentPlayer());</b>
+<i class="no-highlight">382</i>&nbsp;    }
+<i class="no-highlight">383</i>&nbsp;
+<i class="no-highlight">384</i>&nbsp;    /**
+<i class="no-highlight">385</i>&nbsp;     * Prints the players&#39; coins
+<i class="no-highlight">386</i>&nbsp;     */
+<i class="no-highlight">387</i>&nbsp;    public void printCoins() {
+<i class="no-highlight">388</i>&nbsp;        //me
+<b class="nc"><i class="no-highlight">389</i>&nbsp;        for (int i = 0; i &lt; getMe().getCoins(); i++) {</b>
+<b class="nc"><i class="no-highlight">390</i>&nbsp;            out.print(ANSI_YELLOW + COIN + ANSI_RESET);</b>
+<i class="no-highlight">391</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">392</i>&nbsp;        space(51 - getMe().getCoins());</b>
+<i class="no-highlight">393</i>&nbsp;        //opponent n°1
+<b class="nc"><i class="no-highlight">394</i>&nbsp;        for (int i = 0; i &lt; getOpponents().get(0).getCoins(); i++) {</b>
+<b class="nc"><i class="no-highlight">395</i>&nbsp;            out.print(ANSI_YELLOW + COIN + ANSI_RESET);</b>
+<i class="no-highlight">396</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">397</i>&nbsp;        space(51 - getOpponents().get(0).getCoins());</b>
+<i class="no-highlight">398</i>&nbsp;        //opponent n°2
+<b class="nc"><i class="no-highlight">399</i>&nbsp;        if (getOpponents().size() == 2) {</b>
+<b class="nc"><i class="no-highlight">400</i>&nbsp;            for (int i = 0; i &lt; getOpponents().get(1).getCoins(); i++) {</b>
+<b class="nc"><i class="no-highlight">401</i>&nbsp;                out.print(ANSI_YELLOW + COIN + ANSI_RESET);</b>
+<i class="no-highlight">402</i>&nbsp;            }
+<i class="no-highlight">403</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">404</i>&nbsp;        out.println();</b>
+<i class="no-highlight">405</i>&nbsp;    }
+<i class="no-highlight">406</i>&nbsp;
+<i class="no-highlight">407</i>&nbsp;    /**
+<i class="no-highlight">408</i>&nbsp;     * Prints the character cards on the table
+<i class="no-highlight">409</i>&nbsp;     */
+<i class="no-highlight">410</i>&nbsp;    private void printCharacterCards() {
+<b class="nc"><i class="no-highlight">411</i>&nbsp;        characterCardPrinter.print(getCharacterCards());</b>
+<i class="no-highlight">412</i>&nbsp;    }
+<i class="no-highlight">413</i>&nbsp;
+<i class="no-highlight">414</i>&nbsp;    /**
+<i class="no-highlight">415</i>&nbsp;     * Prints the coins on the table
+<i class="no-highlight">416</i>&nbsp;     */
+<i class="no-highlight">417</i>&nbsp;    private void printTableCoins() {
+<b class="nc"><i class="no-highlight">418</i>&nbsp;        space(56);</b>
+<b class="nc"><i class="no-highlight">419</i>&nbsp;        out.println(&quot;COINS ON TABLE: &quot; + getCoins() + &quot; &quot; + COIN);</b>
+<i class="no-highlight">420</i>&nbsp;    }
+<i class="no-highlight">421</i>&nbsp;
+<i class="no-highlight">422</i>&nbsp;    /**
+<i class="no-highlight">423</i>&nbsp;     * Prints the clouds
+<i class="no-highlight">424</i>&nbsp;     */
+<i class="no-highlight">425</i>&nbsp;    private void printCloud() {
+<b class="nc"><i class="no-highlight">426</i>&nbsp;        cloudPrinter.printClouds(getClouds());</b>
+<b class="nc"><i class="no-highlight">427</i>&nbsp;        System.out.println();</b>
+<i class="no-highlight">428</i>&nbsp;    }
+<i class="no-highlight">429</i>&nbsp;
+<i class="no-highlight">430</i>&nbsp;    /**
+<i class="no-highlight">431</i>&nbsp;     * Prints the islands
+<i class="no-highlight">432</i>&nbsp;     */
+<i class="no-highlight">433</i>&nbsp;    private void printIslands() {
+<b class="nc"><i class="no-highlight">434</i>&nbsp;        islandsPrinter.printIslands(getIslands());</b>
+<i class="no-highlight">435</i>&nbsp;    }
+<i class="no-highlight">436</i>&nbsp;
+<i class="no-highlight">437</i>&nbsp;    /**
+<i class="no-highlight">438</i>&nbsp;     * Prints the players&#39; schoolBoards
+<i class="no-highlight">439</i>&nbsp;     */
+<i class="no-highlight">440</i>&nbsp;    public void printSchoolBoard() {
+<b class="nc"><i class="no-highlight">441</i>&nbsp;        out.print(getMe().getNickname() + &quot;&#39;s&quot; + &quot; board:&quot;);</b>
+<b class="nc"><i class="no-highlight">442</i>&nbsp;        space(39);</b>
+<b class="nc"><i class="no-highlight">443</i>&nbsp;        for (PlayerInfo opponent : getOpponents()) {</b>
+<b class="nc"><i class="no-highlight">444</i>&nbsp;            out.print(opponent.getNickname() + &quot;&#39;s&quot; + &quot; board:&quot;);</b>
+<b class="nc"><i class="no-highlight">445</i>&nbsp;            space(39);</b>
+<b class="nc"><i class="no-highlight">446</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">447</i>&nbsp;        out.println();</b>
+<b class="nc"><i class="no-highlight">448</i>&nbsp;        if (isExpertGame()) printCoins();</b>
+<b class="nc"><i class="no-highlight">449</i>&nbsp;        List&lt;SchoolBoardDto&gt; boards = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">450</i>&nbsp;        boards.add(getMe().getBoard());</b>
+<b class="nc"><i class="no-highlight">451</i>&nbsp;        for (PlayerInfo opponent : getOpponents()) boards.add(opponent.getBoard());</b>
+<b class="nc"><i class="no-highlight">452</i>&nbsp;        boardPrinter.printBoard(boards);</b>
+<b class="nc"><i class="no-highlight">453</i>&nbsp;        printAssistantCardPlayed();</b>
+<i class="no-highlight">454</i>&nbsp;    }
+<i class="no-highlight">455</i>&nbsp;
+<i class="no-highlight">456</i>&nbsp;
+<i class="no-highlight">457</i>&nbsp;    /**
+<i class="no-highlight">458</i>&nbsp;     * Prints the players&#39; assistant cards
+<i class="no-highlight">459</i>&nbsp;     */
+<i class="no-highlight">460</i>&nbsp;    private void printAssistantCardPlayed() {
+<b class="nc"><i class="no-highlight">461</i>&nbsp;        List&lt;PlayerInfo&gt; players = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">462</i>&nbsp;        players.add(getMe());</b>
+<b class="nc"><i class="no-highlight">463</i>&nbsp;        players.addAll(getOpponents());</b>
+<b class="nc"><i class="no-highlight">464</i>&nbsp;        assistantCardsPrinter.print(players);</b>
+<b class="nc"><i class="no-highlight">465</i>&nbsp;        out.println();</b>
+<i class="no-highlight">466</i>&nbsp;    }
+<i class="no-highlight">467</i>&nbsp;
+<i class="no-highlight">468</i>&nbsp;
+<i class="no-highlight">469</i>&nbsp;    /**
+<i class="no-highlight">470</i>&nbsp;     * @param index the index of the chosen character card
+<i class="no-highlight">471</i>&nbsp;     * @return true if all the parameters are correct
+<i class="no-highlight">472</i>&nbsp;     */
+<i class="no-highlight">473</i>&nbsp;    private boolean askCharacterCardParameters(int index) {
+<b class="nc"><i class="no-highlight">474</i>&nbsp;        Character character = getCharacterCards().get(index).getCharacter();</b>
+<b class="nc"><i class="no-highlight">475</i>&nbsp;        switch (character) {</b>
+<i class="no-highlight">476</i>&nbsp;            case CHARACTER_ONE -&gt; {
+<b class="nc"><i class="no-highlight">477</i>&nbsp;                return askCharacterOneParameters(index);</b>
+<i class="no-highlight">478</i>&nbsp;            }
+<i class="no-highlight">479</i>&nbsp;            case CHARACTER_SEVEN -&gt; {
+<b class="nc"><i class="no-highlight">480</i>&nbsp;                return askCharacterSevenParameters(index);</b>
+<i class="no-highlight">481</i>&nbsp;            }
+<i class="no-highlight">482</i>&nbsp;            case CHARACTER_NINE -&gt; {
+<b class="nc"><i class="no-highlight">483</i>&nbsp;                return askCharacterNineParameters(index);</b>
+<i class="no-highlight">484</i>&nbsp;            }
+<i class="no-highlight">485</i>&nbsp;            case CHARACTER_ELEVEN -&gt; {
+<b class="nc"><i class="no-highlight">486</i>&nbsp;                return askCharacterElevenParameters(index);</b>
+<i class="no-highlight">487</i>&nbsp;            }
+<i class="no-highlight">488</i>&nbsp;            default -&gt; {
+<b class="nc"><i class="no-highlight">489</i>&nbsp;                return sendCharacterCard(index, null);</b>
+<i class="no-highlight">490</i>&nbsp;            }
+<i class="no-highlight">491</i>&nbsp;        }
+<i class="no-highlight">492</i>&nbsp;    }
+<i class="no-highlight">493</i>&nbsp;
+<i class="no-highlight">494</i>&nbsp;    /**
+<i class="no-highlight">495</i>&nbsp;     * Asks the parameters for the character one
+<i class="no-highlight">496</i>&nbsp;     *
+<i class="no-highlight">497</i>&nbsp;     * @param index the index of the chosen character card
+<i class="no-highlight">498</i>&nbsp;     * @return true if all the parameters are correct
+<i class="no-highlight">499</i>&nbsp;     */
+<i class="no-highlight">500</i>&nbsp;    private boolean askCharacterOneParameters(int index) {
+<b class="nc"><i class="no-highlight">501</i>&nbsp;        boolean validSend = false;</b>
+<b class="nc"><i class="no-highlight">502</i>&nbsp;        Object[] parameters = new Object[2];</b>
+<b class="nc"><i class="no-highlight">503</i>&nbsp;        while (!validSend) {</b>
+<b class="nc"><i class="no-highlight">504</i>&nbsp;            boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">505</i>&nbsp;            while (!valid) {</b>
+<b class="nc"><i class="no-highlight">506</i>&nbsp;                System.out.println(&quot;Choose student from card 1 to move: &quot;);</b>
+<b class="nc"><i class="no-highlight">507</i>&nbsp;                PawnColor student = cliParser.checkIfStudent(readLine());</b>
+<b class="nc"><i class="no-highlight">508</i>&nbsp;                if (student != PawnColor.NONE) {</b>
+<b class="nc"><i class="no-highlight">509</i>&nbsp;                    parameters[0] = student;</b>
+<b class="nc"><i class="no-highlight">510</i>&nbsp;                    valid = true;</b>
+<b class="nc"><i class="no-highlight">511</i>&nbsp;                } else error(&quot;invalid student selected!&quot;);</b>
+<b class="nc"><i class="no-highlight">512</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">513</i>&nbsp;            valid = false;</b>
+<b class="nc"><i class="no-highlight">514</i>&nbsp;            while (!valid) {</b>
+<b class="nc"><i class="no-highlight">515</i>&nbsp;                System.out.println(&quot;Choose Island index: &quot;);</b>
+<b class="nc"><i class="no-highlight">516</i>&nbsp;                int islandIndex = CliParser.isIslandOrSchoolBoard(readLine(), getNumberOfIslandOnTable());</b>
+<b class="nc"><i class="no-highlight">517</i>&nbsp;                if (islandIndex != 13 &amp;&amp; islandIndex != 12) {</b>
+<b class="nc"><i class="no-highlight">518</i>&nbsp;                    parameters[1] = getIslands().get(getMainIsland(islandIndex)).getIsland().getUuid();</b>
+<b class="nc"><i class="no-highlight">519</i>&nbsp;                    valid = true;</b>
+<i class="no-highlight">520</i>&nbsp;                }
+<b class="nc"><i class="no-highlight">521</i>&nbsp;                if (!valid) error(&quot;invalid Island index selected!&quot;);</b>
+<b class="nc"><i class="no-highlight">522</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">523</i>&nbsp;            validSend = sendCharacterCard(index, parameters);</b>
+<b class="nc"><i class="no-highlight">524</i>&nbsp;            if (!validSend) error(&quot;Some parameters are incorrect!&quot;);</b>
+<b class="nc"><i class="no-highlight">525</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">526</i>&nbsp;        return true;</b>
+<i class="no-highlight">527</i>&nbsp;    }
+<i class="no-highlight">528</i>&nbsp;
+<i class="no-highlight">529</i>&nbsp;    /**
+<i class="no-highlight">530</i>&nbsp;     * Asks the parameters for the character seven
+<i class="no-highlight">531</i>&nbsp;     *
+<i class="no-highlight">532</i>&nbsp;     * @param index the index of the chosen character card
+<i class="no-highlight">533</i>&nbsp;     * @return true if all the parameters are correct
+<i class="no-highlight">534</i>&nbsp;     */
+<i class="no-highlight">535</i>&nbsp;    private boolean askCharacterSevenParameters(int index) {
+<i class="no-highlight">536</i>&nbsp;        boolean valid;
+<b class="nc"><i class="no-highlight">537</i>&nbsp;        boolean validSend = false;</b>
+<b class="nc"><i class="no-highlight">538</i>&nbsp;        Object[] parameters = new Object[2];</b>
+<b class="nc"><i class="no-highlight">539</i>&nbsp;        List&lt;PawnColor&gt; studentsFromCard = new ArrayList&lt;&gt;();</b>
+<i class="no-highlight">540</i>&nbsp;        List&lt;PawnColor&gt; studentsFromEntrance;
+<b class="nc"><i class="no-highlight">541</i>&nbsp;        while(!validSend){</b>
+<b class="nc"><i class="no-highlight">542</i>&nbsp;            valid = false;</b>
+<b class="nc"><i class="no-highlight">543</i>&nbsp;            while (!valid) {</b>
+<b class="nc"><i class="no-highlight">544</i>&nbsp;                System.out.println(&quot;Choose student from card 7 to move [max 3, separated by commas, no spaces]: &quot;);</b>
+<b class="nc"><i class="no-highlight">545</i>&nbsp;                studentsFromCard = Arrays.stream(readLine().split(&quot;,&quot;)).map(cliParser::checkIfStudent).collect(Collectors.toList());</b>
+<b class="nc"><i class="no-highlight">546</i>&nbsp;                int size = (int) studentsFromCard.stream().filter(s -&gt; s != PawnColor.NONE).count();</b>
+<b class="nc"><i class="no-highlight">547</i>&nbsp;                if (studentsFromCard.size() == size) {</b>
+<b class="nc"><i class="no-highlight">548</i>&nbsp;                    parameters[0] = studentsFromCard;</b>
+<b class="nc"><i class="no-highlight">549</i>&nbsp;                    valid = true;</b>
+<b class="nc"><i class="no-highlight">550</i>&nbsp;                } else error(&quot;invalid students selected!&quot;);</b>
+<b class="nc"><i class="no-highlight">551</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">552</i>&nbsp;            valid = false;</b>
+<b class="nc"><i class="no-highlight">553</i>&nbsp;            while (!valid) {</b>
+<b class="nc"><i class="no-highlight">554</i>&nbsp;                System.out.println(&quot;Choose student from entrance [max 3, separated by commas, no spaces]: &quot;);</b>
+<b class="nc"><i class="no-highlight">555</i>&nbsp;                studentsFromEntrance = Arrays.stream(readLine().split(&quot;,&quot;)).map(cliParser::checkIfStudent).collect(Collectors.toList());</b>
+<b class="nc"><i class="no-highlight">556</i>&nbsp;                int size = (int) studentsFromEntrance.stream().filter(s -&gt; s != PawnColor.NONE).count();</b>
+<b class="nc"><i class="no-highlight">557</i>&nbsp;                if (studentsFromEntrance.size() == size &amp;&amp; studentsFromEntrance.size() == studentsFromCard.size()) {</b>
+<b class="nc"><i class="no-highlight">558</i>&nbsp;                    parameters[1] = studentsFromEntrance;</b>
+<b class="nc"><i class="no-highlight">559</i>&nbsp;                    valid = true;</b>
+<b class="nc"><i class="no-highlight">560</i>&nbsp;                } else error(&quot;invalid students selected!&quot;);</b>
+<b class="nc"><i class="no-highlight">561</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">562</i>&nbsp;            validSend = sendCharacterCard(index, parameters);</b>
+<b class="nc"><i class="no-highlight">563</i>&nbsp;            if(!validSend) error(&quot;some parameters were incorrect, please retry!&quot;);</b>
+<i class="no-highlight">564</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">565</i>&nbsp;        return true;</b>
+<i class="no-highlight">566</i>&nbsp;    }
+<i class="no-highlight">567</i>&nbsp;
+<i class="no-highlight">568</i>&nbsp;    /**
+<i class="no-highlight">569</i>&nbsp;     * Asks the parameters for the character nine
+<i class="no-highlight">570</i>&nbsp;     *
+<i class="no-highlight">571</i>&nbsp;     * @param index the index of the chosen character card
+<i class="no-highlight">572</i>&nbsp;     * @return true if all the parameters are correct
+<i class="no-highlight">573</i>&nbsp;     */
+<i class="no-highlight">574</i>&nbsp;    private boolean askCharacterNineParameters(int index) {
+<b class="nc"><i class="no-highlight">575</i>&nbsp;        Object[] parameters = new Object[1];</b>
+<b class="nc"><i class="no-highlight">576</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">577</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">578</i>&nbsp;            System.out.println(&quot;Choose student&#39;s color: &quot;);</b>
+<b class="nc"><i class="no-highlight">579</i>&nbsp;            PawnColor student = cliParser.checkIfStudent(readLine());</b>
+<b class="nc"><i class="no-highlight">580</i>&nbsp;            if (student != PawnColor.NONE) {</b>
+<b class="nc"><i class="no-highlight">581</i>&nbsp;                parameters[0] = student;</b>
+<b class="nc"><i class="no-highlight">582</i>&nbsp;                valid = sendCharacterCard(index, parameters);</b>
+<i class="no-highlight">583</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">584</i>&nbsp;            if (!valid) error(&quot;invalid student selected!&quot;);</b>
+<b class="nc"><i class="no-highlight">585</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">586</i>&nbsp;        return true;</b>
+<i class="no-highlight">587</i>&nbsp;    }
+<i class="no-highlight">588</i>&nbsp;
+<i class="no-highlight">589</i>&nbsp;    /**
+<i class="no-highlight">590</i>&nbsp;     * Asks the parameters for the character eleven
+<i class="no-highlight">591</i>&nbsp;     *
+<i class="no-highlight">592</i>&nbsp;     * @param index the index of the chosen character card
+<i class="no-highlight">593</i>&nbsp;     * @return true if all the parameters are correct
+<i class="no-highlight">594</i>&nbsp;     */
+<i class="no-highlight">595</i>&nbsp;    private boolean askCharacterElevenParameters(int index) {
+<b class="nc"><i class="no-highlight">596</i>&nbsp;        boolean valid = false;</b>
+<b class="nc"><i class="no-highlight">597</i>&nbsp;        Object[] parameters = new Object[1];</b>
+<b class="nc"><i class="no-highlight">598</i>&nbsp;        while (!valid) {</b>
+<b class="nc"><i class="no-highlight">599</i>&nbsp;            System.out.println(&quot;Choose student from card 11 to move in your schoolboard: &quot;);</b>
+<b class="nc"><i class="no-highlight">600</i>&nbsp;            PawnColor student = cliParser.checkIfStudent(readLine());</b>
+<b class="nc"><i class="no-highlight">601</i>&nbsp;            if (student != PawnColor.NONE) {</b>
+<b class="nc"><i class="no-highlight">602</i>&nbsp;                parameters[0] = student;</b>
+<b class="nc"><i class="no-highlight">603</i>&nbsp;                valid = sendCharacterCard(index, parameters);</b>
+<i class="no-highlight">604</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">605</i>&nbsp;            if (!valid) error(&quot;invalid student selected!&quot;);</b>
+<b class="nc"><i class="no-highlight">606</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">607</i>&nbsp;        return true;</b>
+<i class="no-highlight">608</i>&nbsp;    }
+<i class="no-highlight">609</i>&nbsp;
+<i class="no-highlight">610</i>&nbsp;
+<i class="no-highlight">611</i>&nbsp;    /**
+<i class="no-highlight">612</i>&nbsp;     * Called when the game is over and the player is the winner
+<i class="no-highlight">613</i>&nbsp;     */
+<i class="no-highlight">614</i>&nbsp;    public void win() {
+<b class="nc"><i class="no-highlight">615</i>&nbsp;        out.println(&quot;Well done, you won the game!&quot;);</b>
+<b class="nc"><i class="no-highlight">616</i>&nbsp;        pressAnyKeyToContinue();</b>
+<i class="no-highlight">617</i>&nbsp;    }
+<i class="no-highlight">618</i>&nbsp;
+<i class="no-highlight">619</i>&nbsp;    /**
+<i class="no-highlight">620</i>&nbsp;     * Called when the game is over and the player is the loser
+<i class="no-highlight">621</i>&nbsp;     */
+<i class="no-highlight">622</i>&nbsp;    public void lose(List&lt;String&gt; winners) {
+<b class="nc"><i class="no-highlight">623</i>&nbsp;        out.println(&quot;Game ended, you lost!&quot;);</b>
+<b class="nc"><i class="no-highlight">624</i>&nbsp;        pressAnyKeyToContinue();</b>
+<i class="no-highlight">625</i>&nbsp;    }
+<i class="no-highlight">626</i>&nbsp;
+<i class="no-highlight">627</i>&nbsp;    /**
+<i class="no-highlight">628</i>&nbsp;     * Called when the game is over and had ended in a tie
+<i class="no-highlight">629</i>&nbsp;     *
+<i class="no-highlight">630</i>&nbsp;     * @param otherWinner the nickname of the other winner
+<i class="no-highlight">631</i>&nbsp;     */
+<i class="no-highlight">632</i>&nbsp;    public void draw(String otherWinner) {
+<b class="nc"><i class="no-highlight">633</i>&nbsp;        out.println(&quot;The game ended in a tie! &quot;);</b>
+<b class="nc"><i class="no-highlight">634</i>&nbsp;        out.println(&quot;The winners are you and &quot; + otherWinner);</b>
+<b class="nc"><i class="no-highlight">635</i>&nbsp;        pressAnyKeyToContinue();</b>
+<i class="no-highlight">636</i>&nbsp;    }
+<i class="no-highlight">637</i>&nbsp;
+<i class="no-highlight">638</i>&nbsp;    /**
+<i class="no-highlight">639</i>&nbsp;     * this method is called when there&#39;s a fatal error on the server and the game needs to be closed
+<i class="no-highlight">640</i>&nbsp;     */
+<i class="no-highlight">641</i>&nbsp;    public void errorAndExit(String error) {
+<b class="nc"><i class="no-highlight">642</i>&nbsp;        error(error);</b>
+<b class="nc"><i class="no-highlight">643</i>&nbsp;        exit();</b>
+<i class="no-highlight">644</i>&nbsp;    }
+<i class="no-highlight">645</i>&nbsp;
+<i class="no-highlight">646</i>&nbsp;    /**
+<i class="no-highlight">647</i>&nbsp;     * Close the game
+<i class="no-highlight">648</i>&nbsp;     */
+<i class="no-highlight">649</i>&nbsp;    public void exit() {
+<b class="nc"><i class="no-highlight">650</i>&nbsp;        out.println(&quot;Press ANY KEY for EXIT.&quot;);</b>
+<b class="nc"><i class="no-highlight">651</i>&nbsp;        readLine();</b>
+<b class="nc"><i class="no-highlight">652</i>&nbsp;        System.exit(1);</b>
+<i class="no-highlight">653</i>&nbsp;    }
+<i class="no-highlight">654</i>&nbsp;
+<i class="no-highlight">655</i>&nbsp;    /**
+<i class="no-highlight">656</i>&nbsp;     * @param error the error
+<i class="no-highlight">657</i>&nbsp;     */
+<i class="no-highlight">658</i>&nbsp;    public void error(String error) {
+<b class="nc"><i class="no-highlight">659</i>&nbsp;        out.println(&quot;\nERROR: &quot; + ANSI_RED + error.toUpperCase() + ANSI_RESET);</b>
+<i class="no-highlight">660</i>&nbsp;    }
+<i class="no-highlight">661</i>&nbsp;
+<i class="no-highlight">662</i>&nbsp;    /**
+<i class="no-highlight">663</i>&nbsp;     * @param space the number of spaces to leave on the left
+<i class="no-highlight">664</i>&nbsp;     */
+<i class="no-highlight">665</i>&nbsp;    private void space(int space) {
+<b class="nc"><i class="no-highlight">666</i>&nbsp;        for (int i = 0; i &lt; space; i++) out.print(&quot; &quot;);</b>
+<i class="no-highlight">667</i>&nbsp;    }
+<i class="no-highlight">668</i>&nbsp;
+<i class="no-highlight">669</i>&nbsp;    /**
+<i class="no-highlight">670</i>&nbsp;     * Clears the cli
+<i class="no-highlight">671</i>&nbsp;     */
+<i class="no-highlight">672</i>&nbsp;    private void clearCli() {
+<b class="nc"><i class="no-highlight">673</i>&nbsp;        for (int i = 0; i &lt; 20; i++) out.println();</b>
+<i class="no-highlight">674</i>&nbsp;    }
+<i class="no-highlight">675</i>&nbsp;
+<i class="no-highlight">676</i>&nbsp;    /**
+<i class="no-highlight">677</i>&nbsp;     * Game over from disconnection
+<i class="no-highlight">678</i>&nbsp;     */
+<i class="no-highlight">679</i>&nbsp;    @Override
+<i class="no-highlight">680</i>&nbsp;    public void printGameOverFromDisconnection() {
+<b class="nc"><i class="no-highlight">681</i>&nbsp;        out.println(&quot;TIMER OUT&quot;);</b>
+<b class="nc"><i class="no-highlight">682</i>&nbsp;        out.println(&quot;it seems that you&#39;re the only player left...&quot;);</b>
+<b class="nc"><i class="no-highlight">683</i>&nbsp;        out.println(&quot;congratulation, you won!&quot;);</b>
+<b class="nc"><i class="no-highlight">684</i>&nbsp;        pressAnyKeyToContinue();</b>
+<i class="no-highlight">685</i>&nbsp;    }
+<i class="no-highlight">686</i>&nbsp;
+<i class="no-highlight">687</i>&nbsp;    /**
+<i class="no-highlight">688</i>&nbsp;     * There aren&#39;t enough player online to continue playing
+<i class="no-highlight">689</i>&nbsp;     */
+<i class="no-highlight">690</i>&nbsp;    public void notEnoughPlayer() {
+<b class="nc"><i class="no-highlight">691</i>&nbsp;        out.println(&quot;your opponent has disconnected, please wait...&quot;);</b>
+<i class="no-highlight">692</i>&nbsp;    }
+<i class="no-highlight">693</i>&nbsp;
+<i class="no-highlight">694</i>&nbsp;    /**
+<i class="no-highlight">695</i>&nbsp;     * Press any key to continue
+<i class="no-highlight">696</i>&nbsp;     */
+<i class="no-highlight">697</i>&nbsp;    private void pressAnyKeyToContinue() {
+<b class="nc"><i class="no-highlight">698</i>&nbsp;        out.println(&quot;Press any key to continue&quot;);</b>
+<b class="nc"><i class="no-highlight">699</i>&nbsp;        readLine();</b>
+<i class="no-highlight">700</i>&nbsp;    }
+<i class="no-highlight">701</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

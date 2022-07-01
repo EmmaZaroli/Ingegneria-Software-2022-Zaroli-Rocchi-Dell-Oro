@@ -1,0 +1,283 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > IslandCardDto</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.dtos</a>
+</div>
+
+<h1>Coverage Summary for Class: IslandCardDto (it.polimi.ingsw.dtos)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">IslandCardDto</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,8%
+  </span>
+  <span class="absValue">
+    (15/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,3%
+  </span>
+  <span class="absValue">
+    (42/45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.dtos;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.model.IslandCard;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.model.enums.Tower;
+<i class="no-highlight">6</i>&nbsp;
+<i class="no-highlight">7</i>&nbsp;import java.io.Serial;
+<i class="no-highlight">8</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">9</i>&nbsp;import java.util.*;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;/**
+<i class="no-highlight">12</i>&nbsp; * IslandCard Dto
+<i class="no-highlight">13</i>&nbsp; */
+<i class="no-highlight">14</i>&nbsp;public class IslandCardDto implements Serializable {
+<i class="no-highlight">15</i>&nbsp;    @Serial
+<i class="no-highlight">16</i>&nbsp;    private static final long serialVersionUID = 106L;
+<i class="no-highlight">17</i>&nbsp;    private UUID uuid;
+<i class="no-highlight">18</i>&nbsp;    private List&lt;PawnColor&gt; students;
+<i class="no-highlight">19</i>&nbsp;    private Tower tower;
+<i class="no-highlight">20</i>&nbsp;    private boolean hasMotherNature;
+<b class="fc"><i class="no-highlight">21</i>&nbsp;    private List&lt;Integer&gt; indices = new ArrayList&lt;&gt;();</b>
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;    /**
+<i class="no-highlight">24</i>&nbsp;     * Construct the islandCardDto from an islandCard
+<i class="no-highlight">25</i>&nbsp;     * @param origin the characterCard
+<i class="no-highlight">26</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    public IslandCardDto(IslandCard origin) {</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;        this.uuid = origin.getUuid();</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;        this.students = new ArrayList&lt;&gt;(origin.getStudentsFromIsland());</b>
+<b class="fc"><i class="no-highlight">30</i>&nbsp;        this.tower = origin.getTower();</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;        this.hasMotherNature = origin.isHasMotherNature();</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;        this.indices.addAll(origin.getIndices());</b>
+<i class="no-highlight">33</i>&nbsp;    }
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;    /**
+<i class="no-highlight">36</i>&nbsp;     * Default constructor
+<i class="no-highlight">37</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    public IslandCardDto(UUID uuid, List&lt;PawnColor&gt; students, Tower tower, boolean hasMotherNature, List&lt;Integer&gt; indices) {</b>
+<b class="fc"><i class="no-highlight">39</i>&nbsp;        this.uuid = uuid;</b>
+<b class="fc"><i class="no-highlight">40</i>&nbsp;        this.students = students;</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;        this.tower = tower;</b>
+<b class="fc"><i class="no-highlight">42</i>&nbsp;        this.hasMotherNature = hasMotherNature;</b>
+<b class="fc"><i class="no-highlight">43</i>&nbsp;        this.indices.addAll(indices);</b>
+<i class="no-highlight">44</i>&nbsp;    }
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;    /**
+<i class="no-highlight">47</i>&nbsp;     * Default constructor
+<i class="no-highlight">48</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">49</i>&nbsp;    public IslandCardDto(){</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;        this.uuid = UUID.randomUUID();</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;        this.students = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;        this.tower = Tower.NONE;</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;        this.hasMotherNature = false;</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;        this.indices = new ArrayList&lt;&gt;();</b>
+<i class="no-highlight">55</i>&nbsp;    }
+<i class="no-highlight">56</i>&nbsp;
+<i class="no-highlight">57</i>&nbsp;    /**
+<i class="no-highlight">58</i>&nbsp;     *
+<i class="no-highlight">59</i>&nbsp;     * @return the uuid
+<i class="no-highlight">60</i>&nbsp;     */
+<i class="no-highlight">61</i>&nbsp;    public UUID getUuid() {
+<b class="fc"><i class="no-highlight">62</i>&nbsp;        return this.uuid;</b>
+<i class="no-highlight">63</i>&nbsp;    }
+<i class="no-highlight">64</i>&nbsp;
+<i class="no-highlight">65</i>&nbsp;    /**
+<i class="no-highlight">66</i>&nbsp;     *
+<i class="no-highlight">67</i>&nbsp;     * @return the list of pawnColors on the islandCardDto
+<i class="no-highlight">68</i>&nbsp;     */
+<i class="no-highlight">69</i>&nbsp;    public List&lt;PawnColor&gt; getStudents() {
+<b class="fc"><i class="no-highlight">70</i>&nbsp;        return this.students;</b>
+<i class="no-highlight">71</i>&nbsp;    }
+<i class="no-highlight">72</i>&nbsp;
+<i class="no-highlight">73</i>&nbsp;    /**
+<i class="no-highlight">74</i>&nbsp;     *
+<i class="no-highlight">75</i>&nbsp;     * @return the Tower
+<i class="no-highlight">76</i>&nbsp;     */
+<i class="no-highlight">77</i>&nbsp;    public Tower getTower() {
+<b class="fc"><i class="no-highlight">78</i>&nbsp;        return tower;</b>
+<i class="no-highlight">79</i>&nbsp;    }
+<i class="no-highlight">80</i>&nbsp;
+<i class="no-highlight">81</i>&nbsp;    /**
+<i class="no-highlight">82</i>&nbsp;     *
+<i class="no-highlight">83</i>&nbsp;     * @return the number of island to witch it&#39;s connected to
+<i class="no-highlight">84</i>&nbsp;     */
+<i class="no-highlight">85</i>&nbsp;    public int getSize() {
+<b class="fc"><i class="no-highlight">86</i>&nbsp;        return indices.size();</b>
+<i class="no-highlight">87</i>&nbsp;    }
+<i class="no-highlight">88</i>&nbsp;
+<i class="no-highlight">89</i>&nbsp;    /**
+<i class="no-highlight">90</i>&nbsp;     *
+<i class="no-highlight">91</i>&nbsp;     * @return true if the islandCardDto has mother nature, false otherwise
+<i class="no-highlight">92</i>&nbsp;     */
+<i class="no-highlight">93</i>&nbsp;    public boolean isHasMotherNature() {
+<b class="fc"><i class="no-highlight">94</i>&nbsp;        return hasMotherNature;</b>
+<i class="no-highlight">95</i>&nbsp;    }
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;    /**
+<i class="no-highlight">98</i>&nbsp;     *
+<i class="no-highlight">99</i>&nbsp;     * @return the list of islands&#39; indexes to witch this islandCard it&#39;s connected to
+<i class="no-highlight">100</i>&nbsp;     */
+<i class="no-highlight">101</i>&nbsp;    public List&lt;Integer&gt; getIndices() {
+<b class="fc"><i class="no-highlight">102</i>&nbsp;        return indices;</b>
+<i class="no-highlight">103</i>&nbsp;    }
+<i class="no-highlight">104</i>&nbsp;
+<i class="no-highlight">105</i>&nbsp;    /**
+<i class="no-highlight">106</i>&nbsp;     *
+<i class="no-highlight">107</i>&nbsp;     * @return a clone of this instance
+<i class="no-highlight">108</i>&nbsp;     */
+<i class="no-highlight">109</i>&nbsp;    public IslandCardDto deepClone() {
+<b class="fc"><i class="no-highlight">110</i>&nbsp;        return new IslandCardDto(this.uuid, new ArrayList&lt;&gt;(this.students), this.tower, this.hasMotherNature, new ArrayList&lt;&gt;(this.indices));</b>
+<i class="no-highlight">111</i>&nbsp;    }
+<i class="no-highlight">112</i>&nbsp;
+<i class="no-highlight">113</i>&nbsp;    /**
+<i class="no-highlight">114</i>&nbsp;     *
+<i class="no-highlight">115</i>&nbsp;     * @param uuid the new uuid
+<i class="no-highlight">116</i>&nbsp;     * @return a clone of this instance with the updated uuid
+<i class="no-highlight">117</i>&nbsp;     */
+<i class="no-highlight">118</i>&nbsp;    public IslandCardDto withUuid(UUID uuid) {
+<b class="fc"><i class="no-highlight">119</i>&nbsp;        IslandCardDto retVal = this.deepClone();</b>
+<b class="fc"><i class="no-highlight">120</i>&nbsp;        retVal.uuid = uuid;</b>
+<b class="fc"><i class="no-highlight">121</i>&nbsp;        return retVal;</b>
+<i class="no-highlight">122</i>&nbsp;    }
+<i class="no-highlight">123</i>&nbsp;
+<i class="no-highlight">124</i>&nbsp;    /**
+<i class="no-highlight">125</i>&nbsp;     *
+<i class="no-highlight">126</i>&nbsp;     * @param students the new list of pawnColors on the islandCard
+<i class="no-highlight">127</i>&nbsp;     * @return a clone of this instance with the updated pawnColors
+<i class="no-highlight">128</i>&nbsp;     */
+<i class="no-highlight">129</i>&nbsp;    public IslandCardDto withStudents(List&lt;PawnColor&gt; students) {
+<b class="fc"><i class="no-highlight">130</i>&nbsp;        IslandCardDto retVal = this.deepClone();</b>
+<b class="fc"><i class="no-highlight">131</i>&nbsp;        retVal.students = students;</b>
+<b class="fc"><i class="no-highlight">132</i>&nbsp;        return retVal;</b>
+<i class="no-highlight">133</i>&nbsp;    }
+<i class="no-highlight">134</i>&nbsp;
+<i class="no-highlight">135</i>&nbsp;    /**
+<i class="no-highlight">136</i>&nbsp;     *
+<i class="no-highlight">137</i>&nbsp;     * @return a clone of this instance without the pawnColors
+<i class="no-highlight">138</i>&nbsp;     */
+<i class="no-highlight">139</i>&nbsp;    public IslandCardDto withoutStudents() {
+<b class="nc"><i class="no-highlight">140</i>&nbsp;        IslandCardDto retVal = this.deepClone();</b>
+<b class="nc"><i class="no-highlight">141</i>&nbsp;        retVal.students = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">142</i>&nbsp;        return retVal;</b>
+<i class="no-highlight">143</i>&nbsp;    }
+<i class="no-highlight">144</i>&nbsp;
+<i class="no-highlight">145</i>&nbsp;    /**
+<i class="no-highlight">146</i>&nbsp;     *
+<i class="no-highlight">147</i>&nbsp;     * @param tower the new Tower
+<i class="no-highlight">148</i>&nbsp;     * @return a clone of this instance with the updated tower
+<i class="no-highlight">149</i>&nbsp;     */
+<i class="no-highlight">150</i>&nbsp;    public IslandCardDto withTower(Tower tower) {
+<b class="fc"><i class="no-highlight">151</i>&nbsp;        IslandCardDto retVal = this.deepClone();</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;        retVal.tower = tower;</b>
+<b class="fc"><i class="no-highlight">153</i>&nbsp;        return retVal;</b>
+<i class="no-highlight">154</i>&nbsp;    }
+<i class="no-highlight">155</i>&nbsp;
+<i class="no-highlight">156</i>&nbsp;    /**
+<i class="no-highlight">157</i>&nbsp;     *
+<i class="no-highlight">158</i>&nbsp;     * @param hasMotherNature true if the islandCard has motherNature
+<i class="no-highlight">159</i>&nbsp;     * @return a clone of this instance with the updated motherNature boolean
+<i class="no-highlight">160</i>&nbsp;     */
+<i class="no-highlight">161</i>&nbsp;    public IslandCardDto withMotherNature(boolean hasMotherNature) {
+<b class="fc"><i class="no-highlight">162</i>&nbsp;        IslandCardDto retVal = this.deepClone();</b>
+<b class="fc"><i class="no-highlight">163</i>&nbsp;        retVal.hasMotherNature = hasMotherNature;</b>
+<b class="fc"><i class="no-highlight">164</i>&nbsp;        return retVal;</b>
+<i class="no-highlight">165</i>&nbsp;    }
+<i class="no-highlight">166</i>&nbsp;
+<i class="no-highlight">167</i>&nbsp;    /**
+<i class="no-highlight">168</i>&nbsp;     *
+<i class="no-highlight">169</i>&nbsp;     * @param index the new index of the islandCard to which this instance is now connected to
+<i class="no-highlight">170</i>&nbsp;     * @return a clone of this instance with the updated indexes
+<i class="no-highlight">171</i>&nbsp;     */
+<i class="no-highlight">172</i>&nbsp;    public IslandCardDto withIndexes(Integer index) {
+<b class="fc"><i class="no-highlight">173</i>&nbsp;        IslandCardDto retVal = this.deepClone();</b>
+<b class="fc"><i class="no-highlight">174</i>&nbsp;        retVal.indices = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i class="no-highlight">175</i>&nbsp;        retVal.indices.add(index);</b>
+<b class="fc"><i class="no-highlight">176</i>&nbsp;        return retVal;</b>
+<i class="no-highlight">177</i>&nbsp;    }
+<i class="no-highlight">178</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

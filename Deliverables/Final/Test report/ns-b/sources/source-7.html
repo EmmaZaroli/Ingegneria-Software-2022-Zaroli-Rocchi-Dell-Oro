@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DiningRoom</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.model</a>
+</div>
+
+<h1>Coverage Summary for Class: DiningRoom (it.polimi.ingsw.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DiningRoom</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.model;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;import java.io.Serial;
+<i class="no-highlight">6</i>&nbsp;import java.io.Serializable;
+<i class="no-highlight">7</i>&nbsp;import java.util.EnumMap;
+<i class="no-highlight">8</i>&nbsp;
+<i class="no-highlight">9</i>&nbsp;/**
+<i class="no-highlight">10</i>&nbsp; * Dining room.
+<i class="no-highlight">11</i>&nbsp; */
+<i class="no-highlight">12</i>&nbsp;public class DiningRoom implements Serializable {
+<i class="no-highlight">13</i>&nbsp;    @Serial
+<i class="no-highlight">14</i>&nbsp;    private static final long serialVersionUID = 7L;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;    private final EnumMap&lt;PawnColor, Integer&gt; students;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;    /**
+<i class="no-highlight">19</i>&nbsp;     * Instantiates a new Dining room.
+<i class="no-highlight">20</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">21</i>&nbsp;    public DiningRoom() {</b>
+<b class="fc"><i class="no-highlight">22</i>&nbsp;        this.students = new EnumMap&lt;&gt;(PawnColor.class);</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;        for (PawnColor p : PawnColor.values())</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;            students.put(p, 0);</b>
+<i class="no-highlight">25</i>&nbsp;    }
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;    /**
+<i class="no-highlight">28</i>&nbsp;     * Adds a student on the row corresponding to the color of the student
+<i class="no-highlight">29</i>&nbsp;     *
+<i class="no-highlight">30</i>&nbsp;     * @param color the color of the student
+<i class="no-highlight">31</i>&nbsp;     * @return true if the player is supposed to take one coin from the table, false otherwise
+<i class="no-highlight">32</i>&nbsp;     */
+<i class="no-highlight">33</i>&nbsp;    protected boolean addStudent(PawnColor color) {
+<b class="fc"><i class="no-highlight">34</i>&nbsp;        int studentsOfSelectedColor = this.students.get(color);</b>
+<b class="fc"><i class="no-highlight">35</i>&nbsp;        studentsOfSelectedColor++;</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;        this.students.replace(color, studentsOfSelectedColor);</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        return studentsOfSelectedColor % 3 == 0;</b>
+<i class="no-highlight">38</i>&nbsp;    }
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    /**
+<i class="no-highlight">41</i>&nbsp;     * Used by the controller to determined if the player can still add a students
+<i class="no-highlight">42</i>&nbsp;     * on the board
+<i class="no-highlight">43</i>&nbsp;     *
+<i class="no-highlight">44</i>&nbsp;     * @param color the color of the student that the player wants to add
+<i class="no-highlight">45</i>&nbsp;     * @return false if the number of students its equals to 10, true otherwise
+<i class="no-highlight">46</i>&nbsp;     */
+<i class="no-highlight">47</i>&nbsp;    public boolean canAddStudent(PawnColor color) {
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        return this.students.get(color) &lt; 10;</b>
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;    /**
+<i class="no-highlight">52</i>&nbsp;     * Gets the number of students of that color
+<i class="no-highlight">53</i>&nbsp;     *
+<i class="no-highlight">54</i>&nbsp;     * @param color the color of the students
+<i class="no-highlight">55</i>&nbsp;     * @return the number of students
+<i class="no-highlight">56</i>&nbsp;     */
+<i class="no-highlight">57</i>&nbsp;    public int getStudents(PawnColor color) {
+<b class="fc"><i class="no-highlight">58</i>&nbsp;        return this.students.get(color);</b>
+<i class="no-highlight">59</i>&nbsp;    }
+<i class="no-highlight">60</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

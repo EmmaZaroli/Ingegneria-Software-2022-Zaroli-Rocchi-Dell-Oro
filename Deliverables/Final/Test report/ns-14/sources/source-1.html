@@ -1,0 +1,344 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > VirtualView</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.view</a>
+</div>
+
+<h1>Coverage Summary for Class: VirtualView (it.polimi.ingsw.view)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">VirtualView</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82,6%
+  </span>
+  <span class="absValue">
+    (19/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81,8%
+  </span>
+  <span class="absValue">
+    (27/33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.view;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.model.*;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.model.enums.GamePhase;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">6</i>&nbsp;import it.polimi.ingsw.network.*;
+<i class="no-highlight">7</i>&nbsp;import it.polimi.ingsw.network.messages.*;
+<i class="no-highlight">8</i>&nbsp;import it.polimi.ingsw.observer.ModelObserver;
+<i class="no-highlight">9</i>&nbsp;import it.polimi.ingsw.servercontroller.User;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.util.Optional;
+<i class="no-highlight">12</i>&nbsp;import java.util.List;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;/**
+<i class="no-highlight">15</i>&nbsp; * Virtual View
+<i class="no-highlight">16</i>&nbsp; */
+<i class="no-highlight">17</i>&nbsp;public class VirtualView extends MessageObservable implements ModelObserver, MessageListener {
+<i class="no-highlight">18</i>&nbsp;    private final User user;
+<i class="no-highlight">19</i>&nbsp;    private final Game game;
+<i class="no-highlight">20</i>&nbsp;
+<b class="fc"><i class="no-highlight">21</i>&nbsp;    public VirtualView(User user, Game game) {</b>
+<b class="fc"><i class="no-highlight">22</i>&nbsp;        this.user = user;</b>
+<b class="fc"><i class="no-highlight">23</i>&nbsp;        this.game = game;</b>
+<i class="no-highlight">24</i>&nbsp;        //case loadSavedGames method has the endpoint null
+<b class="fc"><i class="no-highlight">25</i>&nbsp;        if (user.getEndpoint().isPresent())</b>
+<b class="nc"><i class="no-highlight">26</i>&nbsp;            user.getEndpoint().get().addMessageListener(this);</b>
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;    }
+<i class="no-highlight">29</i>&nbsp;
+<i class="no-highlight">30</i>&nbsp;    /**
+<i class="no-highlight">31</i>&nbsp;     *
+<i class="no-highlight">32</i>&nbsp;     * @return the Endpoint
+<i class="no-highlight">33</i>&nbsp;     */
+<i class="no-highlight">34</i>&nbsp;    public Optional&lt;Endpoint&gt; getClientHandler() {
+<b class="fc"><i class="no-highlight">35</i>&nbsp;        return user.getEndpoint();</b>
+<i class="no-highlight">36</i>&nbsp;    }
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;    /**
+<i class="no-highlight">39</i>&nbsp;     *
+<i class="no-highlight">40</i>&nbsp;     * @return the nickname of the player
+<i class="no-highlight">41</i>&nbsp;     */
+<i class="no-highlight">42</i>&nbsp;    public String getPlayerNickname() {
+<b class="nc"><i class="no-highlight">43</i>&nbsp;        return user.getNickname();</b>
+<i class="no-highlight">44</i>&nbsp;    }
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;    /**
+<i class="no-highlight">47</i>&nbsp;     *
+<i class="no-highlight">48</i>&nbsp;     * @return true if the player is online
+<i class="no-highlight">49</i>&nbsp;     */
+<i class="no-highlight">50</i>&nbsp;    public boolean isOnline() {
+<b class="fc"><i class="no-highlight">51</i>&nbsp;        return user.isOnline();</b>
+<i class="no-highlight">52</i>&nbsp;    }
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;    /**
+<i class="no-highlight">55</i>&nbsp;     * Receives a message coming from the client.
+<i class="no-highlight">56</i>&nbsp;     * Notify the GameController
+<i class="no-highlight">57</i>&nbsp;     * @param message the message coming from the client
+<i class="no-highlight">58</i>&nbsp;     */
+<i class="no-highlight">59</i>&nbsp;    public void onMessageReceived(Message message) {
+<b class="nc"><i class="no-highlight">60</i>&nbsp;        notifyMessage(message);</b>
+<i class="no-highlight">61</i>&nbsp;    }
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;    /**
+<i class="no-highlight">64</i>&nbsp;     *
+<i class="no-highlight">65</i>&nbsp;     * @return the nickname of the current player
+<i class="no-highlight">66</i>&nbsp;     */
+<i class="no-highlight">67</i>&nbsp;    private String getCurrentPlayer() {
+<b class="fc"><i class="no-highlight">68</i>&nbsp;        return game.getPlayers()[game.getCurrentPlayer()].getNickname();</b>
+<i class="no-highlight">69</i>&nbsp;    }
+<i class="no-highlight">70</i>&nbsp;
+<i class="no-highlight">71</i>&nbsp;    /**
+<i class="no-highlight">72</i>&nbsp;     * Notifies the players a change on the given CharacterCard
+<i class="no-highlight">73</i>&nbsp;     *
+<i class="no-highlight">74</i>&nbsp;     * @param message The changed CharacterCard
+<i class="no-highlight">75</i>&nbsp;     * @param parameters the characterCard&#39;s parameters
+<i class="no-highlight">76</i>&nbsp;     */
+<i class="no-highlight">77</i>&nbsp;    @Override
+<i class="no-highlight">78</i>&nbsp;    public void updateCharacterCard(CharacterCard message, Object[] parameters) {
+<b class="fc"><i class="no-highlight">79</i>&nbsp;        user.sendMessage(new CharacterCardMessage(getCurrentPlayer(), MessageType.UPDATE_CHARACTER_CARD, message, parameters));</b>
+<i class="no-highlight">80</i>&nbsp;    }
+<i class="no-highlight">81</i>&nbsp;
+<i class="no-highlight">82</i>&nbsp;    /**
+<i class="no-highlight">83</i>&nbsp;     * Notifies the players a change on the expertParameters
+<i class="no-highlight">84</i>&nbsp;     *
+<i class="no-highlight">85</i>&nbsp;     * @param message The changed expertParameters
+<i class="no-highlight">86</i>&nbsp;     */
+<i class="no-highlight">87</i>&nbsp;    @Override
+<i class="no-highlight">88</i>&nbsp;    public void updateExpertParameters(ExpertGameParameters message) {
+<b class="fc"><i class="no-highlight">89</i>&nbsp;        user.sendMessage(new ExpertParametersMessage(getCurrentPlayer(), message));</b>
+<i class="no-highlight">90</i>&nbsp;    }
+<i class="no-highlight">91</i>&nbsp;
+<i class="no-highlight">92</i>&nbsp;    /**
+<i class="no-highlight">93</i>&nbsp;     * Notifies the players a change on the IslandCard
+<i class="no-highlight">94</i>&nbsp;     *
+<i class="no-highlight">95</i>&nbsp;     * @param message The changed IslandCard
+<i class="no-highlight">96</i>&nbsp;     */
+<i class="no-highlight">97</i>&nbsp;    @Override
+<i class="no-highlight">98</i>&nbsp;    public void updateIslandCard(IslandCard message) {
+<b class="fc"><i class="no-highlight">99</i>&nbsp;        user.sendMessage(new IslandMessage(MessageType.UPDATE_ISLAND, message));</b>
+<i class="no-highlight">100</i>&nbsp;    }
+<i class="no-highlight">101</i>&nbsp;
+<i class="no-highlight">102</i>&nbsp;    /**
+<i class="no-highlight">103</i>&nbsp;     * Notifies the players a change on the gamePhase
+<i class="no-highlight">104</i>&nbsp;     *
+<i class="no-highlight">105</i>&nbsp;     * @param message The new gamePhase
+<i class="no-highlight">106</i>&nbsp;     */
+<i class="no-highlight">107</i>&nbsp;    @Override
+<i class="no-highlight">108</i>&nbsp;    public void updateGamePhase(GamePhase message) {
+<b class="fc"><i class="no-highlight">109</i>&nbsp;        user.sendMessage(new ChangedPhaseMessage(getCurrentPlayer(), message));</b>
+<i class="no-highlight">110</i>&nbsp;    }
+<i class="no-highlight">111</i>&nbsp;
+<i class="no-highlight">112</i>&nbsp;    /**
+<i class="no-highlight">113</i>&nbsp;     * Notifies the players the new current player
+<i class="no-highlight">114</i>&nbsp;     *
+<i class="no-highlight">115</i>&nbsp;     * @param message The new current player
+<i class="no-highlight">116</i>&nbsp;     */
+<i class="no-highlight">117</i>&nbsp;    @Override
+<i class="no-highlight">118</i>&nbsp;    public void updatePlayer(Player message) {
+<i class="no-highlight">119</i>&nbsp;
+<b class="fc"><i class="no-highlight">120</i>&nbsp;        user.sendMessage(new ChangedPlayerMessage(getCurrentPlayer()));</b>
+<b class="fc"><i class="no-highlight">121</i>&nbsp;        if (game.getGamePhase().equals(GamePhase.PLANNING) || game.getGamePhase().equals(GamePhase.ACTION_END))</b>
+<b class="fc"><i class="no-highlight">122</i>&nbsp;            user.sendMessage(new GetDeckMessage(getCurrentPlayer(), MessageType.PLANNING, game.getPlayers()[game.getCurrentPlayer()].getAssistantDeck()));</b>
+<i class="no-highlight">123</i>&nbsp;    }
+<i class="no-highlight">124</i>&nbsp;
+<i class="no-highlight">125</i>&nbsp;    /**
+<i class="no-highlight">126</i>&nbsp;     * Notifies the players the connection state of a player
+<i class="no-highlight">127</i>&nbsp;     *
+<i class="no-highlight">128</i>&nbsp;     * @param message the player
+<i class="no-highlight">129</i>&nbsp;     */
+<i class="no-highlight">130</i>&nbsp;    @Override
+<i class="no-highlight">131</i>&nbsp;    public void updatePlayerOnline(Player message) {
+<b class="fc"><i class="no-highlight">132</i>&nbsp;        if(message.isOnline())</b>
+<b class="nc"><i class="no-highlight">133</i>&nbsp;            user.sendMessage(new ConnectionMessage(message.getNickname(), MessageType.IS_ONLINE));</b>
+<i class="no-highlight">134</i>&nbsp;        else
+<b class="fc"><i class="no-highlight">135</i>&nbsp;            user.sendMessage(new ConnectionMessage(message.getNickname(), MessageType.IS_OFFLINE));</b>
+<i class="no-highlight">136</i>&nbsp;    }
+<i class="no-highlight">137</i>&nbsp;
+<i class="no-highlight">138</i>&nbsp;    /**
+<i class="no-highlight">139</i>&nbsp;     * Notifies the players if a play can or can&#39;t play in that round
+<i class="no-highlight">140</i>&nbsp;     * @param message the player
+<i class="no-highlight">141</i>&nbsp;     */
+<i class="no-highlight">142</i>&nbsp;    @Override
+<i class="no-highlight">143</i>&nbsp;    public void updatePlayerCanPlay(Player message) {
+<b class="fc"><i class="no-highlight">144</i>&nbsp;        user.sendMessage(new PlayerCanPlayMessage(message.getNickname(), message.canPlayThisRound()));</b>
+<i class="no-highlight">145</i>&nbsp;    }
+<i class="no-highlight">146</i>&nbsp;
+<i class="no-highlight">147</i>&nbsp;    /**
+<i class="no-highlight">148</i>&nbsp;     * Notifies the players the number of their coins
+<i class="no-highlight">149</i>&nbsp;     * @param message the player&#39;s coins
+<i class="no-highlight">150</i>&nbsp;     */
+<i class="no-highlight">151</i>&nbsp;    @Override
+<i class="no-highlight">152</i>&nbsp;    public void updatePlayerCoin(int message) {
+<b class="fc"><i class="no-highlight">153</i>&nbsp;        user.sendMessage(new CoinMessage(getCurrentPlayer(),message,false));</b>
+<i class="no-highlight">154</i>&nbsp;    }
+<i class="no-highlight">155</i>&nbsp;
+<i class="no-highlight">156</i>&nbsp;    /**
+<i class="no-highlight">157</i>&nbsp;     * Update the number of coins on the table
+<i class="no-highlight">158</i>&nbsp;     * @param message the number of coins on the table
+<i class="no-highlight">159</i>&nbsp;     */
+<i class="no-highlight">160</i>&nbsp;    @Override
+<i class="no-highlight">161</i>&nbsp;    public void updateTableCoins(int message) {
+<b class="fc"><i class="no-highlight">162</i>&nbsp;        user.sendMessage(new CoinMessage(getCurrentPlayer(),message,true));</b>
+<i class="no-highlight">163</i>&nbsp;    }
+<i class="no-highlight">164</i>&nbsp;
+<i class="no-highlight">165</i>&nbsp;    /**
+<i class="no-highlight">166</i>&nbsp;     * Notifies the players the changed cloudTile
+<i class="no-highlight">167</i>&nbsp;     * @param message the cloudTile
+<i class="no-highlight">168</i>&nbsp;     */
+<i class="no-highlight">169</i>&nbsp;    @Override
+<i class="no-highlight">170</i>&nbsp;    public void updateCloudTile(CloudTile message) {
+<b class="fc"><i class="no-highlight">171</i>&nbsp;        user.sendMessage(new CloudMessage(&quot;server&quot;, MessageType.UPDATE_CLOUD, message));</b>
+<i class="no-highlight">172</i>&nbsp;    }
+<i class="no-highlight">173</i>&nbsp;
+<i class="no-highlight">174</i>&nbsp;    /**
+<i class="no-highlight">175</i>&nbsp;     * Notifies the players the played assistantCard
+<i class="no-highlight">176</i>&nbsp;     * @param message the assistantCard
+<i class="no-highlight">177</i>&nbsp;     */
+<i class="no-highlight">178</i>&nbsp;    @Override
+<i class="no-highlight">179</i>&nbsp;    public void updateAssistantCard(AssistantCard message) {
+<b class="fc"><i class="no-highlight">180</i>&nbsp;        user.sendMessage(new AssistantPlayedMessage(getCurrentPlayer(), MessageType.UPDATE_ASSISTANT_CARD, message));</b>
+<i class="no-highlight">181</i>&nbsp;    }
+<i class="no-highlight">182</i>&nbsp;
+<i class="no-highlight">183</i>&nbsp;    /**
+<i class="no-highlight">184</i>&nbsp;     * Notifies the players the updated schoolBoard
+<i class="no-highlight">185</i>&nbsp;     * @param message the schoolBoard
+<i class="no-highlight">186</i>&nbsp;     */
+<i class="no-highlight">187</i>&nbsp;    @Override
+<i class="no-highlight">188</i>&nbsp;    public void updateSchoolBoard(SchoolBoard message) {
+<b class="fc"><i class="no-highlight">189</i>&nbsp;        user.sendMessage(new SchoolBoardMessage(getCurrentPlayer(), MessageType.UPDATE_BOARD, message));</b>
+<i class="no-highlight">190</i>&nbsp;    }
+<i class="no-highlight">191</i>&nbsp;
+<i class="no-highlight">192</i>&nbsp;    /**
+<i class="no-highlight">193</i>&nbsp;     * Notifies the players that an error occurred on the server
+<i class="no-highlight">194</i>&nbsp;     * @param message the Exception
+<i class="no-highlight">195</i>&nbsp;     */
+<i class="no-highlight">196</i>&nbsp;    @Override
+<i class="no-highlight">197</i>&nbsp;    public void updateException(Exception message) {
+<b class="nc"><i class="no-highlight">198</i>&nbsp;        user.sendMessage(new ErrorMessage(getCurrentPlayer(), game.getLastError().getMessage()));</b>
+<i class="no-highlight">199</i>&nbsp;    }
+<i class="no-highlight">200</i>&nbsp;
+<i class="no-highlight">201</i>&nbsp;    /**
+<i class="no-highlight">202</i>&nbsp;     * Ask the current player to move a student
+<i class="no-highlight">203</i>&nbsp;     */
+<i class="no-highlight">204</i>&nbsp;    @Override
+<i class="no-highlight">205</i>&nbsp;    public void updateAskStudent(){
+<b class="fc"><i class="no-highlight">206</i>&nbsp;        user.sendMessage(new MoveStudentMessage(getCurrentPlayer(),MessageType.ASK_STUDENTS_TO_MOVE, PawnColor.NONE));</b>
+<i class="no-highlight">207</i>&nbsp;    }
+<i class="no-highlight">208</i>&nbsp;
+<i class="no-highlight">209</i>&nbsp;    /**
+<i class="no-highlight">210</i>&nbsp;     * Notify the winners to the players
+<i class="no-highlight">211</i>&nbsp;     * @param message the list of winners
+<i class="no-highlight">212</i>&nbsp;     */
+<i class="no-highlight">213</i>&nbsp;    @Override
+<i class="no-highlight">214</i>&nbsp;    public void updateWinners(List&lt;String&gt; message){
+<i class="no-highlight">215</i>&nbsp;        //notify winners
+<b class="fc"><i class="no-highlight">216</i>&nbsp;        user.sendMessage(new GameOverMessage(MessageType.GAME_OVER, message));</b>
+<i class="no-highlight">217</i>&nbsp;    }
+<i class="no-highlight">218</i>&nbsp;
+<i class="no-highlight">219</i>&nbsp;    /**
+<i class="no-highlight">220</i>&nbsp;     * Notifies the players a game over from disconnection
+<i class="no-highlight">221</i>&nbsp;     */
+<i class="no-highlight">222</i>&nbsp;    @Override
+<i class="no-highlight">223</i>&nbsp;    public void updateGameOverFromDisconnection() {
+<b class="nc"><i class="no-highlight">224</i>&nbsp;        user.sendMessage(new ConnectionMessage(getCurrentPlayer(), MessageType.GAME_OVER_FROM_DISCONNECTION));</b>
+<i class="no-highlight">225</i>&nbsp;    }
+<i class="no-highlight">226</i>&nbsp;
+<i class="no-highlight">227</i>&nbsp;    /**
+<i class="no-highlight">228</i>&nbsp;     * Notifies the player that there aren&#39;t enough players to continue playing
+<i class="no-highlight">229</i>&nbsp;     * @param message true if there aren&#39;t enough players to continue playing
+<i class="no-highlight">230</i>&nbsp;     */
+<i class="no-highlight">231</i>&nbsp;    @Override
+<i class="no-highlight">232</i>&nbsp;    public void updateEnoughPlayerOnline(boolean message) {
+<b class="fc"><i class="no-highlight">233</i>&nbsp;        if(message)</b>
+<b class="fc"><i class="no-highlight">234</i>&nbsp;            user.sendMessage(new ConnectionMessage(getCurrentPlayer(), MessageType.ENOUGH_PLAYERS));</b>
+<i class="no-highlight">235</i>&nbsp;        else
+<b class="fc"><i class="no-highlight">236</i>&nbsp;            user.sendMessage(new ConnectionMessage(getCurrentPlayer(), MessageType.NOT_ENOUGH_PLAYERS));</b>
+<i class="no-highlight">237</i>&nbsp;    }
+<i class="no-highlight">238</i>&nbsp;
+<i class="no-highlight">239</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,250 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Island</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.client.gui.sceneControllers</a>
+</div>
+
+<h1>Coverage Summary for Class: Island (it.polimi.ingsw.client.gui.sceneControllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Island</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/57)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Island$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/59)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.client.gui.sceneControllers;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.client.modelview.LinkedIslands;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.model.enums.PawnColor;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.model.enums.Tower;
+<i class="no-highlight">6</i>&nbsp;import javafx.beans.NamedArg;
+<i class="no-highlight">7</i>&nbsp;import javafx.fxml.FXML;
+<i class="no-highlight">8</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i class="no-highlight">9</i>&nbsp;import javafx.scene.image.Image;
+<i class="no-highlight">10</i>&nbsp;import javafx.scene.image.ImageView;
+<i class="no-highlight">11</i>&nbsp;import javafx.scene.layout.GridPane;
+<i class="no-highlight">12</i>&nbsp;import javafx.scene.layout.Pane;
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;import java.io.IOException;
+<i class="no-highlight">15</i>&nbsp;import java.util.List;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;public class Island extends Pane {
+<i class="no-highlight">18</i>&nbsp;    @FXML
+<i class="no-highlight">19</i>&nbsp;    private GridPane students;
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;    @FXML
+<i class="no-highlight">22</i>&nbsp;    private ImageView image;
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;    private int kind;
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;    /**
+<i class="no-highlight">27</i>&nbsp;     * Creates an island
+<i class="no-highlight">28</i>&nbsp;     *
+<i class="no-highlight">29</i>&nbsp;     * @param kind
+<i class="no-highlight">30</i>&nbsp;     */
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    public Island(@NamedArg(&quot;kind&quot;) int kind) {</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(&quot;/it.polimi.ingsw.client.gui/markups/components/island.fxml&quot;));</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;        fxmlLoader.setRoot(this);</b>
+<b class="nc"><i class="no-highlight">34</i>&nbsp;        fxmlLoader.setController(this);</b>
+<i class="no-highlight">35</i>&nbsp;
+<b class="nc"><i class="no-highlight">36</i>&nbsp;        this.kind = kind;</b>
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;        try {
+<b class="nc"><i class="no-highlight">39</i>&nbsp;            fxmlLoader.load();</b>
+<b class="nc"><i class="no-highlight">40</i>&nbsp;        } catch (IOException exception) {</b>
+<b class="nc"><i class="no-highlight">41</i>&nbsp;            throw new RuntimeException(exception);</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;        }</b>
+<i class="no-highlight">43</i>&nbsp;    }
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    /**
+<i class="no-highlight">46</i>&nbsp;     * Callback method to load an image based on the selected kind
+<i class="no-highlight">47</i>&nbsp;     */
+<i class="no-highlight">48</i>&nbsp;    public void initialize() {
+<b class="nc"><i class="no-highlight">49</i>&nbsp;        if (kind == 0) {</b>
+<b class="nc"><i class="no-highlight">50</i>&nbsp;            image.setImage(new Image(&quot;/it.polimi.ingsw.client.gui/assets/island1.png&quot;));</b>
+<i class="no-highlight">51</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">52</i>&nbsp;        if (kind == 1) {</b>
+<b class="nc"><i class="no-highlight">53</i>&nbsp;            image.setImage(new Image(&quot;/it.polimi.ingsw.client.gui/assets/island2.png&quot;));</b>
+<i class="no-highlight">54</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        if (kind == 2) {</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;            image.setImage(new Image(&quot;/it.polimi.ingsw.client.gui/assets/island3.png&quot;));</b>
+<i class="no-highlight">57</i>&nbsp;        }
+<i class="no-highlight">58</i>&nbsp;    }
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;    /**
+<i class="no-highlight">61</i>&nbsp;     * Sets the infos about this cloud
+<i class="no-highlight">62</i>&nbsp;     */
+<i class="no-highlight">63</i>&nbsp;    public void setCloud(LinkedIslands island) {
+<b class="nc"><i class="no-highlight">64</i>&nbsp;        this.students.getChildren().removeAll(this.students.getChildren());</b>
+<i class="no-highlight">65</i>&nbsp;
+<b class="nc"><i class="no-highlight">66</i>&nbsp;        List&lt;PawnColor&gt; students = island.getIsland().getStudents();</b>
+<i class="no-highlight">67</i>&nbsp;
+<b class="nc"><i class="no-highlight">68</i>&nbsp;        this.students.setHgap(4);</b>
+<b class="nc"><i class="no-highlight">69</i>&nbsp;        this.students.setVgap(4);</b>
+<i class="no-highlight">70</i>&nbsp;
+<b class="nc"><i class="no-highlight">71</i>&nbsp;        int row = 0;</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;        int column = 0;</b>
+<i class="no-highlight">73</i>&nbsp;
+<b class="nc"><i class="no-highlight">74</i>&nbsp;        if (island.getIsland().isHasMotherNature()) {</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;            Image image = new Image(&quot;/it.polimi.ingsw.client.gui/assets/mother_nature.png&quot;);</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;            ImageView imageView = new ImageView(image);</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;            imageView.setFitHeight(40);</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;            imageView.setFitWidth(35);</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;            this.students.add(imageView, column, row);</b>
+<b class="nc"><i class="no-highlight">80</i>&nbsp;            column++;</b>
+<i class="no-highlight">81</i>&nbsp;        }
+<i class="no-highlight">82</i>&nbsp;
+<b class="nc"><i class="no-highlight">83</i>&nbsp;        Tower tower = island.getIsland().getTower();</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;        if (tower != Tower.NONE) {</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;            Image image = switch (tower) {</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;                case GREY -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/grey_tower.png&quot;);</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;                case BLACK -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/black_tower.png&quot;);</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;                default -&gt; new Image(&quot;/it.polimi.ingsw.client.gui/assets/white_tower.png&quot;);</b>
+<i class="no-highlight">89</i>&nbsp;            };
+<b class="nc"><i class="no-highlight">90</i>&nbsp;            ImageView imageView = new ImageView(image);</b>
+<b class="nc"><i class="no-highlight">91</i>&nbsp;            imageView.setFitHeight(29);</b>
+<b class="nc"><i class="no-highlight">92</i>&nbsp;            imageView.setFitWidth(14);</b>
+<b class="nc"><i class="no-highlight">93</i>&nbsp;            this.students.add(imageView, column, row);</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;            column++;</b>
+<i class="no-highlight">95</i>&nbsp;        }
+<i class="no-highlight">96</i>&nbsp;
+<b class="nc"><i class="no-highlight">97</i>&nbsp;        for (int i = 0; i &lt; students.size(); i++) {</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;            String basePath = &quot;/it.polimi.ingsw.client.gui/assets/student_&quot;;</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;            String path = switch (students.get(i)) {</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;                case PINK -&gt; &quot;pink.png&quot;;</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;                case YELLOW -&gt; &quot;yellow.png&quot;;</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;                case GREEN -&gt; &quot;green.png&quot;;</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;                case RED -&gt; &quot;red.png&quot;;</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;                case BLUE -&gt; &quot;blue.png&quot;;</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;                case NONE -&gt; &quot;none.png&quot;;</b>
+<i class="no-highlight">106</i>&nbsp;            };
+<b class="nc"><i class="no-highlight">107</i>&nbsp;            Image image = new Image(basePath + path);</b>
+<b class="nc"><i class="no-highlight">108</i>&nbsp;            ImageView imageView = new ImageView(image);</b>
+<b class="nc"><i class="no-highlight">109</i>&nbsp;            imageView.setFitHeight(25);</b>
+<b class="nc"><i class="no-highlight">110</i>&nbsp;            imageView.setFitWidth(25);</b>
+<b class="nc"><i class="no-highlight">111</i>&nbsp;            this.students.add(imageView, column, row);</b>
+<b class="nc"><i class="no-highlight">112</i>&nbsp;            column++;</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;            if (column == 4) {</b>
+<b class="nc"><i class="no-highlight">114</i>&nbsp;                row++;</b>
+<b class="nc"><i class="no-highlight">115</i>&nbsp;                column = 0;</b>
+<i class="no-highlight">116</i>&nbsp;            }
+<i class="no-highlight">117</i>&nbsp;        }
+<i class="no-highlight">118</i>&nbsp;    }
+<i class="no-highlight">119</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>

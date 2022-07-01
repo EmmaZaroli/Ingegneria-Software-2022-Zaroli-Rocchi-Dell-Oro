@@ -1,0 +1,408 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GameHandlerBuilder</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">it.polimi.ingsw.servercontroller</a>
+</div>
+
+<h1>Coverage Summary for Class: GameHandlerBuilder (it.polimi.ingsw.servercontroller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameHandlerBuilder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/71)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameHandlerBuilder$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/72)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package it.polimi.ingsw.servercontroller;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import it.polimi.ingsw.gamecontroller.ExpertGameController;
+<i class="no-highlight">4</i>&nbsp;import it.polimi.ingsw.gamecontroller.ExpertTableController;
+<i class="no-highlight">5</i>&nbsp;import it.polimi.ingsw.gamecontroller.GameController;
+<i class="no-highlight">6</i>&nbsp;import it.polimi.ingsw.gamecontroller.TableController;
+<i class="no-highlight">7</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.GameMode;
+<i class="no-highlight">8</i>&nbsp;import it.polimi.ingsw.gamecontroller.enums.PlayersNumber;
+<i class="no-highlight">9</i>&nbsp;import it.polimi.ingsw.gamecontroller.exceptions.InvalidPlayerNumberException;
+<i class="no-highlight">10</i>&nbsp;import it.polimi.ingsw.model.*;
+<i class="no-highlight">11</i>&nbsp;import it.polimi.ingsw.model.enums.Tower;
+<i class="no-highlight">12</i>&nbsp;import it.polimi.ingsw.model.enums.Wizard;
+<i class="no-highlight">13</i>&nbsp;import it.polimi.ingsw.view.VirtualView;
+<i class="no-highlight">14</i>&nbsp;
+<i class="no-highlight">15</i>&nbsp;import java.util.LinkedList;
+<i class="no-highlight">16</i>&nbsp;import java.util.List;
+<i class="no-highlight">17</i>&nbsp;
+<i class="no-highlight">18</i>&nbsp;/**
+<i class="no-highlight">19</i>&nbsp; * Game Handler Builder
+<i class="no-highlight">20</i>&nbsp; * Builds the game and assigns it to a gameHandler
+<i class="no-highlight">21</i>&nbsp; */
+<b class="nc"><i class="no-highlight">22</i>&nbsp;public class GameHandlerBuilder {</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;    private GameMode gameMode = GameMode.NORMAL_MODE;   //if no GameMode is specified, the default mode will be normal</b>
+<b class="nc"><i class="no-highlight">24</i>&nbsp;    private PlayersNumber playersNumber = PlayersNumber.THREE;  //if no player number is specified, the default number will be three</b>
+<b class="nc"><i class="no-highlight">25</i>&nbsp;    private final List&lt;User&gt; users = new LinkedList&lt;&gt;();</b>
+<i class="no-highlight">26</i>&nbsp;
+<b class="nc"><i class="no-highlight">27</i>&nbsp;    private final List&lt;GameReadyListener&gt; gameStartingListeners = new LinkedList&lt;&gt;();</b>
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;    /**
+<i class="no-highlight">30</i>&nbsp;     * Assigns the gameMode
+<i class="no-highlight">31</i>&nbsp;     * @param gameMode the gameMode
+<i class="no-highlight">32</i>&nbsp;     * @return this instance, updated
+<i class="no-highlight">33</i>&nbsp;     */
+<i class="no-highlight">34</i>&nbsp;    public GameHandlerBuilder gameMode(GameMode gameMode) {
+<b class="nc"><i class="no-highlight">35</i>&nbsp;        this.gameMode = gameMode;</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;        return this;</b>
+<i class="no-highlight">37</i>&nbsp;    }
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;    /**
+<i class="no-highlight">40</i>&nbsp;     * Assigns the number of players
+<i class="no-highlight">41</i>&nbsp;     * @param playersNumber the number of players
+<i class="no-highlight">42</i>&nbsp;     * @return this instance, updated
+<i class="no-highlight">43</i>&nbsp;     */
+<i class="no-highlight">44</i>&nbsp;    public GameHandlerBuilder playersNumber(PlayersNumber playersNumber) {
+<b class="nc"><i class="no-highlight">45</i>&nbsp;        this.playersNumber = playersNumber;</b>
+<b class="nc"><i class="no-highlight">46</i>&nbsp;        return this;</b>
+<i class="no-highlight">47</i>&nbsp;    }
+<i class="no-highlight">48</i>&nbsp;
+<i class="no-highlight">49</i>&nbsp;    /**
+<i class="no-highlight">50</i>&nbsp;     * Adds a user to the list of users
+<i class="no-highlight">51</i>&nbsp;     * @param user the user to add
+<i class="no-highlight">52</i>&nbsp;     * @return this instance, updated
+<i class="no-highlight">53</i>&nbsp;     */
+<i class="no-highlight">54</i>&nbsp;    public GameHandlerBuilder player(User user) {
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        this.users.add(user);</b>
+<b class="nc"><i class="no-highlight">56</i>&nbsp;        return this;</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;    /**
+<i class="no-highlight">60</i>&nbsp;     * Removes a user to the list of users
+<i class="no-highlight">61</i>&nbsp;     * @param user the user to remove
+<i class="no-highlight">62</i>&nbsp;     * @return this instance, updated
+<i class="no-highlight">63</i>&nbsp;     */
+<i class="no-highlight">64</i>&nbsp;    public GameHandlerBuilder removePlayer(User user) {
+<b class="nc"><i class="no-highlight">65</i>&nbsp;        this.users.remove(user);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;        return this;</b>
+<i class="no-highlight">67</i>&nbsp;    }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;    /**
+<i class="no-highlight">70</i>&nbsp;     * Resets the lists of this instance
+<i class="no-highlight">71</i>&nbsp;     * @return this instance, updated
+<i class="no-highlight">72</i>&nbsp;     */
+<i class="no-highlight">73</i>&nbsp;    public GameHandlerBuilder reset() {
+<b class="nc"><i class="no-highlight">74</i>&nbsp;        this.users.clear();</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;        this.gameStartingListeners.clear();</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;        return this;</b>
+<i class="no-highlight">77</i>&nbsp;    }
+<i class="no-highlight">78</i>&nbsp;
+<i class="no-highlight">79</i>&nbsp;    /**
+<i class="no-highlight">80</i>&nbsp;     *
+<i class="no-highlight">81</i>&nbsp;     * @return true if the number of users already enqueued is equals to the number of players needed for the game
+<i class="no-highlight">82</i>&nbsp;     */
+<i class="no-highlight">83</i>&nbsp;    public boolean isGameFull() {
+<b class="nc"><i class="no-highlight">84</i>&nbsp;        return users.size() == playersNumber.getPlayersNumber();</b>
+<i class="no-highlight">85</i>&nbsp;    }
+<i class="no-highlight">86</i>&nbsp;
+<i class="no-highlight">87</i>&nbsp;    /**
+<i class="no-highlight">88</i>&nbsp;     * Builds the gameHandler
+<i class="no-highlight">89</i>&nbsp;     * @return the gameHandler
+<i class="no-highlight">90</i>&nbsp;     * @throws InvalidPlayerNumberException  Signals that in GameControllerBuilder the specified PlayerCount does not match the actual number of player passed to the builder
+<i class="no-highlight">91</i>&nbsp;     */
+<i class="no-highlight">92</i>&nbsp;    public GameHandler build() throws InvalidPlayerNumberException {
+<b class="nc"><i class="no-highlight">93</i>&nbsp;        checkPlayerNumberValidity();</b>
+<b class="nc"><i class="no-highlight">94</i>&nbsp;        return buildGameHandler();</b>
+<i class="no-highlight">95</i>&nbsp;    }
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;    /**
+<i class="no-highlight">98</i>&nbsp;     * Used for loaded a previously closed game
+<i class="no-highlight">99</i>&nbsp;     * @param game the game
+<i class="no-highlight">100</i>&nbsp;     * @return the gameHandler
+<i class="no-highlight">101</i>&nbsp;     * @throws InvalidPlayerNumberException if the number of users already enqueued is not equals to the number of players needed for the game
+<i class="no-highlight">102</i>&nbsp;     */
+<i class="no-highlight">103</i>&nbsp;    public GameHandler load(Game game) throws InvalidPlayerNumberException {
+<b class="nc"><i class="no-highlight">104</i>&nbsp;        checkPlayerNumberValidity();</b>
+<b class="nc"><i class="no-highlight">105</i>&nbsp;        return buildGameHandler(game);</b>
+<i class="no-highlight">106</i>&nbsp;    }
+<i class="no-highlight">107</i>&nbsp;
+<i class="no-highlight">108</i>&nbsp;    /**
+<i class="no-highlight">109</i>&nbsp;     * Checks if the number of users already enqueued is equals to the number of players needed for the game
+<i class="no-highlight">110</i>&nbsp;     * @throws InvalidPlayerNumberException if the number of users already enqueued is not equals to the number of players needed for the game
+<i class="no-highlight">111</i>&nbsp;     */
+<i class="no-highlight">112</i>&nbsp;    private void checkPlayerNumberValidity() throws InvalidPlayerNumberException {
+<b class="nc"><i class="no-highlight">113</i>&nbsp;        if (users.size() != playersNumber.getPlayersNumber())</b>
+<b class="nc"><i class="no-highlight">114</i>&nbsp;            throw new InvalidPlayerNumberException((users.size() &gt; playersNumber.getPlayersNumber()) ? InvalidPlayerNumberException.Reason.TOO_MANY_PLAYERS : InvalidPlayerNumberException.Reason.NOT_ENOUGH_PLAYERS);</b>
+<i class="no-highlight">115</i>&nbsp;    }
+<i class="no-highlight">116</i>&nbsp;
+<i class="no-highlight">117</i>&nbsp;    /**
+<i class="no-highlight">118</i>&nbsp;     * Builds a new Game
+<i class="no-highlight">119</i>&nbsp;     * @return the gameHandler
+<i class="no-highlight">120</i>&nbsp;     */
+<i class="no-highlight">121</i>&nbsp;    private GameHandler buildGameHandler() {
+<b class="nc"><i class="no-highlight">122</i>&nbsp;        Game gameModel = buildGameModel();</b>
+<b class="nc"><i class="no-highlight">123</i>&nbsp;        VirtualView[] virtualViews = buildVirtualViews(gameModel);</b>
+<b class="nc"><i class="no-highlight">124</i>&nbsp;        GameController gameController = buildGameController(gameModel, virtualViews);</b>
+<b class="nc"><i class="no-highlight">125</i>&nbsp;        gameController.init();</b>
+<b class="nc"><i class="no-highlight">126</i>&nbsp;        setListeners(gameModel, gameController, virtualViews);</b>
+<b class="nc"><i class="no-highlight">127</i>&nbsp;        notifyGameReady();</b>
+<b class="nc"><i class="no-highlight">128</i>&nbsp;        return new GameHandler(new LinkedList&lt;&gt;(users), gameController, gameModel, virtualViews);</b>
+<i class="no-highlight">129</i>&nbsp;    }
+<i class="no-highlight">130</i>&nbsp;
+<i class="no-highlight">131</i>&nbsp;    /**
+<i class="no-highlight">132</i>&nbsp;     * Loads a previously closed game
+<i class="no-highlight">133</i>&nbsp;     * @param gameModel the previous game
+<i class="no-highlight">134</i>&nbsp;     * @return the gameHandler
+<i class="no-highlight">135</i>&nbsp;     */
+<i class="no-highlight">136</i>&nbsp;    private GameHandler buildGameHandler(Game gameModel) {
+<b class="nc"><i class="no-highlight">137</i>&nbsp;        VirtualView[] virtualViews = buildVirtualViews(gameModel);</b>
+<b class="nc"><i class="no-highlight">138</i>&nbsp;        GameController gameController = buildGameController(gameModel, virtualViews);</b>
+<b class="nc"><i class="no-highlight">139</i>&nbsp;        gameController.setObservers();</b>
+<b class="nc"><i class="no-highlight">140</i>&nbsp;        setListeners(gameModel, gameController, virtualViews);</b>
+<b class="nc"><i class="no-highlight">141</i>&nbsp;        notifyGameReady();</b>
+<b class="nc"><i class="no-highlight">142</i>&nbsp;        return new GameHandler(new LinkedList&lt;&gt;(users), gameController, gameModel, virtualViews);</b>
+<i class="no-highlight">143</i>&nbsp;    }
+<i class="no-highlight">144</i>&nbsp;
+<i class="no-highlight">145</i>&nbsp;    /**
+<i class="no-highlight">146</i>&nbsp;     * Adds the disconnectionListeners
+<i class="no-highlight">147</i>&nbsp;     * @param gameModel the game
+<i class="no-highlight">148</i>&nbsp;     * @param gameController the gameController
+<i class="no-highlight">149</i>&nbsp;     * @param virtualViews the virtualViews
+<i class="no-highlight">150</i>&nbsp;     */
+<i class="no-highlight">151</i>&nbsp;    private void setListeners(Game gameModel, GameController gameController, VirtualView[] virtualViews){
+<b class="nc"><i class="no-highlight">152</i>&nbsp;        for (VirtualView virtualView : virtualViews) {</b>
+<b class="nc"><i class="no-highlight">153</i>&nbsp;            if (virtualView.getClientHandler().isPresent()) {</b>
+<b class="nc"><i class="no-highlight">154</i>&nbsp;                virtualView.getClientHandler().get().addDisconnectionListener(gameController);</b>
+<i class="no-highlight">155</i>&nbsp;            }
+<b class="nc"><i class="no-highlight">156</i>&nbsp;            virtualView.addListener(gameController);</b>
+<i class="no-highlight">157</i>&nbsp;        }
+<i class="no-highlight">158</i>&nbsp;    }
+<i class="no-highlight">159</i>&nbsp;
+<i class="no-highlight">160</i>&nbsp;    /**
+<i class="no-highlight">161</i>&nbsp;     * Builds the game based on the gameMode chose
+<i class="no-highlight">162</i>&nbsp;     * @return the game
+<i class="no-highlight">163</i>&nbsp;     */
+<i class="no-highlight">164</i>&nbsp;    private Game buildGameModel() {
+<b class="nc"><i class="no-highlight">165</i>&nbsp;        return switch (gameMode) {</b>
+<b class="nc"><i class="no-highlight">166</i>&nbsp;            case NORMAL_MODE -&gt; buildNormalGameModel();</b>
+<b class="nc"><i class="no-highlight">167</i>&nbsp;            case EXPERT_MODE -&gt; buildExpertGameModel();</b>
+<i class="no-highlight">168</i>&nbsp;        };
+<i class="no-highlight">169</i>&nbsp;    }
+<i class="no-highlight">170</i>&nbsp;
+<i class="no-highlight">171</i>&nbsp;    /**
+<i class="no-highlight">172</i>&nbsp;     * Builds the Normal game
+<i class="no-highlight">173</i>&nbsp;     * @return the game
+<i class="no-highlight">174</i>&nbsp;     */
+<i class="no-highlight">175</i>&nbsp;    private Game buildNormalGameModel() {
+<b class="nc"><i class="no-highlight">176</i>&nbsp;        Player[] players = new Player[playersNumber.getPlayersNumber()];</b>
+<b class="nc"><i class="no-highlight">177</i>&nbsp;        for (int i = 0; i &lt; players.length; i++) {</b>
+<b class="nc"><i class="no-highlight">178</i>&nbsp;            players[i] = new Player(users.get(i).getNickname(), Wizard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());</b>
+<i class="no-highlight">179</i>&nbsp;        }
+<i class="no-highlight">180</i>&nbsp;
+<b class="nc"><i class="no-highlight">181</i>&nbsp;        Table table = new Table(playersNumber);</b>
+<i class="no-highlight">182</i>&nbsp;
+<b class="nc"><i class="no-highlight">183</i>&nbsp;        GameParameters parameters = new GameParameters(playersNumber, gameMode);</b>
+<i class="no-highlight">184</i>&nbsp;
+<b class="nc"><i class="no-highlight">185</i>&nbsp;        return new Game(players, table, parameters);</b>
+<i class="no-highlight">186</i>&nbsp;    }
+<i class="no-highlight">187</i>&nbsp;
+<i class="no-highlight">188</i>&nbsp;    /**
+<i class="no-highlight">189</i>&nbsp;     * Builds the Expert game
+<i class="no-highlight">190</i>&nbsp;     * @return the game
+<i class="no-highlight">191</i>&nbsp;     */
+<i class="no-highlight">192</i>&nbsp;    private Game buildExpertGameModel() {
+<b class="nc"><i class="no-highlight">193</i>&nbsp;        ExpertPlayer[] players = new ExpertPlayer[playersNumber.getPlayersNumber()];</b>
+<b class="nc"><i class="no-highlight">194</i>&nbsp;        for (int i = 0; i &lt; players.length; i++) {</b>
+<b class="nc"><i class="no-highlight">195</i>&nbsp;            players[i] = new ExpertPlayer(users.get(i).getNickname(), Wizard.values()[i], Tower.getValidValues()[i], playersNumber.getPlayersNumber());</b>
+<i class="no-highlight">196</i>&nbsp;        }
+<i class="no-highlight">197</i>&nbsp;
+<b class="nc"><i class="no-highlight">198</i>&nbsp;        ExpertTable table = new ExpertTable(playersNumber);</b>
+<i class="no-highlight">199</i>&nbsp;
+<b class="nc"><i class="no-highlight">200</i>&nbsp;        ExpertGameParameters parameters = new ExpertGameParameters(playersNumber, gameMode);</b>
+<i class="no-highlight">201</i>&nbsp;
+<b class="nc"><i class="no-highlight">202</i>&nbsp;        return new ExpertGame(players, table, parameters);</b>
+<i class="no-highlight">203</i>&nbsp;    }
+<i class="no-highlight">204</i>&nbsp;
+<i class="no-highlight">205</i>&nbsp;    /**
+<i class="no-highlight">206</i>&nbsp;     * Builds the gameController based on the gameMode chose
+<i class="no-highlight">207</i>&nbsp;     * @param gameModel the game
+<i class="no-highlight">208</i>&nbsp;     * @param virtualViews the virtualViews
+<i class="no-highlight">209</i>&nbsp;     * @return the gameController
+<i class="no-highlight">210</i>&nbsp;     */
+<i class="no-highlight">211</i>&nbsp;    private GameController buildGameController(Game gameModel, VirtualView[] virtualViews) {
+<b class="nc"><i class="no-highlight">212</i>&nbsp;        GameController gameController = switch (gameMode) {</b>
+<b class="nc"><i class="no-highlight">213</i>&nbsp;            case NORMAL_MODE -&gt; buildNormalGameController(gameModel, virtualViews);</b>
+<b class="nc"><i class="no-highlight">214</i>&nbsp;            case EXPERT_MODE -&gt; buildExpertGameController(gameModel, virtualViews);</b>
+<i class="no-highlight">215</i>&nbsp;        };
+<b class="nc"><i class="no-highlight">216</i>&nbsp;        return gameController;</b>
+<i class="no-highlight">217</i>&nbsp;    }
+<i class="no-highlight">218</i>&nbsp;
+<i class="no-highlight">219</i>&nbsp;    /**
+<i class="no-highlight">220</i>&nbsp;     * Builds the Normal gameController
+<i class="no-highlight">221</i>&nbsp;     * @param gameModel the game
+<i class="no-highlight">222</i>&nbsp;     * @param virtualViews the virtualViews
+<i class="no-highlight">223</i>&nbsp;     * @return the gameController
+<i class="no-highlight">224</i>&nbsp;     */
+<i class="no-highlight">225</i>&nbsp;    private GameController buildNormalGameController(Game gameModel, VirtualView[] virtualViews) {
+<b class="nc"><i class="no-highlight">226</i>&nbsp;        TableController tableController = new TableController(gameModel.getTable(), gameModel.getParameters());</b>
+<b class="nc"><i class="no-highlight">227</i>&nbsp;        return new GameController(gameModel, tableController, virtualViews);</b>
+<i class="no-highlight">228</i>&nbsp;    }
+<i class="no-highlight">229</i>&nbsp;
+<i class="no-highlight">230</i>&nbsp;    /**
+<i class="no-highlight">231</i>&nbsp;     * Builds the Expert gameController
+<i class="no-highlight">232</i>&nbsp;     * @param gameModel the game
+<i class="no-highlight">233</i>&nbsp;     * @param virtualViews the virtualViews
+<i class="no-highlight">234</i>&nbsp;     * @return the expertGameController
+<i class="no-highlight">235</i>&nbsp;     */
+<i class="no-highlight">236</i>&nbsp;    private ExpertGameController buildExpertGameController(Game gameModel, VirtualView[] virtualViews) {
+<b class="nc"><i class="no-highlight">237</i>&nbsp;        ExpertTableController tableController = new ExpertTableController((ExpertTable) gameModel.getTable(), (ExpertGameParameters) gameModel.getParameters());</b>
+<b class="nc"><i class="no-highlight">238</i>&nbsp;        return new ExpertGameController((ExpertGame) gameModel, tableController, virtualViews);</b>
+<i class="no-highlight">239</i>&nbsp;    }
+<i class="no-highlight">240</i>&nbsp;
+<i class="no-highlight">241</i>&nbsp;    /**
+<i class="no-highlight">242</i>&nbsp;     * Builds the virtualViews for every user
+<i class="no-highlight">243</i>&nbsp;     * @param gameModel the game
+<i class="no-highlight">244</i>&nbsp;     * @return the virtualViews
+<i class="no-highlight">245</i>&nbsp;     */
+<i class="no-highlight">246</i>&nbsp;    private VirtualView[] buildVirtualViews(Game gameModel) {
+<b class="nc"><i class="no-highlight">247</i>&nbsp;        VirtualView[] virtualViews = new VirtualView[playersNumber.getPlayersNumber()];</b>
+<b class="nc"><i class="no-highlight">248</i>&nbsp;        for (int i = 0; i &lt; virtualViews.length; i++) {</b>
+<b class="nc"><i class="no-highlight">249</i>&nbsp;            virtualViews[i] = new VirtualView(users.get(i), gameModel);</b>
+<i class="no-highlight">250</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">251</i>&nbsp;        return virtualViews;</b>
+<i class="no-highlight">252</i>&nbsp;    }
+<i class="no-highlight">253</i>&nbsp;
+<i class="no-highlight">254</i>&nbsp;    /**
+<i class="no-highlight">255</i>&nbsp;     * Adds a gameReadyListener
+<i class="no-highlight">256</i>&nbsp;     * @param l the gameReadyListener
+<i class="no-highlight">257</i>&nbsp;     */
+<i class="no-highlight">258</i>&nbsp;    public void addGameStartingListener(GameReadyListener l) {
+<b class="nc"><i class="no-highlight">259</i>&nbsp;        this.gameStartingListeners.add(l);</b>
+<i class="no-highlight">260</i>&nbsp;    }
+<i class="no-highlight">261</i>&nbsp;
+<i class="no-highlight">262</i>&nbsp;    /**
+<i class="no-highlight">263</i>&nbsp;     * remove a gameReadyListener
+<i class="no-highlight">264</i>&nbsp;     * @param l the gameReadyListener
+<i class="no-highlight">265</i>&nbsp;     */
+<i class="no-highlight">266</i>&nbsp;    public void removeGameStartingListener(GameReadyListener l) {
+<b class="nc"><i class="no-highlight">267</i>&nbsp;        this.gameStartingListeners.remove(l);</b>
+<i class="no-highlight">268</i>&nbsp;    }
+<i class="no-highlight">269</i>&nbsp;
+<i class="no-highlight">270</i>&nbsp;    /**
+<i class="no-highlight">271</i>&nbsp;     * Notifies the gameReadyListeners that the game is ready
+<i class="no-highlight">272</i>&nbsp;     */
+<i class="no-highlight">273</i>&nbsp;    private void notifyGameReady() {
+<b class="nc"><i class="no-highlight">274</i>&nbsp;        List&lt;GameReadyListener&gt; temporaryCopy = new LinkedList&lt;&gt;(gameStartingListeners);</b>
+<b class="nc"><i class="no-highlight">275</i>&nbsp;        temporaryCopy.forEach(GameReadyListener::onGameReady);</b>
+<i class="no-highlight">276</i>&nbsp;    }
+<i class="no-highlight">277</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-07-01 21:06</div>
+</div>
+</body>
+</html>
