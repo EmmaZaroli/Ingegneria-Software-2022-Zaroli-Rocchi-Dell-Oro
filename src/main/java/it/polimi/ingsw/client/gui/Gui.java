@@ -242,7 +242,7 @@ public class Gui extends View implements Initializable {
      * Sets the additional steps mother nature can do after an effect has been activated
      */
     public void setAdditionalMotherNatureMovement(int value) {
-        this.additionalMotherNatureMovement = 2;
+        this.additionalMotherNatureMovement = value;
     }
 
     public void sendAssistantCardProxy(int index) {
@@ -272,6 +272,7 @@ public class Gui extends View implements Initializable {
             Optional<ButtonType> response = sharedAlert.showAndWait();
             if (response.isPresent()) {
                 sendMotherNatureSteps(Integer.parseInt((response.get().getText()).substring(1)));
+                additionalMotherNatureMovement = 0;
             }
         });
     }
@@ -363,7 +364,6 @@ public class Gui extends View implements Initializable {
     @Override
     public void updateCurrentPlayersTurn(String otherPlayer) {
         if (message != null) {
-            additionalMotherNatureMovement = 0;
             this.currentPlayer = otherPlayer;
             Platform.runLater(() -> message.setText("Current player: " + currentPlayer + " Current game phase: " + currentPhase));
         }
