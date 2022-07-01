@@ -82,7 +82,7 @@ public class Endpoint {
                 out.writeObject(message);
                 out.flush();
             } catch (Exception e) {
-                disconnect("WRITING");
+                disconnect();
                 this.notifyDisconnection();
             }
         }
@@ -142,7 +142,7 @@ public class Endpoint {
                 //System.out.println("RECIVED PING");
             }
         } catch (Exception e) {
-            disconnect(e.getMessage());
+            disconnect();
             notifyDisconnection();
         }
     }
@@ -156,7 +156,7 @@ public class Endpoint {
         this.disconnectionTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                disconnect("TIMER EXPIRED");
+                disconnect();
                 notifyDisconnection();
             }
         }, ApplicationConstants.DISCONNECTION_TIMER_PING);
@@ -181,10 +181,8 @@ public class Endpoint {
 
     /**
      * Called when the player is disconnected
-     * @param reason the reason for the disconnection
      */
-    public void disconnect(String reason) {
-        System.out.println("DISCONNECTION " + reason);
+    public void disconnect() {
         isOnline = false;
         try {
             this.stopPinging();
