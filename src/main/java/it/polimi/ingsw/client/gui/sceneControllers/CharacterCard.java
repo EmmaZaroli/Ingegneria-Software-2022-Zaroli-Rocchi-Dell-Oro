@@ -355,20 +355,23 @@ public class CharacterCard extends Pane {
      * Handles the effect of the character 7
      */
     private void handleEffectSeven() {
-        int i = 0;
-        boolean shouldContinue = true;
-        while (i < 3 && shouldContinue) {
-            Platform.runLater(() -> {
-                List<ButtonType> buttons = new LinkedList<>();
-                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(0)), ButtonBar.ButtonData.OK_DONE));
-                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(1)), ButtonBar.ButtonData.OK_DONE));
-                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(2)), ButtonBar.ButtonData.OK_DONE));
-                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(3)), ButtonBar.ButtonData.OK_DONE));
-                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(4)), ButtonBar.ButtonData.OK_DONE));
-                buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(5)), ButtonBar.ButtonData.OK_DONE));
+        Platform.runLater(() -> {
+            List<ButtonType> buttons = new LinkedList<>();
+            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(0)), ButtonBar.ButtonData.OK_DONE));
+            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(1)), ButtonBar.ButtonData.OK_DONE));
+            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(2)), ButtonBar.ButtonData.OK_DONE));
+            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(3)), ButtonBar.ButtonData.OK_DONE));
+            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(4)), ButtonBar.ButtonData.OK_DONE));
+            buttons.add(new ButtonType(resolveColorString(characterCard.getStudents().get(5)), ButtonBar.ButtonData.OK_DONE));
 
-                buttons.add(new ButtonType("End effect", ButtonBar.ButtonData.CANCEL_CLOSE));
+            buttons.add(new ButtonType("Skip", ButtonBar.ButtonData.CANCEL_CLOSE));
 
+            boolean shouldContinue = true;
+
+            List<PawnColor> studentsFromCard = new LinkedList<>();
+            List<PawnColor> studentsFromEntrance = new LinkedList<>();
+
+            for (int i = 0; i < 3 && shouldContinue; i++) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Chose a student to place in your entrance", buttons.toArray(new ButtonType[]{}));
                 Optional<ButtonType> response = alert.showAndWait();
                 if (response.isPresent()) {
@@ -382,33 +385,36 @@ public class CharacterCard extends Pane {
                             default -> PawnColor.NONE;
                         };
 
-                        List<ButtonType> buttons2 = new LinkedList<>();
-                        for (int ii = 0; ii < gui.getMe().getBoard().getEntrance().size(); ii++) {
-                            buttons.add(new ButtonType(resolveColorString(gui.getMe().getBoard().getEntrance().get(ii)), ButtonBar.ButtonData.OK_DONE));
-                        }
-
-                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Chose a student to remove from your entrance", buttons2.toArray(new ButtonType[]{}));
-                        Optional<ButtonType> response2 = alert2.showAndWait();
-                        if (response2.isPresent()) {
-                            PawnColor fromEntrance = switch (response.get().getText()) {
-                                case "Red" -> PawnColor.RED;
-                                case "Green" -> PawnColor.GREEN;
-                                case "Blue" -> PawnColor.BLUE;
-                                case "Pink" -> PawnColor.PINK;
-                                case "Yellow" -> PawnColor.YELLOW;
-                                default -> PawnColor.NONE;
-                            };
-
-                            if (!gui.activateCharacter(index, fromCard, fromEntrance)) {
-                                gui.error("Error while activating the effect");
+                        if (fromCard != PawnColor.NONE) {
+                            studentsFromCard.add(fromCard);
+                            List<ButtonType> buttons2 = new LinkedList<>();
+                            for (int ii = 0; ii < gui.getMe().getBoard().getEntrance().size(); ii++) {
+                                buttons2.add(new ButtonType(resolveColorString(gui.getMe().getBoard().getEntrance().get(ii)), ButtonBar.ButtonData.OK_DONE));
                             }
+
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Chose a student to remove from your entrance", buttons2.toArray(new ButtonType[]{}));
+                            Optional<ButtonType> response2 = alert2.showAndWait();
+                            if (response2.isPresent()) {
+                                PawnColor fromEntrance = switch (response.get().getText()) {
+                                    case "Red" -> PawnColor.RED;
+                                    case "Green" -> PawnColor.GREEN;
+                                    case "Blue" -> PawnColor.BLUE;
+                                    case "Pink" -> PawnColor.PINK;
+                                    case "Yellow" -> PawnColor.YELLOW;
+                                    default -> PawnColor.NONE;
+                                };
+                                studentsFromEntrance.add(fromEntrance);
+                            }
+                        } else {
+                            shouldContinue = false;
                         }
                     }
-                } else {
-                    handleEffectSeven();
                 }
-            });
-        }
+            }
+            if (!gui.activateCharacter(index, studentsFromCard, studentsFromEntrance)) {
+                gui.error("Error while activating the effect");
+            }
+        });
     }
 
     /**
