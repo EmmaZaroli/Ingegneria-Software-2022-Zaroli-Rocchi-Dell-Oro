@@ -424,6 +424,7 @@ public class Cli extends View {
      */
     private void printCloud() {
         cloudPrinter.printClouds(getClouds());
+        System.out.println();
     }
 
     /**

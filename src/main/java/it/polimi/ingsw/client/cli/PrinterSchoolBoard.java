@@ -47,7 +47,7 @@ public class PrinterSchoolBoard {
 
         for (int i = 0; i < boards.size(); i++) {
             out.print(" ____________________________________");
-            out.print("            "); //12 spaces
+            out.print("           "); //12 spaces
         }
         out.println();
 
@@ -75,7 +75,8 @@ public class PrinterSchoolBoard {
                 out.print("| " + student1 + " " + student2 + " ");
                 studentsTable(rows, boards.get(j));
                 countTowers[j] = towersPrinter(boards.get(j).getTowersCount(), boards.get(j).getTowerColor(), countTowers[j]);
-                System.out.print("  |");
+                if(boards.size()==3 && rows==4) System.out.print(" |");
+                else System.out.print("  |");
                 space(); //10 spaces
             }
             studentPosition = studentPosition + 2;
@@ -85,7 +86,7 @@ public class PrinterSchoolBoard {
         space();
         out.print(BOTTOM);
         if (boards.size() == 3) {
-            out.print("         ");
+            space();
             out.print(BOTTOM);
         }
     }
