@@ -662,7 +662,7 @@ public class GameController implements DisconnectionListener, MessageListener {
         playerSortedByProfessors.stream().
                 sorted(Comparator.comparing(Player::getProfessorsCount).reversed()).toList();
 
-        if (playerSortedByProfessors.get(0).getBoard().getProfessorsCount() > playerSortedByProfessors.get(1).getBoard().getProfessorsCount()) {
+        if (playerSortedByProfessors.get(0).getBoard().getProfessorsCount() < playerSortedByProfessors.get(1).getBoard().getProfessorsCount()) {
             winners.add(playerSortedByTower.get(1).getNickname());
             return winners;
         }
