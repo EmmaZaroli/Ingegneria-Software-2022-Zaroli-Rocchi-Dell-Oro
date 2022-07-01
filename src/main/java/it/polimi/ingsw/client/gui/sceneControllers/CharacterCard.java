@@ -109,29 +109,6 @@ public class CharacterCard extends Pane {
             imageView.setFitHeight(25);
             imageView.setFitWidth(25);
 
-            imageView.setOnMouseClicked(mouseEvent -> {
-                if (gui.canActivateCharacterProxy(card)) {
-                    switch (characterCard.getCharacter()) {
-                        case CHARACTER_ONE -> {
-                            gui.genericMessage("You activated the Character.\nMove a student from the CharacterCard to an island");
-                            isDragAndDropEnabled = true;
-                        }
-                        case CHARACTER_TWO, CHARACTER_SIX, CHARACTER_EIGHT -> {
-                            gui.genericMessage("You activated the Character.");
-                            gui.activateCharacter(index);
-                        }
-                        case CHARACTER_FOUR -> {
-                            gui.setAdditionalMotherNatureMovement(2);
-                            gui.genericMessage("You activated the Character");
-                            gui.activateCharacter(index);
-                        }
-                        case CHARACTER_SEVEN -> handleEffectSeven();
-                        case CHARACTER_NINE -> handleEffectNine();
-                        case CHARACTER_ELEVEN -> handleEffectEleven();
-                    }
-                }
-            });
-
             imageView.setOnMousePressed(mouseEvent -> {
                 if (isDragAndDropEnabled) {
                     orgSceneX = mouseEvent.getSceneX();
@@ -163,6 +140,29 @@ public class CharacterCard extends Pane {
                 column = 0;
             }
         }
+
+        this.setOnMouseClicked(mouseEvent -> {
+            if (gui.canActivateCharacterProxy(card)) {
+                switch (characterCard.getCharacter()) {
+                    case CHARACTER_ONE -> {
+                        gui.genericMessage("You activated the Character.\nMove a student from the CharacterCard to an island");
+                        isDragAndDropEnabled = true;
+                    }
+                    case CHARACTER_TWO, CHARACTER_SIX, CHARACTER_EIGHT -> {
+                        gui.genericMessage("You activated the Character.");
+                        gui.activateCharacter(index);
+                    }
+                    case CHARACTER_FOUR -> {
+                        gui.setAdditionalMotherNatureMovement(2);
+                        gui.genericMessage("You activated the Character");
+                        gui.activateCharacter(index);
+                    }
+                    case CHARACTER_SEVEN -> handleEffectSeven();
+                    case CHARACTER_NINE -> handleEffectNine();
+                    case CHARACTER_ELEVEN -> handleEffectEleven();
+                }
+            }
+        });
 
         imageView.setImage(image);
         coin.setVisible(card.hasCoin());
