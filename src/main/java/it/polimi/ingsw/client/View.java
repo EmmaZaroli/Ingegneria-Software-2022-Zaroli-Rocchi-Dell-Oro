@@ -746,6 +746,7 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
                 count++;
             i++;
         }
+        while(getIslands().get(i).isConnectedWithNext()) i++;
         return i;
     }
 

@@ -90,7 +90,7 @@ public class PrinterIslands {
         size[11] = Math.max(intermediate, 0);
         if (islands.get(11).isMainIsland()) topWithConnection(up0, size[11]);
         else topWithConnection(up0);
-        System.out.print("                                 ");
+        System.out.print("                                ");
         if (up0) System.out.print("  ");
         intermediate = (islands.get(5).getIsland().getStudents().size() - 11) / 2;
         size[5] = Math.max(intermediate, 0);
@@ -110,7 +110,8 @@ public class PrinterIslands {
 
         //side 2
         space(37);
-        System.out.print(islandsIndex[11]); // 1 space
+        String correctionSpace = Integer.parseInt(islandsIndex[11]) < 10 ? " " : "";
+        System.out.print(islandsIndex[11] + correctionSpace); // 1 space + 1 additional if it's a number with less than 2 digits
         space(1);
         if (islands.get(11).isMainIsland()) side(false, false, islands.get(11).getIsland(), 11, 7);
         else side(false, false, Tower.NONE);

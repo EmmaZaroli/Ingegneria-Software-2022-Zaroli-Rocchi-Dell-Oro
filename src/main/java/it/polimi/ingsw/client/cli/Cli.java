@@ -78,12 +78,16 @@ public class Cli extends View {
     @Override
     public void askServerInfo() {
         String ip;
-        int port;
+        int port=24000;
 
         out.print("Please, insert the Server's ip address: ");
         ip = readLine();
         out.print("Select the Server's port number: ");
-        port = Integer.parseInt(readLine());
+        try {
+            port = Integer.parseInt(readLine());
+        }catch(NumberFormatException e){
+            errorAndExit("the port entered is not a number");
+        }
 
         //ip = "127.0.0.1";
         //port = 24000;
