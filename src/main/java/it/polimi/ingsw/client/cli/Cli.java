@@ -533,10 +533,11 @@ public class Cli extends View {
      */
     private boolean askCharacterSevenParameters(int index) {
         boolean valid = false;
+        boolean validSend = false;
         Object[] parameters = new Object[2];
         List<PawnColor> studentsFromCard = new ArrayList<>();
         List<PawnColor> studentsFromEntrance;
-        do {
+        while(!validSend){
             while (!valid) {
                 System.out.println("Choose student from card 7 to move [max 3, separated by commas, no spaces]: ");
                 studentsFromCard = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());
@@ -556,7 +557,9 @@ public class Cli extends View {
                     valid = true;
                 } else error("invalid students selected!");
             }
-        } while (!sendCharacterCard(index, parameters));
+            validSend = sendCharacterCard(index, parameters);
+            if(!validSend) error("some parameters were incorrect, please retry!");
+        }
         return true;
     }
 
