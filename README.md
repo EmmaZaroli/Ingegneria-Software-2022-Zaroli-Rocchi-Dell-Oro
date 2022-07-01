@@ -27,15 +27,15 @@ Number: GC10
 
 ### Server
 
-'''
-java -jar Server.jar --port <\port\>
-'''
+```
+java -jar Server.jar --port <port>
+```
 
 ### Client
 
-'''
+```
 java -jar Client.jar [--cli]
-'''
+```
 
 Omitting the argument --cli will start the GUI version of the client
 
@@ -47,7 +47,7 @@ For a complete report, please refer to the [full data](Deliverables/Final/Testin
 
 ## Design documents
 
-Design documents are stored in the [Deliverables](Deliverables) folder. JavaDoc documents are also available.
+Design documents are stored in the [Deliverables](Deliverables/Final) folder. JavaDoc documents are also available.
 
 ## Additional tools used
 
