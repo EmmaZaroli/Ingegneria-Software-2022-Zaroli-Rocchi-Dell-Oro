@@ -538,7 +538,7 @@ public class Cli extends View {
         List<PawnColor> studentsFromEntrance;
         do {
             while (!valid) {
-                System.out.println("Choose student from card 7 to move [max 3, separated by commas]: ");
+                System.out.println("Choose student from card 7 to move [max 3, separated by commas, no spaces]: ");
                 studentsFromCard = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());
                 int size = (int) studentsFromCard.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromCard.size() == size) {
@@ -548,7 +548,7 @@ public class Cli extends View {
             }
             valid = false;
             while (!valid) {
-                System.out.println("Choose student from entrance [max 3, separated by commas]: ");
+                System.out.println("Choose student from entrance [max 3, separated by commas, no spaces]: ");
                 studentsFromEntrance = Arrays.stream(readLine().split(",")).map(cliParser::checkIfStudent).collect(Collectors.toList());
                 int size = (int) studentsFromEntrance.stream().filter(s -> s != PawnColor.NONE).count();
                 if (studentsFromEntrance.size() == size && studentsFromEntrance.size() == studentsFromCard.size()) {
