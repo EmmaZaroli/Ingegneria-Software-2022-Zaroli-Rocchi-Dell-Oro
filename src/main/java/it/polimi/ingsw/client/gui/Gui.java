@@ -373,13 +373,13 @@ public class Gui extends View implements Initializable {
     public void win() {
         Platform.runLater(() -> {
             sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You won the game");
-            sharedAlert.showAndWait();
             sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
                 @Override
                 public void handle(DialogEvent dialogEvent) {
                     start();
                 }
             });
+            sharedAlert.showAndWait();
         });
     }
 
@@ -393,7 +393,6 @@ public class Gui extends View implements Initializable {
         final String finalWinnerString = winnersString;
         Platform.runLater(() -> {
             sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You lost. " + finalWinnerString + "won the game");
-            sharedAlert.showAndWait();
             sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
                 @Override
                 public void handle(DialogEvent dialogEvent) {
@@ -401,11 +400,22 @@ public class Gui extends View implements Initializable {
                 }
             });
         });
+        sharedAlert.showAndWait();
     }
 
     @Override
     public void draw(String otherWinner) {
-        //TODO
+        String winnersString = "";
+        Platform.runLater(() -> {
+            sharedAlert = new Alert(Alert.AlertType.INFORMATION, "You and " + otherWinner + " won the game!");
+            sharedAlert.setOnCloseRequest(new EventHandler<DialogEvent>() {
+                @Override
+                public void handle(DialogEvent dialogEvent) {
+                    start();
+                }
+            });
+        });
+        sharedAlert.showAndWait();
     }
 
     @Override
