@@ -758,8 +758,14 @@ public abstract class View implements MessageListener, UserInterface, Disconnect
         if (cloudIndex < 0 || cloudIndex >= getClouds().size())
             return false;
         CloudTileDto cloudTile = getClouds().get(cloudIndex);
-        if(cloudTile.getStudents().isEmpty())
-            return false;
+        if(cloudTile.getStudents().isEmpty()){
+            for(CloudTileDto cloud : getClouds()){
+                if(cloud != cloudTile){
+                    if(!cloud.getStudents().isEmpty())
+                        return false;
+                }
+            }
+        }
         Message message = new CloudMessage(me.getNickname(), MessageType.ACTION_CHOOSE_CLOUD, cloudTile);
         endpoint.sendMessage(message);
         return true;

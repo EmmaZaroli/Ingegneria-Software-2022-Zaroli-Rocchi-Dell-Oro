@@ -1,7 +1,9 @@
 package it.polimi.ingsw.gamecontroller;
 
+import it.polimi.ingsw.dtos.CloudTileDto;
 import it.polimi.ingsw.gamecontroller.exceptions.*;
 import it.polimi.ingsw.model.AssistantCard;
+import it.polimi.ingsw.model.CloudTile;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -405,7 +407,12 @@ public class GameController implements DisconnectionListener, MessageListener {
         }
         List<PawnColor> studentsFromCloud = this.tableController.takeStudentsFromCloud(uuid);
         if (studentsFromCloud.isEmpty()) {
-            throw new EmptyCloudException();
+            for(CloudTile cloud : this.tableController.getTable().getCloudTiles()){
+                if(cloud.getUuid() != uuid){
+                    if(cloud.getStudentsNumber() != 0)
+                        throw new EmptyCloudException();
+                }
+            }
         }
         game.getCurrentPlayerBoard().addStudentsToEntrance(studentsFromCloud);
         this.playerHasEndedAction();
