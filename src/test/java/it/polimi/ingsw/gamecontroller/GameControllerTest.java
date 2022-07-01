@@ -626,7 +626,7 @@ class GameControllerTest extends TestCase {
             Assertions.assertFalse(virtualViews[1].isOnline());
             Assertions.assertTrue(player1.isOnline());
             Assertions.assertTrue(player2.isOnline());
-            gameController.onDisconnect(this); //TODO fix this
+            gameController.onDisconnect(this);
             Assertions.assertFalse(player1.isOnline());
             Assertions.assertFalse(player2.isOnline());
             Assertions.assertFalse(game.areEnoughPlayersOnline());

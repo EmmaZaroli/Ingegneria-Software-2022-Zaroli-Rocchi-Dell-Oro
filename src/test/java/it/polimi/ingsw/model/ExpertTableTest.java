@@ -103,11 +103,6 @@ public class ExpertTableTest{
     }
 
     @Test
-    void gettingIsland(){
-        //TODO
-    }
-
-    @Test
     void settingTower(){
         IslandCard island = table2Players.getIslands().get(0);
         Assertions.assertEquals(island.getTower(), Tower.NONE);
