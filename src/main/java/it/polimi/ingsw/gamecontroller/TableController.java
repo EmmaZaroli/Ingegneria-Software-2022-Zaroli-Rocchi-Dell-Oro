@@ -74,7 +74,7 @@ public class TableController {
         }*/
         for (CloudTile cloud : table.getCloudTiles()) {
             if(cloud.getStudentsNumber() == 0) {
-                for (int i = 0; i < numberOfPlayers; i++) {
+                for (int i = 0; i < numberOfPlayers && !table.getBag().isEmpty(); i++) {
                     studentsDrawn.add(table.getBag().drawStudent());
                 }
                 table.addStudents(cloud, studentsDrawn);
