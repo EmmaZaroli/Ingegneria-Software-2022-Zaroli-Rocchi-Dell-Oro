@@ -527,44 +527,14 @@ public class Gui extends View implements Initializable {
             if (character1 != null && getCharacterCards() != null && getCharacterCards().size() > 2 && isExpertGame()) {
                 character1.setCard(getCharacterCards().get(0));
                 character1.setController(this);
-                character1.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        if (canActivateCharacter(0)) {
-                            //TODO
-                        } else {
-                            error("You cannot activate this character now");
-                        }
-                    }
-                });
             }
             if (character2 != null && getCharacterCards() != null && getCharacterCards().size() > 2 && isExpertGame()) {
                 character2.setCard(getCharacterCards().get(1));
                 character2.setController(this);
-                character2.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        if (canActivateCharacter(1)) {
-                            //TODO
-                        } else {
-                            error("You cannot activate this character now");
-                        }
-                    }
-                });
             }
             if (character3 != null && getCharacterCards() != null && getCharacterCards().size() > 2 && isExpertGame()) {
                 character3.setCard(getCharacterCards().get(2));
                 character3.setController(this);
-                character3.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        if (canActivateCharacter(2)) {
-                            //TODO
-                        } else {
-                            error("You cannot activate this character now");
-                        }
-                    }
-                });
             }
         });
     }
